@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
-export async function middleware(request: NextRequest){
+export async function proxy(request: NextRequest){
   let response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest){
   // Refresh token if expired - Safe verification
   const { data: { user } } = await supabase.auth.getUser();
 
-  // Protected Routes Guarding Example
+  // Protected Routes Guarding
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/end-user') ||
                            request.nextUrl.pathname.startsWith('/bac-sec') ||
                            request.nextUrl.pathname.startsWith('/supply');
