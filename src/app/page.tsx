@@ -8,20 +8,26 @@ export default async function LoginPage({ searchParams }: Props) {
   const { error } = await searchParams;
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#030712] via-[#0f172a] to-[#020617] p-4 font-sans selection:bg-indigo-500 selection:text-white">
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-white/5 bg-slate-900/40 p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden before:absolute before:top-0 before:left-0 before:right-0 before:h-[2px] before:bg-gradient-to-r before:from-indigo-500 before:to-sky-400">
-        
-        {/* Subtle decorative glows */}
-        <div className="absolute -top-40 -left-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
-        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-sky-500/10 rounded-full blur-[100px] pointer-events-none" />
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-[#030712] px-4 py-12 selection:bg-indigo-500 selection:text-white overflow-hidden">
+      
+      {/* Background gradients/glows */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] aspect-square rounded-full bg-indigo-500/10 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] aspect-square rounded-full bg-sky-500/10 blur-[120px]" />
+      </div>
 
-        <div className="relative text-center">
-          {/* Logo */}
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-sky-400 font-black text-xl tracking-tight text-white shadow-xl shadow-indigo-500/20">
+      {/* Main card */}
+      <div className="relative w-full max-w-[420px] rounded-2xl border border-white/5 bg-slate-900/50 p-8 backdrop-blur-xl shadow-2xl z-10">
+        {/* Accent top border */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-sky-400" />
+
+        {/* Brand Header */}
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-sky-400 font-extrabold text-xl text-white shadow-xl shadow-indigo-500/20 mb-4">
             <span>P</span>
             <span className="text-sky-200">W</span>
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-extrabold tracking-tight text-white">
             Welcome to ProcureWise
           </h1>
           <p className="mt-2 text-sm text-slate-400">
@@ -29,7 +35,8 @@ export default async function LoginPage({ searchParams }: Props) {
           </p>
         </div>
 
-        <form action={login} className="relative space-y-6">
+        {/* Auth Form */}
+        <form action={login} className="space-y-6">
           <div className="space-y-1.5">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               Email Address
@@ -39,9 +46,10 @@ export default async function LoginPage({ searchParams }: Props) {
               type="email"
               required
               placeholder="you@bsc.edu.ph"
-              className="w-full rounded-xl border border-white/10 bg-slate-950/45 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:bg-slate-950/80"
+              className="w-full rounded-xl border border-white/10 bg-slate-950/45 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition duration-150 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:bg-slate-950/80"
             />
           </div>
+
           <div className="space-y-1.5">
             <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               Password
@@ -51,7 +59,7 @@ export default async function LoginPage({ searchParams }: Props) {
               type="password"
               required
               placeholder="••••••••"
-              className="w-full rounded-xl border border-white/10 bg-slate-950/45 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:bg-slate-950/80"
+              className="w-full rounded-xl border border-white/10 bg-slate-950/45 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition duration-150 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:bg-slate-950/80"
             />
           </div>
 
@@ -66,7 +74,7 @@ export default async function LoginPage({ searchParams }: Props) {
 
           <button
             type="submit"
-            className="group relative flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 py-3 text-sm font-semibold text-white transition-all duration-200 hover:from-indigo-600 hover:to-indigo-700 hover:shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98]"
+            className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 py-3 text-sm font-semibold text-white shadow-lg shadow-indigo-500/15 hover:from-indigo-600 hover:to-indigo-700 transition duration-150 active:scale-[0.98]"
           >
             Sign In
           </button>
@@ -75,4 +83,5 @@ export default async function LoginPage({ searchParams }: Props) {
     </div>
   );
 }
+
 
