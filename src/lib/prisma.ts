@@ -6,12 +6,14 @@ import { URL } from "url";
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
 const createPrismaClient = () => {
-  const connectionString = process.env.DATABASE_URL;
+  let connectionString = process.env.DATABASE_URL;
   if (!connectionString) {
     throw new Error("DATABASE_URL is not set in environment variables.");
   }
 
-  // Parse the connection string using Node's standard URL parser.
+  // Strip any leading/trailing quotes if present in the .env file
+  connectionString = connectionString.replace(/^["']|["']$/g, "");
+
   const dbUrl = new URL(connectionString);
   
   const pool = new Pool({
@@ -21,7 +23,7 @@ const createPrismaClient = () => {
     port: dbUrl.port ? parseInt(dbUrl.port) : 5432,
     database: dbUrl.pathname.substring(1),
     ssl: dbUrl.searchParams.get("sslmode") !== "disable" ? { rejectUnauthorized: false } : undefined,
-    connectionTimeoutMillis: 30000, // 30 seconds connection timeout
+    connectionTimeoutMillis: 30000,
   });
 
   const adapter = new PrismaPg(pool);
