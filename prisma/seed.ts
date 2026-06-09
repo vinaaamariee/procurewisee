@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import "dotenv/config";
+import { prisma } from "../src/lib/prisma";
 import { suppliers, officeItems } from "../src/lib/mock-price-data";
-
-const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding suppliers...");
