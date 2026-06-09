@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, Fragment } from "react";
 import {
   OfficeItem,
   Supplier,
@@ -132,9 +132,8 @@ export default function ComparisonTable({
               const isExpanded = expandedItem === item.id;
 
               return (
-                <>
+                <Fragment key={item.id}>
                   <tr
-                    key={item.id}
                     id={`row-${item.id}`}
                     className={`table-row ${isExpanded ? "row-expanded" : ""}`}
                     onClick={() => setExpandedItem(isExpanded ? null : item.id)}
@@ -183,7 +182,7 @@ export default function ComparisonTable({
                   </tr>
 
                   {isExpanded && (
-                    <tr key={`${item.id}-detail`} id={`row-detail-${item.id}`} className="detail-row">
+                    <tr id={`row-detail-${item.id}`} className="detail-row">
                       <td colSpan={3 + visibleSuppliers.length + 2}>
                         <div className="detail-panel">
                           <p className="detail-description">{item.description}</p>
@@ -202,7 +201,7 @@ export default function ComparisonTable({
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               );
             })}
           </tbody>
