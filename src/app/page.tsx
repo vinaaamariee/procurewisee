@@ -1,96 +1,78 @@
-import Link from "next/link";
+import { login } from './actions/auth';
 
-export default function Home() {
+interface Props {
+  searchParams: Promise<{ error?: string }>;
+}
+
+export default async function LoginPage({ searchParams }: Props) {
+  const { error } = await searchParams;
+
   return (
-    <div className="home-page">
-      <div className="home-content">
-        <div className="home-logo">
-          <span>P</span><span>W</span>
-        </div>
-        <h1 className="home-title">ProcureWise</h1>
-        <p className="home-desc">
-          An Intelligent Procurement Analytics and Automated Canvassing System<br />
-          with Best-Value Recommendation Engine
-        </p>
-        <p className="home-inst">Batanes State College</p>
-        <div className="home-links">
-          <Link href="/price-comparison" id="nav-price-comparison" className="home-btn-primary">
-            Price Comparison Dashboard →
-          </Link>
-        </div>
-      </div>
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#030712] via-[#0f172a] to-[#020617] p-4 font-sans selection:bg-indigo-500 selection:text-white">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-white/5 bg-slate-900/40 p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden before:absolute before:top-0 before:left-0 before:right-0 before:h-[2px] before:bg-gradient-to-r before:from-indigo-500 before:to-sky-400">
+        
+        {/* Subtle decorative glows */}
+        <div className="absolute -top-40 -left-40 w-80 h-80 bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute -bottom-40 -right-40 w-80 h-80 bg-sky-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-      <style>{`
-        .home-page {
-          min-height: 100vh;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background: linear-gradient(160deg, #030712 0%, #0f172a 60%, #020617 100%);
-          padding: 2rem;
-        }
-        .home-content {
-          text-align: center;
-          max-width: 520px;
-        }
-        .home-logo {
-          width: 72px;
-          height: 72px;
-          border-radius: 16px;
-          background: linear-gradient(135deg, #6366f1 0%, #38bdf8 100%);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 900;
-          font-size: 1.25rem;
-          letter-spacing: -1px;
-          color: #ffffff;
-          box-shadow: 0 4px 24px rgba(99, 102, 241, 0.4);
-          margin: 0 auto 1.5rem;
-        }
-        .home-title {
-          font-size: 2.5rem;
-          font-weight: 900;
-          background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          letter-spacing: -1px;
-          margin-bottom: 1rem;
-        }
-        .home-desc {
-          font-size: 0.9rem;
-          color: rgba(255,255,255,0.65);
-          line-height: 1.7;
-          margin-bottom: 0.5rem;
-        }
-        .home-inst {
-          font-size: 0.78rem;
-          color: #38bdf8;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          font-weight: 700;
-          margin-bottom: 2rem;
-        }
-        .home-links { display: flex; flex-direction: column; gap: 0.75rem; }
-        .home-btn-primary {
-          display: inline-block;
-          padding: 0.8rem 1.75rem;
-          border-radius: 12px;
-          background: linear-gradient(135deg, #6366f1, #4f46e5);
-          border: 1px solid rgba(56, 189, 248, 0.3);
-          color: #ffffff;
-          font-weight: 700;
-          font-size: 0.9rem;
-          text-decoration: none;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-          box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-        }
-        .home-btn-primary:hover {
-          background: linear-gradient(135deg, #4f46e5, #4338ca);
-          transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
-        }
-      `}</style>
+        <div className="relative text-center">
+          {/* Logo */}
+          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-sky-400 font-black text-xl tracking-tight text-white shadow-xl shadow-indigo-500/20">
+            <span>P</span>
+            <span className="text-sky-200">W</span>
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+            Welcome to ProcureWise
+          </h1>
+          <p className="mt-2 text-sm text-slate-400">
+            Sign in to your institutional account
+          </p>
+        </div>
+
+        <form action={login} className="relative space-y-6">
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              Email Address
+            </label>
+            <input
+              name="email"
+              type="email"
+              required
+              placeholder="you@bsc.edu.ph"
+              className="w-full rounded-xl border border-white/10 bg-slate-950/45 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:bg-slate-950/80"
+            />
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              Password
+            </label>
+            <input
+              name="password"
+              type="password"
+              required
+              placeholder="••••••••"
+              className="w-full rounded-xl border border-white/10 bg-slate-950/45 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-all duration-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 focus:bg-slate-950/80"
+            />
+          </div>
+
+          {error && (
+            <div className="flex items-center gap-2 rounded-lg border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-xs font-medium text-red-400">
+              <svg viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4 shrink-0">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+              </svg>
+              <span>{error}</span>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="group relative flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-indigo-500 to-indigo-600 py-3 text-sm font-semibold text-white transition-all duration-200 hover:from-indigo-600 hover:to-indigo-700 hover:shadow-lg hover:shadow-indigo-500/20 active:scale-[0.98]"
+          >
+            Sign In
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
+
