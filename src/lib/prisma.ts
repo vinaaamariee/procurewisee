@@ -12,7 +12,6 @@ const createPrismaClient = () => {
   }
 
   // Parse the connection string using Node's standard URL parser.
-  // This correctly handles special characters and URL-encoded components.
   const dbUrl = new URL(connectionString);
   
   const pool = new Pool({
@@ -22,6 +21,7 @@ const createPrismaClient = () => {
     port: dbUrl.port ? parseInt(dbUrl.port) : 5432,
     database: dbUrl.pathname.substring(1),
     ssl: dbUrl.searchParams.get("sslmode") !== "disable" ? { rejectUnauthorized: false } : undefined,
+    connectionTimeoutMillis: 30000, // 30 seconds connection timeout
   });
 
   const adapter = new PrismaPg(pool);
