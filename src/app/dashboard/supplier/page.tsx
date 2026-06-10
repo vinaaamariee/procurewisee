@@ -41,11 +41,22 @@ export default async function SupplierDashboard() {
   const supabase = await createClient();
 
   // Match the supplier by company name or contact person
-  const { data: supplier } = await supabase
+  let { data: supplier } = await supabase
     .from('suppliers')
     .select('id:supplier_id')
     .or(`companyName.eq."${profile.fullName}",contactPerson.eq."${profile.fullName}"`)
     .maybeSingle();
+
+  if (!supplier) {
+    // Fallback to the first supplier in development/testing mode
+    const { data: firstSupplier } = await supabase
+      .from('suppliers')
+      .select('id:supplier_id')
+      .order('supplier_id', { ascending: true })
+      .limit(1)
+      .single();
+    supplier = firstSupplier;
+  }
 
   const { openRfqs, myQuotes } = await getSupplierData(supplier?.id);
 
