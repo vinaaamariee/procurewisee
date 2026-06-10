@@ -47,6 +47,52 @@ export async function login(formData: FormData) {
   return redirect(ROLE_HOME[profile.role as UserRole] ?? '/dashboard/officer');
 }
 
+export async function register(formData: FormData) {
+  const supabase = await createClient();
+
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+  const fullName = formData.get('fullName') as string;
+  const username = formData.get('username') as string;
+  const role = formData.get('role') as string;
+
+  if (!email || !password || !fullName || !username || !role) {
+    return redirect('/?error=All fields are required.');
+  }
+
+  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: fullName,
+        username: username,
+        role: role,
+      },
+    },
+  });
+
+  if (signUpError) {
+    return redirect(`/?error=${encodeURIComponent(signUpError.message)}`);
+  }
+
+  // If session is returned (email confirmation disabled), redirect to dashboard
+  if (signUpData.session) {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('id', signUpData.user!.id)
+      .single();
+
+    if (profile) {
+      revalidatePath('/', 'layout');
+      return redirect(ROLE_HOME[profile.role as UserRole] ?? '/dashboard/officer');
+    }
+  }
+
+  return redirect('/?success=Account created successfully! You can now log in.');
+}
+
 export async function signout() {
   const supabase = await createClient();
   await supabase.auth.signOut();

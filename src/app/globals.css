@@ -789,3 +789,13 @@ html, body {
   .pc-section-heading { font-size: 1.35rem; }
   .grid { grid-template-columns: 1fr 1fr !important; }
 }
+
+/* Chrome/Safari Autofill Styles Overrides */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #030712 inset !important;
+  -webkit-text-fill-color: #f8fafc !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
