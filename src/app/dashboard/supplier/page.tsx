@@ -9,15 +9,15 @@ async function getSupplierData(supplierId?: number) {
   const [openRfqs, allQuotes] = await Promise.all([
     supabase
       .from('requests_for_quote')
-      .select('id, "rfqNumber", title, "approvedBudgetContract", "deadlineDate", status')
+      .select('id:rfq_id, rfqNumber, title, approvedBudgetContract, deadlineDate, status')
       .eq('status', 'Published')
-      .order('id', { ascending: false })
+      .order('rfq_id', { ascending: false })
       .limit(6),
     supplierId
       ? supabase
           .from('supplier_quotes')
-          .select('id, status, "totalQuotedAmount", "offeredDeliveryDays", rfq:requests_for_quote("rfqNumber", title)')
-          .eq('"supplierId"', supplierId)
+          .select('id:quote_id, status, totalQuotedAmount, offeredDeliveryDays, rfq:requests_for_quote(rfqNumber, title)')
+          .eq('supplierId', supplierId)
           .limit(5)
       : Promise.resolve({ data: [] }),
   ]);
@@ -36,8 +36,17 @@ const QUOTE_STATUS_STYLE: Record<string, { bg: string; text: string }> = {
 };
 
 export default async function SupplierDashboard() {
-  await requireRole('Supplier');
-  const { openRfqs, myQuotes } = await getSupplierData();
+  const { profile } = await requireRole('Supplier');
+  const supabase = await createClient();
+
+  // Match the supplier by company name or contact person
+  const { data: supplier } = await supabase
+    .from('suppliers')
+    .select('id:supplier_id')
+    .or(`companyName.eq."${profile.fullName}",contactPerson.eq."${profile.fullName}"`)
+    .maybeSingle();
+
+  const { openRfqs, myQuotes } = await getSupplierData(supplier?.id);
 
   const statCards = [
     { label: 'Open RFQs',       value: openRfqs.length, icon: '📋', color: '#38bdf8', desc: 'Available to bid on' },

@@ -7,9 +7,9 @@ async function getApproverStats() {
   const supabase = await createClient();
 
   const [canvases, recommendations, auditEntries] = await Promise.all([
-    supabase.from('canvas_abstracts').select('id, status'),
-    supabase.from('recommendations').select('id, "isApproved"'),
-    supabase.from('audit_trails').select('id, action, "createdAt"').order('"createdAt"', { ascending: false }).limit(5),
+    supabase.from('canvas_abstracts').select('id:canvas_id'),
+    supabase.from('recommendations').select('id:recomm_id, approvalStatus'),
+    supabase.from('audit_trails').select('id:audit_id, action:actionType, createdAt:timestamp').order('timestamp', { ascending: false }).limit(5),
   ]);
 
   const canvasList = canvases.data ?? [];
@@ -17,8 +17,8 @@ async function getApproverStats() {
 
   return {
     totalCanvases:    canvasList.length,
-    pendingReview:    recList.filter(r => !r.isApproved).length,
-    approvedCount:    recList.filter(r => r.isApproved).length,
+    pendingReview:    recList.filter(r => r.approvalStatus === 'Pending Review').length,
+    approvedCount:    recList.filter(r => r.approvalStatus === 'Approved').length,
     recentAuditLogs:  auditEntries.data ?? [],
   };
 }
@@ -27,9 +27,9 @@ async function getPendingRecommendations() {
   const supabase = await createClient();
   const { data } = await supabase
     .from('recommendations')
-    .select(`id, "compositeScore", rank, reasoning, "isApproved", supplier:suppliers("companyName"), quote:supplier_quotes("rfqId", totalQuotedAmount)`)
-    .eq('"isApproved"', false)
-    .order('rank', { ascending: true })
+    .select('id:recomm_id, compositeScore:compositeMcdmScore, rank:rankPosition, reasoning:justificationLog, approvalStatus, supplier:suppliers(companyName), quote:supplier_quotes(rfqId, totalQuotedAmount)')
+    .eq('approvalStatus', 'Pending Review')
+    .order('rankPosition', { ascending: true })
     .limit(5);
   return data ?? [];
 }

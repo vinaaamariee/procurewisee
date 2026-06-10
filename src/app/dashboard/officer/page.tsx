@@ -8,8 +8,8 @@ async function getOfficerStats() {
 
   const [rfqs, suppliers, appItems] = await Promise.all([
     supabase.from('requests_for_quote').select('status'),
-    supabase.from('suppliers').select('id'),
-    supabase.from('app_items').select('id'),
+    supabase.from('suppliers').select('id:supplier_id'),
+    supabase.from('app_items').select('id:app_item_id'),
   ]);
 
   const rfqList = rfqs.data ?? [];
@@ -25,8 +25,8 @@ async function getRecentRfqs() {
   const supabase = await createClient();
   const { data } = await supabase
     .from('requests_for_quote')
-    .select('id, "rfqNumber", title, status, "deadlineDate", "approvedBudgetContract"')
-    .order('id', { ascending: false })
+    .select('id:rfq_id, rfqNumber, title, status, deadlineDate, approvedBudgetContract')
+    .order('rfq_id', { ascending: false })
     .limit(5);
   return data ?? [];
 }
