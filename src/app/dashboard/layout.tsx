@@ -79,19 +79,7 @@ export default async function DashboardLayout({
             <form action={signout}>
               <button
                 type="submit"
-                style={{
-                  padding: '0.4rem 0.9rem', borderRadius: 8,
-                  background: 'transparent', border: '1px solid rgba(239,68,68,0.3)',
-                  color: '#f87171', fontSize: '0.75rem', fontWeight: 600,
-                  cursor: 'pointer', transition: 'all 0.2s',
-                  fontFamily: 'inherit',
-                }}
-                onMouseOver={e => {
-                  (e.target as HTMLButtonElement).style.background = 'rgba(239,68,68,0.1)';
-                }}
-                onMouseOut={e => {
-                  (e.target as HTMLButtonElement).style.background = 'transparent';
-                }}
+                className="px-3.5 py-1.5 rounded-lg bg-transparent border border-red-500/30 text-red-400 hover:bg-red-500/10 text-[11px] font-semibold cursor-pointer transition-colors duration-200"
               >
                 Sign Out
               </button>
