@@ -1,56 +1,128 @@
-# PROCUREWISE
+# 🏛️ ProcureWise
 ### An Intelligent Procurement Analytics and Automated Canvassing System with Best-Value Recommendation Engine
 **Capstone Project for Batanes State College**
 
 ---
 
-## 🚀 Merged Features (Master Branch)
-
-### 📊 Price Comparison Dashboard (`/price-comparison`)
-The first major feature successfully implemented and merged into the `master` branch is the **Price Comparison Dashboard**. This module allows procurement officers to canvass and compare office supply prices across local and regional suppliers to optimize public funds.
-
-#### Core Capabilities:
-* **Key Performance Indicators (KPIs)**:
-  * **Items Compared**: The count of active supplies analyzed.
-  * **Suppliers Evaluated**: Total number of registered local/regional vendors.
-  * **Avg. Savings Potential**: Average percentage of savings possible by opting for the best-value quote instead of the highest.
-  * **Total Savings Opportunity**: Real-time calculation of overall budget optimization if best-value quotes are chosen for all items.
-* **Interactive Comparison Table**:
-  * Currency formatted in Philippine Pesos (₱).
-  * Color-coded price highlights (Green = Best value/lowest price, Red = Worst value/highest price).
-  * Availability tags (In Stock, Limited, Unavailable) for inventory management.
-  * Dynamic sorting by item name, category, or specific supplier columns.
-  * Expandable detail rows displaying item descriptions and delivery lead times per supplier.
-* **Supplier Search & Filter Engine**:
-  * Real-time search query matching.
-  * Category-based filter.
-  * Multi-select supplier toggle filter.
-* **Visual Price Chart**:
-  * Pure CSS horizontal bar chart visualization comparing items across all active vendors.
-  * Automatic green highlighting for the best quote inside the chart.
-* **Sleek Dark Theme**:
-  * Premium slate-indigo and sky-blue design matching professional dashboard standards.
+## 🌟 Overview
+ProcureWise is a modern web application built to streamline and automate the public procurement process at Batanes State College. By replacing manual paperwork and convoluted spreadsheets with structured workflows, automated canvassing, and objective scoring, the system ensures transparency, speeds up purchasing decisions, and optimizes government budget utilization.
 
 ---
 
 ## 🛠️ Technology Stack
 * **Framework**: Next.js 16.2.7 (Turbopack) & React 19
 * **Language**: TypeScript (Strict Mode)
-* **Styles**: Custom CSS variables, gradients, and glassmorphism ([globals.css](file:///c:/Users/sy/procurewise/src/app/globals.css))
-* **Database / Backend**: Prisma configuration ready
+* **Authentication**: Supabase Auth (via `@supabase/ssr` cookies and edge proxy validation)
+* **Database & ORM**: PostgreSQL hosted on Supabase, managed through **Prisma ORM**
+* **Styling**: Tailwind CSS & Vanilla CSS (with sleek transitions, gradients, and custom scrollbars)
+* **Theming**: `next-themes` for high-performance Light/Dark Mode toggling
 
 ---
 
-## 💻 Getting Started
+## 📊 Core Features & Functionality
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+### 1. Security & Role-Based Access Control (RBAC)
+ProcureWise protects user access and ensures strict segregation of duties through a middleware-equivalent Edge Proxy (`src/proxy.ts`):
+* **Authentication Gateway**: Prevents unauthenticated users from accessing any `/dashboard/*` paths, forcing a redirect back to `/` (login).
+* **Role Guards**: Extracts the user's validated database profile role and restricts route access. If a user tries to access a path outside their authorized scope, they are redirected to their appropriate home dashboard:
+  - **Procurement Officer** $\rightarrow$ `/dashboard/officer`
+  - **Administrative Approver** $\rightarrow$ `/dashboard/approver`
+  - **Supplier** $\rightarrow$ `/dashboard/supplier`
+* **Profile Synchronization**: PostgreSQL triggers (`on_auth_user_created` running `handle_new_user()`) dynamically sync Supabase Auth sign-ups into the `user_profiles` table, maintaining strict database integrity.
+* **Account Deactivation**: Enforces checks for active status (`isActive`); deactivated profiles are immediately signed out.
 
-2. Run the development server:
-   ```bash
-   npm run dev
-   ```
+### 2. Multi-Criteria Decision Making (MCDM) Engine
+The highlight of the system is the **Best-Value Recommendation Engine**:
+* Ranks bidding suppliers using a multi-criteria model (MCDM) analyzing three key pillars:
+  1. **Price Score (50%)**: Normalized value comparing quotation price against the Approved Budget for the Contract (ABC) and competing bids.
+  2. **Delivery Score (30%)**: Historical lead times compared against the supplier's commitment.
+  3. **Reliability Score (20%)**: Based on quality compliance rates and historical feedback ratings.
+* **Justification Logs**: Generates human-readable compliance logs justifying why a specific supplier has been recommended for the award.
 
-3. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Price Comparison & Canvassing Dashboard (`/price-comparison`)
+Allows officers to conduct real-time market surveys and compare supplier quotes:
+* **KPI Metrics**: Real-time cards showing items compared, suppliers evaluated, average savings potential, and the overall budget savings opportunity.
+* **Interactive Table**:
+  * Currency formatted in Philippine Pesos (₱).
+  * Color-coded price highlights (Emerald Green = Best-value/lowest quote, Light Red = Highest quote).
+  * Inventory availability badges (*In Stock*, *Limited*, *Unavailable*).
+  * Dynamic sorting by column.
+  * Expandable detail rows displaying lead times and item-specific notes.
+* **Filter Engine**: Real-time matching by search query, product category, and multi-select supplier checkboxes.
+* **CSS Price Chart**: Responsive horizontal bar charts visualizing price differences between suppliers, auto-highlighting the best-value quote.
+
+### 4. Dynamic Theming (Light & Dark Mode)
+A polished design matching modern application standards:
+* **Theme Toggle**: Fast, client-side toggle switch (with Sun/Moon icons) matching user system settings.
+* **Adaptive Variables**: Color variables (`--bg-deep`, `--text-primary`, `--border`) transition fluidly from a clean light slate to a deep indigo slate-black background.
+* **Autofill Overrides**: Clean overrides for browser inputs preventing the native bright-yellow or black autofill boxes from breaking the glassmorphic aesthetics.
+
+---
+
+## 💾 Database Schema Details
+
+The database is built on **PostgreSQL** using the following schema mappings (`prisma/schema.prisma`):
+
+```mermaid
+erDiagram
+    UserProfile ||--o{ AppItem : "creates"
+    UserProfile ||--o{ RequestForQuote : "creates"
+    UserProfile ||--o{ CanvasAbstract : "compiles"
+    UserProfile ||--o{ Recommendation : "reviews"
+    UserProfile ||--o{ AuditTrail : "performs"
+    Supplier ||--o{ SupplierQuote : "submits"
+    Supplier ||--o{ Recommendation : "recommended"
+    AppItem ||--o{ RfqItem : "maps to"
+    RequestForQuote ||--o{ RfqItem : "contains"
+    RequestForQuote ||--o{ SupplierQuote : "has"
+    RequestForQuote ||--o{ CanvasAbstract : "has"
+    SupplierQuote ||--o{ QuoteDetail : "details"
+    SupplierQuote ||--o{ Recommendation : "awarded"
+    RfqItem ||--o{ QuoteDetail : "gets price"
+    CanvasAbstract ||--o{ Recommendation : "recommends"
+```
+
+* **`UserProfile`**: Stores usernames, emails, roles, and status. Extends Supabase's internal auth table.
+* **`Supplier`**: Holds company name, TIN, contact details, business address, reliability rating, compliance rate, and verification badge.
+* **`AppItem`**: Annual Procurement Plan items mapping PAP codes, object codes, estimated budget, end-user units, and funding source.
+* **`RequestForQuote`**: Master RFQ tracker (Draft, Published, Closed, Evaluated statuses) including title, ABC budget limit, and deadline.
+* **`SupplierQuote`**: Captures quotation amounts, delivery day commitments, and bid evaluation states.
+* **`CanvasAbstract`**: Stores summary files, opening location, and date of bids.
+* **`Recommendation`**: Stores weighted composite scores, ranks, and justifications generated by the MCDM system.
+* **`AuditTrail`**: Logs system mutations (`actionType`, `tableAffected`, `newState`, `ipAddress`) for strict accountability.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- Node.js (v18+)
+- pnpm (recommended) or npm
+
+### 2. Environment Configuration
+Create a `.env` file in the root directory:
+```env
+# Database Connection (Transaction Pooler for Prisma)
+DATABASE_URL="postgresql://<user>:<password>@<host>:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://<user>:<password>@<host>:5432/postgres"
+
+# Supabase Auth Settings
+NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="your-publishable-key"
+```
+
+### 3. Installation & Run
+```bash
+# Install dependencies
+pnpm install
+
+# Generate Prisma Client
+npx prisma generate
+
+# Populate database mock values & suppliers
+npx prisma db seed
+
+# Spin up local development server
+pnpm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) to access the login portal.
