@@ -21,7 +21,9 @@ const createPrismaClient = () => {
   const pool = new Pool({
     connectionString,
     ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 30000, // 30 seconds connection timeout
+    connectionTimeoutMillis: 15000,
+    idleTimeoutMillis: 10000,
+    statement_timeout: 20000,
   });
 
   const adapter = new PrismaPg(pool);
