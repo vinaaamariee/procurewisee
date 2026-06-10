@@ -57,6 +57,13 @@ A polished design matching modern application standards:
 * **Adaptive Variables**: Color variables (`--bg-deep`, `--text-primary`, `--border`) transition fluidly from a clean light slate to a deep indigo slate-black background.
 * **Autofill Overrides**: Clean overrides for browser inputs preventing the native bright-yellow or black autofill boxes from breaking the glassmorphic aesthetics.
 
+
+### 5. Supplier Quote Submission System (Manual & Excel)
+A complete workflow for registered suppliers to submit and review bids:
+* **Option A: Manual Submission**: An interactive online form resembling the Batanes State College RFQ document, calculating live totals, showing itemized line costs, and enforcing budget limit constraints (ABC).
+* **Option B: Excel Integration**: Direct integration with spreadsheet templates using `xlsx`. Suppliers download an automated `.xlsx` template pre-filled with RFQ items, fill details offline, and upload it to auto-populate prices and parse availability in real-time.
+* **Server Action Validation**: A secure Next.js Server Action (`src/app/actions/quote-actions.ts`) processes transactions, computes total bids, and updates database records inside a clean transaction block.
+
 ---
 
 ## 💾 Database Schema Details

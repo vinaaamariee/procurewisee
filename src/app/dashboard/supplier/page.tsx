@@ -1,5 +1,6 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { createClient } from '@/lib/supabase/server';
+import Link from 'next/link';
 
 export const metadata = { title: 'Supplier Portal — ProcureWise' };
 
@@ -121,13 +122,17 @@ export default async function SupplierDashboard() {
                     </div>
                   </div>
                 </div>
-                <button style={{
-                  width: '100%', padding: '0.5rem', borderRadius: 8,
-                  background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)',
-                  color: '#818cf8', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
-                }}>
+                <Link
+                  href={`/dashboard/supplier/rfq/${rfq.id}`}
+                  style={{
+                    display: 'block', textDecoration: 'none', textAlign: 'center',
+                    width: '100%', padding: '0.5rem', borderRadius: 8,
+                    background: 'rgba(99,102,241,0.12)', border: '1px solid rgba(99,102,241,0.3)',
+                    color: '#818cf8', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+                  }}
+                >
                   Submit Quote
-                </button>
+                </Link>
               </div>
             ))
           )}
