@@ -4,11 +4,11 @@ import RfqCreationForm from '@/components/officer/RfqCreationForm';
 
 export const metadata = { title: 'Create RFQ — ProcureWise' };
 
-export default async function CreateRfqPage() {
-  // Enforce role check
+export default async function NewRfqPage() {
+  // Enforce Procurement Officer role
   await requireRole('Procurement Officer');
 
-  // Fetch APP Items for selection in the form
+  // Fetch Annual Procurement Plan (APP) items
   const rawAppItems = await prisma.appItem.findMany({
     select: {
       id: true,
@@ -22,7 +22,7 @@ export default async function CreateRfqPage() {
     },
   });
 
-  // Safely serialize Decimal fields to numbers
+  // Convert Decimals to numbers for cleaner serialization/props handling
   const appItems = rawAppItems.map((item) => ({
     id: item.id,
     papCode: item.papCode,
@@ -48,21 +48,24 @@ export default async function CreateRfqPage() {
   }));
 
   return (
-    <div style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       
-      {/* Header block */}
+      {/* ── Page Header ── */}
       <div>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.5px', lineHeight: 1.2 }}>
-          Solicitation Management
+        <a href="/dashboard/officer" style={{ color: '#818cf8', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600 }}>
+          ← Back to Dashboard
+        </a>
+        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f8fafc', marginTop: '0.5rem', letterSpacing: '-0.3px' }}>
+          Create New Request for Quotation (RFQ)
         </h1>
-        <p style={{ marginTop: '0.4rem', fontSize: '0.875rem', color: '#64748b' }}>
-          Create and publish a Request for Price Quotation, linking to annual procurement item baselines.
+        <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '0.2rem' }}>
+          Fill in the details to digitally generate and publish a solicitation for suppliers.
         </p>
       </div>
 
-      {/* RFQ Creation Form */}
+      {/* ── Creation Form ── */}
       <RfqCreationForm appItems={appItems} catalogProducts={catalogProducts} />
-
+      
     </div>
   );
 }
