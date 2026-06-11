@@ -133,7 +133,7 @@ export default async function OfficerDashboard() {
         <h2 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '0.75rem' }}>Quick Actions</h2>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           {[
-            { label: '+ New RFQ', color: '#6366f1', href: '#' },
+            { label: '+ New RFQ', color: '#6366f1', href: '/dashboard/officer/rfq/new' },
             { label: 'View Suppliers', color: '#38bdf8', href: '#' },
             { label: 'APP Items', color: '#fbbf24', href: '#' },
             { label: 'Price Comparison', color: '#34d399', href: '/price-comparison' },
