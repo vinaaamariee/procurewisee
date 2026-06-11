@@ -62,7 +62,16 @@ A polished design matching modern application standards:
 A complete workflow for registered suppliers to submit and review bids:
 * **Option A: Manual Submission**: An interactive online form resembling the Batanes State College RFQ document, calculating live totals, showing itemized line costs, and enforcing budget limit constraints (ABC).
 * **Option B: Excel Integration**: Direct integration with spreadsheet templates using `xlsx`. Suppliers download an automated `.xlsx` template pre-filled with RFQ items, fill details offline, and upload it to auto-populate prices and parse availability in real-time.
-* **Server Action Validation**: A secure Next.js Server Action (`src/app/actions/quote-actions.ts`) processes transactions, computes total bids, and updates database records inside a clean transaction block.
+* **Server Action Validation**: A secure Next.js Server Action (`src/app/actions/quotes.ts`) processes transactions, computes total bids, and updates database records inside a clean transaction block.
+
+### 6. Modular Server Actions Layer
+All database and authentication operations are managed through Next.js Server Actions, providing secure, type-safe API gateways:
+* **User Profile Actions (`src/app/actions/users.ts`)**: Creates user profiles post-signup, retrieves profile details for role-based routing, and toggles profile activation state.
+* **Supplier Actions (`src/app/actions/suppliers.ts`)**: Manages supplier database records, fetches alphabetically ordered lists, and toggles supplier verification status.
+* **RFQ Actions (`src/app/actions/rfq.ts`)**: Auto-generates incremental RFQ references (e.g. `RFQ-2026-06-001`), manages state transitions (`Draft` $\rightarrow$ `Published` $\rightarrow$ `Closed`), and retrieves full RFQ records with nested supplier bids.
+* **Quotation Actions (`src/app/actions/quotes.ts`)**: Validates submitted bid prices against the RFQ budget limits (ABC), processes multi-row quotation lists, and handles transaction-safe updates.
+* **Recommendation Actions (`src/app/actions/recommendations.ts`)**: Runs the MCDM algorithm to normalize price and lead times, fetches reliability rates, ranks suppliers, writes detailed text justifications, and transitions the RFQ status to `Evaluated`.
+
 
 ---
 

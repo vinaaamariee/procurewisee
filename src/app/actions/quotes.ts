@@ -9,6 +9,10 @@ interface QuoteDetailInput {
   isAvailable: boolean;
 }
 
+/**
+ * Submits a quote from a supplier for a specific RFQ.
+ * Cleans up any existing quote from the same supplier and updates within a database transaction.
+ */
 export async function submitQuoteAction({
   rfqId,
   supplierId,
@@ -88,9 +92,34 @@ export async function submitQuoteAction({
     });
 
     revalidatePath('/dashboard/supplier');
+    revalidatePath(`/dashboard/supplier/rfq/${rfqId}`);
+    revalidatePath('/', 'layout');
     return { success: true };
   } catch (error: any) {
     console.error('Error submitting quote:', error);
     return { success: false, error: error.message || 'Failed to submit quote.' };
   }
+}
+
+// Alias for compatibility
+export const submitQuote = submitQuoteAction;
+
+/**
+ * Retrieves all supplier quotes submitted for a specific RFQ.
+ */
+export async function getQuotesForRfq(rfqId: number) {
+  return await prisma.supplierQuote.findMany({
+    where: { rfqId },
+    include: {
+      supplier: true,
+      quoteDetails: {
+        include: {
+          rfqItem: true,
+        },
+      },
+    },
+    orderBy: {
+      submissionDate: 'desc',
+    },
+  });
 }
