@@ -135,7 +135,7 @@ export default async function OfficerDashboard() {
           {[
             { label: '+ New RFQ', color: '#6366f1', href: '/dashboard/officer/rfq/new' },
             { label: 'View Suppliers', color: '#38bdf8', href: '/dashboard/supplier-profiles' },
-            { label: 'APP Items', color: '#fbbf24', href: '#' },
+            { label: 'Product Catalog', color: '#818cf8', href: '/dashboard/catalog' },
             { label: 'Price Comparison', color: '#34d399', href: '/price-comparison' },
           ].map(action => (
             <a key={action.label} href={action.href} style={{

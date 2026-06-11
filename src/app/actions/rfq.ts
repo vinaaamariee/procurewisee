@@ -21,6 +21,7 @@ export async function createRfq(data: {
     quantity: number;
     unit: string;
     appItemId?: number | null;
+    productId?: number | null;
   }>;
 }) {
   try {
@@ -48,6 +49,7 @@ export async function createRfq(data: {
             quantity: item.quantity,
             unit: item.unit,
             appItemId: item.appItemId || null,
+            productId: item.productId || null,
           })),
         },
       },

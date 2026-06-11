@@ -31,6 +31,22 @@ export default async function CreateRfqPage() {
     estimatedBudget: Number(item.estimatedBudget),
   }));
 
+  // Fetch active catalog products
+  const rawCatalogProducts = await prisma.catalogProduct.findMany({
+    where: { isActive: true },
+    orderBy: { name: 'asc' },
+  });
+
+  const catalogProducts = rawCatalogProducts.map((p) => ({
+    id: p.id,
+    sku: p.sku,
+    name: p.name,
+    category: p.category,
+    description: p.description,
+    unitOfMeasure: p.unitOfMeasure,
+    estimatedUnitCost: Number(p.estimatedUnitCost),
+  }));
+
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       
@@ -45,7 +61,7 @@ export default async function CreateRfqPage() {
       </div>
 
       {/* RFQ Creation Form */}
-      <RfqCreationForm appItems={appItems} />
+      <RfqCreationForm appItems={appItems} catalogProducts={catalogProducts} />
 
     </div>
   );

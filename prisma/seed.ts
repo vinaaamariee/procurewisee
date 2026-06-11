@@ -382,6 +382,69 @@ async function main() {
   ]);
   console.log("  ✔ 4 audit trail entries\n");
 
+  // ── 10. PRODUCT CATALOG ───────────────────────────────────────────────────
+  console.log("📦 Seeding product catalog items...");
+  const catalogProductsData = [
+    {
+      sku: "PAP-A4-001",
+      name: "Paper A4 80gsm",
+      category: "Office Supplies",
+      description: "High-grade photocopy paper, A4 size, 80gsm, 500 sheets/ream.",
+      unitOfMeasure: "ream",
+      estimatedUnitCost: 220.00,
+    },
+    {
+      sku: "INK-HP-85A",
+      name: "HP 85A Black LaserJet Toner",
+      category: "Office Supplies",
+      description: "Original HP 85A Black LaserJet Toner Cartridge (CE285A).",
+      unitOfMeasure: "cart",
+      estimatedUnitCost: 4500.00,
+    },
+    {
+      sku: "PEN-PIL-BLK",
+      name: "Pilot G2 Gel Pen Black 0.5mm",
+      category: "Office Supplies",
+      description: "Retractable rolling ball gel pen, black ink, ultra fine 0.5mm.",
+      unitOfMeasure: "box",
+      estimatedUnitCost: 950.00,
+    },
+    {
+      sku: "LAP-LEN-L14",
+      name: "Lenovo ThinkPad L14 Gen 4",
+      category: "ICT Equipment",
+      description: "Intel Core i5, 16GB DDR4 RAM, 512GB SSD, 14 inch FHD display, Windows 11 Pro.",
+      unitOfMeasure: "unit",
+      estimatedUnitCost: 55000.00,
+    },
+    {
+      sku: "PRN-EPS-L3210",
+      name: "Epson EcoTank L3210 A4 All-in-One Printer",
+      category: "ICT Equipment",
+      description: "Multifunction ink tank printer with scan, copy, and print functions.",
+      unitOfMeasure: "unit",
+      estimatedUnitCost: 9800.00,
+    },
+    {
+      sku: "TAR-STK-MATTE",
+      name: "Matte Vinyl Sticker Wrap 3ft x 8ft",
+      category: "Signage & Prints",
+      description: "Custom printed matte vinyl sticker wrap, waterproof and fade resistant.",
+      unitOfMeasure: "pcs",
+      estimatedUnitCost: 1800.00,
+    },
+  ];
+
+  for (const cp of catalogProductsData) {
+    await prisma.catalogProduct.upsert({
+      where: { sku: cp.sku },
+      update: cp,
+      create: cp,
+    });
+    console.log(`  ✔ Catalog Product: ${cp.name} (${cp.sku})`);
+  }
+  console.log();
+
   console.log("✅ ProcureWise seed complete!\n");
   console.log("Summary:");
   console.log(`  • ${suppliers.length} suppliers`);

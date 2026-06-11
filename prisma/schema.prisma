@@ -138,6 +138,8 @@ model RfqItem {
   rfq          RequestForQuote @relation(fields: [rfqId], references: [id], onDelete: Cascade)
   appItemId    Int?
   appItem      AppItem? @relation(fields: [appItemId], references: [id])
+  productId    Int?
+  product      CatalogProduct? @relation(fields: [productId], references: [id])
   itemNumber   String  @db.VarChar(10)
   particulars  String
   quantity     Int
@@ -233,6 +235,28 @@ model Recommendation {
   reviewedBy          UserProfile? @relation("RecommendationReviewedBy", fields: [reviewedById], references: [id])
 
   @@map("recommendations")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// NEW: PRODUCT CATALOG
+// ─────────────────────────────────────────────────────────────────────────────
+
+model CatalogProduct {
+  id                Int      @id @default(autoincrement()) @map("product_id")
+  sku               String   @unique @db.VarChar(50)
+  name              String   @db.VarChar(150)
+  category          String   @db.VarChar(100)
+  description       String   @db.Text
+  unitOfMeasure     String   @db.VarChar(30)
+  estimatedUnitCost Decimal  @db.Decimal(12, 2)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  rfqItems          RfqItem[]
+
+  @@map("catalog_products")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
