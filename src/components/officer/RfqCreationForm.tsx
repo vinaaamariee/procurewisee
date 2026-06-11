@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { createRfqAction } from '@/app/actions/rfq-actions';
+import { createRfqAction } from '@/app/actions/rfq';
 
 interface AppItem {
   id: number;
@@ -12,6 +12,16 @@ interface AppItem {
   estimatedBudget: number;
 }
 
+interface CatalogProduct {
+  id: number;
+  sku: string;
+  name: string;
+  category: string;
+  description: string;
+  unitOfMeasure: string;
+  estimatedUnitCost: number;
+}
+
 interface ItemRow {
   id: string;
   itemNumber: string;
@@ -19,13 +29,15 @@ interface ItemRow {
   quantity: number;
   unit: string;
   appItemId: number | null;
+  productId: number | null;
 }
 
 interface RfqCreationFormProps {
   appItems: AppItem[];
+  catalogProducts: CatalogProduct[];
 }
 
-export default function RfqCreationForm({ appItems }: RfqCreationFormProps) {
+export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreationFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -57,6 +69,7 @@ export default function RfqCreationForm({ appItems }: RfqCreationFormProps) {
       quantity: 1,
       unit: 'pcs',
       appItemId: null,
+      productId: null,
     },
   ]);
 
@@ -79,6 +92,7 @@ export default function RfqCreationForm({ appItems }: RfqCreationFormProps) {
         quantity: 1,
         unit: 'pcs',
         appItemId: null,
+        productId: null,
       },
     ]);
   };
@@ -110,6 +124,20 @@ export default function RfqCreationForm({ appItems }: RfqCreationFormProps) {
             ...item,
             appItemId: appItemVal,
             particulars: matchedAppItem ? matchedAppItem.generalDescription : item.particulars,
+          };
+        }
+
+        // If linking a Catalog Product, pre-fill name/specs and unit
+        if (field === 'productId') {
+          const prodVal = value ? parseInt(value) : null;
+          const matchedProduct = catalogProducts.find((p) => p.id === prodVal);
+          return {
+            ...item,
+            productId: prodVal,
+            particulars: matchedProduct
+              ? `${matchedProduct.name} - SKU: ${matchedProduct.sku} (${matchedProduct.description})`
+              : item.particulars,
+            unit: matchedProduct ? matchedProduct.unitOfMeasure : item.unit,
           };
         }
 
@@ -172,6 +200,7 @@ export default function RfqCreationForm({ appItems }: RfqCreationFormProps) {
           quantity: item.quantity,
           unit: item.unit,
           appItemId: item.appItemId,
+          productId: item.productId,
         })),
       });
 
@@ -352,7 +381,8 @@ export default function RfqCreationForm({ appItems }: RfqCreationFormProps) {
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
                   <th style={{ padding: '0.5rem', textAlign: 'left', width: '70px' }}>Item #</th>
-                  <th style={{ padding: '0.5rem', textAlign: 'left', width: '250px' }}>Link APP Item (Optional)</th>
+                  <th style={{ padding: '0.5rem', textAlign: 'left', width: '220px' }}>Link APP Item (Optional)</th>
+                  <th style={{ padding: '0.5rem', textAlign: 'left', width: '220px' }}>Product Catalog (Optional)</th>
                   <th style={{ padding: '0.5rem', textAlign: 'left' }}>Particulars / Description Specification *</th>
                   <th style={{ padding: '0.5rem', textAlign: 'center', width: '90px' }}>Qty *</th>
                   <th style={{ padding: '0.5rem', textAlign: 'left', width: '100px' }}>Unit *</th>
@@ -376,7 +406,7 @@ export default function RfqCreationForm({ appItems }: RfqCreationFormProps) {
                         }}
                       />
                     </td>
-
+ 
                     {/* APP Item selector */}
                     <td style={{ padding: '0.75rem 0.5rem' }}>
                       <select
@@ -385,13 +415,33 @@ export default function RfqCreationForm({ appItems }: RfqCreationFormProps) {
                         style={{
                           width: '100%', padding: '0.4rem', borderRadius: 6,
                           background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)',
-                          color: '#f1f5f9', fontSize: '0.8rem', maxWidth: '240px'
+                          color: '#f1f5f9', fontSize: '0.8rem', maxWidth: '220px'
                         }}
                       >
                         <option value="">-- Select APP Item --</option>
                         {appItems.map((a) => (
                           <option key={a.id} value={a.id}>
                             [{a.papCode}] {a.projectTitle} (₱{Number(a.estimatedBudget).toLocaleString('en-PH')})
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+
+                    {/* Catalog Product selector */}
+                    <td style={{ padding: '0.75rem 0.5rem' }}>
+                      <select
+                        value={item.productId || ''}
+                        onChange={(e) => handleItemFieldChange(item.id, 'productId', e.target.value)}
+                        style={{
+                          width: '100%', padding: '0.4rem', borderRadius: 6,
+                          background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)',
+                          color: '#f1f5f9', fontSize: '0.8rem', maxWidth: '220px'
+                        }}
+                      >
+                        <option value="">-- Select Catalog Product --</option>
+                        {catalogProducts.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            [{p.sku}] {p.name} (₱{Number(p.estimatedUnitCost).toLocaleString('en-PH')})
                           </option>
                         ))}
                       </select>

@@ -7,7 +7,7 @@ import { revalidatePath } from "next/cache";
 /**
  * Maps standard auth role strings (with or without spaces) to Prisma's UserRole enum.
  */
-export function mapRoleToPrisma(role: string): UserRole {
+function mapRoleToPrisma(role: string): UserRole {
   const normalized = role.replace(/\s+/g, "").toLowerCase();
   if (normalized === "procurementofficer") {
     return UserRole.ProcurementOfficer;

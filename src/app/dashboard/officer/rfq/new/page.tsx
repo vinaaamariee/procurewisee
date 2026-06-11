@@ -9,7 +9,7 @@ export default async function NewRfqPage() {
   await requireRole('Procurement Officer');
 
   // Fetch Annual Procurement Plan (APP) items
-  const appItems = await prisma.appItem.findMany({
+  const rawAppItems = await prisma.appItem.findMany({
     select: {
       id: true,
       papCode: true,
@@ -18,17 +18,33 @@ export default async function NewRfqPage() {
       estimatedBudget: true,
     },
     orderBy: {
-      id: 'asc',
+      projectTitle: 'asc',
     },
   });
 
   // Convert Decimals to numbers for cleaner serialization/props handling
-  const serializedAppItems = appItems.map(item => ({
+  const appItems = rawAppItems.map((item) => ({
     id: item.id,
     papCode: item.papCode,
     projectTitle: item.projectTitle,
     generalDescription: item.generalDescription,
     estimatedBudget: Number(item.estimatedBudget),
+  }));
+
+  // Fetch active catalog products
+  const rawCatalogProducts = await prisma.catalogProduct.findMany({
+    where: { isActive: true },
+    orderBy: { name: 'asc' },
+  });
+
+  const catalogProducts = rawCatalogProducts.map((p) => ({
+    id: p.id,
+    sku: p.sku,
+    name: p.name,
+    category: p.category,
+    description: p.description,
+    unitOfMeasure: p.unitOfMeasure,
+    estimatedUnitCost: Number(p.estimatedUnitCost),
   }));
 
   return (
@@ -48,7 +64,7 @@ export default async function NewRfqPage() {
       </div>
 
       {/* ── Creation Form ── */}
-      <RfqCreationForm appItems={serializedAppItems} />
+      <RfqCreationForm appItems={appItems} catalogProducts={catalogProducts} />
       
     </div>
   );

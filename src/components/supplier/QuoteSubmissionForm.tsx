@@ -3,7 +3,7 @@
 import { useState, useTransition, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import * as XLSX from 'xlsx';
-import { submitQuoteAction } from '@/app/actions/quote-actions';
+import { submitQuoteAction } from '@/app/actions/quotes';
 
 interface RfqItem {
   id: number;

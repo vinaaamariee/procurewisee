@@ -48,13 +48,31 @@ export default async function ApproverDashboard() {
   return (
     <div style={{ maxWidth: 1400, margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
-      <div>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.5px', lineHeight: 1.2 }}>
-          Administrative Approver Portal
-        </h1>
-        <p style={{ marginTop: '0.4rem', fontSize: '0.875rem', color: '#64748b' }}>
-          Review MCDM recommendations, approve canvas abstracts, and monitor audit trails.
-        </p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
+        <div>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.5px', lineHeight: 1.2 }}>
+            Administrative Approver Portal
+          </h1>
+          <p style={{ marginTop: '0.4rem', fontSize: '0.875rem', color: '#64748b' }}>
+            Review MCDM recommendations, approve canvas abstracts, and monitor audit trails.
+          </p>
+        </div>
+        <a
+          href="/dashboard/catalog"
+          style={{
+            padding: '0.55rem 1.25rem',
+            borderRadius: 8,
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.15)',
+            color: '#bae6fd',
+            fontSize: '0.82rem',
+            fontWeight: 600,
+            textDecoration: 'none',
+            transition: 'all 0.2s',
+          }}
+        >
+          👁️ Product Catalog
+        </a>
       </div>
 
       {/* Stat Cards */}
