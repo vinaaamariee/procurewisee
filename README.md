@@ -72,6 +72,13 @@ All database and authentication operations are managed through Next.js Server Ac
 * **Quotation Actions (`src/app/actions/quotes.ts`)**: Validates submitted bid prices against the RFQ budget limits (ABC), processes multi-row quotation lists, and handles transaction-safe updates.
 * **Recommendation Actions (`src/app/actions/recommendations.ts`)**: Runs the MCDM algorithm to normalize price and lead times, fetches reliability rates, ranks suppliers, writes detailed text justifications, and transitions the RFQ status to `Evaluated`.
 
+### 7. Supplier Directory & Performance Audit UI (Branch: `feature/supplier-profiles-ui`)
+A polished administrative dashboard at `/dashboard/supplier-profiles` that allows Procurement Officers and Administrative Approvers to audit all registered suppliers:
+* **Interactive Client Search & Filtering**: Real-time supplier search by company name, contact, or address, along with filter tabs for verification status (All, Verified, Unverified) and sorting dropdowns (Name, Reliability, Quality, and Lead Time).
+* **Role-Restricted Verification Toggle**: A secure toggle action linked to the `verifySupplier` Server Action. Only Procurement Officers can verify or revoke verification for a vendor; for other roles, the action is disabled.
+* **Performance Intelligence Visualizations**: Renders color-coded metrics highlighting supplier reliability ratings (0.00-5.00), quality compliance percentages, and average lead delivery times.
+
+
 
 ---
 
