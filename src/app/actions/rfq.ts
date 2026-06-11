@@ -23,40 +23,45 @@ export async function createRfq(data: {
     appItemId?: number | null;
   }>;
 }) {
-  let rfqNumber = data.rfqNumber;
-  if (!rfqNumber) {
-    const year = new Date().getFullYear();
-    const month = String(new Date().getMonth() + 1).padStart(2, '0');
-    // Compute total count to increment suffix
-    const count = await prisma.requestForQuote.count();
-    rfqNumber = `RFQ-${year}-${month}-${String(count + 1).padStart(3, '0')}`;
-  }
+  try {
+    let rfqNumber = data.rfqNumber;
+    if (!rfqNumber) {
+      const year = new Date().getFullYear();
+      const month = String(new Date().getMonth() + 1).padStart(2, '0');
+      // Compute total count to increment suffix
+      const count = await prisma.requestForQuote.count();
+      rfqNumber = `RFQ-${year}-${month}-${String(count + 1).padStart(3, '0')}`;
+    }
 
-  const createdRfq = await prisma.requestForQuote.create({
-    data: {
-      rfqNumber,
-      title: data.title,
-      approvedBudgetContract: data.approvedBudgetContract,
-      deadlineDate: new Date(data.deadlineDate),
-      status: data.status || RfqStatus.Draft,
-      createdById: data.createdById || null,
-      items: {
-        create: data.items.map(item => ({
-          itemNumber: item.itemNumber,
-          particulars: item.particulars,
-          quantity: item.quantity,
-          unit: item.unit,
-          appItemId: item.appItemId || null,
-        })),
+    const createdRfq = await prisma.requestForQuote.create({
+      data: {
+        rfqNumber,
+        title: data.title,
+        approvedBudgetContract: data.approvedBudgetContract,
+        deadlineDate: new Date(data.deadlineDate),
+        status: data.status || RfqStatus.Draft,
+        createdById: data.createdById || null,
+        items: {
+          create: data.items.map(item => ({
+            itemNumber: item.itemNumber,
+            particulars: item.particulars,
+            quantity: item.quantity,
+            unit: item.unit,
+            appItemId: item.appItemId || null,
+          })),
+        },
       },
-    },
-    include: {
-      items: true,
-    },
-  });
+      include: {
+        items: true,
+      },
+    });
 
-  revalidatePath("/", "layout");
-  return createdRfq;
+    revalidatePath("/", "layout");
+    return { success: true, data: createdRfq };
+  } catch (error: any) {
+    console.error("Error creating RFQ:", error);
+    return { success: false, error: error.message || "Failed to create RFQ." };
+  }
 }
 
 // Alias to ensure compatibility with client-side component calls
