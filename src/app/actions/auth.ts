@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import type { UserRole } from '@/types/auth';
@@ -54,10 +55,15 @@ export async function register(formData: FormData) {
   const password = formData.get('password') as string;
   const fullName = formData.get('fullName') as string;
   const username = formData.get('username') as string;
-  const role = formData.get('role') as string;
+  const role = 'Supplier';
+  
+  const companyName = formData.get('companyName') as string;
+  const tin = formData.get('tin') as string;
+  const contactNumber = formData.get('contactNumber') as string;
+  const businessAddress = formData.get('businessAddress') as string;
 
-  if (!email || !password || !fullName || !username || !role) {
-    return redirect('/?error=All fields are required.');
+  if (!email || !password || !fullName || !username || !companyName || !businessAddress) {
+    return redirect('/?error=Please fill in all required fields.');
   }
 
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -74,6 +80,21 @@ export async function register(formData: FormData) {
 
   if (signUpError) {
     return redirect(`/?error=${encodeURIComponent(signUpError.message)}`);
+  }
+
+  // Create Supplier record using Prisma
+  try {
+    await prisma.supplier.create({
+      data: {
+        companyName,
+        tin: tin || null,
+        contactNumber: contactNumber || null,
+        contactPerson: fullName,
+        businessAddress,
+      },
+    });
+  } catch (error) {
+    console.error('Failed to create supplier database record:', error);
   }
 
   // If session is returned (email confirmation disabled), redirect to dashboard
