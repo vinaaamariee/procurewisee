@@ -54,14 +54,14 @@
 }
 
 .dark {
-  /* Dark Mode (High-contrast BBSC Crimson & Amber-Gold theme) */
-  --accent:           #f43f5e; /* Vibrant Crimson */
-  --accent-light:     #fb7185;
-  --accent-glass:     rgba(244, 63, 94, 0.12);
+  /* Dark Mode (High-contrast BBSC Brand Maroon & Amber Gold theme) */
+  --accent:           #c2272a; /* Vibrant Brand Maroon */
+  --accent-light:     #e23a3e;
+  --accent-glass:     rgba(194, 39, 42, 0.15);
   
-  --secondary:        #f59e0b; /* Amber Gold */
-  --secondary-light:  #fbbf24;
-  --secondary-dim:    rgba(245, 158, 11, 0.12);
+  --secondary:        #eab308; /* Brand Gold */
+  --secondary-light:  #facc15;
+  --secondary-dim:    rgba(234, 179, 8, 0.15);
   
   --bg-deep:          #0f172a; /* Slate 900 solid background */
   --bg-dark:          #1e293b; /* Slate 800 solid secondary background */
@@ -78,7 +78,7 @@
   --surface:          #1e293b; /* Solid Dark Surface */
   --surface-hover:    #334155;
   --border:           #334155; /* Slate 700 solid border */
-  --border-accent:    rgba(245, 158, 11, 0.25);
+  --border-accent:    rgba(234, 179, 8, 0.25);
   --shadow-card:    0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
 }
 

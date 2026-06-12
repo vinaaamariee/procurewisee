@@ -40,10 +40,10 @@ export default async function ApproverDashboard() {
   const [stats, recs] = await Promise.all([getApproverStats(), getPendingRecommendations()]);
 
   const statCards = [
-    { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: '📄', color: '#fbbf24', desc: 'Bid opening records' },
-    { label: 'Pending Review',   value: stats.pendingReview, icon: '⏳', color: '#f87171', desc: 'Awaiting approval' },
-    { label: 'Approved',         value: stats.approvedCount, icon: '✅', color: '#34d399', desc: 'Recommendations accepted' },
-    { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: '🔒', color: '#818cf8', desc: 'Recent trail entries' },
+    { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: '📄', color: 'var(--secondary)', desc: 'Bid opening records' },
+    { label: 'Pending Review',   value: stats.pendingReview, icon: '⏳', color: 'var(--accent)', desc: 'Awaiting approval' },
+    { label: 'Approved',         value: stats.approvedCount, icon: '✅', color: '#10b981', desc: 'Recommendations accepted' },
+    { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: '🔒', color: 'var(--accent-light)', desc: 'Recent trail entries' },
   ];
 
   return (
@@ -60,17 +60,8 @@ export default async function ApproverDashboard() {
         </div>
         <a
           href="/dashboard/catalog"
-          style={{
-            padding: '0.55rem 1.25rem',
-            borderRadius: 8,
-            background: 'var(--bg-dark)',
-            border: '1px solid var(--border)',
-            color: '#bae6fd',
-            fontSize: '0.82rem',
-            fontWeight: 600,
-            textDecoration: 'none',
-            transition: 'all 0.2s',
-          }}
+          className="px-5 py-2.5 rounded-xl border border-[#ca8a04]/30 bg-[#ca8a04]/10 hover:bg-[#ca8a04] text-[#7e191b] dark:text-[#f59e0b] hover:text-white font-bold text-sm transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ca8a04]/20 cursor-pointer text-center"
+          style={{ textDecoration: 'none' }}
         >
           👁️ Product Catalog
         </a>
@@ -79,19 +70,12 @@ export default async function ApproverDashboard() {
       {/* Stat Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: '1rem' }}>
         {statCards.map(card => (
-          <div key={card.label} style={{
-            padding: '1.25rem', borderRadius: 16,
-            background: 'var(--surface)',
-            border: '1px solid var(--border)',
-            backdropFilter: 'blur(12px)',
-            boxShadow: 'var(--shadow-card)',
-            position: 'relative', overflow: 'hidden',
-          }}>
+          <div key={card.label} className="summary-card">
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: card.color, borderRadius: '16px 16px 0 0' }} />
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{card.icon}</div>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-1px', lineHeight: 1 }}>{card.value}</div>
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{card.label}</div>
-            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>{card.desc}</div>
+            <div className="summary-card-icon" style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{card.icon}</div>
+            <div className="summary-card-value">{card.value}</div>
+            <div className="summary-card-label">{card.label}</div>
+            <div className="summary-card-sublabel">{card.desc}</div>
           </div>
         ))}
       </div>
@@ -108,50 +92,46 @@ export default async function ApproverDashboard() {
             </span>
           )}
         </div>
-        <div style={{ padding: '0.5rem 0' }}>
+        <div>
           {recs.length === 0 ? (
             <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
               Submissions cleared or pending review.
             </div>
           ) : (
             recs.map((rec: any, i: number) => (
-              <div key={rec.id} style={{
-                display: 'flex', alignItems: 'center', gap: '1rem',
-                padding: '1rem 1.5rem', borderBottom: '1px solid var(--border)',
-              }}>
-                <div style={{
-                  width: 32, height: 32, borderRadius: '50%',
-                  background: i === 0 ? 'var(--green-dim)' : 'var(--bg-dark)',
-                  border: `1px solid ${i === 0 ? 'var(--green)' : 'var(--border)'}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '0.8rem', fontWeight: 800,
-                  color: i === 0 ? 'var(--green)' : 'var(--text-muted)', flexShrink: 0,
-                }}>
-                  #{rec.rank}
-                </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>
-                    {(rec.supplier as any)?.companyName ?? 'Unknown Supplier'}
-                  </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.15rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {rec.reasoning}
+              <div key={rec.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 border-b border-slate-100 dark:border-slate-800 last:border-b-0 hover:bg-slate-50 dark:hover:bg-slate-800/10 transition-colors">
+                <div className="flex items-center gap-4">
+                  {rec.rank === 1 ? (
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#ca8a04] to-[#eab308] border border-[#ca8a04]/50 shadow-md text-white font-black text-sm flex items-center justify-center flex-shrink-0 animate-pulse-subtle">
+                      #{rec.rank}
+                    </div>
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-[#7e191b]/10 border border-[#7e191b]/30 text-[#7e191b] dark:text-[#f59e0b] font-bold text-xs flex items-center justify-center flex-shrink-0">
+                      #{rec.rank}
+                    </div>
+                  )}
+                  <div style={{ minWidth: 0 }}>
+                    <div className="text-sm font-black text-slate-800 dark:text-slate-200">
+                      {(rec.supplier as any)?.companyName ?? 'Unknown Supplier'}
+                    </div>
+                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 overflow-hidden text-overflow-ellipsis whitespace-nowrap max-w-[280px] sm:max-w-md">
+                      {rec.reasoning}
+                    </div>
                   </div>
                 </div>
-                <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                  <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#818cf8' }}>
-                    Score: {Number(rec.compositeScore).toFixed(4)}
+                <div className="flex items-center gap-6">
+                  <div className="text-right">
+                    <div className="text-sm font-black text-[#7e191b] dark:text-[#f59e0b]">
+                      Score: {Number(rec.compositeScore).toFixed(4)}
+                    </div>
+                    <div className="text-xs text-slate-400 dark:text-slate-500 font-semibold">
+                      ₱{Number((rec.quote as any)?.totalQuotedAmount ?? 0).toLocaleString('en-PH')}
+                    </div>
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>
-                    ₱{Number((rec.quote as any)?.totalQuotedAmount ?? 0).toLocaleString('en-PH')}
-                  </div>
+                  <button className="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md hover:shadow-emerald-600/20 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+                    Approve
+                  </button>
                 </div>
-                <button style={{
-                  padding: '0.4rem 0.9rem', borderRadius: 8, flexShrink: 0,
-                  background: 'var(--green-dim)', border: '1px solid var(--green)',
-                  color: 'var(--green)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
-                }}>
-                  Approve
-                </button>
               </div>
             ))
           )}
@@ -165,9 +145,9 @@ export default async function ApproverDashboard() {
         </div>
         <div>
           {stats.recentAuditLogs.map((log: any) => (
-            <div key={log.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.85rem 1.5rem', borderBottom: '1px solid var(--border)' }}>
-              <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#818cf8', flexShrink: 0 }} />
-              <div style={{ flex: 1, fontSize: '0.82rem', color: 'var(--text-secondary)' }}>{log.action}</div>
+            <div key={log.id} className="flex items-center gap-4 py-4 px-6 border-b border-slate-100 dark:border-slate-800 last:border-b-0 hover:bg-slate-50 dark:hover:bg-slate-800/10 transition-colors">
+              <div className="w-2.5 h-2.5 rounded-full bg-[#ca8a04] shadow-sm shadow-[#ca8a04]/50 flex-shrink-0 animate-pulse-subtle" />
+              <div style={{ flex: 1, fontSize: '0.82rem', color: 'var(--text-secondary)' }} className="font-semibold">{log.action}</div>
               <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                 {new Date(log.createdAt).toLocaleString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </div>

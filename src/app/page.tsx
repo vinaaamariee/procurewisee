@@ -147,7 +147,7 @@ function LoginPage() {
                   Sign In to Portal
                 </h2>
               ) : (
-                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight text-center">
+                <h2 className="uiverse-title leading-tight mb-2">
                   Supplier Registry
                 </h2>
               )}
