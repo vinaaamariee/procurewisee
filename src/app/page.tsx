@@ -4,6 +4,7 @@ import React, { useState, useTransition, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { login, register } from './actions/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { Mail, Lock, User, Building2, Phone, MapPin, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 function LoginPage() {
   const searchParams = useSearchParams();
@@ -38,203 +39,546 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] dark:bg-[#0f172a] text-[#1A1A1A] dark:text-slate-200 font-sans flex items-center justify-center p-4 sm:p-6 md:p-10 transition-colors duration-300 relative overflow-x-hidden">
-      
-      {/* Background Ambient Decorative Light Grid (Very subtle luxury touch) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 opacity-20 dark:opacity-10">
-        <div className="absolute top-[5%] left-[5%] w-[45%] aspect-square rounded-full bg-radial from-[#7e191b]/5 to-transparent blur-[120px]" />
-        <div className="absolute bottom-[5%] right-[5%] w-[45%] aspect-square rounded-full bg-radial from-[#ca8a04]/5 to-transparent blur-[120px]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(126,25,27,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(126,25,27,0.015)_1px,transparent_1px)] bg-[size:40px_40px]" />
-      </div>
+    <div className="login-container-wrapper min-h-screen relative overflow-x-hidden">
+      <style dangerouslySetInnerHTML={{ __html: `
+        /* --- Stylesheet adapted for ProcureWise login layout --- */
+        .login-container-wrapper {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+            background-color: #f6f8fb;
+            transition: background-color 0.3s ease;
+        }
+        .dark .login-container-wrapper {
+            background-color: #070b13;
+        }
 
-      {/* Floating Card Container */}
-      <div className="relative z-10 w-full max-w-[1120px] min-h-[680px] bg-white dark:bg-slate-900 rounded-[24px] shadow-[0px_4px_6px_-1px_rgba(0,0,0,0.02),0px_12px_24px_-4px_rgba(26,26,26,0.04),0px_32px_64px_-12px_rgba(26,26,26,0.08)] overflow-hidden flex flex-col lg:flex-row items-stretch border border-[#E7E5E0]/40 dark:border-slate-800/40 transition-all duration-300">
-        
-        {/* ========================================== */}
-        {/* LEFT PANEL: Quiet Luxury Identity Panel  */}
-        {/* ========================================== */}
-        <div className="w-full lg:w-[45%] lg:shrink-0 lg:grow-0 bg-[#1A1A1A] text-white p-8 sm:p-12 lg:p-16 flex flex-col justify-between relative overflow-hidden select-none">
-          {/* Accent lighting for left panel */}
-          <div className="absolute -top-24 -left-24 w-60 h-60 rounded-full bg-[#800000]/10 blur-[80px] pointer-events-none" />
-          <div className="absolute -bottom-24 -right-24 w-60 h-60 rounded-full bg-[#D4AF37]/5 blur-[80px] pointer-events-none" />
+        /* --- Left Panel --- */
+        .left-panel {
+            width: 50%;
+            background: linear-gradient(180deg, #18191c 0%, #1c1518 40%, #461113 100%);
+            position: relative;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-          {/* Top Micro-Copy with max-width wrapping to prevent overflow */}
-          <div className="relative z-10 flex justify-center lg:justify-start">
-            <span className="text-[10px] sm:text-[11px] tracking-[0.1em] text-[#E5E5E5]/70 font-semibold uppercase block leading-relaxed max-w-[320px] text-center lg:text-left">
-              Global procurement made simple – online procurement solutions for you.
-            </span>
-          </div>
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 10;
+        }
 
-          {/* Main Headline */}
-          <div className="relative z-10 mt-8 mb-4">
-            <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-bold tracking-tight text-white leading-tight text-center lg:text-left">
-              Manage your procurement
-            </h1>
-          </div>
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
 
-          {/* Smartphone & Graph Visual Asset */}
-          <div className="relative z-10 flex-grow flex items-center justify-center py-6">
-            <div className="relative flex items-center justify-center">
-              
-              {/* Smartphone Frame (3D tilt rotation) */}
-              <div 
-                className="relative w-[210px] h-[340px] bg-[#161617] border-[4px] border-[#38383a] rounded-[32px] p-2.5 shadow-2xl transition-all duration-500 hover:rotate-0"
-                style={{
-                  transform: 'perspective(1000px) rotateY(-10deg) rotateX(6deg) rotateZ(-2deg)',
-                  boxShadow: '15px 15px 35px rgba(0,0,0,0.6), -10px -10px 25px rgba(255,255,255,0.01)'
-                }}
-              >
-                {/* Screen Content */}
-                <div className="relative w-full h-full rounded-[23px] bg-[#0A0A0A] overflow-hidden flex flex-col justify-between p-3.5 border border-[#161617]">
-                  
-                  {/* Notch / Dynamic Island */}
-                  <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-16 h-3 bg-black rounded-full z-30" />
+        .logo-text {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
 
-                  {/* Mini Screen Header */}
-                  <div className="pt-4 flex justify-between items-center border-b border-slate-900 pb-1.5">
-                    <div>
-                      <span className="text-[6px] text-slate-500 uppercase tracking-widest block font-bold">PROCUREWISE</span>
-                      <span className="text-[8px] text-white font-extrabold block">Bidding Comparison</span>
-                    </div>
-                    <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  </div>
+        .logo-text span {
+            color: #dcb353;
+        }
 
-                  {/* Vertical Grouped Column Chart */}
-                  <div className="flex-1 flex flex-col justify-end gap-4 py-2">
-                    
-                    {/* Item Group 1: Bond Paper (Long) */}
-                    <div className="space-y-1">
-                      <div className="flex items-end justify-between h-[70px] px-1.5 relative border-b border-slate-900">
-                        {/* Supplier A column (Maroon) */}
-                        <div className="relative w-3.5 bg-gradient-to-t from-[#4a0d0e] to-[#800000] rounded-t-sm" style={{ height: '85%' }}>
-                          <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[6px] font-bold text-white bg-slate-950 px-1 py-0.5 rounded border border-slate-900 leading-none">₱210</span>
-                        </div>
-                        {/* Supplier B column (Gold) */}
-                        <div className="relative w-3.5 bg-gradient-to-t from-[#917122] to-[#D4AF37] rounded-t-sm" style={{ height: '70%' }}>
-                          <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[6px] font-bold text-white bg-slate-950 px-1 py-0.5 rounded border border-slate-900 leading-none">₱195</span>
-                        </div>
-                        {/* Supplier C column (Gray) */}
-                        <div className="relative w-3.5 bg-gradient-to-t from-[#4c4c4e] to-[#8A8A8F] rounded-t-sm" style={{ height: '78%' }}>
-                          <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[6px] font-bold text-white bg-slate-950 px-1 py-0.5 rounded border border-slate-900 leading-none">₱205</span>
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <span className="text-[6.5px] text-slate-400 font-bold uppercase tracking-wider block">Bond Paper (Long)</span>
-                      </div>
-                    </div>
+        .tagline {
+            color: #a0a0a0;
+            font-size: 14px;
+            margin-top: 8px;
+            z-index: 10;
+        }
 
-                    {/* Item Group 2: Bond Paper (Short) */}
-                    <div className="space-y-1">
-                      <div className="flex items-end justify-between h-[70px] px-1.5 relative border-b border-slate-900">
-                        {/* Supplier A column (Maroon) */}
-                        <div className="relative w-3.5 bg-gradient-to-t from-[#4a0d0e] to-[#800000] rounded-t-sm" style={{ height: '72%' }}>
-                          <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[6px] font-bold text-white bg-slate-950 px-1 py-0.5 rounded border border-slate-900 leading-none">₱185</span>
-                        </div>
-                        {/* Supplier B column (Gold) */}
-                        <div className="relative w-3.5 bg-gradient-to-t from-[#917122] to-[#D4AF37] rounded-t-sm" style={{ height: '58%' }}>
-                          <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[6px] font-bold text-white bg-slate-950 px-1 py-0.5 rounded border border-slate-900 leading-none">₱170</span>
-                        </div>
-                        {/* Supplier C column (Gray) */}
-                        <div className="relative w-3.5 bg-gradient-to-t from-[#4c4c4e] to-[#8A8A8F] rounded-t-sm" style={{ height: '65%' }}>
-                          <span className="absolute -top-4 left-1/2 -translate-x-1/2 text-[6px] font-bold text-white bg-slate-950 px-1 py-0.5 rounded border border-slate-900 leading-none">₱180</span>
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <span className="text-[6.5px] text-slate-400 font-bold uppercase tracking-wider block">Bond Paper (Short)</span>
-                      </div>
-                    </div>
+        .network-graphic {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+        }
 
-                  </div>
+        /* --- Right Panel --- */
+        .right-panel {
+            width: 50%;
+            background-color: #f6f8fb;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            transition: background-color 0.3s ease;
+        }
+        .dark .right-panel {
+            background-color: #070b13;
+        }
 
-                  {/* Screen Footer Info */}
-                  <div className="flex justify-between items-center text-[5.5px] text-slate-500 border-t border-slate-900 pt-1.5 font-semibold">
-                    <span>Live Quotations</span>
-                    <span>ProcureWise Mobile</span>
-                  </div>
+        .right-panel-inner {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: calc(100vh - 80px);
+            width: 100%;
+            max-width: 440px;
+            z-index: 10;
+        }
+        @media (max-width: 900px) {
+            .right-panel-inner {
+                min-height: auto;
+            }
+        }
 
-                </div>
-              </div>
+        /* Blurred Background Blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 0;
+            opacity: 0.6;
+            transition: background-color 0.3s ease;
+        }
 
-              {/* Hand Overlay Silhouette holding phone - shifted slightly to remain fully in Left Panel */}
-              <div 
-                className="absolute w-[160px] h-[160px] pointer-events-none z-20 select-none"
-                style={{
-                  bottom: '-35px',
-                  right: '-30px',
-                  transform: 'rotate(-4deg)'
-                }}
-              >
-                <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_10px_15px_rgba(0,0,0,0.5)]">
-                  {/* Palm and wrist base */}
-                  <path d="M70 120 C 72 105, 68 95, 62 90 C 58 87, 52 87, 48 92 C 45 96, 42 104, 43 112 C 44 115, 38 118, 30 120 Z" fill="url(#handGrad)" />
-                  {/* Thumb overlapping the phone chassis & bezel on the lower right */}
-                  <path d="M48,82 C 55,78, 63,82, 65,90 C 67,98, 62,106, 54,108 C 50,109, 48,106, 47,102 C 46,98, 45,86, 48,82 Z" fill="url(#handGrad)" />
-                  
-                  <defs>
-                    <linearGradient id="handGrad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#252527" />
-                      <stop offset="100%" stopColor="#0B0B0C" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
+        .blob-1 {
+            top: 15%;
+            right: 20%;
+            width: 250px;
+            height: 250px;
+            background: #d8c3af;
+        }
+        .dark .blob-1 {
+            background: rgba(216, 195, 175, 0.15);
+        }
 
+        .blob-2 {
+            top: 25%;
+            right: 15%;
+            width: 200px;
+            height: 200px;
+            background: #a96c73;
+        }
+        .dark .blob-2 {
+            background: rgba(169, 108, 115, 0.15);
+        }
+
+        .blob-3 {
+            bottom: 10%;
+            left: 20%;
+            width: 150px;
+            height: 150px;
+            background: #b26a6a;
+        }
+        .dark .blob-3 {
+            background: rgba(178, 106, 106, 0.15);
+        }
+
+        /* Login Card */
+        .login-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            z-index: 10;
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            margin: auto 0;
+        }
+        .dark .login-card {
+            background: rgba(15, 23, 42, 0.65);
+            border-color: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+        }
+
+        .card-header h2 {
+            font-size: 13px;
+            color: #dcb353;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+        .dark .card-header h2 {
+            color: #dcb353;
+        }
+
+        .card-header h1 {
+            font-size: 30px;
+            color: #111;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .dark .card-header h1 {
+            color: #ffffff;
+        }
+
+        .card-header p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 28px;
+        }
+        .dark .card-header p {
+            color: #94a3b8;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 8px;
+        }
+        .dark .form-group label {
+            color: #e2e8f0;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 13px 40px 13px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            background-color: #ffffff;
+            color: #111;
+            outline: none;
+            transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+        }
+        .dark .form-group input, .dark .form-group textarea {
+            border-color: rgba(255, 255, 255, 0.08);
+            background-color: rgba(15, 23, 42, 0.4);
+            color: #ffffff;
+        }
+
+        .form-group input::placeholder, .form-group textarea::placeholder {
+            color: #999;
+        }
+        .dark .form-group input::placeholder, .dark .form-group textarea::placeholder {
+            color: #556070;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #dcb353;
+        }
+        .dark .form-group input:focus, .dark .form-group textarea:focus {
+            border-color: #dcb353;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .input-icon:hover {
+            color: #555;
+        }
+        .dark .input-icon:hover {
+            color: #ccc;
+        }
+
+        .forgot-password {
+            display: block;
+            text-align: right;
+            font-size: 13px;
+            color: #555;
+            text-decoration: none;
+            margin-top: -6px;
+            margin-bottom: 24px;
+        }
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        .dark .forgot-password {
+            color: #94a3b8;
+        }
+        .dark .forgot-password:hover {
+            color: #ffffff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 30px;
+            background: linear-gradient(90deg, #621418 0%, #b88a1b 100%);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(98, 20, 24, 0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+        }
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.1);
+            box-shadow: 0 12px 24px rgba(98, 20, 24, 0.25);
+        }
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .signup-text {
+            text-align: center;
+            font-size: 13px;
+            color: #444;
+            margin-top: 24px;
+            margin-bottom: 16px;
+        }
+        .dark .signup-text {
+            color: #94a3b8;
+        }
+
+        .signup-text a {
+            color: #621418;
+            font-weight: 600;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .signup-text a:hover {
+            text-decoration: underline;
+        }
+        .dark .signup-text a {
+            color: #dcb353;
+        }
+
+        .social-logins {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding-top: 20px;
+        }
+        .dark .social-logins {
+            border-top-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .social-btn {
+            font-size: 13px;
+            color: #555;
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid #777;
+            padding-bottom: 2px;
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .social-btn:hover {
+            color: #111;
+            border-color: #111;
+        }
+        .dark .social-btn {
+            color: #94a3b8;
+            border-color: #555;
+        }
+        .dark .social-btn:hover {
+            color: #ffffff;
+            border-color: #ffffff;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .login-container-wrapper {
+                flex-direction: column;
+            }
+            .left-panel {
+                width: 100%;
+                min-height: 40vh;
+                padding: 30px;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            .right-panel {
+                width: 100%;
+                min-height: 60vh;
+                padding: 30px 20px;
+            }
+            .network-graphic {
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                margin-top: 30px;
+                margin-bottom: 10px;
+                width: 100%;
+                max-width: 400px;
+                align-self: center;
+            }
+            .login-card {
+                padding: 30px 24px;
+            }
+        }
+      `}} />
+
+      {/* Left Panel */}
+      <div className="left-panel">
+        {/* Top Header Identity Group */}
+        <div className="relative z-10">
+          <div className="flex items-center gap-3">
+            <svg className="w-8 h-8 text-[#dcb353] drop-shadow-[0_0_8px_rgba(220,179,8,0.35)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <polygon points="12,2 22,7.5 22,18.5 12,24 2,18.5 2,7.5" strokeLinecap="round" strokeLinejoin="round" />
+              <polygon points="12,7 18,10.5 18,17 12,20 6,17 6,10.5" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15" />
+            </svg>
+            <div className="flex flex-col">
+              <span className="font-extrabold text-xl leading-none tracking-tight text-white">ProcureWise</span>
+              <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-1">Elevate Your Procurement Intelligence</span>
             </div>
-          </div>
-
-          {/* Left Footer: Copyright */}
-          <div className="relative z-10 text-center lg:text-left mt-4 text-[11px] font-medium text-[#E5E5E5]/50 tracking-wider">
-            <span>© 2026 Batanes State College</span>
           </div>
         </div>
 
-        {/* ========================================== */}
-        {/* RIGHT PANEL: Sign-In / Register Form      */}
-        {/* ========================================== */}
-        <div className="w-full lg:w-[55%] lg:shrink-0 lg:grow-0 bg-white dark:bg-slate-900 p-8 sm:p-12 lg:p-16 flex flex-col justify-between transition-colors duration-300">
-          
-          {/* Top Header Lockup & Switch Link */}
-          <div className="flex justify-between items-center text-[13px] mb-8 lg:mb-4">
-            <div className="font-semibold text-gray-900 dark:text-white flex items-center gap-1.5">
-              <span>ProcureWise</span>
-              <span className="text-gray-300 dark:text-slate-800 font-light">|</span>
-              <span className="text-gray-400 dark:text-gray-500 font-medium">Batanes State College</span>
-            </div>
-            
-            <button
-              type="button"
-              onClick={() => { setActiveTab(activeTab === 'login' ? 'register' : 'login'); handleClearParams(); }}
-              className="text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 flex items-center gap-1.5 opacity-80 cursor-pointer outline-none font-semibold"
-            >
-              {activeTab === 'login' ? (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                  Sign Up
-                </>
-              ) : (
-                <>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  Sign In
-                </>
-              )}
-            </button>
-          </div>
+        {/* Network Constellation Graphic */}
+        <svg className="network-graphic" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
 
-          {/* Central Form Container - tightened width to 380px to center elegantly without overflow */}
-          <div className="my-auto w-full max-w-[380px] mx-auto py-4">
-            
-            {/* Form Title */}
-            <h2 className="text-[28px] font-bold text-gray-900 dark:text-white tracking-tight mb-5 leading-tight">
-              {activeTab === 'login' ? 'Sign In' : 'Supplier Register'}
-            </h2>
+          <g stroke="#dcb353" strokeWidth="1.5" opacity="0.4">
+            <line x1="250" y1="120" x2="150" y2="200" />
+            <line x1="250" y1="120" x2="350" y2="200" />
+            <line x1="150" y1="200" x2="150" y2="300" />
+            <line x1="350" y1="200" x2="350" y2="300" />
+            <line x1="150" y1="300" x2="250" y2="380" />
+            <line x1="350" y1="300" x2="250" y2="380" />
+            <line x1="250" y1="120" x2="100" y2="250" />
+            <line x1="100" y1="250" x2="150" y2="300" />
+            <line x1="100" y1="250" x2="250" y2="250" />
+            <line x1="150" y1="200" x2="250" y2="250" />
+            <line x1="350" y1="200" x2="250" y2="250" />
+            <line x1="350" y1="300" x2="250" y2="250" />
+            <line x1="150" y1="300" x2="250" y2="250" />
+            <line x1="250" y1="120" x2="250" y2="250" />
+            <line x1="250" y1="380" x2="250" y2="250" />
+          </g>
+
+          <g stroke="#a33" strokeWidth="1.5" opacity="0.5">
+            <line x1="150" y1="200" x2="200" y2="350" />
+            <line x1="350" y1="200" x2="420" y2="200" />
+            <line x1="420" y1="200" x2="350" y2="300" />
+            <line x1="420" y1="200" x2="400" y2="320" />
+            <line x1="350" y1="300" x2="400" y2="320" />
+            <line x1="250" y1="380" x2="200" y2="350" />
+          </g>
+
+          <circle cx="250" cy="120" r="5" fill="#f4c862" filter="url(#glow)"/>
+          <circle cx="150" cy="200" r="4" fill="#a52a2a" filter="url(#glow)"/>
+          <circle cx="350" cy="200" r="5" fill="#f4c862" filter="url(#glow)"/>
+          <circle cx="150" cy="300" r="5" fill="#f4c862" filter="url(#glow)"/>
+          <circle cx="350" cy="300" r="4" fill="#a52a2a" filter="url(#glow)"/>
+          <circle cx="250" cy="380" r="5" fill="#a52a2a" filter="url(#glow)"/>
+          <circle cx="100" cy="250" r="5" fill="#f4c862" filter="url(#glow)"/>
+          <circle cx="250" cy="250" r="6" fill="#f4c862" filter="url(#glow)"/>
+          <circle cx="420" cy="200" r="4" fill="#a52a2a" filter="url(#glow)"/>
+          <circle cx="400" cy="320" r="4" fill="#f4c862" filter="url(#glow)"/>
+          <circle cx="200" cy="350" r="4" fill="#f4c862" filter="url(#glow)"/>
+
+          <rect x="255" y="100" width="70" height="18" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
+          <text x="260" y="112" fill="#ddd" fontSize="9">SUPPLIER A</text>
+          <rect x="255" y="80" width="65" height="16" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
+          <text x="260" y="91" fill="#ddd" fontSize="8">BID #4S810</text>
+          
+          <text x="160" y="190" fill="#ddd" fontSize="9">SUPPLIER A</text>
+          <rect x="135" y="125" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="1" opacity="0.6"/>
+          <text x="140" y="136" fill="#ddd" fontSize="8">BID #4S911</text>
+
+          <text x="265" y="190" fill="#ddd" fontSize="9">PRICE DATA</text>
+          
+          <rect x="270" y="275" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="1" opacity="0.6"/>
+          <text x="275" y="286" fill="#ddd" fontSize="8">LOGISTICS</text>
+
+          <rect x="380" y="295" width="75" height="18" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
+          <text x="385" y="307" fill="#ddd" fontSize="8">AUCTION LIVE</text>
+
+          <rect x="255" y="315" width="90" height="18" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
+          <text x="260" y="327" fill="#ddd" fontSize="8">CONTRACT VALID</text>
+
+          <rect x="205" y="390" width="65" height="16" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
+          <text x="210" y="401" fill="#ddd" fontSize="8">LOGISTICS</text>
+
+          <rect x="70" y="320" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="1" opacity="0.6"/>
+          <text x="75" y="331" fill="#ddd" fontSize="8">SUPPLIER 1</text>
+          
+          <text x="120" y="265" fill="#ddd" fontSize="8">CONSOLIDATE</text>
+          <rect x="25" y="225" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="1" opacity="0.6"/>
+          <text x="30" y="236" fill="#ddd" fontSize="8">BID #4S810</text>
+
+          <rect x="420" y="170" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="0.4"/>
+          <text x="425" y="181" fill="#ddd" fontSize="8">SUPPLIER A</text>
+        </svg>
+
+        {/* Copyright Footer */}
+        <div className="relative z-10 text-xs font-semibold text-slate-500 tracking-wider">
+          <span>© 2026 Batanes State College</span>
+        </div>
+      </div>
+
+      {/* Right Panel */}
+      <div className="right-panel">
+        <div className="blob blob-1"></div>
+        <div className="blob blob-2"></div>
+        <div className="blob blob-3"></div>
+
+        {/* Next.js Theme Toggle aligned with top-right position */}
+        <div className="absolute top-10 right-10 z-10">
+          <ThemeToggle />
+        </div>
+
+        <div className="right-panel-inner">
+          <div className="login-card">
+            <div className="card-header">
+              <h2>{activeTab === 'login' ? 'Sign In' : 'Sign Up'}</h2>
+              <h1>{activeTab === 'login' ? 'Welcome Back!' : 'Register Business'}</h1>
+              <p>
+                {activeTab === 'login' 
+                  ? 'Sign in to access your dashboard' 
+                  : 'Join ProcureWise to participate in college RFQs'}
+              </p>
+            </div>
 
             {/* Error and Success Alerts */}
             {error && (
-              <div className="relative flex items-start gap-3 rounded-2xl border border-red-200 dark:border-red-950/40 bg-red-50/50 dark:bg-red-950/20 p-4 mb-4 text-xs text-red-600 dark:text-red-400 animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="relative flex items-start gap-3 rounded-2xl border border-red-200 dark:border-red-950/40 bg-red-50/50 dark:bg-red-950/20 p-4 mb-5 text-xs text-red-600 dark:text-red-400 animate-in fade-in slide-in-from-top-1 duration-200">
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 shrink-0 text-red-500 mt-0.5">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
                 </svg>
@@ -248,7 +592,7 @@ function LoginPage() {
             )}
 
             {success && (
-              <div className="relative flex items-start gap-3 rounded-2xl border border-emerald-200 dark:border-emerald-950/40 bg-emerald-50/50 dark:bg-emerald-950/20 p-4 mb-4 text-xs text-emerald-600 dark:text-emerald-400 animate-in fade-in slide-in-from-top-1 duration-200">
+              <div className="relative flex items-start gap-3 rounded-2xl border border-emerald-200 dark:border-emerald-950/40 bg-emerald-50/50 dark:bg-emerald-950/20 p-4 mb-5 text-xs text-emerald-600 dark:text-emerald-400 animate-in fade-in slide-in-from-top-1 duration-200">
                 <svg viewBox="0 0 20 20" fill="currentColor" className="h-5 w-5 shrink-0 text-emerald-500 mt-0.5">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.06l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
                 </svg>
@@ -261,213 +605,193 @@ function LoginPage() {
               </div>
             )}
 
-            {/* Form Renderer */}
+            {/* Forms */}
             {activeTab === 'login' ? (
-              <form 
-                onSubmit={(e) => handleFormSubmit(e, login)} 
-                className="space-y-4"
-              >
-                {/* Field 1: Email/Username */}
-                <div className="relative">
+              <form onSubmit={(e) => handleFormSubmit(e, login)}>
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <div className="input-wrapper">
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="Email or Username"
+                    />
+                    <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <circle cx="9" cy="10" r="3"></circle>
+                      <path d="M15 10h2"></path>
+                      <path d="M15 14h2"></path>
+                      <path d="M4 18c2.67-1.33 5.33-2 8-2s5.33.67 8 2"></path>
+                    </svg>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Password</label>
+                  <div className="input-wrapper">
+                    <input
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      placeholder="Enter your password"
+                    />
+                    {showPassword ? (
+                      <EyeOff className="input-icon" onClick={() => setShowPassword(!showPassword)} />
+                    ) : (
+                      <Eye className="input-icon" onClick={() => setShowPassword(!showPassword)} />
+                    )}
+                  </div>
+                </div>
+
+                <a href="#" className="forgot-password" onClick={(e) => { e.preventDefault(); alert("Please contact the Admin Support to reset your password."); }}>
+                  Forgot Password?
+                </a>
+
+                <button type="submit" className="btn-submit" disabled={isPending}>
+                  {isPending ? "Signing In..." : "Sign In to ProcureWise"}
+                </button>
+              </form>
+            ) : (
+              <form onSubmit={(e) => handleFormSubmit(e, register)}>
+                {/* Full Name & Username in 2 Columns */}
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Full Name *</label>
+                    <input
+                      name="fullName"
+                      type="text"
+                      required
+                      placeholder="Your Full Name"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Username *</label>
+                    <input
+                      name="username"
+                      type="text"
+                      required
+                      placeholder="Username"
+                    />
+                  </div>
+                </div>
+
+                {/* Email Address */}
+                <div className="form-group">
+                  <label>Email Address *</label>
                   <input
                     name="email"
                     type="email"
                     required
-                    placeholder="Email or Username"
-                    className="w-full h-[52px] px-4 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400"
+                    placeholder="name@company.com"
                   />
                 </div>
-
-                {/* Field 2: Password */}
-                <div className="relative">
-                  <input
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    placeholder="Password"
-                    className="w-full h-[52px] px-4 pr-12 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-white transition-all cursor-pointer p-1"
-                  >
-                    {showPassword ? (
-                      <svg fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" className="w-[18px] h-[18px]">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
-                      </svg>
-                    ) : (
-                      <svg fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" className="w-[18px] h-[18px]">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    )}
-                  </button>
-                </div>
-
-                {/* Secondary Links: Forgot password */}
-                <div className="text-center pt-1">
-                  <a href="#" className="text-[#800000] dark:text-[#f87171] hover:text-[#962124] dark:hover:text-[#f87171]/80 text-sm font-semibold hover:underline transition-colors duration-200">
-                    Forgot password?
-                  </a>
-                </div>
-
-                {/* Submit Button */}
-                <div className="pt-2">
-                  <button
-                    type="submit"
-                    disabled={isPending}
-                    className="w-full h-[54px] rounded-full bg-gradient-to-r from-[#FF6B35] to-[#DD2C53] text-white font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-md shadow-[#FF6B35]/25 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
-                  >
-                    {isPending ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <span className="h-4.5 w-4.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                        Signing In...
-                      </span>
-                    ) : '→ Sign In'}
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <form 
-                onSubmit={(e) => handleFormSubmit(e, register)} 
-                className="space-y-3"
-              >
-                {/* Full Name & Username in 2 Columns */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <input
-                    name="fullName"
-                    type="text"
-                    required
-                    placeholder="Full Name *"
-                    className="w-full h-[46px] px-4 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400"
-                  />
-                  <input
-                    name="username"
-                    type="text"
-                    required
-                    placeholder="Username *"
-                    className="w-full h-[46px] px-4 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400"
-                  />
-                </div>
-
-                {/* Email Address */}
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  placeholder="Email Address *"
-                  className="w-full h-[46px] px-4 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400"
-                />
 
                 {/* Password Input with eye toggle */}
-                <div className="relative">
-                  <input
-                    name="password"
-                    type={showRegPassword ? "text" : "password"}
-                    required
-                    placeholder="Password *"
-                    className="w-full h-[46px] px-4 pr-12 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowRegPassword(!showRegPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-white transition-all cursor-pointer p-1"
-                  >
+                <div className="form-group">
+                  <label>Password *</label>
+                  <div className="input-wrapper">
+                    <input
+                      name="password"
+                      type={showRegPassword ? "text" : "password"}
+                      required
+                      placeholder="Choose a password"
+                    />
                     {showRegPassword ? (
-                      <svg fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" className="w-[18px] h-[18px]">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
-                      </svg>
+                      <EyeOff className="input-icon" onClick={() => setShowRegPassword(!showRegPassword)} />
                     ) : (
-                      <svg fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24" className="w-[18px] h-[18px]">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
+                      <Eye className="input-icon" onClick={() => setShowRegPassword(!showRegPassword)} />
                     )}
-                  </button>
+                  </div>
                 </div>
 
                 {/* Company Name */}
-                <input
-                  name="companyName"
-                  type="text"
-                  required
-                  placeholder="Company Name *"
-                  className="w-full h-[46px] px-4 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400"
-                />
+                <div className="form-group">
+                  <label>Company Name *</label>
+                  <input
+                    name="companyName"
+                    type="text"
+                    required
+                    placeholder="Registered Company Name"
+                  />
+                </div>
 
                 {/* TIN & Contact Number */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <input
-                    name="tin"
-                    type="text"
-                    placeholder="TIN (Optional)"
-                    className="w-full h-[46px] px-4 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400"
-                  />
-                  <input
-                    name="contactNumber"
-                    type="text"
-                    placeholder="Contact Number *"
-                    className="w-full h-[46px] px-4 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400"
-                  />
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>TIN (Optional)</label>
+                    <input
+                      name="tin"
+                      type="text"
+                      placeholder="000-000-000-000"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Contact Number *</label>
+                    <input
+                      name="contactNumber"
+                      type="text"
+                      required
+                      placeholder="Contact number"
+                    />
+                  </div>
                 </div>
 
                 {/* Business Address */}
-                <textarea
-                  name="businessAddress"
-                  required
-                  rows={2}
-                  placeholder="Business Address *"
-                  className="w-full px-4 py-2.5 rounded-[12px] border border-gray-200 dark:border-slate-800 bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 text-sm font-semibold transition-all duration-200 outline-none focus:border-gray-900 dark:focus:border-slate-400 focus:ring-1 focus:ring-gray-900 dark:focus:ring-slate-400 resize-none h-[68px]"
-                />
-
-                {/* Submit Button */}
-                <div className="pt-1">
-                  <button
-                    type="submit"
-                    disabled={isPending}
-                    className="w-full h-[54px] rounded-full bg-gradient-to-r from-[#FF6B35] to-[#DD2C53] text-white font-bold uppercase tracking-wider flex items-center justify-center gap-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-md shadow-[#FF6B35]/25 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
-                  >
-                    {isPending ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <span className="h-4.5 w-4.5 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                        Registering...
-                      </span>
-                    ) : '→ Create Account'}
-                  </button>
+                <div className="form-group">
+                  <label>Business Address *</label>
+                  <textarea
+                    name="businessAddress"
+                    required
+                    rows={2}
+                    placeholder="Registered business address"
+                  />
                 </div>
+
+                <button type="submit" className="btn-submit" disabled={isPending}>
+                  {isPending ? "Registering..." : "Create Supplier Account"}
+                </button>
               </form>
             )}
 
+            <div className="signup-text">
+              {activeTab === 'login' ? "Don't have an account? " : "Already have an account? "}
+              <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab(activeTab === 'login' ? 'register' : 'login'); handleClearParams(); }}>
+                {activeTab === 'login' ? 'Sign Up' : 'Sign In'}
+              </a>
+            </div>
+
+            <div className="social-logins">
+              <a href="#" className="social-btn" onClick={(e) => { e.preventDefault(); alert("Social auth is currently not configured."); }}>Sign up with Google</a>
+              <a href="#" className="social-btn" onClick={(e) => { e.preventDefault(); alert("Social auth is currently not configured."); }}>Sign up with Microsoft</a>
+            </div>
           </div>
 
           {/* Right Footer Layout */}
-          <div className="flex justify-between items-center text-[11px] text-gray-400 dark:text-gray-500 pt-6 mt-8 border-t border-gray-100 dark:border-slate-800 font-semibold uppercase tracking-wider">
-            {/* Left element: Hide on desktop left-panel copy, display on mobile */}
+          <div className="flex justify-between items-center text-[11px] text-slate-500 pt-6 mt-8 border-t border-slate-200 dark:border-slate-800/60 font-semibold uppercase tracking-wider z-10">
+            {/* Left element: Display on mobile, hide on desktop since left panel copy takes care of it */}
             <div className="lg:hidden">
-              © 2026 BBSC
+              © 2026 Batanes State College
             </div>
             
             {/* Right element: Support and Dropdown */}
             <div className="flex items-center justify-between w-full lg:justify-end gap-5">
               <a 
                 onClick={() => alert("Please contact the BSC Procurement Unit Helpdesk or System Admin to request support.")}
-                className="hover:text-gray-700 dark:hover:text-slate-300 transition-colors duration-200 cursor-pointer"
+                className="hover:text-slate-800 dark:hover:text-white transition-colors duration-200 cursor-pointer"
               >
                 Contact Admin Support
               </a>
               
-              <div className="relative group cursor-pointer flex items-center gap-1 hover:text-gray-700 dark:hover:text-slate-300 transition-colors duration-200">
+              <div className="relative group cursor-pointer flex items-center gap-1 hover:text-slate-800 dark:hover:text-white transition-colors duration-200">
                 <span>English</span>
-                <svg className="w-3 h-3 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <svg className="w-3 h-3 text-slate-500" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
     </div>
   );
@@ -476,11 +800,12 @@ function LoginPage() {
 export default function LoginPageWrapper() {
   return (
     <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center bg-[#FAF9F6] dark:bg-[#0f172a]">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#7e191b] border-t-transparent" />
+      <div className="flex min-h-screen items-center justify-center bg-[#FAF9F6] dark:bg-[#070b13]">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[var(--accent)] border-t-transparent" />
       </div>
     }>
       <LoginPage />
     </Suspense>
   );
 }
+
