@@ -836,3 +836,120 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px #030712 inset !important;
   -webkit-text-fill-color: #f8fafc !important;
 }
+
+/* ============================================================
+   CUSTOM DYNAMIC LOGIN PAGE STYLES & ANIMATIONS
+   ============================================================ */
+@keyframes float-slow-1 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(60px, -40px) scale(1.15);
+  }
+}
+
+@keyframes float-slow-2 {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-60px, 50px) scale(0.9);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes logo-shine {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  50% {
+    transform: translateX(150%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(150%) skewX(-20deg);
+  }
+}
+
+.animate-float-1 {
+  animation: float-slow-1 25s ease-in-out infinite;
+}
+
+.animate-float-2 {
+  animation: float-slow-2 30s ease-in-out infinite;
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 10s ease-in-out infinite;
+}
+
+/* Shimmer overlay effect for premium elements */
+.shimmer-sweep {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer-sweep::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 30%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-20deg);
+  animation: logo-shine 6s infinite ease-in-out;
+}
+
+/* Custom interactive input field styles */
+.login-input-wrapper {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.login-input-wrapper:focus-within {
+  transform: translateY(-1px);
+}
+
+.login-input-wrapper svg {
+  transition: color 0.3s ease;
+}
+
+.login-input-wrapper:focus-within svg {
+  color: var(--secondary) !important;
+}
+
+/* Premium submit button with glow and hover animation */
+.btn-premium {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  border: 1px solid rgba(202, 138, 4, 0.2);
+}
+
+.btn-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(126, 25, 27, 0.25), 0 0 12px rgba(202, 138, 4, 0.2);
+  border-color: rgba(202, 138, 4, 0.5);
+}
+
+.btn-premium:active {
+  transform: translateY(0);
+}
+
