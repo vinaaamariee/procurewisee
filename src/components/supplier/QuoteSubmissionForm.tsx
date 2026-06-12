@@ -4,8 +4,6 @@ import { useState, useTransition, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import * as XLSX from 'xlsx';
 import { submitQuoteAction } from '@/app/actions/quotes';
-import DocumentHeader from '@/components/common/DocumentHeader';
-import DocumentFooter from '@/components/common/DocumentFooter';
 
 interface RfqItem {
   id: number;
@@ -285,21 +283,22 @@ export default function QuoteSubmissionForm({
         gap: '2rem'
       }}>
         
-        {/* Batanes State College Official Header */}
-        <DocumentHeader />
-
         {/* Paper style header block */}
         <div style={{
           textAlign: 'center',
           borderBottom: '2px solid rgba(255,255,255,0.08)',
           paddingBottom: '1.5rem',
-          color: '#f8fafc',
-          marginTop: '-0.5rem'
+          color: '#f8fafc'
         }}>
-          <div style={{ fontSize: '0.85rem', color: '#818cf8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>
-            PROCUREMENT UNIT
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '2.5rem' }}>🏛️</div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '0.5px' }}>BATANES STATE COLLEGE</div>
+              <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Washington Ave., San Antonio, Basco, Batanes</div>
+              <div style={{ fontSize: '0.72rem', color: '#6366f1', fontWeight: 700, marginTop: '0.2rem' }}>PROCUREMENT UNIT</div>
+            </div>
           </div>
-          <h2 style={{ fontSize: '1.35rem', fontWeight: 800, marginTop: '0.5rem', letterSpacing: '1px', color: '#38bdf8' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', letterSpacing: '1px', color: '#38bdf8' }}>
             REQUEST FOR PRICE QUOTATION
           </h2>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', fontSize: '0.8rem', color: '#64748b' }}>
@@ -532,9 +531,6 @@ export default function QuoteSubmissionForm({
             </div>
           </div>
         </div>
-
-        {/* Batanes State College Official Footer */}
-        <DocumentFooter />
 
       </form>
     </div>

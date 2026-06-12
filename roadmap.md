@@ -27,7 +27,6 @@ This phase builds out the interfaces where external suppliers interact with the 
 - `[x]` **Supplier Dashboard:** A portal for suppliers to view open RFQs publicly available or invited.
 - `[x]` **Manual Quote Submission:** An interactive online form for suppliers to bid on line items, adhering to ABC constraints.
 - `[x]` **Excel Quote Integration:** Allowing suppliers to download an `.xlsx` template, fill it offline, and upload it to automatically parse prices into the system in real-time.
-- `[x]` **Document Branding (Header & Footer):** Extracted reusable official document layout components (`DocumentHeader.tsx` and `DocumentFooter.tsx`) with high-fidelity Batanes State College branding.
 
 ---
 
