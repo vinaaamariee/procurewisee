@@ -85,6 +85,15 @@ A standard supplies and equipment database that streamlines RFQ creation and pro
 * **Universal Catalog Browser**: A read-only browser at `/dashboard/catalog` accessible by all roles (Officers, Suppliers, and Approvers) supporting real-time keywords search and category filtering.
 * **Server Action Management**: All operations are powered by secure Next.js Server Actions (`src/app/actions/catalog.ts`).
 
+### 9. Immutable Audit Trail ("The Security Guard")
+A forensic tracking mechanism designed to enforce regulatory compliance and prevent budget creep:
+* **Background Logging**: Executes asynchronously via Next.js 16's stable `after()` scheduler, ensuring logging actions never block client responses or degrade transaction performance.
+* **State Snapshots**: Automatically records structural JSON representations of `oldState` and `newState` for key operations:
+  - **RFQ Transactions**: Logs on `CREATE_RFQ`, `PUBLISH_RFQ`, and `CLOSE_RFQ`.
+  - **Supplier Bidding**: Logs on `SUBMIT_BID` (capturing overwrites of existing bids).
+  - **Evaluated Recommendations**: Logs on `APPROVE_RECOMMENDATION` status changes.
+* **Audit Metadata**: Automatically stamps records with the active user session ID (fetched inside the `after` callback context) and the requester's IP address (resolved via async `headers()`).
+
 ---
 
 ## 💾 Database Schema Details

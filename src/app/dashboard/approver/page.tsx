@@ -1,5 +1,6 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { createClient } from '@/lib/supabase/server';
+import { approveRecommendation } from '@/app/actions/recommendations';
 
 export const metadata = { title: 'Approver Dashboard — ProcureWise' };
 
@@ -32,6 +33,11 @@ async function getPendingRecommendations() {
     .order('rankPosition', { ascending: true })
     .limit(5);
   return data ?? [];
+}
+
+async function handleApprove(recommId: number) {
+  'use server';
+  await approveRecommendation(recommId);
 }
 
 export default async function ApproverDashboard() {
@@ -144,13 +150,15 @@ export default async function ApproverDashboard() {
                     ₱{Number((rec.quote as any)?.totalQuotedAmount ?? 0).toLocaleString('en-PH')}
                   </div>
                 </div>
-                <button style={{
-                  padding: '0.4rem 0.9rem', borderRadius: 8, flexShrink: 0,
-                  background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(52,211,153,0.3)',
-                  color: '#34d399', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
-                }}>
-                  Approve
-                </button>
+                <form action={handleApprove.bind(null, rec.id)}>
+                  <button type="submit" style={{
+                    padding: '0.4rem 0.9rem', borderRadius: 8, flexShrink: 0,
+                    background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(52,211,153,0.3)',
+                    color: '#34d399', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit',
+                  }}>
+                    Approve
+                  </button>
+                </form>
               </div>
             ))
           )}
