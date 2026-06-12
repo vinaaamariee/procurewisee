@@ -29,7 +29,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="relative flex min-h-screen bg-slate-50 dark:bg-[#090b0f] text-slate-800 dark:text-slate-300 selection:bg-blue-600 selection:text-white font-sans overflow-hidden transition-colors duration-300">
+    <div className="relative flex min-h-screen bg-slate-50 dark:bg-[#0f172a] text-slate-800 dark:text-slate-300 selection:bg-[#7e191b] selection:text-white font-sans overflow-hidden transition-colors duration-300">
       
       {/* Theme Toggle Positioned Top Right */}
       <div className="absolute top-6 right-6 z-50">
@@ -39,78 +39,76 @@ function LoginPage() {
       {/* 50/50 Split Grid */}
       <div className="flex flex-col md:flex-row w-full min-h-screen">
         
-        {/* Left Column - 3D/Warm Orange Ambient Showcase (Hidden on Mobile) */}
-        <div className="hidden md:flex md:w-1/2 relative flex-col justify-center items-center p-12 overflow-hidden bg-white dark:bg-gradient-to-br dark:from-[#1b120c] dark:via-[#0f0f13] dark:to-[#07070a] border-r border-slate-200 dark:border-white/5 transition-colors duration-300">
+        {/* Left Column - Academic/Branding Showcase (Hidden on Mobile) */}
+        <div className="hidden md:flex md:w-1/2 relative flex-col justify-center items-center p-12 overflow-hidden bg-[#7e191b] dark:bg-[#450a0a] border-r border-[#ca8a04]/20 transition-colors duration-300">
           
-          {/* Subtle warm orange lighting source (Dark mode only) */}
+          {/* Subtle warm gold lighting source (Dark mode only) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden hidden dark:block">
-            <div className="absolute top-[20%] right-[-10%] w-[80%] aspect-square rounded-full bg-[#f97316]/10 blur-[130px]" />
-            <div className="absolute bottom-[20%] left-[-10%] w-[60%] aspect-square rounded-full bg-blue-900/10 blur-[120px]" />
+            <div className="absolute top-[20%] right-[-10%] w-[80%] aspect-square rounded-full bg-[#ca8a04]/10 blur-[130px]" />
+            <div className="absolute bottom-[20%] left-[-10%] w-[60%] aspect-square rounded-full bg-[#7e191b]/10 blur-[120px]" />
           </div>
 
           {/* Floating square cards with user silhouettes */}
-          <div className="absolute top-[18%] left-[18%] w-14 h-14 bg-slate-100 dark:bg-[#141519] border border-slate-200 dark:border-white/5 shadow-xl dark:shadow-2xl rounded-xl flex items-center justify-center -rotate-6 opacity-80 transition-colors">
-            <svg viewBox="0 0 100 100" className="w-7 h-7 text-slate-400 dark:text-slate-700">
+          <div className="absolute top-[18%] left-[18%] w-14 h-14 bg-white/5 border border-white/10 shadow-xl rounded-xl flex items-center justify-center -rotate-6 opacity-75">
+            <svg viewBox="0 0 100 100" className="w-7 h-7 text-[#ca8a04]/60">
               <circle cx="50" cy="40" r="22" fill="currentColor" />
               <path d="M15 85c0-18 15-28 35-28s35 10 35 28v5H15v-5z" fill="currentColor" />
             </svg>
           </div>
 
-          <div className="absolute bottom-[16%] left-[44%] w-18 h-18 bg-slate-100 dark:bg-[#141519] border border-slate-200 dark:border-white/5 shadow-xl dark:shadow-2xl rounded-2xl flex items-center justify-center rotate-12 opacity-80 animate-pulse transition-colors" style={{ animationDuration: '4s' }}>
-            <svg viewBox="0 0 100 100" className="w-9 h-9 text-slate-400 dark:text-slate-700">
+          <div className="absolute bottom-[16%] left-[44%] w-18 h-18 bg-white/5 border border-white/10 shadow-xl rounded-2xl flex items-center justify-center rotate-12 opacity-75 animate-pulse" style={{ animationDuration: '4s' }}>
+            <svg viewBox="0 0 100 100" className="w-9 h-9 text-[#ca8a04]/60">
               <circle cx="50" cy="40" r="22" fill="currentColor" />
               <path d="M15 85c0-18 15-28 35-28s35 10 35 28v5H15v-5z" fill="currentColor" />
             </svg>
           </div>
 
-          <div className="absolute top-[26%] right-[22%] w-16 h-16 bg-slate-100 dark:bg-[#141519] border border-slate-200 dark:border-white/5 shadow-xl dark:shadow-2xl rounded-xl flex items-center justify-center rotate-6 opacity-80 transition-colors">
-            <svg viewBox="0 0 100 100" className="w-8 h-8 text-slate-400 dark:text-slate-700">
+          <div className="absolute top-[26%] right-[22%] w-16 h-16 bg-white/5 border border-white/10 shadow-xl rounded-xl flex items-center justify-center rotate-6 opacity-75">
+            <svg viewBox="0 0 100 100" className="w-8 h-8 text-[#ca8a04]/60">
               <circle cx="50" cy="40" r="22" fill="currentColor" />
               <path d="M15 85c0-18 15-28 35-28s35 10 35 28v5H15v-5z" fill="currentColor" />
             </svg>
           </div>
 
           {/* Central Glassmorphic Testimonial Card */}
-          <div className="relative z-10 bg-white/60 dark:bg-[#161413]/35 border border-slate-200 dark:border-white/5 backdrop-blur-xl p-7 sm:p-8 rounded-2xl w-full max-w-sm shadow-[0_20px_50px_rgba(0,0,0,0.05)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-colors">
+          <div className="relative z-10 bg-white/10 dark:bg-black/30 border border-white/15 backdrop-blur-xl p-7 sm:p-8 rounded-2xl w-full max-w-sm shadow-2xl transition-colors text-white">
             
-            {/* Small blue rounded icon badge */}
-            <div className="h-9 w-9 bg-blue-600 rounded-lg flex items-center justify-center text-white mb-6 shadow-md shadow-blue-600/20">
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} className="h-4.5 w-4.5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
+            {/* Small BBSC Gold icon badge */}
+            <div className="h-9 w-9 bg-[#ca8a04] rounded-lg flex items-center justify-center text-[#7e191b] mb-6 shadow-md shadow-[#ca8a04]/20">
+              <span className="font-extrabold text-sm">🏛️</span>
             </div>
 
             {/* Quote block */}
-            <p className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm leading-relaxed mb-6 font-medium">
-              "ProcureWise was created to simplify institutional buying. We replace slow, manual paperwork and complex spreadsheets with automated bidding and objective scoring—making the entire procurement process fast, fair, and transparent."
+            <p className="text-white/90 text-xs sm:text-sm leading-relaxed mb-6 font-medium">
+              "ProcureWise is the official procurement support platform of Batanes State College. We replace slow, manual paperwork with objective automated bidding and comparisons—making the entire solicitation process transparent and compliant."
             </p>
 
             {/* Author info */}
             <div>
-              <span className="text-slate-800 dark:text-slate-200 font-semibold text-xs block">Our Mission</span>
-              <span className="text-slate-500 text-[10px] mt-0.5 block">Simplifying Institutional Procurement</span>
+              <span className="text-[#ca8a04] font-bold text-xs block">BATANES STATE COLLEGE</span>
+              <span className="text-white/60 text-[10px] mt-0.5 block">Procurement Unit Portal</span>
             </div>
 
             {/* Pagination Indicators */}
             <div className="flex items-center gap-1.5 mt-8">
-              <div className="h-1.5 w-1.5 rounded-full bg-blue-600 dark:bg-slate-300" />
-              <div className="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600" />
-              <div className="h-1.5 w-1.5 rounded-full bg-slate-300 dark:bg-slate-600" />
+              <div className="h-1.5 w-1.5 rounded-full bg-[#ca8a04]" />
+              <div className="h-1.5 w-1.5 rounded-full bg-white/30" />
+              <div className="h-1.5 w-1.5 rounded-full bg-white/30" />
             </div>
           </div>
 
         </div>
 
         {/* Right Column - Auth Form */}
-        <div className="w-full md:w-1/2 bg-slate-50 dark:bg-[#090b11] flex flex-col justify-center px-8 sm:px-16 md:px-24 py-12 relative transition-colors duration-300">
+        <div className="w-full md:w-1/2 bg-slate-50 dark:bg-[#0f172a] flex flex-col justify-center px-8 sm:px-16 md:px-24 py-12 relative transition-colors duration-300">
           
           {/* Logo brand for Mobile View (Hidden on Desktop) */}
           <div className="absolute top-8 left-8 flex items-center gap-2 md:hidden">
-            <div className="h-7 w-7 bg-white dark:bg-slate-900 shadow-sm dark:shadow-none rounded-lg flex items-center justify-center text-slate-800 dark:text-white font-black text-xs border border-slate-200 dark:border-white/5">
+            <div className="h-8 w-8 bg-[#7e191b] shadow-sm rounded-lg flex items-center justify-center text-white font-black text-xs border border-[#ca8a04]/20">
               <span>P</span>
-              <span className="text-blue-600 dark:text-blue-400">W</span>
+              <span className="text-[#ca8a04]">W</span>
             </div>
-            <span className="text-sm font-extrabold tracking-tight text-slate-800 dark:text-white">ProcureWise</span>
+            <span className="text-sm font-extrabold tracking-tight text-[#7e191b] dark:text-[#f59e0b]">ProcureWise</span>
           </div>
 
           <div className="w-full max-w-md mx-auto space-y-6 pt-10 md:pt-0">
@@ -126,7 +124,7 @@ function LoginPage() {
                     Don't have an account?{' '}
                     <button
                       onClick={() => { setActiveTab('register'); handleClearParams(); }}
-                      className="text-blue-600 dark:text-blue-500 hover:underline font-semibold cursor-pointer"
+                      className="text-[#7e191b] dark:text-red-400 hover:underline font-semibold cursor-pointer"
                     >
                       Click here
                     </button>
@@ -136,7 +134,7 @@ function LoginPage() {
                     Already have an account?{' '}
                     <button
                       onClick={() => { setActiveTab('login'); handleClearParams(); }}
-                      className="text-blue-600 dark:text-blue-500 hover:underline font-semibold cursor-pointer"
+                      className="text-[#7e191b] dark:text-red-400 hover:underline font-semibold cursor-pointer"
                     >
                       Click here
                     </button>
@@ -185,7 +183,7 @@ function LoginPage() {
                     name="email"
                     type="email"
                     required
-                    className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500/10 text-sm shadow-sm dark:shadow-none"
+                    className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-4 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] dark:focus:border-red-600 focus:ring-1 focus:ring-[#7e191b]/10 text-sm shadow-sm dark:shadow-none"
                   />
                 </div>
 
@@ -198,7 +196,7 @@ function LoginPage() {
                       name="password"
                       type={showPassword ? "text" : "password"}
                       required
-                      className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg pl-4 pr-11 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500/10 text-sm shadow-sm dark:shadow-none"
+                      className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg pl-4 pr-11 py-3 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] dark:focus:border-red-600 focus:ring-1 focus:ring-[#7e191b]/10 text-sm shadow-sm dark:shadow-none"
                     />
                     <button
                       type="button"
@@ -222,7 +220,7 @@ function LoginPage() {
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full bg-[#3051c5] hover:bg-[#3d63e2] text-white py-3 rounded-lg text-sm font-semibold transition cursor-pointer shadow-md shadow-blue-500/20"
+                  className="w-full bg-[#7e191b] hover:bg-[#962124] dark:bg-red-700 dark:hover:bg-red-600 text-white py-3 rounded-lg text-sm font-semibold transition cursor-pointer shadow-md shadow-red-900/15"
                 >
                   {isPending ? (
                     <span className="flex items-center justify-center gap-2">
@@ -245,7 +243,7 @@ function LoginPage() {
                       type="text"
                       required
                       placeholder="Juan Dela Cruz"
-                      className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                      className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] text-sm shadow-sm dark:shadow-none"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -257,7 +255,7 @@ function LoginPage() {
                       type="text"
                       required
                       placeholder="juan_dc"
-                      className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                      className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] text-sm shadow-sm dark:shadow-none"
                     />
                   </div>
                 </div>
@@ -270,7 +268,7 @@ function LoginPage() {
                     name="email"
                     type="email"
                     required
-                    className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                    className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] text-sm shadow-sm dark:shadow-none"
                   />
                 </div>
 
@@ -284,7 +282,7 @@ function LoginPage() {
                       type={showRegPassword ? "text" : "password"}
                       required
                       placeholder="Min 6 characters"
-                      className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg pl-4 pr-11 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                      className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg pl-4 pr-11 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] text-sm shadow-sm dark:shadow-none"
                     />
                     <button
                       type="button"
@@ -313,7 +311,7 @@ function LoginPage() {
                     name="companyName"
                     type="text"
                     required
-                    className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                    className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] text-sm shadow-sm dark:shadow-none"
                   />
                 </div>
 
@@ -326,7 +324,7 @@ function LoginPage() {
                       name="tin"
                       type="text"
                       placeholder="000-000-000-000"
-                      className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                      className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] text-sm shadow-sm dark:shadow-none"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -336,7 +334,7 @@ function LoginPage() {
                     <input
                       name="contactNumber"
                       type="text"
-                      className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                      className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] text-sm shadow-sm dark:shadow-none"
                     />
                   </div>
                 </div>
@@ -349,14 +347,14 @@ function LoginPage() {
                     name="businessAddress"
                     required
                     rows={2}
-                    className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none resize-none"
+                    className="w-full bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-[#334155] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-[#7e191b] text-sm shadow-sm dark:shadow-none resize-none"
                   ></textarea>
                 </div>
 
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="w-full bg-[#3051c5] hover:bg-[#3d63e2] text-white py-3 rounded-lg text-sm font-semibold transition cursor-pointer shadow-md shadow-blue-500/20"
+                  className="w-full bg-[#7e191b] hover:bg-[#962124] dark:bg-red-700 dark:hover:bg-red-600 text-white py-3 rounded-lg text-sm font-semibold transition cursor-pointer shadow-md shadow-red-900/15"
                 >
                   {isPending ? (
                     <span className="flex items-center justify-center gap-2">
@@ -374,7 +372,7 @@ function LoginPage() {
                 Forgot your password?{' '}
                 <button
                   onClick={() => alert("Please contact your ProcureWise administrator to reset your password.")}
-                  className="text-blue-600 dark:text-blue-500 hover:underline font-semibold cursor-pointer"
+                  className="text-[#7e191b] dark:text-red-400 hover:underline font-semibold cursor-pointer"
                 >
                   Click here
                 </button>
@@ -392,8 +390,8 @@ function LoginPage() {
 export default function LoginPageWrapper() {
   return (
     <Suspense fallback={
-      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-[#090b0f]">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-500 border-t-transparent" />
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-[#0f172a]">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#7e191b] border-t-transparent" />
       </div>
     }>
       <LoginPage />
