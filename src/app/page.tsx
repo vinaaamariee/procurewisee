@@ -141,11 +141,17 @@ function LoginPage() {
           <div className="w-full max-w-md mx-auto bg-white/90 dark:bg-[#1e293b]/90 border border-slate-200/80 dark:border-[#334155]/80 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-none p-6 sm:p-8 md:p-10 space-y-6 backdrop-blur-md transition-all duration-300">
             
             {/* Header / Intro */}
-            <div className="space-y-1 text-center">
-              <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
-                {activeTab === 'login' ? 'Sign In to Portal' : 'Supplier Registry'}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
+            <div className="space-y-1 flex flex-col items-center justify-center">
+              {activeTab === 'login' ? (
+                <h2 className="uiverse-title leading-tight mb-2">
+                  Sign In to Portal
+                </h2>
+              ) : (
+                <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white leading-tight text-center">
+                  Supplier Registry
+                </h2>
+              )}
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium text-center">
                 {activeTab === 'login' ? 'Enter credentials to access your dashboard.' : 'Register your company as an official BSC supplier.'}
               </p>
             </div>
@@ -222,51 +228,37 @@ function LoginPage() {
                 {/* Form 1: Sign In */}
                 <form 
                   onSubmit={(e) => handleFormSubmit(e, login)} 
-                  className="w-1/2 pr-3 pl-0.5 space-y-5"
+                  className="w-1/2 pr-3 pl-0.5 uiverse-form-container"
                 >
                   {/* Email input */}
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Email Address
-                    </label>
-                    <div className="login-input-wrapper">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                        <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-4 h-4">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                      </span>
-                      <input
-                        name="email"
-                        type="email"
-                        required
-                        placeholder="name@batanesstatecollege.edu.ph"
-                        className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-11 pr-4 py-3.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 dark:focus:ring-[#ca8a04]/5 text-sm shadow-sm"
-                      />
-                    </div>
-                  </div>
+                  <label>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder=" "
+                      className="uiverse-input"
+                    />
+                    <span>Email Address</span>
+                  </label>
 
                   {/* Password input */}
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Password
-                    </label>
-                    <div className="login-input-wrapper">
-                      <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                        <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-4 h-4">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                      </span>
-                      <input
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        required
-                        placeholder="••••••••"
-                        className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-11 pr-12 py-3.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 dark:focus:ring-[#ca8a04]/5 text-sm shadow-sm"
-                      />
+                  <label>
+                    <input
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      required
+                      placeholder=" "
+                      className="uiverse-input pr-12"
+                    />
+                    <span>Password</span>
+
+                    {/* Show/Hide Password Eye Button */}
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center z-10">
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-white transition-all p-1 hover:scale-110 active:scale-95 outline-none cursor-pointer"
+                        className="text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-white transition-all p-1 hover:scale-110 active:scale-95 outline-none cursor-pointer"
                       >
                         {showPassword ? (
                           <svg fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" className="h-4 w-4">
@@ -280,12 +272,12 @@ function LoginPage() {
                         )}
                       </button>
                     </div>
-                  </div>
+                  </label>
 
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full btn-premium text-white py-3.5 rounded-xl text-sm font-black transition cursor-pointer shadow-lg shadow-[#7e191b]/15"
+                    className="w-full uiverse-submit text-white"
                   >
                     {isPending ? (
                       <span className="flex items-center justify-center gap-2">
@@ -299,93 +291,61 @@ function LoginPage() {
                 {/* Form 2: Supplier Register */}
                 <form 
                   onSubmit={(e) => handleFormSubmit(e, register)} 
-                  className="w-1/2 pl-3 pr-0.5 space-y-4"
+                  className="w-1/2 pl-3 pr-0.5 uiverse-form-container"
                 >
                   {/* Full Name & Username */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                        Full Name *
-                      </label>
-                      <div className="login-input-wrapper">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                          <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                          </svg>
-                        </span>
-                        <input
-                          name="fullName"
-                          type="text"
-                          required
-                          placeholder="Juan Dela Cruz"
-                          className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 text-sm shadow-sm"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                        Username *
-                      </label>
-                      <div className="login-input-wrapper">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                          <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
-                          </svg>
-                        </span>
-                        <input
-                          name="username"
-                          type="text"
-                          required
-                          placeholder="juan_dc"
-                          className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 text-sm shadow-sm"
-                        />
-                      </div>
-                    </div>
+                    <label>
+                      <input
+                        name="fullName"
+                        type="text"
+                        required
+                        placeholder=" "
+                        className="uiverse-input"
+                      />
+                      <span>Full Name *</span>
+                    </label>
+                    <label>
+                      <input
+                        name="username"
+                        type="text"
+                        required
+                        placeholder=" "
+                        className="uiverse-input"
+                      />
+                      <span>Username *</span>
+                    </label>
                   </div>
 
                   {/* Email */}
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Email Address *
-                    </label>
-                    <div className="login-input-wrapper">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                        <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
-                      </span>
-                      <input
-                        name="email"
-                        type="email"
-                        required
-                        placeholder="supplier@company.com"
-                        className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 text-sm shadow-sm"
-                      />
-                    </div>
-                  </div>
+                  <label>
+                    <input
+                      name="email"
+                      type="email"
+                      required
+                      placeholder=" "
+                      className="uiverse-input"
+                    />
+                    <span>Email Address *</span>
+                  </label>
 
                   {/* Password */}
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Password *
-                    </label>
-                    <div className="login-input-wrapper">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                        <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                      </span>
-                      <input
-                        name="password"
-                        type={showRegPassword ? "text" : "password"}
-                        required
-                        placeholder="Min 6 characters"
-                        className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-11 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 text-sm shadow-sm"
-                      />
+                  <label>
+                    <input
+                      name="password"
+                      type={showRegPassword ? "text" : "password"}
+                      required
+                      placeholder=" "
+                      className="uiverse-input pr-12"
+                    />
+                    <span>Password *</span>
+                    
+                    {/* Show/Hide Password Eye Button */}
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center z-10">
                       <button
                         type="button"
                         onClick={() => setShowRegPassword(!showRegPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-white transition-all p-1 hover:scale-110 active:scale-95 outline-none cursor-pointer"
+                        className="text-gray-400 dark:text-gray-500 hover:text-gray-700 dark:hover:text-white transition-all p-1 hover:scale-110 active:scale-95 outline-none cursor-pointer"
                       >
                         {showRegPassword ? (
                           <svg fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" className="h-4 w-4">
@@ -399,95 +359,58 @@ function LoginPage() {
                         )}
                       </button>
                     </div>
-                  </div>
+                  </label>
 
                   {/* Company Name */}
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Company Name *
-                    </label>
-                    <div className="login-input-wrapper">
-                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                        <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h18v3H3V3z" />
-                        </svg>
-                      </span>
-                      <input
-                        name="companyName"
-                        type="text"
-                        required
-                        placeholder="Batanes Supplies Corp."
-                        className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 text-sm shadow-sm"
-                      />
-                    </div>
-                  </div>
+                  <label>
+                    <input
+                      name="companyName"
+                      type="text"
+                      required
+                      placeholder=" "
+                      className="uiverse-input"
+                    />
+                    <span>Company Name *</span>
+                  </label>
 
                   {/* TIN & Contact Number */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                        TIN (Optional)
-                      </label>
-                      <div className="login-input-wrapper">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                          <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
-                          </svg>
-                        </span>
-                        <input
-                          name="tin"
-                          type="text"
-                          placeholder="000-000-000-000"
-                          className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 text-sm shadow-sm"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                        Contact Number
-                      </label>
-                      <div className="login-input-wrapper">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                          <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-1.514 2.022a13.916 13.916 0 01-6.793-6.793l2.022-1.514c.362-.272.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
-                          </svg>
-                        </span>
-                        <input
-                          name="contactNumber"
-                          type="text"
-                          placeholder="+63 917 123 4567"
-                          className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 text-sm shadow-sm"
-                        />
-                      </div>
-                    </div>
+                    <label>
+                      <input
+                        name="tin"
+                        type="text"
+                        placeholder=" "
+                        className="uiverse-input"
+                      />
+                      <span>TIN (Optional)</span>
+                    </label>
+                    <label>
+                      <input
+                        name="contactNumber"
+                        type="text"
+                        placeholder=" "
+                        className="uiverse-input"
+                      />
+                      <span>Contact Number</span>
+                    </label>
                   </div>
 
                   {/* Business Address */}
-                  <div className="space-y-1.5">
-                    <label className="block text-[11px] font-extrabold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                      Business Address *
-                    </label>
-                    <div className="login-input-wrapper">
-                      <span className="absolute left-3 top-3 text-slate-400 dark:text-slate-500 pointer-events-none z-10">
-                        <svg fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" className="w-3.5 h-3.5">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1115 0z" />
-                        </svg>
-                      </span>
-                      <textarea
-                        name="businessAddress"
-                        required
-                        rows={2}
-                        placeholder="Street, Barangay, Municipality, Province"
-                        className="w-full bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3.5 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none transition-all duration-300 focus:bg-white dark:focus:bg-slate-900 focus:border-[#7e191b] dark:focus:border-[#ca8a04] focus:ring-4 focus:ring-[#7e191b]/5 text-sm shadow-sm resize-none"
-                      ></textarea>
-                    </div>
-                  </div>
+                  <label>
+                    <textarea
+                      name="businessAddress"
+                      required
+                      rows={2}
+                      placeholder=" "
+                      className="uiverse-input resize-none h-[76px]"
+                    ></textarea>
+                    <span>Business Address *</span>
+                  </label>
 
                   <button
                     type="submit"
                     disabled={isPending}
-                    className="w-full btn-premium text-white py-3.5 rounded-xl text-sm font-black transition cursor-pointer shadow-lg shadow-[#7e191b]/15 mt-2"
+                    className="w-full uiverse-submit text-white mt-2"
                   >
                     {isPending ? (
                       <span className="flex items-center justify-center gap-2">

@@ -953,3 +953,133 @@ input:-webkit-autofill:active {
   transform: translateY(0);
 }
 
+/* ============================================================
+   UIVERSE FORM STYLING (BY YAYA12085) SCOPED FOR LOGIN
+   ============================================================ */
+.uiverse-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.uiverse-title {
+  font-size: 26px;
+  color: var(--accent);
+  font-weight: 800;
+  letter-spacing: -1px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: 28px;
+}
+
+.uiverse-title::before,
+.uiverse-title::after {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  border-radius: 50%;
+  left: 0px;
+  background-color: var(--accent);
+}
+
+.uiverse-title::before {
+  width: 15px;
+  height: 15px;
+  background-color: var(--accent);
+}
+
+.uiverse-title::after {
+  width: 15px;
+  height: 15px;
+  animation: uiverse-pulse 1.2s linear infinite;
+}
+
+.uiverse-form-container label {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.uiverse-form-container label .uiverse-input {
+  width: 100%;
+  padding: 22px 12px 8px 12px;
+  outline: 0;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.uiverse-form-container label .uiverse-input:focus {
+  border-color: var(--accent);
+  background-color: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-glass);
+}
+
+.uiverse-form-container label .uiverse-input + span {
+  position: absolute;
+  left: 12px;
+  top: 16px;
+  color: var(--text-muted);
+  font-size: 0.85em;
+  font-weight: 600;
+  cursor: text;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.uiverse-form-container label .uiverse-input:placeholder-shown + span {
+  top: 16px;
+  font-size: 0.85em;
+}
+
+.uiverse-form-container label .uiverse-input:focus + span,
+.uiverse-form-container label .uiverse-input:not(:placeholder-shown) + span {
+  top: 6px;
+  font-size: 0.68em;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.uiverse-submit {
+  border: none;
+  outline: none;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+  padding: 12px;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 4px 12px var(--accent-glass);
+}
+
+.uiverse-submit:hover {
+  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px var(--accent-glass);
+}
+
+.uiverse-submit:active {
+  transform: translateY(0);
+}
+
+@keyframes uiverse-pulse {
+  from {
+    transform: scale(0.95);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+
