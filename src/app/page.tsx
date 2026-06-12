@@ -6,6 +6,149 @@ import { login, register } from './actions/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Mail, Lock, User, Building2, Phone, MapPin, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
+
+
+
+function NetworkVisualizer() {
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!canvas || !container) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Make canvas fill the container perfectly
+    function resize() {
+      if (!canvas || !container) return;
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+    
+    resize();
+    window.addEventListener('resize', resize);
+
+    // Configuration
+    const particles: Node[] = [];
+    const particleCount = 35; // Number of floating dots
+    const connectionDistance = 130; // How close they need to be to draw a line
+
+    class Node {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      radius: number;
+      isGold: boolean;
+
+      constructor() {
+        this.x = Math.random() * (canvas?.width || 500);
+        this.y = Math.random() * (canvas?.height || 500);
+        // Very slow, elegant drifting speed
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = Math.random() * 2 + 1.5;
+        // Randomly assign gold or red colors
+        this.isGold = Math.random() > 0.4; 
+      }
+
+      update() {
+        if (!canvas) return;
+        this.x += this.vx;
+        this.y += this.vy;
+
+        // Softly bounce off the edges of the container
+        if (this.x <= 0 || this.x >= canvas.width) this.vx *= -1;
+        if (this.y <= 0 || this.y >= canvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        if (!ctx) return;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.isGold ? '#dcb353' : '#a52a2a';
+        ctx.fill();
+      }
+    }
+
+    // Create the nodes
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Node());
+    }
+
+    let animationFrameId: number;
+
+    // The main animation loop
+    function animate() {
+      if (!canvas || !ctx) return;
+      // Clear the canvas every frame
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw connecting lines
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < connectionDistance) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            
+            // Lines fade out as nodes get further apart
+            const opacity = 1 - (distance / connectionDistance);
+            
+            if (particles[i].isGold && particles[j].isGold) {
+              ctx.strokeStyle = `rgba(220, 179, 83, ${opacity * 0.3})`; // Gold line
+            } else {
+              ctx.strokeStyle = `rgba(165, 42, 42, ${opacity * 0.3})`;  // Red line
+            }
+            
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Move and draw all nodes
+      particles.forEach(node => {
+        node.update();
+        node.draw();
+      });
+
+      animationFrameId = requestAnimationFrame(animate);
+    }
+
+    // Start the engine
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', resize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return (
+    <div ref={containerRef} id="network-container">
+      <canvas ref={canvasRef} id="networkCanvas" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 1 }} />
+      <div className="network-labels" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', zIndex: 2, pointerEvents: 'none' }}>
+        <div className="badge gold" style={{ top: '25%', left: '60%' }}>SUPPLIER A</div>
+        <div className="badge red" style={{ top: '35%', left: '30%' }}>BID #4S911</div>
+        <div className="badge red" style={{ top: '45%', left: '75%' }}>LOGISTICS</div>
+        <div className="badge gold" style={{ top: '60%', left: '70%' }}>AUCTION LIVE</div>
+        <div className="badge gold" style={{ top: '65%', left: '60%' }}>CONTRACT VALID</div>
+        <div className="badge red" style={{ top: '75%', left: '20%' }}>SUPPLIER 1</div>
+        <div className="raw-text" style={{ top: '45%', left: '55%' }}>PRICE DATA</div>
+      </div>
+    </div>
+  );
+}
+
 function LoginPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -56,7 +199,7 @@ function LoginPage() {
         /* --- Left Panel --- */
         .left-panel {
             width: 50%;
-            background: linear-gradient(180deg, #18191c 0%, #1c1518 40%, #461113 100%);
+            background: linear-gradient(180deg, #121316 0%, #1a1215 40%, #3e0b0e 100%);
             position: relative;
             padding: 40px;
             display: flex;
@@ -94,16 +237,6 @@ function LoginPage() {
             font-size: 14px;
             margin-top: 8px;
             z-index: 10;
-        }
-
-        .network-graphic {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            max-width: 500px;
-            height: auto;
         }
 
         /* --- Right Panel --- */
@@ -415,6 +548,47 @@ function LoginPage() {
             border-color: #ffffff;
         }
 
+        /* --- Network Visualizer CSS --- */
+        #network-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            min-height: 450px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .badge {
+            position: absolute;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            animation: floatLabel 6s ease-in-out infinite alternate;
+        }
+        .badge.gold {
+            border: 1px solid rgba(220, 179, 83, 0.5);
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(220, 179, 83, 0.08);
+        }
+        .badge.red {
+            border: 1px solid rgba(165, 42, 42, 0.5);
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(165, 42, 42, 0.08);
+        }
+        .raw-text {
+            position: absolute;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            animation: floatLabel 5s ease-in-out infinite alternate-reverse;
+        }
+        @keyframes floatLabel {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-10px); }
+        }
+
         /* Responsive Design */
         @media (max-width: 900px) {
             .login-container-wrapper {
@@ -426,25 +600,25 @@ function LoginPage() {
                 padding: 30px;
                 border-right: none;
                 border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
             }
             .right-panel {
                 width: 100%;
                 min-height: 60vh;
                 padding: 30px 20px;
             }
-            .network-graphic {
-                position: relative;
-                top: auto;
-                left: auto;
-                transform: none;
-                margin-top: 30px;
-                margin-bottom: 10px;
-                width: 100%;
-                max-width: 400px;
-                align-self: center;
-            }
             .login-card {
                 padding: 30px 24px;
+            }
+            #network-container {
+                min-height: 280px;
+                max-height: 320px;
+                width: 100%;
+                margin-top: 20px;
+                margin-bottom: 10px;
+                align-self: center;
             }
         }
       `}} />
@@ -466,92 +640,14 @@ function LoginPage() {
         </div>
 
         {/* Network Constellation Graphic */}
-        <svg className="network-graphic" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feComposite in="SourceGraphic" in2="blur" operator="over" />
-            </filter>
-          </defs>
-
-          <g stroke="#dcb353" strokeWidth="1.5" opacity="0.4">
-            <line x1="250" y1="120" x2="150" y2="200" />
-            <line x1="250" y1="120" x2="350" y2="200" />
-            <line x1="150" y1="200" x2="150" y2="300" />
-            <line x1="350" y1="200" x2="350" y2="300" />
-            <line x1="150" y1="300" x2="250" y2="380" />
-            <line x1="350" y1="300" x2="250" y2="380" />
-            <line x1="250" y1="120" x2="100" y2="250" />
-            <line x1="100" y1="250" x2="150" y2="300" />
-            <line x1="100" y1="250" x2="250" y2="250" />
-            <line x1="150" y1="200" x2="250" y2="250" />
-            <line x1="350" y1="200" x2="250" y2="250" />
-            <line x1="350" y1="300" x2="250" y2="250" />
-            <line x1="150" y1="300" x2="250" y2="250" />
-            <line x1="250" y1="120" x2="250" y2="250" />
-            <line x1="250" y1="380" x2="250" y2="250" />
-          </g>
-
-          <g stroke="#a33" strokeWidth="1.5" opacity="0.5">
-            <line x1="150" y1="200" x2="200" y2="350" />
-            <line x1="350" y1="200" x2="420" y2="200" />
-            <line x1="420" y1="200" x2="350" y2="300" />
-            <line x1="420" y1="200" x2="400" y2="320" />
-            <line x1="350" y1="300" x2="400" y2="320" />
-            <line x1="250" y1="380" x2="200" y2="350" />
-          </g>
-
-          <circle cx="250" cy="120" r="5" fill="#f4c862" filter="url(#glow)"/>
-          <circle cx="150" cy="200" r="4" fill="#a52a2a" filter="url(#glow)"/>
-          <circle cx="350" cy="200" r="5" fill="#f4c862" filter="url(#glow)"/>
-          <circle cx="150" cy="300" r="5" fill="#f4c862" filter="url(#glow)"/>
-          <circle cx="350" cy="300" r="4" fill="#a52a2a" filter="url(#glow)"/>
-          <circle cx="250" cy="380" r="5" fill="#a52a2a" filter="url(#glow)"/>
-          <circle cx="100" cy="250" r="5" fill="#f4c862" filter="url(#glow)"/>
-          <circle cx="250" cy="250" r="6" fill="#f4c862" filter="url(#glow)"/>
-          <circle cx="420" cy="200" r="4" fill="#a52a2a" filter="url(#glow)"/>
-          <circle cx="400" cy="320" r="4" fill="#f4c862" filter="url(#glow)"/>
-          <circle cx="200" cy="350" r="4" fill="#f4c862" filter="url(#glow)"/>
-
-          <rect x="255" y="100" width="70" height="18" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
-          <text x="260" y="112" fill="#ddd" fontSize="9">SUPPLIER A</text>
-          <rect x="255" y="80" width="65" height="16" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
-          <text x="260" y="91" fill="#ddd" fontSize="8">BID #4S810</text>
-          
-          <text x="160" y="190" fill="#ddd" fontSize="9">SUPPLIER A</text>
-          <rect x="135" y="125" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="1" opacity="0.6"/>
-          <text x="140" y="136" fill="#ddd" fontSize="8">BID #4S911</text>
-
-          <text x="265" y="190" fill="#ddd" fontSize="9">PRICE DATA</text>
-          
-          <rect x="270" y="275" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="1" opacity="0.6"/>
-          <text x="275" y="286" fill="#ddd" fontSize="8">LOGISTICS</text>
-
-          <rect x="380" y="295" width="75" height="18" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
-          <text x="385" y="307" fill="#ddd" fontSize="8">AUCTION LIVE</text>
-
-          <rect x="255" y="315" width="90" height="18" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
-          <text x="260" y="327" fill="#ddd" fontSize="8">CONTRACT VALID</text>
-
-          <rect x="205" y="390" width="65" height="16" rx="4" fill="transparent" stroke="#dcb353" strokeWidth="1" opacity="0.6"/>
-          <text x="210" y="401" fill="#ddd" fontSize="8">LOGISTICS</text>
-
-          <rect x="70" y="320" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="1" opacity="0.6"/>
-          <text x="75" y="331" fill="#ddd" fontSize="8">SUPPLIER 1</text>
-          
-          <text x="120" y="265" fill="#ddd" fontSize="8">CONSOLIDATE</text>
-          <rect x="25" y="225" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="1" opacity="0.6"/>
-          <text x="30" y="236" fill="#ddd" fontSize="8">BID #4S810</text>
-
-          <rect x="420" y="170" width="65" height="16" rx="4" fill="transparent" stroke="#a52a2a" strokeWidth="0.4"/>
-          <text x="425" y="181" fill="#ddd" fontSize="8">SUPPLIER A</text>
-        </svg>
+        <NetworkVisualizer />
 
         {/* Copyright Footer */}
         <div className="relative z-10 text-xs font-semibold text-slate-500 tracking-wider">
           <span>© 2026 Batanes State College</span>
         </div>
       </div>
+
 
       {/* Right Panel */}
       <div className="right-panel">
@@ -759,11 +855,6 @@ function LoginPage() {
               <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab(activeTab === 'login' ? 'register' : 'login'); handleClearParams(); }}>
                 {activeTab === 'login' ? 'Sign Up' : 'Sign In'}
               </a>
-            </div>
-
-            <div className="social-logins">
-              <a href="#" className="social-btn" onClick={(e) => { e.preventDefault(); alert("Social auth is currently not configured."); }}>Sign up with Google</a>
-              <a href="#" className="social-btn" onClick={(e) => { e.preventDefault(); alert("Social auth is currently not configured."); }}>Sign up with Microsoft</a>
             </div>
           </div>
 
