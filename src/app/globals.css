@@ -18,22 +18,22 @@
   --secondary-light:  #eab308;
   --secondary-dim:    rgba(202, 138, 4, 0.06);
   
-  --bg-deep:          #f8fafc; /* Slate 50 solid background */
-  --bg-dark:          #f1f5f9; /* Slate 100 solid secondary background */
-  --bg-header:        #ffffff; /* Solid White header */
+  --bg-deep:          #FAF9F6; /* Warm Alabaster canvas background */
+  --bg-dark:          #F5F5F3; /* Soft Cream secondary canvas */
+  --bg-header:        #FAF9F6; /* Warm Alabaster header */
   
   --green:            #059669; /* Emerald 600 */
   --green-dim:        rgba(5, 150, 105, 0.08);
   --red-dim:          rgba(220, 38, 38, 0.08);
   
-  --text-primary:     #0f172a; /* Slate 900 */
-  --text-secondary:   #475569; /* Slate 600 */
-  --text-muted:       #64748b;
+  --text-primary:     #1A1A1A; /* Deep charcoal / soft off-black */
+  --text-secondary:   #4D4D4D; /* Medium charcoal secondary text */
+  --text-muted:       #737373; /* Muted charcoal */
   
-  --surface:          #ffffff; /* Solid White Surface */
-  --surface-hover:    #f8fafc;
-  --border:           #e2e8f0; /* Slate 200 solid border */
-  --border-accent:    rgba(202, 138, 4, 0.2);
+  --surface:          #FCFAF6; /* Off-white warm surface */
+  --surface-hover:    #F5F3EE; /* Subtle warm hover surface */
+  --border:           #E7E5E0; /* Warm light border */
+  --border-accent:    rgba(202, 138, 4, 0.15);
   
   /* Map old variables for compatibility and easy transition */
   --maroon:         var(--accent);

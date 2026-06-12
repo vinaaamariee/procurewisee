@@ -1,17 +1,22 @@
 // SummaryCards — KPI overview for the Price Comparison Dashboard
 // Colors: Batanes State College Maroon & Gold
 
-import { officeItems, suppliers, getBestQuote, getAverageSavings, type OfficeItem, type PriceQuote } from "@/lib/mock-price-data";
+import { getBestQuote, getAverageSavings, type OfficeItem, type PriceQuote, type Supplier } from "@/lib/mock-price-data";
 
 function formatPeso(amount: number) {
   return `₱${amount.toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
 }
 
-export default function SummaryCards() {
-  const avgSavings = getAverageSavings();
+interface SummaryCardsProps {
+  items: OfficeItem[];
+  suppliers: Supplier[];
+}
+
+export default function SummaryCards({ items, suppliers }: SummaryCardsProps) {
+  const avgSavings = getAverageSavings(items);
 
   // Total potential savings: sum of (worst - best) across all items
-  const totalSavings = officeItems.reduce((sum: number, item: OfficeItem) => {
+  const totalSavings = items.reduce((sum: number, item: OfficeItem) => {
     const available = item.quotes.filter((q: PriceQuote) => q.availability !== "out-of-stock");
     if (available.length < 2) return sum;
     const prices = available.map((q: PriceQuote) => q.unitPrice);
@@ -22,7 +27,7 @@ export default function SummaryCards() {
     {
       id: "card-items-compared",
       label: "Items Compared",
-      value: officeItems.length.toString(),
+      value: items.length.toString(),
       sublabel: "office supply items",
       icon: (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-6 h-6">

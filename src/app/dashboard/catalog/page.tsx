@@ -3,6 +3,8 @@ import { getCatalogProducts, getProductCategories } from '@/app/actions/catalog'
 import CatalogBrowser from '@/components/catalog/CatalogBrowser';
 import { ROLE_HOME } from '@/types/auth';
 
+import { BackButton } from '@/components/back-button';
+
 export const metadata = { title: 'Product Catalog — ProcureWise' };
 
 export default async function ProductCatalogPage() {
@@ -26,33 +28,23 @@ export default async function ProductCatalogPage() {
   }));
 
   return (
-    <div style={{ maxWidth: 1400, margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div style={{ maxWidth: 1400, margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       
+      {/* Navigation Persistence - Back Button pinned to upper left */}
+      <div className="flex justify-start">
+        <BackButton href={roleHome} label="Back to Dashboard" />
+      </div>
+
       {/* Page Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.5px' }}>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px' }} className="font-extrabold">
             Product Catalog
           </h1>
-          <p style={{ marginTop: '0.4rem', fontSize: '0.875rem', color: '#64748b' }}>
+          <p style={{ marginTop: '0.4rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
             Browse standard goods, materials, and equipment specifications used for canvassing and RFQs.
           </p>
         </div>
-        <a
-          href={roleHome}
-          style={{
-            padding: '0.5rem 1rem',
-            borderRadius: 8,
-            border: '1px solid rgba(255,255,255,0.15)',
-            color: '#94a3b8',
-            textDecoration: 'none',
-            fontSize: '0.8rem',
-            fontWeight: 600,
-            transition: 'all 0.2s',
-          }}
-        >
-          ← Back to Dashboard
-        </a>
       </div>
 
       {/* Catalog browser */}

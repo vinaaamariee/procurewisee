@@ -60,7 +60,7 @@ export default async function ApproverDashboard() {
         </div>
         <a
           href="/dashboard/catalog"
-          className="px-5 py-2.5 rounded-xl border border-[#ca8a04]/30 bg-[#ca8a04]/10 hover:bg-[#ca8a04] text-[#7e191b] dark:text-[#f59e0b] hover:text-white font-bold text-sm transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#ca8a04]/20 cursor-pointer text-center"
+          className="px-5 py-2.5 rounded-xl border border-[#E7E5E0] dark:border-slate-800 bg-[#FCFAF6] dark:bg-[#1e293b] text-slate-700 dark:text-slate-300 hover:bg-[#7e191b]/5 dark:hover:bg-[#f59e0b]/5 hover:text-[#7e191b] dark:hover:text-[#f59e0b] hover:border-[#7e191b]/30 dark:hover:border-[#f59e0b]/30 font-bold text-sm transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-sm cursor-pointer text-center"
           style={{ textDecoration: 'none' }}
         >
           👁️ Product Catalog

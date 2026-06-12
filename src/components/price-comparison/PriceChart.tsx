@@ -1,15 +1,16 @@
-import { officeItems, suppliers, getBestQuote, type Supplier, type PriceQuote, type OfficeItem } from "@/lib/mock-price-data";
+import { getBestQuote, type Supplier, type PriceQuote, type OfficeItem } from "@/lib/mock-price-data";
 
 function formatPeso(amount: number) {
   return `₱${amount.toLocaleString("en-PH", { minimumFractionDigits: 0 })}`;
 }
 
 interface PriceChartProps {
-  items: typeof officeItems;
+  items: OfficeItem[];
+  suppliers: Supplier[];
   selectedSuppliers: string[];
 }
 
-export default function PriceChart({ items, selectedSuppliers }: PriceChartProps) {
+export default function PriceChart({ items, suppliers, selectedSuppliers }: PriceChartProps) {
   const visibleSuppliers =
     selectedSuppliers.length > 0
       ? suppliers.filter((s: Supplier) => selectedSuppliers.includes(s.id))

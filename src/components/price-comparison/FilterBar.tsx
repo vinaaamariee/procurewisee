@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { categories, suppliers, type Supplier } from "@/lib/mock-price-data";
+import { type Supplier } from "@/lib/mock-price-data";
 
 interface FilterBarProps {
   searchQuery: string;
@@ -10,6 +10,8 @@ interface FilterBarProps {
   onCategoryChange: (v: string) => void;
   selectedSuppliers: string[];
   onSuppliersChange: (v: string[]) => void;
+  categories: string[];
+  suppliers: Supplier[];
 }
 
 export default function FilterBar({
@@ -19,6 +21,8 @@ export default function FilterBar({
   onCategoryChange,
   selectedSuppliers,
   onSuppliersChange,
+  categories,
+  suppliers,
 }: FilterBarProps) {
   const [supplierOpen, setSupplierOpen] = useState(false);
 

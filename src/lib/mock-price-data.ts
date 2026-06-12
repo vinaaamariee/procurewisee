@@ -228,8 +228,9 @@ export function getSavingsPercent(item: OfficeItem): number {
   return Math.round(((worst.unitPrice - best.unitPrice) / worst.unitPrice) * 100);
 }
 
-export function getAverageSavings(): number {
-  const savingsList = officeItems.map(getSavingsPercent);
+export function getAverageSavings(items: OfficeItem[]): number {
+  if (!items || items.length === 0) return 0;
+  const savingsList = items.map(getSavingsPercent);
   return Math.round(savingsList.reduce((a, b) => a + b, 0) / savingsList.length);
 }
 

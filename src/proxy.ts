@@ -106,8 +106,10 @@ export async function proxy(request: NextRequest) {
       );
     }
 
-    // 3. Role-based route guard
-    const routeGuard = ROUTE_ROLE.find(({ prefix }) => pathname.startsWith(prefix));
+    // 3. Role-based route guard - match exact segment or sub-paths to avoid sibling prefix collisions (e.g. /dashboard/supplier-profiles matching /dashboard/supplier)
+    const routeGuard = ROUTE_ROLE.find(({ prefix }) => 
+      pathname === prefix || pathname.startsWith(prefix + '/')
+    );
 
     if (routeGuard && profile.role !== routeGuard.role) {
       // Wrong role for this section → send to their correct dashboard
