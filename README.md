@@ -86,6 +86,12 @@ A standard supplies and equipment database that streamlines RFQ creation and pro
 * **Universal Catalog Browser**: A read-only browser at `/dashboard/catalog` accessible by all roles (Officers, Suppliers, and Approvers) supporting real-time keywords search and category filtering.
 * **Server Action Management**: All operations are powered by secure Next.js Server Actions (`src/app/actions/catalog.ts`).
 
+### 9. Document Standardization & E2E Testing
+Standardized Batanes State College headers and footers across all official document-like interfaces:
+* **Reusable Layout Components**: Introduced `<DocumentHeader>` and `<DocumentFooter>` components under `src/components/common/` that render the official college branding banners (`/bsc-header.png` and `/bsc-footer.png`) cleanly inside rounded, bordered containers with subtle drop shadows to blend with both light and dark modes.
+* **Solicitation and Bid Forms**: Standardized the visual layouts of the RFQ Creation Form (`RfqCreationForm.tsx`) and the Supplier Quotation Form (`QuoteSubmissionForm.tsx`).
+* **E2E Integration Verification**: Created a robust standalone E2E integration test script at `scripts/test-rfq-engine.ts` to programmatically verify the full solicitation flow, including RFQ drafting, pre-filling items from the product catalog, setting ABC limits, database persistence, and status transitions.
+
 ---
 
 ## 💾 Database Schema Details
