@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { logAuditTrail } from '@/lib/audit';
 
 interface QuoteDetailInput {
   rfqItemId: number;
@@ -60,7 +61,7 @@ export async function submitQuoteAction({
     }
 
     // 3. Database Transaction: Clean up any old quote for this supplier and RFQ, then create new
-    await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx) => {
       // Find existing quote
       const existingQuote = await tx.supplierQuote.findFirst({
         where: {
@@ -77,7 +78,7 @@ export async function submitQuoteAction({
       }
 
       // Create new quote
-      await tx.supplierQuote.create({
+      const newQuote = await tx.supplierQuote.create({
         data: {
           rfqId,
           supplierId,
@@ -89,6 +90,16 @@ export async function submitQuoteAction({
           },
         },
       });
+
+      return { existingQuote, newQuote };
+    });
+
+    logAuditTrail({
+      actionType: 'SUBMIT_BID',
+      tableAffected: 'supplier_quotes',
+      recordId: result.newQuote.id,
+      oldState: result.existingQuote,
+      newState: result.newQuote,
     });
 
     revalidatePath('/dashboard/supplier');

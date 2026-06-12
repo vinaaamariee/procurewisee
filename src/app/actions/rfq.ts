@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { RfqStatus } from "@/generated/prisma/client";
 import { revalidatePath } from "next/cache";
+import { logAuditTrail } from "@/lib/audit";
 
 /**
  * Creates a Request for Quote (RFQ) along with its requisition line items.
@@ -58,6 +59,13 @@ export async function createRfq(data: {
       },
     });
 
+    logAuditTrail({
+      actionType: "CREATE_RFQ",
+      tableAffected: "requests_for_quote",
+      recordId: createdRfq.id,
+      newState: createdRfq,
+    });
+
     revalidatePath("/", "layout");
     return { success: true, data: createdRfq };
   } catch (error: any) {
@@ -73,9 +81,21 @@ export const createRfqAction = createRfq;
  * Transitions an RFQ's status to `Published` (open for bidding).
  */
 export async function publishRfq(rfqId: number) {
+  const oldRfq = await prisma.requestForQuote.findUnique({
+    where: { id: rfqId },
+  });
+
   const updated = await prisma.requestForQuote.update({
     where: { id: rfqId },
     data: { status: RfqStatus.Published },
+  });
+
+  logAuditTrail({
+    actionType: "PUBLISH_RFQ",
+    tableAffected: "requests_for_quote",
+    recordId: rfqId,
+    oldState: oldRfq,
+    newState: updated,
   });
 
   revalidatePath("/", "layout");
@@ -86,9 +106,21 @@ export async function publishRfq(rfqId: number) {
  * Transitions an RFQ's status to `Closed` (no longer accepting quotes).
  */
 export async function closeRfq(rfqId: number) {
+  const oldRfq = await prisma.requestForQuote.findUnique({
+    where: { id: rfqId },
+  });
+
   const updated = await prisma.requestForQuote.update({
     where: { id: rfqId },
     data: { status: RfqStatus.Closed },
+  });
+
+  logAuditTrail({
+    actionType: "CLOSE_RFQ",
+    tableAffected: "requests_for_quote",
+    recordId: rfqId,
+    oldState: oldRfq,
+    newState: updated,
   });
 
   revalidatePath("/", "layout");
