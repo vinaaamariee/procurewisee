@@ -2,10 +2,10 @@ import 'dotenv/config';
 import { prisma } from './src/lib/prisma';
 
 async function run() {
-  console.log('Querying user_profiles...');
+  console.log('Querying raw database rows...');
   try {
-    const profiles = await prisma.userProfile.findMany();
-    console.log('User Profiles:', profiles);
+    const rawProfiles = await prisma.$queryRaw`SELECT id, username, role FROM user_profiles`;
+    console.log('Raw DB User Profiles:', rawProfiles);
   } catch (e) {
     console.error('Error:', e);
   } finally {
