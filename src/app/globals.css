@@ -5,6 +5,8 @@
 
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ---------- CSS Variables ---------- */
 :root {
   /* Default: Light Mode (Solid academic Batanes State College theme) */
