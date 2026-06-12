@@ -227,8 +227,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
       {errorMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)',
-          color: '#f87171', fontSize: '0.875rem', fontWeight: 500
+          background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)',
+          color: '#ef4444', fontSize: '0.875rem', fontWeight: 500
         }}>
           ⚠️ {errorMsg}
         </div>
@@ -237,8 +237,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
       {successMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)',
-          color: '#34d399', fontSize: '0.875rem', fontWeight: 500
+          background: 'var(--green-dim)', border: '1px solid var(--border)',
+          color: 'var(--green)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ✅ {successMsg}
         </div>
@@ -246,12 +246,12 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
 
       {/* Main Glass Form */}
       <form onSubmit={(e) => handleSubmit(e)} style={{
-        background: 'rgba(15,23,42,0.65)',
-        border: '1px solid rgba(255,255,255,0.07)',
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
         borderRadius: 16,
         padding: '2rem',
         backdropFilter: 'blur(16px)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+        boxShadow: 'var(--shadow-card)',
         display: 'flex',
         flexDirection: 'column',
         gap: '2rem'
@@ -260,19 +260,19 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
         {/* official header styling */}
         <div style={{
           textAlign: 'center',
-          borderBottom: '2px solid rgba(255,255,255,0.08)',
+          borderBottom: '2px solid var(--border)',
           paddingBottom: '1.5rem',
-          color: '#f8fafc'
+          color: 'var(--text-primary)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
             <div style={{ fontSize: '2.5rem' }}>🏛️</div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '0.5px' }}>BATANES STATE COLLEGE</div>
-              <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Washington Ave., San Antonio, Basco, Batanes</div>
-              <div style={{ fontSize: '0.72rem', color: '#6366f1', fontWeight: 700, marginTop: '0.2rem' }}>PROCUREMENT UNIT</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Washington Ave., San Antonio, Basco, Batanes</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--accent)', fontWeight: 700, marginTop: '0.2rem' }}>PROCUREMENT UNIT</div>
             </div>
           </div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', letterSpacing: '1px', color: '#38bdf8' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', letterSpacing: '1px', color: 'var(--secondary)' }}>
             CREATE REQUEST FOR PRICE QUOTATION
           </h2>
         </div>
@@ -285,7 +285,7 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
         }}>
           {/* RFQ Number */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8' }}>RFQ Ref No. *</label>
+            <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>RFQ Ref No. *</label>
             <input
               type="text"
               required
@@ -294,15 +294,15 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
               placeholder="e.g. 2606-GAS1-185"
               style={{
                 padding: '0.6rem 0.8rem', borderRadius: 8,
-                background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f8fafc', fontSize: '0.85rem'
+                background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                color: 'var(--text-primary)', fontSize: '0.85rem'
               }}
             />
           </div>
 
           {/* Title */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', gridColumn: 'span 2' }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8' }}>Title / Subject of Solicitation *</label>
+            <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Title / Subject of Solicitation *</label>
             <input
               type="text"
               required
@@ -311,17 +311,17 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
               placeholder="e.g. Procurement of Sticker Wrap with Print"
               style={{
                 padding: '0.6rem 0.8rem', borderRadius: 8,
-                background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f8fafc', fontSize: '0.85rem'
+                background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                color: 'var(--text-primary)', fontSize: '0.85rem'
               }}
             />
           </div>
 
           {/* Approved Budget Contract */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8' }}>Approved Budget for the Contract (ABC) *</label>
+            <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Approved Budget for the Contract (ABC) *</label>
             <div style={{ position: 'relative' }}>
-              <span style={{ position: 'absolute', left: '0.8rem', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '0.85rem' }}>₱</span>
+              <span style={{ position: 'absolute', left: '0.8rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '0.85rem' }}>₱</span>
               <input
                 type="number"
                 step="0.01"
@@ -332,8 +332,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
                 placeholder="0.00"
                 style={{
                   width: '100%', padding: '0.6rem 0.8rem 0.6rem 1.8rem', borderRadius: 8,
-                  background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#34d399', fontSize: '0.85rem', fontWeight: 700,
+                  background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                  color: 'var(--green)', fontSize: '0.85rem', fontWeight: 700,
                 }}
               />
             </div>
@@ -341,7 +341,7 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
 
           {/* Deadline Date */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8' }}>Submission Deadline *</label>
+            <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Submission Deadline *</label>
             <input
               type="date"
               required
@@ -349,25 +349,25 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
               onChange={(e) => setDeadlineDate(e.target.value)}
               style={{
                 padding: '0.6rem 0.8rem', borderRadius: 8,
-                background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.1)',
-                color: '#f8fafc', fontSize: '0.85rem'
+                background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                color: 'var(--text-primary)', fontSize: '0.85rem'
               }}
             />
-            <span style={{ fontSize: '0.68rem', color: '#64748b' }}>Defaults to 7 calendar days</span>
+            <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>Defaults to 7 calendar days</span>
           </div>
         </div>
 
         {/* Dynamic Line Items Section */}
         <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255,255,255,0.08)', paddingBottom: '0.5rem' }}>
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#38bdf8', letterSpacing: '0.3px' }}>Solicited Line Items</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+            <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--secondary)', letterSpacing: '0.3px' }}>Solicited Line Items</h3>
             <button
               type="button"
               onClick={handleAddItem}
               style={{
                 padding: '0.4rem 0.8rem', borderRadius: 6,
-                background: 'rgba(99,102,241,0.15)', border: '1px solid rgba(99,102,241,0.3)',
-                color: '#818cf8', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer',
+                background: 'var(--accent-glass)', border: '1px solid var(--border)',
+                color: 'var(--accent)', fontSize: '0.78rem', fontWeight: 700, cursor: 'pointer',
                 transition: 'all 0.2s',
               }}
             >
@@ -379,7 +379,7 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
+                <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
                   <th style={{ padding: '0.5rem', textAlign: 'left', width: '70px' }}>Item #</th>
                   <th style={{ padding: '0.5rem', textAlign: 'left', width: '220px' }}>Link APP Item (Optional)</th>
                   <th style={{ padding: '0.5rem', textAlign: 'left', width: '220px' }}>Product Catalog (Optional)</th>
@@ -391,7 +391,7 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
               </thead>
               <tbody>
                 {items.map((item) => (
-                  <tr key={item.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', verticalAlign: 'top' }}>
+                  <tr key={item.id} style={{ borderBottom: '1px solid var(--border)', verticalAlign: 'top' }}>
                     
                     {/* Item Number */}
                     <td style={{ padding: '0.75rem 0.5rem' }}>
@@ -401,8 +401,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
                         value={item.itemNumber}
                         style={{
                           width: '100%', padding: '0.4rem', borderRadius: 6,
-                          background: 'rgba(255,255,255,0.03)', border: 'none',
-                          color: '#818cf8', textAlign: 'center', fontWeight: 700, fontSize: '0.85rem'
+                          background: 'var(--bg-dark)', border: 'none',
+                          color: 'var(--accent)', textAlign: 'center', fontWeight: 700, fontSize: '0.85rem'
                         }}
                       />
                     </td>
@@ -414,13 +414,13 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
                         onChange={(e) => handleItemFieldChange(item.id, 'appItemId', e.target.value)}
                         style={{
                           width: '100%', padding: '0.4rem', borderRadius: 6,
-                          background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)',
-                          color: '#f1f5f9', fontSize: '0.8rem', maxWidth: '220px'
+                          background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                          color: 'var(--text-primary)', fontSize: '0.8rem', maxWidth: '220px'
                         }}
                       >
-                        <option value="">-- Select APP Item --</option>
+                        <option value="" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>-- Select APP Item --</option>
                         {appItems.map((a) => (
-                          <option key={a.id} value={a.id}>
+                          <option key={a.id} value={a.id} style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>
                             [{a.papCode}] {a.projectTitle} (₱{Number(a.estimatedBudget).toLocaleString('en-PH')})
                           </option>
                         ))}
@@ -434,13 +434,13 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
                         onChange={(e) => handleItemFieldChange(item.id, 'productId', e.target.value)}
                         style={{
                           width: '100%', padding: '0.4rem', borderRadius: 6,
-                          background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)',
-                          color: '#f1f5f9', fontSize: '0.8rem', maxWidth: '220px'
+                          background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                          color: 'var(--text-primary)', fontSize: '0.8rem', maxWidth: '220px'
                         }}
                       >
-                        <option value="">-- Select Catalog Product --</option>
+                        <option value="" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>-- Select Catalog Product --</option>
                         {catalogProducts.map((p) => (
-                          <option key={p.id} value={p.id}>
+                          <option key={p.id} value={p.id} style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>
                             [{p.sku}] {p.name} (₱{Number(p.estimatedUnitCost).toLocaleString('en-PH')})
                           </option>
                         ))}
@@ -457,8 +457,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
                         placeholder="Describe the item specifications exactly..."
                         style={{
                           width: '100%', padding: '0.4rem 0.6rem', borderRadius: 6,
-                          background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.08)',
-                          color: '#f8fafc', fontSize: '0.82rem', resize: 'vertical', fontFamily: 'sans-serif'
+                          background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                          color: 'var(--text-primary)', fontSize: '0.82rem', resize: 'vertical', fontFamily: 'sans-serif'
                         }}
                       />
                     </td>
@@ -473,8 +473,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
                         onChange={(e) => handleItemFieldChange(item.id, 'quantity', parseInt(e.target.value) || 0)}
                         style={{
                           width: '100%', padding: '0.4rem', borderRadius: 6,
-                          background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.08)',
-                          color: '#f8fafc', textAlign: 'center', fontWeight: 600, fontSize: '0.85rem'
+                          background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                          color: 'var(--text-primary)', textAlign: 'center', fontWeight: 600, fontSize: '0.85rem'
                         }}
                       />
                     </td>
@@ -490,8 +490,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
                         list="unit-suggestions"
                         style={{
                           width: '100%', padding: '0.4rem', borderRadius: 6,
-                          background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.08)',
-                          color: '#f8fafc', fontSize: '0.82rem'
+                          background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                          color: 'var(--text-primary)', fontSize: '0.82rem'
                         }}
                       />
                       <datalist id="unit-suggestions">
@@ -514,8 +514,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
                         disabled={items.length === 1}
                         style={{
                           padding: '0.4rem', borderRadius: 6,
-                          background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)',
-                          color: '#f87171', fontSize: '0.75rem', cursor: items.length === 1 ? 'not-allowed' : 'pointer',
+                          background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)',
+                          color: '#ef4444', fontSize: '0.75rem', cursor: items.length === 1 ? 'not-allowed' : 'pointer',
                           opacity: items.length === 1 ? 0.4 : 1, transition: 'all 0.2s'
                         }}
                         title="Delete this row"
@@ -536,11 +536,11 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          borderTop: '1px solid rgba(255,255,255,0.08)',
+          borderTop: '1px solid var(--border)',
           paddingTop: '1.5rem',
           marginTop: '1rem'
         }}>
-          <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
             * Denotes a required field
           </span>
 
@@ -550,8 +550,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
               onClick={() => router.push('/dashboard/officer')}
               style={{
                 padding: '0.6rem 1.5rem', borderRadius: 8,
-                background: 'transparent', border: '1px solid rgba(255,255,255,0.15)',
-                color: '#94a3b8', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer',
+                background: 'transparent', border: '1px solid var(--border)',
+                color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer',
               }}
             >
               Cancel
@@ -564,8 +564,8 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
               onClick={(e) => handleSubmit(e, 'Draft')}
               style={{
                 padding: '0.6rem 1.5rem', borderRadius: 8,
-                background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)',
-                color: '#f1f5f9', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer',
+                background: 'var(--bg-dark)', border: '1px solid var(--border)',
+                color: 'var(--text-primary)', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer',
                 transition: 'all 0.2s',
                 opacity: isPending ? 0.5 : 1,
               }}
@@ -579,9 +579,9 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
               disabled={isPending}
               style={{
                 padding: '0.6rem 2rem', borderRadius: 8,
-                background: 'linear-gradient(135deg, #6366f1, #38bdf8)', border: 'none',
+                background: 'var(--accent)', border: 'none',
                 color: '#fff', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
-                boxShadow: '0 4px 16px rgba(99,102,241,0.25)',
+                boxShadow: '0 4px 12px var(--accent-glass)',
                 transition: 'all 0.2s',
                 opacity: isPending ? 0.5 : 1,
               }}

@@ -1,6 +1,7 @@
 import { signout } from '@/app/actions/auth';
 import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
 import { ROLE_COLORS, ROLE_HOME } from '@/types/auth';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default async function DashboardLayout({
   children,
@@ -12,14 +13,14 @@ export default async function DashboardLayout({
   const dashboardHome = ROLE_HOME[profile.role];
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(160deg,#030712 0%,#0f172a 60%,#020617 100%)' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(160deg, var(--bg-deep) 0%, var(--bg-dark) 100%)' }}>
       {/* ── Top Navigation Bar ── */}
       <header style={{
         position: 'sticky', top: 0, zIndex: 100,
-        background: 'rgba(15,23,42,0.85)',
+        background: 'var(--bg-header)',
         backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(255,255,255,0.07)',
-        boxShadow: '0 1px 0 rgba(56,189,248,0.08)',
+        borderBottom: '1px solid var(--border)',
+        boxShadow: '0 1px 0 rgba(56,189,248,0.04)',
       }}>
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 1.5rem', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
           {/* Brand */}
@@ -29,18 +30,18 @@ export default async function DashboardLayout({
               background: 'linear-gradient(135deg,#6366f1,#38bdf8)',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontWeight: 900, fontSize: '0.8rem', color: '#fff',
-              boxShadow: '0 0 16px rgba(99,102,241,0.35)',
+              boxShadow: '0 0 16px rgba(99,102,241,0.25)',
               flexShrink: 0,
             }}>
               <span>P</span><span style={{ color: '#bae6fd' }}>W</span>
             </div>
             <div>
-              <div style={{ fontWeight: 800, fontSize: '1rem', color: '#f8fafc', letterSpacing: '-0.3px', lineHeight: 1.2 }}>ProcureWise</div>
-              <div style={{ fontSize: '0.65rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Batanes State College</div>
+              <div style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>ProcureWise</div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Batanes State College</div>
             </div>
           </a>
 
-          {/* Right side: role badge + user + signout */}
+          {/* Right side: role badge + user + theme toggle + signout */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             {/* Role Badge */}
             <div style={{
@@ -58,8 +59,8 @@ export default async function DashboardLayout({
             <div style={{
               display: 'flex', alignItems: 'center', gap: '0.6rem',
               padding: '0.35rem 0.75rem 0.35rem 0.5rem',
-              borderRadius: 999, background: 'rgba(255,255,255,0.04)',
-              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: 999, background: 'var(--surface)',
+              border: '1px solid var(--border)',
             }}>
               <div style={{
                 width: 28, height: 28, borderRadius: '50%',
@@ -70,10 +71,13 @@ export default async function DashboardLayout({
                 {profile.fullName?.[0]?.toUpperCase() ?? 'U'}
               </div>
               <div style={{ lineHeight: 1.3 }}>
-                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#f1f5f9' }}>{profile.fullName}</div>
-                <div style={{ fontSize: '0.65rem', color: '#64748b' }}>{profile.email}</div>
+                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-primary)' }}>{profile.fullName}</div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{profile.email}</div>
               </div>
             </div>
+
+            {/* Theme Toggle */}
+            <ThemeToggle />
 
             {/* Sign Out */}
             <form action={signout}>
@@ -95,11 +99,11 @@ export default async function DashboardLayout({
 
       {/* ── Footer ── */}
       <footer style={{
-        borderTop: '1px solid rgba(255,255,255,0.05)',
-        padding: '1rem 1.5rem',
+        borderTop: '1px solid var(--border)',
+        padding: '1.25rem 1.5rem',
         textAlign: 'center',
-        fontSize: '0.7rem',
-        color: '#334155',
+        fontSize: '0.72rem',
+        color: 'var(--text-muted)',
       }}>
         ProcureWise &nbsp;·&nbsp; Batanes State College &nbsp;·&nbsp; Procurement Management System
       </footer>

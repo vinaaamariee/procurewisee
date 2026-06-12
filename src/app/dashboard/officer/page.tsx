@@ -54,10 +54,10 @@ export default async function OfficerDashboard() {
 
       {/* ── Page Header ── */}
       <div>
-        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.5px', lineHeight: 1.2 }}>
+        <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px', lineHeight: 1.2 }}>
           Procurement Officer Portal
         </h1>
-        <p style={{ marginTop: '0.4rem', fontSize: '0.875rem', color: '#64748b' }}>
+        <p style={{ marginTop: '0.4rem', fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
           Manage RFQs, review supplier quotes, and track procurement activities.
         </p>
       </div>
@@ -67,35 +67,35 @@ export default async function OfficerDashboard() {
         {statCards.map(card => (
           <div key={card.label} style={{
             padding: '1.25rem', borderRadius: 16,
-            background: 'rgba(15,23,42,0.65)',
-            border: '1px solid rgba(255,255,255,0.07)',
+            background: 'var(--surface)',
+            border: '1px solid var(--border)',
             backdropFilter: 'blur(12px)',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.4)',
+            boxShadow: 'var(--shadow-card)',
             position: 'relative', overflow: 'hidden',
           }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: card.color, borderRadius: '16px 16px 0 0' }} />
             <div style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{card.icon}</div>
-            <div style={{ fontSize: '2rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-1px', lineHeight: 1 }}>{card.value}</div>
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#94a3b8', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{card.label}</div>
-            <div style={{ fontSize: '0.7rem', color: '#475569', marginTop: '0.15rem' }}>{card.desc}</div>
+            <div style={{ fontSize: '2rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-1px', lineHeight: 1 }}>{card.value}</div>
+            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginTop: '0.35rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{card.label}</div>
+            <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>{card.desc}</div>
           </div>
         ))}
       </div>
 
       {/* ── Recent RFQs ── */}
-      <div style={{ borderRadius: 16, background: 'rgba(15,23,42,0.65)', border: '1px solid rgba(255,255,255,0.07)', backdropFilter: 'blur(12px)', overflow: 'hidden' }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: '#f1f5f9' }}>Recent Solicitations</h2>
-          <span style={{ fontSize: '0.72rem', color: '#64748b', background: 'rgba(255,255,255,0.04)', padding: '0.25rem 0.65rem', borderRadius: 999, border: '1px solid rgba(255,255,255,0.07)' }}>
+      <div style={{ borderRadius: 16, background: 'var(--surface)', border: '1px solid var(--border)', backdropFilter: 'blur(12px)', overflow: 'hidden', boxShadow: 'var(--shadow-card)' }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-primary)' }}>Recent Solicitations</h2>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-secondary)', background: 'var(--bg-dark)', padding: '0.25rem 0.65rem', borderRadius: 999, border: '1px solid var(--border)' }}>
             Last {rfqs.length} records
           </span>
         </div>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
             <thead>
-              <tr style={{ background: 'rgba(56,189,248,0.05)', borderBottom: '1px solid rgba(56,189,248,0.15)' }}>
+              <tr style={{ background: 'var(--secondary-dim)', borderBottom: '1px solid var(--border-gold)' }}>
                 {['RFQ No.', 'Title', 'Budget (₱)', 'Deadline', 'Status'].map(h => (
-                  <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: '#38bdf8', whiteSpace: 'nowrap' }}>{h}</th>
+                  <th key={h} style={{ padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.6px', color: 'var(--secondary)', whiteSpace: 'nowrap' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -103,13 +103,13 @@ export default async function OfficerDashboard() {
               {rfqs.map((rfq, i) => {
                 const s = STATUS_STYLE[rfq.status] ?? { bg: 'rgba(100,116,139,0.15)', text: '#94a3b8' };
                 return (
-                  <tr key={rfq.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', transition: 'background 0.15s' }}>
-                    <td style={{ padding: '0.85rem 1rem', color: '#818cf8', fontWeight: 600, whiteSpace: 'nowrap' }}>{rfq.rfqNumber}</td>
-                    <td style={{ padding: '0.85rem 1rem', color: '#f1f5f9', maxWidth: 280 }}>{rfq.title}</td>
-                    <td style={{ padding: '0.85rem 1rem', color: '#94a3b8', whiteSpace: 'nowrap' }}>
+                  <tr key={rfq.id} style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.15s' }}>
+                    <td style={{ padding: '0.85rem 1rem', color: '#6366f1', fontWeight: 600, whiteSpace: 'nowrap' }}>{rfq.rfqNumber}</td>
+                    <td style={{ padding: '0.85rem 1rem', color: 'var(--text-primary)', maxWidth: 280 }}>{rfq.title}</td>
+                    <td style={{ padding: '0.85rem 1rem', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
                       ₱{Number(rfq.approvedBudgetContract).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                     </td>
-                    <td style={{ padding: '0.85rem 1rem', color: '#64748b', whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '0.85rem 1rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
                       {rfq.deadlineDate ? new Date(rfq.deadlineDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
                     </td>
                     <td style={{ padding: '0.85rem 1rem' }}>
@@ -121,7 +121,7 @@ export default async function OfficerDashboard() {
                 );
               })}
               {rfqs.length === 0 && (
-                <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: '#475569' }}>No solicitations found.</td></tr>
+                <tr><td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-muted)' }}>No solicitations found.</td></tr>
               )}
             </tbody>
           </table>
@@ -130,7 +130,7 @@ export default async function OfficerDashboard() {
 
       {/* ── Quick Actions ── */}
       <div>
-        <h2 style={{ fontSize: '0.85rem', fontWeight: 700, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '0.75rem' }}>Quick Actions</h2>
+        <h2 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.8px', marginBottom: '0.75rem' }}>Quick Actions</h2>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           {[
             { label: '+ New RFQ', color: '#6366f1', href: '/dashboard/officer/rfq/new' },

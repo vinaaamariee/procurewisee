@@ -98,9 +98,9 @@ export default function SupplierProfilesTable({
 
   // Helper to color quality compliance
   const getQualityStyle = (rate: number) => {
-    if (rate >= 90) return { color: '#10b981', bg: 'rgba(16,185,129,0.12)', label: 'Excellent' };
-    if (rate >= 80) return { color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', label: 'Good' };
-    return { color: '#ef4444', bg: 'rgba(239,68,68,0.12)', label: 'Poor' };
+    if (rate >= 90) return { color: 'var(--green)', bg: 'var(--green-dim)', label: 'Excellent' };
+    if (rate >= 80) return { color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', label: 'Good' };
+    return { color: '#ef4444', bg: 'var(--red-dim)', label: 'Poor' };
   };
 
   return (
@@ -110,14 +110,14 @@ export default function SupplierProfilesTable({
       {errorMsg && (
         <div style={{
           padding: '1rem 1.25rem', borderRadius: 12,
-          background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)',
-          color: '#f87171', fontSize: '0.85rem', fontWeight: 500,
+          background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)',
+          color: '#ef4444', fontSize: '0.85rem', fontWeight: 500,
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}>
           <span>⚠️ {errorMsg}</span>
           <button 
             onClick={() => setErrorMsg(null)} 
-            style={{ background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontWeight: 700 }}
+            style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontWeight: 700 }}
           >
             ✕
           </button>
@@ -131,16 +131,17 @@ export default function SupplierProfilesTable({
         gap: '1rem',
         alignItems: 'center',
         justifyContent: 'space-between',
-        background: 'rgba(15,23,42,0.45)',
-        border: '1px solid rgba(255,255,255,0.06)',
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
         borderRadius: 16,
         padding: '1.25rem',
         backdropFilter: 'blur(12px)',
+        boxShadow: 'var(--shadow-card)',
       }}>
         
         {/* Search */}
         <div style={{ flex: '1 1 300px', position: 'relative' }}>
-          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: '#64748b', fontSize: '1rem' }}>
+          <span style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)', fontSize: '1rem' }}>
             🔍
           </span>
           <input
@@ -152,9 +153,9 @@ export default function SupplierProfilesTable({
               width: '100%',
               padding: '0.65rem 1rem 0.65rem 2.5rem',
               borderRadius: 10,
-              background: 'rgba(0,0,0,0.25)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: '#f8fafc',
+              background: 'var(--bg-deep)',
+              border: '1px solid var(--border)',
+              color: 'var(--text-primary)',
               fontSize: '0.875rem',
               outline: 'none',
               transition: 'border 0.2s',
@@ -163,7 +164,7 @@ export default function SupplierProfilesTable({
         </div>
 
         {/* Verification Filters */}
-        <div style={{ display: 'flex', gap: '0.5rem', background: 'rgba(0,0,0,0.2)', padding: '0.25rem', borderRadius: 10, border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', background: 'var(--bg-dark)', padding: '0.25rem', borderRadius: 10, border: '1px solid var(--border)' }}>
           {(['All', 'Verified', 'Unverified'] as const).map((filter) => (
             <button
               key={filter}
@@ -172,8 +173,8 @@ export default function SupplierProfilesTable({
                 padding: '0.45rem 1rem',
                 borderRadius: 8,
                 border: 'none',
-                background: verificationFilter === filter ? 'rgba(99,102,241,0.25)' : 'transparent',
-                color: verificationFilter === filter ? '#818cf8' : '#94a3b8',
+                background: verificationFilter === filter ? 'var(--accent-glass)' : 'transparent',
+                color: verificationFilter === filter ? 'var(--accent)' : 'var(--text-secondary)',
                 fontSize: '0.8rem',
                 fontWeight: 600,
                 cursor: 'pointer',
@@ -187,26 +188,26 @@ export default function SupplierProfilesTable({
 
         {/* Sort By Dropdown */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>Sort By:</span>
+          <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>Sort By:</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
             style={{
               padding: '0.5rem 1.5rem 0.5rem 0.75rem',
               borderRadius: 8,
-              background: 'rgba(0,0,0,0.25)',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: '#f8fafc',
+              background: 'var(--bg-deep)',
+              border: '1px solid var(--border)',
+              color: 'var(--text-primary)',
               fontSize: '0.8rem',
               fontWeight: 600,
               outline: 'none',
               cursor: 'pointer',
             }}
           >
-            <option value="name">Company Name (A-Z)</option>
-            <option value="reliability">Reliability Score (High to Low)</option>
-            <option value="quality">Quality Compliance (High to Low)</option>
-            <option value="delivery">Avg Delivery (Fastest first)</option>
+            <option value="name" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>Company Name (A-Z)</option>
+            <option value="reliability" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>Reliability Score (High to Low)</option>
+            <option value="quality" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>Quality Compliance (High to Low)</option>
+            <option value="delivery" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>Avg Delivery (Fastest first)</option>
           </select>
         </div>
 
@@ -214,17 +215,17 @@ export default function SupplierProfilesTable({
 
       {/* Main Table Grid */}
       <div style={{
-        background: 'rgba(15,23,42,0.65)',
-        border: '1px solid rgba(255,255,255,0.07)',
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
         borderRadius: 16,
         backdropFilter: 'blur(16px)',
         overflow: 'hidden',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+        boxShadow: 'var(--shadow-card)',
       }}>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem', textAlign: 'left' }}>
             <thead>
-              <tr style={{ background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.06)', color: '#94a3b8' }}>
+              <tr style={{ background: 'var(--bg-dark)', borderBottom: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
                 <th style={{ padding: '1rem 1.25rem', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Supplier / Address</th>
                 <th style={{ padding: '1rem 1.25rem', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.8px' }}>Verification Status</th>
                 <th style={{ padding: '1rem 1.25rem', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.8px', textAlign: 'center' }}>Reliability (5.00)</th>
@@ -245,23 +246,23 @@ export default function SupplierProfilesTable({
                   <tr 
                     key={supplier.id} 
                     style={{ 
-                      borderBottom: '1px solid rgba(255,255,255,0.04)',
+                      borderBottom: '1px solid var(--border)',
                       transition: 'background 0.2s',
                     }}
-                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.01)'}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--surface-hover)'}
                     onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                   >
                     
                     {/* Column 1: Info */}
                     <td style={{ padding: '1.25rem' }}>
-                      <div style={{ fontWeight: 700, color: '#f8fafc', fontSize: '0.925rem' }}>{supplier.companyName}</div>
+                      <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '0.925rem' }}>{supplier.companyName}</div>
                       {supplier.tin && (
-                        <div style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.2rem' }}>TIN: {supplier.tin}</div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>TIN: {supplier.tin}</div>
                       )}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', marginTop: '0.4rem', fontSize: '0.75rem', color: '#94a3b8' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', marginTop: '0.4rem', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                         <span>👤 {supplier.contactPerson || 'No contact person'}</span>
                         <span>📞 {supplier.contactNumber || 'No phone'}</span>
-                        <span style={{ color: '#475569', marginTop: '0.2rem' }}>📍 {supplier.businessAddress}</span>
+                        <span style={{ color: 'var(--text-muted)', marginTop: '0.2rem' }}>📍 {supplier.businessAddress}</span>
                       </div>
                     </td>
 
@@ -273,9 +274,9 @@ export default function SupplierProfilesTable({
                         gap: '0.35rem',
                         padding: '0.3rem 0.75rem',
                         borderRadius: 999,
-                        background: supplier.isVerified ? 'rgba(16,185,129,0.12)' : 'rgba(100,116,139,0.08)',
-                        border: `1px solid ${supplier.isVerified ? 'rgba(16,185,129,0.3)' : 'rgba(100,116,139,0.2)'}`,
-                        color: supplier.isVerified ? '#34d399' : '#64748b',
+                        background: supplier.isVerified ? 'var(--green-dim)' : 'var(--bg-dark)',
+                        border: '1px solid var(--border)',
+                        color: supplier.isVerified ? 'var(--green)' : 'var(--text-muted)',
                         fontSize: '0.75rem',
                         fontWeight: 700,
                         textTransform: 'uppercase',
@@ -289,10 +290,10 @@ export default function SupplierProfilesTable({
                     {/* Column 3: Reliability */}
                     <td style={{ padding: '1.25rem', textAlign: 'center', verticalAlign: 'middle' }}>
                       <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <div style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f1f5f9', fontFamily: 'monospace' }}>
+                        <div style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'monospace' }}>
                           {reliability.toFixed(2)}
                         </div>
-                        <div style={{ fontSize: '0.7rem', color: '#818cf8', fontWeight: 600, marginTop: '0.2rem' }}>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--accent)', fontWeight: 600, marginTop: '0.2rem' }}>
                           {'★'.repeat(Math.round(reliability)) + '☆'.repeat(5 - Math.round(reliability))}
                         </div>
                       </div>
@@ -317,10 +318,10 @@ export default function SupplierProfilesTable({
                     {/* Column 5: Delivery Days */}
                     <td style={{ padding: '1.25rem', textAlign: 'center', verticalAlign: 'middle' }}>
                       <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
-                        <span style={{ fontSize: '1.1rem', fontWeight: 800, color: '#f8fafc', fontFamily: 'monospace' }}>
+                        <span style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'monospace' }}>
                           {supplier.historicalDeliveryDays}
                         </span>
-                        <span style={{ fontSize: '0.7rem', color: '#64748b', marginTop: '0.2rem' }}>
+                        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
                           Avg Days
                         </span>
                       </div>
@@ -336,9 +337,9 @@ export default function SupplierProfilesTable({
                           style={{
                             padding: '0.5rem 1rem',
                             borderRadius: 8,
-                            background: supplier.isVerified ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)',
-                            border: `1px solid ${supplier.isVerified ? 'rgba(239,68,68,0.3)' : 'rgba(16,185,129,0.3)'}`,
-                            color: supplier.isVerified ? '#f87171' : '#34d399',
+                            background: supplier.isVerified ? 'var(--red-dim)' : 'var(--green-dim)',
+                            border: '1px solid var(--border)',
+                            color: supplier.isVerified ? '#ef4444' : 'var(--green)',
                             fontSize: '0.78rem',
                             fontWeight: 700,
                             cursor: updatingId === supplier.id ? 'not-allowed' : 'pointer',
@@ -359,7 +360,7 @@ export default function SupplierProfilesTable({
 
               {filteredSuppliers.length === 0 && (
                 <tr>
-                  <td colSpan={isOfficer ? 6 : 5} style={{ padding: '4rem', textAlign: 'center', color: '#475569', fontSize: '0.9rem' }}>
+                  <td colSpan={isOfficer ? 6 : 5} style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                     No suppliers match your search or filters.
                   </td>
                 </tr>

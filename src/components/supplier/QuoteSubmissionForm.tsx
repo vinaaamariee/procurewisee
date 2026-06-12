@@ -253,8 +253,8 @@ export default function QuoteSubmissionForm({
       {errorMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'rgba(239,68,68,0.12)', border: '1px solid rgba(239,68,68,0.3)',
-          color: '#f87171', fontSize: '0.875rem', fontWeight: 500
+          background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)',
+          color: '#ef4444', fontSize: '0.875rem', fontWeight: 500
         }}>
           ⚠️ {errorMsg}
         </div>
@@ -263,8 +263,8 @@ export default function QuoteSubmissionForm({
       {successMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)',
-          color: '#34d399', fontSize: '0.875rem', fontWeight: 500
+          background: 'var(--green-dim)', border: '1px solid var(--border)',
+          color: 'var(--green)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ✅ {successMsg}
         </div>
@@ -272,12 +272,12 @@ export default function QuoteSubmissionForm({
 
       {/* Main Form Box */}
       <form onSubmit={handleSubmit} style={{
-        background: 'rgba(15,23,42,0.65)',
-        border: '1px solid rgba(255,255,255,0.07)',
+        background: 'var(--surface)',
+        border: '1px solid var(--border)',
         borderRadius: 16,
         padding: '2rem',
         backdropFilter: 'blur(16px)',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+        boxShadow: 'var(--shadow-card)',
         display: 'flex',
         flexDirection: 'column',
         gap: '2rem'
@@ -286,23 +286,23 @@ export default function QuoteSubmissionForm({
         {/* Paper style header block */}
         <div style={{
           textAlign: 'center',
-          borderBottom: '2px solid rgba(255,255,255,0.08)',
+          borderBottom: '2px solid var(--border)',
           paddingBottom: '1.5rem',
-          color: '#f8fafc'
+          color: 'var(--text-primary)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
             <div style={{ fontSize: '2.5rem' }}>🏛️</div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '0.5px' }}>BATANES STATE COLLEGE</div>
-              <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>Washington Ave., San Antonio, Basco, Batanes</div>
-              <div style={{ fontSize: '0.72rem', color: '#6366f1', fontWeight: 700, marginTop: '0.2rem' }}>PROCUREMENT UNIT</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Washington Ave., San Antonio, Basco, Batanes</div>
+              <div style={{ fontSize: '0.72rem', color: 'var(--accent)', fontWeight: 700, marginTop: '0.2rem' }}>PROCUREMENT UNIT</div>
             </div>
           </div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', letterSpacing: '1px', color: '#38bdf8' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', letterSpacing: '1px', color: 'var(--secondary)' }}>
             REQUEST FOR PRICE QUOTATION
           </h2>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', fontSize: '0.8rem', color: '#64748b' }}>
-            <div>RFQ Ref #: <span style={{ color: '#818cf8', fontWeight: 600 }}>{rfq.rfqNumber}</span></div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+            <div>RFQ Ref #: <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{rfq.rfqNumber}</span></div>
             <div>Date: {new Date().toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
           </div>
         </div>
@@ -310,11 +310,11 @@ export default function QuoteSubmissionForm({
         {/* Procurement Guidelines */}
         <div style={{
           padding: '1.25rem',
-          background: 'rgba(255,255,255,0.02)',
-          border: '1px solid rgba(255,255,255,0.04)',
+          background: 'var(--bg-dark)',
+          border: '1px solid var(--border)',
           borderRadius: 12,
           fontSize: '0.8rem',
-          color: '#94a3b8',
+          color: 'var(--text-secondary)',
           lineHeight: 1.6,
           display: 'flex',
           flexDirection: 'column',
@@ -322,7 +322,7 @@ export default function QuoteSubmissionForm({
         }}>
           <div>• Please offer your best and final price for the item/s listed below.</div>
           <div>• <strong>Price Evaluation Mode</strong>: The default mode shall be on a <strong>LOT BASIS</strong> (otherwise item-by-item).</div>
-          <div>• <strong>Limit Budget (ABC)</strong>: <span style={{ color: '#f43f5e', fontWeight: 700 }}>₱{limitBudget.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</span>. Quotes above this limit may be automatically disqualified.</div>
+          <div>• <strong>Limit Budget (ABC)</strong>: <span style={{ color: '#ef4444', fontWeight: 700 }}>₱{limitBudget.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</span>. Quotes above this limit may be automatically disqualified.</div>
           <div>• In case an item is unavailable or out of stock, toggle availability to <strong>No (None)</strong>.</div>
         </div>
 
@@ -333,14 +333,14 @@ export default function QuoteSubmissionForm({
           gap: '1rem',
           justifyContent: 'space-between',
           alignItems: 'center',
-          background: 'rgba(255,255,255,0.03)',
+          background: 'var(--bg-dark)',
           padding: '1rem',
           borderRadius: 12,
-          border: '1px solid rgba(255,255,255,0.06)'
+          border: '1px solid var(--border)'
         }}>
           <div>
-            <h3 style={{ fontSize: '0.875rem', fontWeight: 700, color: '#f1f5f9' }}>Excel Integration</h3>
-            <p style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '0.15rem' }}>Download template to edit offline, then re-upload.</p>
+            <h3 style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-primary)' }}>Excel Integration</h3>
+            <p style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>Download template to edit offline, then re-upload.</p>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
             <button
@@ -348,8 +348,8 @@ export default function QuoteSubmissionForm({
               onClick={downloadExcelTemplate}
               style={{
                 padding: '0.5rem 1rem', borderRadius: 8,
-                background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.3)',
-                color: '#38bdf8', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+                background: 'var(--secondary-dim)', border: '1px solid var(--border)',
+                color: 'var(--secondary)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '0.4rem'
               }}
             >
@@ -360,8 +360,8 @@ export default function QuoteSubmissionForm({
               onClick={() => fileInputRef.current?.click()}
               style={{
                 padding: '0.5rem 1rem', borderRadius: 8,
-                background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)',
-                color: '#34d399', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+                background: 'var(--green-dim)', border: '1px solid var(--border)',
+                color: 'var(--green)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '0.4rem'
               }}
             >
@@ -381,7 +381,7 @@ export default function QuoteSubmissionForm({
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', color: '#94a3b8' }}>
+              <tr style={{ borderBottom: '1px solid var(--border)', color: 'var(--text-secondary)' }}>
                 <th style={{ padding: '0.75rem 1rem', textAlign: 'left', fontWeight: 600 }}>Item #</th>
                 <th style={{ padding: '0.75rem 1rem', textAlign: 'left', fontWeight: 600 }}>Particular / Specification</th>
                 <th style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 600 }}>Qty</th>
@@ -400,26 +400,26 @@ export default function QuoteSubmissionForm({
 
                 return (
                   <tr key={item.id} style={{
-                    borderBottom: '1px solid rgba(255,255,255,0.05)',
-                    background: entry.isAvailable ? 'transparent' : 'rgba(239,68,68,0.02)',
-                    color: entry.isAvailable ? '#f1f5f9' : '#64748b',
+                    borderBottom: '1px solid var(--border)',
+                    background: entry.isAvailable ? 'transparent' : 'var(--red-dim)',
+                    color: entry.isAvailable ? 'var(--text-primary)' : 'var(--text-muted)',
                     transition: 'all 0.2s'
                   }}>
-                    <td style={{ padding: '1rem', fontWeight: 700, color: '#818cf8' }}>{item.itemNumber}</td>
+                    <td style={{ padding: '1rem', fontWeight: 700, color: 'var(--accent)' }}>{item.itemNumber}</td>
                     <td style={{ padding: '1rem', maxWidth: '300px' }}>
                       <div style={{ fontWeight: 600 }}>{item.particulars}</div>
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'center', fontWeight: 600 }}>{qty}</td>
-                    <td style={{ padding: '1rem', textAlign: 'center', color: '#64748b' }}>{item.unit}</td>
+                    <td style={{ padding: '1rem', textAlign: 'center', color: 'var(--text-muted)' }}>{item.unit}</td>
                     <td style={{ padding: '1rem', textAlign: 'center' }}>
                       <button
                         type="button"
                         onClick={() => handleAvailabilityToggle(item.id, !entry.isAvailable)}
                         style={{
                           padding: '0.25rem 0.5rem', borderRadius: 6,
-                          background: entry.isAvailable ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)',
-                          border: `1px solid ${entry.isAvailable ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}`,
-                          color: entry.isAvailable ? '#34d399' : '#f87171',
+                          background: entry.isAvailable ? 'var(--green-dim)' : 'var(--red-dim)',
+                          border: '1px solid var(--border)',
+                          color: entry.isAvailable ? 'var(--green)' : '#ef4444',
                           fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer',
                         }}
                       >
@@ -435,13 +435,13 @@ export default function QuoteSubmissionForm({
                         onChange={(e) => handlePriceChange(item.id, e.target.value)}
                         style={{
                           width: '100%', padding: '0.4rem 0.65rem', borderRadius: 6,
-                          background: entry.isAvailable ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.02)',
-                          border: `1px solid ${entry.isAvailable ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.05)'}`,
-                          color: '#f8fafc', textAlign: 'right', fontSize: '0.85rem', fontFamily: 'monospace',
+                          background: entry.isAvailable ? 'var(--bg-deep)' : 'var(--bg-dark)',
+                          border: '1px solid var(--border)',
+                          color: 'var(--text-primary)', textAlign: 'right', fontSize: '0.85rem', fontFamily: 'monospace',
                         }}
                       />
                     </td>
-                    <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, fontFamily: 'monospace', color: entry.isAvailable ? '#34d399' : '#475569' }}>
+                    <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, fontFamily: 'monospace', color: entry.isAvailable ? 'var(--green)' : 'var(--text-muted)' }}>
                       {entry.isAvailable ? `₱${rowTotal.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'}
                     </td>
                   </tr>
@@ -449,14 +449,14 @@ export default function QuoteSubmissionForm({
               })}
 
               {/* Total Row */}
-              <tr style={{ background: 'rgba(255,255,255,0.01)', fontWeight: 800 }}>
-                <td colSpan={6} style={{ padding: '1.25rem 1rem', textAlign: 'right', fontSize: '0.9rem', color: '#f1f5f9' }}>
+              <tr style={{ background: 'var(--bg-dark)', fontWeight: 800 }}>
+                <td colSpan={6} style={{ padding: '1.25rem 1rem', textAlign: 'right', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
                   Total Bid Amount:
                 </td>
-                <td style={{ padding: '1.25rem 1rem', textAlign: 'right', fontSize: '1rem', color: totalQuotedAmount > limitBudget ? '#f43f5e' : '#34d399', fontFamily: 'monospace' }}>
+                <td style={{ padding: '1.25rem 1rem', textAlign: 'right', fontSize: '1rem', color: totalQuotedAmount > limitBudget ? '#ef4444' : 'var(--green)', fontFamily: 'monospace' }}>
                   ₱{totalQuotedAmount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   {totalQuotedAmount > limitBudget && (
-                    <div style={{ fontSize: '0.65rem', color: '#f43f5e', fontWeight: 600, marginTop: '0.25rem' }}>
+                    <div style={{ fontSize: '0.65rem', color: '#ef4444', fontWeight: 600, marginTop: '0.25rem' }}>
                       Exceeds ABC Budget Limit!
                     </div>
                   )}
@@ -471,11 +471,11 @@ export default function QuoteSubmissionForm({
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
           gap: '2rem',
-          borderTop: '1px solid rgba(255,255,255,0.08)',
+          borderTop: '1px solid var(--border)',
           paddingTop: '1.5rem',
         }}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#94a3b8', marginBottom: '0.5rem' }}>
+            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
               Offered Delivery Days
             </label>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -487,19 +487,19 @@ export default function QuoteSubmissionForm({
                 onChange={(e) => setDeliveryDays(parseInt(e.target.value) || '')}
                 style={{
                   width: '100px', padding: '0.5rem', borderRadius: 8,
-                  background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)',
-                  color: '#f8fafc', textAlign: 'center', fontWeight: 700
+                  background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                  color: 'var(--text-primary)', textAlign: 'center', fontWeight: 700
                 }}
               />
-              <span style={{ fontSize: '0.8rem', color: '#64748b' }}>Calendar Days</span>
+              <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Calendar Days</span>
             </div>
-            <p style={{ fontSize: '0.68rem', color: '#475569', marginTop: '0.4rem' }}>
+            <p style={{ fontSize: '0.68rem', color: 'var(--text-muted)', marginTop: '0.4rem' }}>
               Standard RFQ request is 30 calendar days. Faster delivery scores higher in MCDM.
             </p>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: '1rem' }}>
-            <div style={{ fontSize: '0.72rem', color: '#64748b', textAlign: 'right' }}>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)', textAlign: 'right' }}>
               By submitting, you certify that prices are final and terms are accepted.
             </div>
             <div style={{ display: 'flex', gap: '1rem' }}>
@@ -508,8 +508,8 @@ export default function QuoteSubmissionForm({
                 onClick={() => router.push('/dashboard/supplier')}
                 style={{
                   padding: '0.6rem 1.5rem', borderRadius: 8,
-                  background: 'transparent', border: '1px solid rgba(255,255,255,0.15)',
-                  color: '#94a3b8', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer',
+                  background: 'transparent', border: '1px solid var(--border)',
+                  color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer',
                 }}
               >
                 Cancel
@@ -519,9 +519,9 @@ export default function QuoteSubmissionForm({
                 disabled={isPending || totalQuotedAmount > limitBudget}
                 style={{
                   padding: '0.6rem 2rem', borderRadius: 8,
-                  background: 'linear-gradient(135deg,#6366f1,#38bdf8)', border: 'none',
+                  background: 'var(--accent)', border: 'none',
                   color: '#fff', fontSize: '0.85rem', fontWeight: 700,
-                  boxShadow: '0 4px 16px rgba(99,102,241,0.25)',
+                  boxShadow: '0 4px 12px var(--accent-glass)',
                   opacity: (isPending || totalQuotedAmount > limitBudget) ? 0.5 : 1,
                   cursor: (isPending || totalQuotedAmount > limitBudget) ? 'not-allowed' : 'pointer'
                 }}
