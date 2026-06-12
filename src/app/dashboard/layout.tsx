@@ -27,13 +27,13 @@ export default async function DashboardLayout({
           <a href={dashboardHome} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
             <div style={{
               width: 40, height: 40, borderRadius: 10,
-              background: 'linear-gradient(135deg,#6366f1,#38bdf8)',
+              background: 'linear-gradient(135deg, var(--accent), var(--secondary))',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               fontWeight: 900, fontSize: '0.8rem', color: '#fff',
-              boxShadow: '0 0 16px rgba(99,102,241,0.25)',
+              boxShadow: '0 0 16px var(--accent-glass)',
               flexShrink: 0,
             }}>
-              <span>P</span><span style={{ color: '#bae6fd' }}>W</span>
+              <span>P</span><span style={{ color: 'var(--secondary-light)' }}>W</span>
             </div>
             <div>
               <div style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>ProcureWise</div>
