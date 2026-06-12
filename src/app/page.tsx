@@ -3,12 +3,10 @@
 import React, { useState, useTransition, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { login, register } from './actions/auth';
-import type { UserRole } from '@/types/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 function LoginPage() {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
-  const [selectedRole, setSelectedRole] = useState<UserRole>('Procurement Officer');
   const [showPassword, setShowPassword] = useState(false);
   const [showRegPassword, setShowRegPassword] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -17,39 +15,6 @@ function LoginPage() {
   
   const error = searchParams.get('error');
   const success = searchParams.get('success');
-
-  const rolesList: { role: UserRole; label: string; desc: string; icon: React.ReactNode }[] = [
-    {
-      role: 'Procurement Officer',
-      label: 'Officer',
-      desc: 'Canvass items & publish RFQs',
-      icon: (
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      )
-    },
-    {
-      role: 'Administrative Approver',
-      label: 'Approver',
-      desc: 'MCDM analytics & approvals',
-      icon: (
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-      )
-    },
-    {
-      role: 'Supplier',
-      label: 'Supplier',
-      desc: 'Submit bids & quotations',
-      icon: (
-        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} className="h-4 w-4">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      )
-    }
-  ];
 
   const handleClearParams = () => {
     router.replace('/');
@@ -153,7 +118,7 @@ function LoginPage() {
             {/* Headers */}
             <div>
               <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
-                {activeTab === 'login' ? 'Welcome to ProcureWise' : 'Create your account'}
+                {activeTab === 'login' ? 'Welcome to ProcureWise' : 'Create Supplier Account'}
               </h2>
               <p className="text-sm text-slate-500 dark:text-slate-400 mt-2.5">
                 {activeTab === 'login' ? (
@@ -342,34 +307,50 @@ function LoginPage() {
 
                 <div className="space-y-1.5">
                   <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">
-                    Assign System Role
+                    Company Name
                   </label>
-                  <input type="hidden" name="role" value={selectedRole} />
-                  
-                  <div className="grid grid-cols-3 gap-2">
-                    {rolesList.map((item) => {
-                      const isSelected = selectedRole === item.role;
-                      return (
-                        <button
-                          key={item.role}
-                          type="button"
-                          onClick={() => setSelectedRole(item.role)}
-                          className={`flex flex-col items-center justify-center p-2 rounded-lg border text-center transition duration-150 cursor-pointer ${
-                            isSelected
-                              ? 'border-blue-500 bg-blue-50 dark:bg-blue-600/10 text-blue-700 dark:text-white shadow-sm'
-                              : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-[#101216] text-slate-500 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700 shadow-sm dark:shadow-none'
-                          }`}
-                        >
-                          <div className={`p-1 rounded mb-1 transition-colors ${
-                            isSelected ? 'bg-blue-600 text-white' : 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400'
-                          }`}>
-                            {item.icon}
-                          </div>
-                          <div className="text-[9px] font-bold leading-tight">{item.label}</div>
-                        </button>
-                      );
-                    })}
+                  <input
+                    name="companyName"
+                    type="text"
+                    required
+                    className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">
+                      TIN (Optional)
+                    </label>
+                    <input
+                      name="tin"
+                      type="text"
+                      placeholder="000-000-000-000"
+                      className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                    />
                   </div>
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">
+                      Contact Number (Optional)
+                    </label>
+                    <input
+                      name="contactNumber"
+                      type="text"
+                      className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400">
+                    Business Address
+                  </label>
+                  <textarea
+                    name="businessAddress"
+                    required
+                    rows={2}
+                    className="w-full bg-white dark:bg-[#101216] border border-slate-200 dark:border-[#21262e] rounded-lg px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 outline-none transition focus:border-blue-500 text-sm shadow-sm dark:shadow-none resize-none"
+                  ></textarea>
                 </div>
 
                 <button
