@@ -974,6 +974,10 @@ input:-webkit-autofill:active {
   padding-left: 28px;
 }
 
+.dark .uiverse-title {
+  color: #ffffff;
+}
+
 .uiverse-title::before,
 .uiverse-title::after {
   position: absolute;

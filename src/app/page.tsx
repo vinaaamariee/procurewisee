@@ -123,7 +123,7 @@ function LoginPage() {
         </div>
 
         {/* Right Column - Auth Form Container */}
-        <div className="w-full md:w-1/2 flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-16 py-12 relative overflow-y-auto">
+        <div className="w-full md:w-1/2 flex flex-col justify-center items-center px-4 sm:px-8 md:px-12 lg:px-16 py-12 relative overflow-y-auto">
           
           {/* Logo brand for Mobile View (Hidden on Desktop) */}
           <div className="flex items-center gap-2.5 md:hidden mx-auto mb-8">
