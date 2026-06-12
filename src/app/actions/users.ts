@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { UserRole } from "@/generated/prisma/client";
 import { revalidatePath } from "next/cache";
+import { requireRole } from '@/lib/auth/get-user-profile';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 /**
  * Maps standard auth role strings (with or without spaces) to Prisma's UserRole enum.
@@ -71,4 +73,58 @@ export async function updateUserStatus(userId: string, isActive: boolean) {
 
   revalidatePath("/", "layout");
   return profile;
+}
+
+/**
+ * Creates a new Procurement Officer or Administrative Approver account.
+ * Restricts invocation to logged-in Administrative Approvers.
+ * Uses a cookie-free Supabase client to avoid invalidating the admin session.
+ */
+export async function createStaffAccount(formData: FormData) {
+  try {
+    // 1. Gate to Administrative Approvers only
+    await requireRole('Administrative Approver');
+
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    const fullName = formData.get('fullName') as string;
+    const username = formData.get('username') as string;
+    const role = formData.get('role') as string;
+
+    if (!email || !password || !fullName || !username || !role) {
+      return { success: false, error: 'All fields are required.' };
+    }
+
+    if (role !== 'Procurement Officer' && role !== 'Administrative Approver') {
+      return { success: false, error: 'Invalid staff role selection.' };
+    }
+
+    // 2. Initialize cookie-free Supabase client
+    const supabaseAdmin = createSupabaseClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+    );
+
+    // 3. Create the user in Supabase Auth
+    const { data, error } = await supabaseAdmin.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          username: username,
+          role: role,
+        },
+      },
+    });
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    revalidatePath('/dashboard/approver');
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message || 'An unexpected error occurred.' };
+  }
 }
