@@ -1,5 +1,6 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { createClient } from '@/lib/supabase/server';
+import AddStaffForm from './add-staff-form';
 
 export const metadata = { title: 'Approver Dashboard — ProcureWise' };
 
@@ -177,6 +178,9 @@ export default async function ApproverDashboard() {
           )}
         </div>
       </div>
+
+      {/* Add Staff Form Section */}
+      <AddStaffForm />
     </div>
   );
 }
