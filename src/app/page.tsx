@@ -33,51 +33,55 @@ function NetworkVisualizer() {
     window.addEventListener('resize', resize);
 
     // Configuration
-    const particles: Node[] = [];
-    const particleCount = 35; // Number of floating dots
-    const connectionDistance = 130; // How close they need to be to draw a line
+    const PARTICLE_COUNT = 40;
+    const CONNECTION_DISTANCE = 140;
 
-    class Node {
+    class NetworkNode {
+      baseX: number;
+      baseY: number;
       x: number;
       y: number;
-      vx: number;
-      vy: number;
+      angle: number;
+      orbitRadius: number;
+      orbitSpeed: number;
       radius: number;
       isGold: boolean;
 
-      constructor() {
-        this.x = Math.random() * (canvas?.width || 500);
-        this.y = Math.random() * (canvas?.height || 500);
-        // Very slow, elegant drifting speed
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
+      constructor(canvasWidth: number, canvasHeight: number) {
+        // Set a permanent home base so the web structure never dismantles
+        this.baseX = Math.random() * canvasWidth;
+        this.baseY = Math.random() * canvasHeight;
+        this.x = this.baseX;
+        this.y = this.baseY;
+        
+        // Randomize orbit properties for organic breathing movement
+        this.angle = Math.random() * Math.PI * 2;
+        this.orbitRadius = Math.random() * 18 + 5; // Orbit between 5px and 23px
+        this.orbitSpeed = (Math.random() * 0.008) + 0.004;
+        
         this.radius = Math.random() * 2 + 1.5;
-        // Randomly assign gold or red colors
-        this.isGold = Math.random() > 0.4; 
+        this.isGold = Math.random() > 0.4;
       }
 
       update() {
-        if (!canvas) return;
-        this.x += this.vx;
-        this.y += this.vy;
-
-        // Softly bounce off the edges of the container
-        if (this.x <= 0 || this.x >= canvas.width) this.vx *= -1;
-        if (this.y <= 0 || this.y >= canvas.height) this.vy *= -1;
+        // Node orbits its home base instead of drifting away infinitely
+        this.angle += this.orbitSpeed;
+        this.x = this.baseX + Math.cos(this.angle) * this.orbitRadius;
+        this.y = this.baseY + Math.sin(this.angle) * this.orbitRadius;
       }
 
-      draw() {
-        if (!ctx) return;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.isGold ? '#dcb353' : '#a52a2a';
-        ctx.fill();
+      draw(context: CanvasRenderingContext2D) {
+        context.beginPath();
+        context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        context.fillStyle = this.isGold ? '#dcb353' : '#a52a2a';
+        context.fill();
       }
     }
 
-    // Create the nodes
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Node());
+    // Initialize the nodes array
+    const particles: NetworkNode[] = [];
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      particles.push(new NetworkNode(canvas.width, canvas.height));
     }
 
     let animationFrameId: number;
@@ -85,7 +89,6 @@ function NetworkVisualizer() {
     // The main animation loop
     function animate() {
       if (!canvas || !ctx) return;
-      // Clear the canvas every frame
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw connecting lines
@@ -95,20 +98,20 @@ function NetworkVisualizer() {
           const dy = particles[i].y - particles[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < connectionDistance) {
+          if (distance < CONNECTION_DISTANCE) {
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
-            
-            // Lines fade out as nodes get further apart
-            const opacity = 1 - (distance / connectionDistance);
-            
+
+            // Lines stretch and fade out slightly as nodes reach edge of orbit
+            const opacity = 1 - (distance / CONNECTION_DISTANCE);
+
             if (particles[i].isGold && particles[j].isGold) {
-              ctx.strokeStyle = `rgba(220, 179, 83, ${opacity * 0.3})`; // Gold line
+              ctx.strokeStyle = `rgba(220, 179, 83, ${opacity * 0.35})`;
             } else {
-              ctx.strokeStyle = `rgba(165, 42, 42, ${opacity * 0.3})`;  // Red line
+              ctx.strokeStyle = `rgba(165, 42, 42, ${opacity * 0.35})`;
             }
-            
+
             ctx.lineWidth = 1;
             ctx.stroke();
           }
@@ -116,9 +119,9 @@ function NetworkVisualizer() {
       }
 
       // Move and draw all nodes
-      particles.forEach(node => {
+      particles.forEach((node) => {
         node.update();
-        node.draw();
+        node.draw(ctx);
       });
 
       animationFrameId = requestAnimationFrame(animate);
@@ -565,7 +568,7 @@ function LoginPage() {
             font-size: 11px;
             font-weight: 500;
             letter-spacing: 0.5px;
-            animation: floatLabel 6s ease-in-out infinite alternate;
+            animation: pulseLabel 4s ease-in-out infinite alternate;
         }
         .badge.gold {
             border: 1px solid rgba(220, 179, 83, 0.5);
@@ -582,11 +585,15 @@ function LoginPage() {
             font-size: 11px;
             color: rgba(255, 255, 255, 0.6);
             font-weight: 500;
-            animation: floatLabel 5s ease-in-out infinite alternate-reverse;
+            animation: pulseText 5s ease-in-out infinite alternate-reverse;
         }
-        @keyframes floatLabel {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-10px); }
+        @keyframes pulseLabel {
+            0% { transform: translateY(0px) scale(0.95); opacity: 0.7; box-shadow: 0 0 0px rgba(0,0,0,0); }
+            100% { transform: translateY(-8px) scale(1.05); opacity: 1; box-shadow: 0 6px 15px rgba(220, 179, 83, 0.2); }
+        }
+        @keyframes pulseText {
+            0% { transform: translateY(0px) scale(0.95); opacity: 0.4; text-shadow: 0 0 0px rgba(255,255,255,0); }
+            100% { transform: translateY(6px) scale(1.05); opacity: 0.9; text-shadow: 0 0 8px rgba(255,255,255,0.4); }
         }
 
         /* Responsive Design */
@@ -626,16 +633,13 @@ function LoginPage() {
       {/* Left Panel */}
       <div className="left-panel">
         {/* Top Header Identity Group */}
-        <div className="relative z-10">
-          <div className="flex items-center gap-3">
-            <svg className="w-8 h-8 text-[#dcb353] drop-shadow-[0_0_8px_rgba(220,179,8,0.35)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <polygon points="12,2 22,7.5 22,18.5 12,24 2,18.5 2,7.5" strokeLinecap="round" strokeLinejoin="round" />
-              <polygon points="12,7 18,10.5 18,17 12,20 6,17 6,10.5" strokeLinecap="round" strokeLinejoin="round" fill="currentColor" fillOpacity="0.15" />
-            </svg>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-xl leading-none tracking-tight text-white">ProcureWise</span>
-              <span className="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-1">Elevate Your Procurement Intelligence</span>
-            </div>
+        <div className="logo-container" style={{ display: 'flex', alignItems: 'center', gap: '14px', zIndex: 10, marginBottom: '20px' }}>
+          <div style={{ backgroundColor: '#ffffff', border: '1.5px solid #e5e7eb', boxShadow: '0 4px 15px rgba(220, 179, 83, 0.15)', borderRadius: '14px', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Inter', sans-serif", fontWeight: 900, fontSize: '22px', letterSpacing: '-1px' }}>
+            <span style={{ color: '#7e191b' }}>P</span><span style={{ color: '#dcb353' }}>W</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+            <div style={{ color: '#ffffff', fontSize: '26px', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.5px' }}>ProcureWise</div>
+            <div style={{ color: '#94a3b8', fontSize: '11px', fontWeight: 700, letterSpacing: '0.5px', marginTop: '2px' }}>BATANES STATE COLLEGE</div>
           </div>
         </div>
 
@@ -744,7 +748,10 @@ function LoginPage() {
                   Forgot Password?
                 </a>
 
-                <button type="submit" className="btn-submit" disabled={isPending}>
+                <button type="submit" className="btn-submit" disabled={isPending} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                  <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '10px', boxShadow: '0 2px 6px rgba(0,0,0,0.15)' }}>
+                    <span style={{ color: '#7e191b' }}>P</span><span style={{ color: '#dcb353' }}>W</span>
+                  </div>
                   {isPending ? "Signing In..." : "Sign In to ProcureWise"}
                 </button>
               </form>

@@ -52,13 +52,48 @@ export default async function RfqDetailPage({ params }: { params: Params }) {
     return notFound();
   }
 
+  // Brand Colors mapped from your Login Page design
+  const theme = {
+    crimson: '#7e191b',
+    gold: '#dcb353',
+    goldDark: '#b88a1b',
+    textMain: '#1f2937',
+    textMuted: '#6b7280',
+    glassBg: 'rgba(255, 255, 255, 0.7)',
+    glassBorder: 'rgba(255, 255, 255, 0.9)',
+    shadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
+  };
+
+  // Render "Closed" state with ProcureWise styling
   if (rfq.status !== 'Published') {
     return (
-      <div style={{ maxWidth: 800, margin: '4rem auto', padding: '2rem', textAlign: 'center', background: 'rgba(15,23,42,0.6)', borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)' }}>
-        <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#fbbf24' }}>Solicitation Closed</h2>
-        <p style={{ marginTop: '1rem', color: '#94a3b8' }}>
-          This Request for Quotation (Ref: {rfq.rfqNumber}) is currently in status <strong>{rfq.status}</strong> and is not open for submission.
-        </p>
+      <div style={{ maxWidth: '800px', margin: '4rem auto', padding: '0 1.5rem', fontFamily: '"Inter", sans-serif' }}>
+        <a
+          href="/dashboard/supplier"
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.2rem',
+            backgroundColor: 'rgba(255,255,255,0.8)', border: `1px solid ${theme.glassBorder}`,
+            borderRadius: '999px', color: theme.textMain, textDecoration: 'none',
+            fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+            cursor: 'pointer', marginBottom: '2rem'
+          }}
+        >
+          <span>←</span> Back to Portal
+        </a>
+        <div style={{ 
+          background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', overflow: 'hidden', 
+          boxShadow: theme.shadow, padding: '3rem', textAlign: 'center', position: 'relative'
+        }}>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: theme.crimson }} />
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: theme.textMain, margin: 0 }}>Solicitation Closed</h2>
+          <p style={{ marginTop: '1rem', color: theme.textMuted, fontSize: '0.95rem', lineHeight: 1.6 }}>
+            This Request for Quotation (Ref: <strong style={{ color: theme.crimson }}>{rfq.rfqNumber}</strong>) is currently marked as 
+            <span style={{ display: 'inline-block', margin: '0 0.5rem', padding: '0.2rem 0.6rem', background: 'rgba(0,0,0,0.05)', borderRadius: '6px', fontWeight: 700, color: theme.textMain }}>{rfq.status}</span> 
+            and is no longer accepting submissions.
+          </p>
+        </div>
       </div>
     );
   }
@@ -79,29 +114,65 @@ export default async function RfqDetailPage({ params }: { params: Params }) {
     .maybeSingle();
 
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem', fontFamily: '"Inter", sans-serif' }}>
       
-      {/* Page Header with Back button */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div>
-          <a href="/dashboard/supplier" style={{ color: '#818cf8', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600 }}>
-            ← Back to Portal
-          </a>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f8fafc', marginTop: '0.5rem', letterSpacing: '-0.3px' }}>
-            Submit Bid Quotation
-          </h1>
+      {/* ── Page Header ── */}
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.5rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <div>
+            <a
+              href="/dashboard/supplier"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.2rem',
+                backgroundColor: 'rgba(255,255,255,0.8)', border: `1px solid ${theme.glassBorder}`,
+                borderRadius: '999px', color: theme.textMain, textDecoration: 'none',
+                fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+                cursor: 'pointer'
+              }}
+            >
+              <span>←</span> Back to Portal
+            </a>
+          </div>
+          <div>
+            <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: theme.textMain, margin: 0, letterSpacing: '-0.5px' }}>
+              Submit Bid Quotation
+            </h1>
+            <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: theme.textMuted, margin: '0.5rem 0 0 0' }}>
+              Review the requirements below and submit your pricing and delivery terms.
+            </p>
+          </div>
         </div>
-        <div style={{ fontSize: '0.8rem', color: '#64748b', textAlign: 'right' }}>
-          Supplier: <span style={{ color: '#f1f5f9', fontWeight: 700 }}>{supplier.companyName}</span>
+
+        {/* Supplier Identity Badge */}
+        <div style={{ 
+          display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.25rem',
+          backgroundColor: 'rgba(220, 179, 83, 0.1)', border: `1px solid rgba(220, 179, 83, 0.3)`,
+          borderRadius: '1rem', boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
+        }}>
+          <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: `linear-gradient(135deg, ${theme.gold}, ${theme.goldDark})`, color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem' }}>
+            🏢
+          </div>
+          <div>
+            <div style={{ fontSize: '0.65rem', color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 700 }}>Bidding As</div>
+            <div style={{ fontSize: '0.9rem', color: theme.goldDark, fontWeight: 800 }}>{supplier.companyName}</div>
+          </div>
         </div>
       </div>
 
-      <QuoteSubmissionForm
-        rfq={rfq}
-        rfqItems={rfqItems || []}
-        supplierId={supplier.id}
-        existingQuote={existingQuote}
-      />
+      {/* ── Quote Submission Form Container ── */}
+      {/* Wrapped in the ProcureWise Glassmorphic Card Style */}
+      <div style={{
+        background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+        border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', overflow: 'hidden', 
+        boxShadow: theme.shadow, padding: '2.5rem'
+      }}>
+        <QuoteSubmissionForm
+          rfq={rfq}
+          rfqItems={rfqItems || []}
+          supplierId={supplier.id}
+          existingQuote={existingQuote}
+        />
+      </div>
 
     </div>
   );

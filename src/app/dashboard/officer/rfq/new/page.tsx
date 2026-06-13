@@ -47,24 +47,56 @@ export default async function NewRfqPage() {
     estimatedUnitCost: Number(p.estimatedUnitCost),
   }));
 
+  // Brand Colors mapped from your Login Page design
+  const theme = {
+    crimson: '#7e191b',
+    gold: '#dcb353',
+    goldDark: '#b88a1b',
+    textMain: '#1f2937',
+    textMuted: '#6b7280',
+    glassBg: 'rgba(255, 255, 255, 0.7)',
+    glassBorder: 'rgba(255, 255, 255, 0.9)',
+    shadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
+  };
+
   return (
-    <div style={{ maxWidth: 1000, margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem', fontFamily: '"Inter", sans-serif' }}>
       
       {/* ── Page Header ── */}
-      <div>
-        <a href="/dashboard/officer" style={{ color: '#818cf8', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600 }}>
-          ← Back to Dashboard
-        </a>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f8fafc', marginTop: '0.5rem', letterSpacing: '-0.3px' }}>
-          Create New Request for Quotation (RFQ)
-        </h1>
-        <p style={{ fontSize: '0.82rem', color: '#64748b', marginTop: '0.2rem' }}>
-          Fill in the details to digitally generate and publish a solicitation for suppliers.
-        </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <div>
+          <a
+            href="/dashboard/officer"
+            style={{
+              display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.2rem',
+              backgroundColor: 'rgba(255,255,255,0.8)', border: `1px solid ${theme.glassBorder}`,
+              borderRadius: '999px', color: theme.textMain, textDecoration: 'none',
+              fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+              cursor: 'pointer'
+            }}
+          >
+            <span>←</span> Back to Dashboard
+          </a>
+        </div>
+        <div>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: theme.textMain, margin: 0, letterSpacing: '-0.5px' }}>
+            Create New Request for Quotation (RFQ)
+          </h1>
+          <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: theme.textMuted, margin: '0.5rem 0 0 0' }}>
+            Fill in the details to digitally generate and publish a solicitation for suppliers.
+          </p>
+        </div>
       </div>
 
-      {/* ── Creation Form ── */}
-      <RfqCreationForm appItems={appItems} catalogProducts={catalogProducts} />
+      {/* ── Creation Form Container ── */}
+      {/* Wrapped in the ProcureWise Glassmorphic Card Style */}
+      <div style={{
+        background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+        border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', overflow: 'hidden', 
+        boxShadow: theme.shadow, padding: '2.5rem'
+      }}>
+        <RfqCreationForm appItems={appItems} catalogProducts={catalogProducts} />
+      </div>
       
     </div>
   );
