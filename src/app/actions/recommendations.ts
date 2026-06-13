@@ -3,6 +3,8 @@
 import { prisma } from "@/lib/prisma";
 import { RfqStatus } from "@/generated/prisma/client";
 import { revalidatePath } from "next/cache";
+import { logAuditTrail } from "@/lib/audit";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 /**
  * Runs the MCDM (Multi-Criteria Decision Making) scoring algorithm on all submitted quotes
@@ -166,4 +168,60 @@ export async function getRecommendations(rfqId: number) {
       rankPosition: "asc",
     },
   });
+}
+
+/**
+ * Approves a recommendation. Sets its status to Approved, assigns the reviewer's ID,
+ * and logs the action in the audit trail.
+ */
+export async function approveRecommendation(recommId: number) {
+  try {
+    // 1. Enforce Administrative Approver role and retrieve profile
+    const { profile } = await requireRole('Administrative Approver');
+
+    // 2. Fetch the recommendation and ensure it exists
+    const recommendation = await prisma.recommendation.findUnique({
+      where: { id: recommId },
+      include: {
+        canvas: true,
+      },
+    });
+
+    if (!recommendation) {
+      throw new Error(`Recommendation with ID ${recommId} not found.`);
+    }
+
+    if (recommendation.approvalStatus === 'Approved') {
+      return { success: true, message: 'Recommendation is already approved.' };
+    }
+
+    // 3. Database Transaction: Update recommendation approval status
+    const updated = await prisma.$transaction(async (tx) => {
+      const result = await tx.recommendation.update({
+        where: { id: recommId },
+        data: {
+          approvalStatus: 'Approved',
+          reviewedById: profile.id,
+        },
+      });
+
+      return result;
+    });
+
+    // 4. Log the audit trail
+    logAuditTrail({
+      actionType: 'APPROVE_RECOMMENDATION',
+      tableAffected: 'recommendations',
+      recordId: recommId,
+      oldState: recommendation,
+      newState: updated,
+    });
+
+    revalidatePath("/", "layout");
+    revalidatePath("/dashboard/approver");
+    return { success: true, recommendation: updated };
+  } catch (error: any) {
+    console.error("Error approving recommendation:", error);
+    return { success: false, error: error.message || "Failed to approve recommendation." };
+  }
 }

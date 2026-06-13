@@ -90,6 +90,15 @@ A standard supplies and equipment database that streamlines RFQ creation and pro
 Allows Procurement Officers to draft RFQs and publish them. To ensure the reliability of this core logic:
 * **E2E Integration Verification**: Created a robust standalone E2E integration test script at `scripts/test-rfq-engine.ts` to programmatically verify the full solicitation flow, including RFQ drafting, pre-filling items from the product catalog, setting ABC limits, database persistence, and status transitions.
 
+### 10. Immutable Audit Trail ("The Security Guard")
+A forensic tracking mechanism designed to enforce regulatory compliance and prevent budget creep:
+* **Background Logging**: Executes asynchronously via Next.js 16's stable `after()` scheduler, ensuring logging actions never block client responses or degrade transaction performance.
+* **State Snapshots**: Automatically records structural JSON representations of `oldState` and `newState` for key operations:
+  - **RFQ Transactions**: Logs on `CREATE_RFQ`, `PUBLISH_RFQ`, and `CLOSE_RFQ`.
+  - **Supplier Bidding**: Logs on `SUBMIT_BID` (capturing overwrites of existing bids).
+  - **Evaluated Recommendations**: Logs on `APPROVE_RECOMMENDATION` status changes.
+* **Audit Metadata**: Automatically stamps records with the active user session ID (fetched inside the `after` callback context) and the requester's IP address (resolved via async `headers()`).
+
 ---
 
 ## 💾 Database Schema Details
