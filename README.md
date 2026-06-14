@@ -171,3 +171,24 @@ npx prisma db seed
 pnpm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) to access the login portal.
+
+---
+
+## ⚠️ Troubleshooting & Production Deployment
+
+### P1001: Can't reach database server at `db.tfswokhkuxwvpcpxekso.supabase.co`
+
+If you encounter a `P1001` database connection error in production (e.g., on Vercel), it is because Supabase direct connections (`db.[project-id].supabase.co` on port `5432`) use **IPv6-only** resolution. Most serverless hosting providers (including Vercel) do not support IPv6-only database connections out-of-the-box.
+
+#### Solution:
+Update the environment variables in your production hosting platform (e.g., Vercel Project Settings) to use the **Supavisor Connection Pooler URL** which is IPv4-compatible:
+
+1. **`DATABASE_URL`**: Update this in your production environment settings to point to the Transaction Pooler (port `6543`):
+   ```env
+   DATABASE_URL="postgresql://postgres.tfswokhkuxwvpcpxekso:[YOUR_DATABASE_PASSWORD]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
+   ```
+2. **`DIRECT_URL`**: Update this to also use the IPv4-compatible pooler URL (or transaction/session pooler) to ensure build/migration scripts run without network timeouts:
+   ```env
+   DIRECT_URL="postgresql://postgres.tfswokhkuxwvpcpxekso:[YOUR_DATABASE_PASSWORD]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
+   ```
+
