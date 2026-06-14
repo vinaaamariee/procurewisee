@@ -23,6 +23,8 @@ ProcureWise is a modern web application built to streamline and automate the pub
 
 ### 1. Security & Role-Based Access Control (RBAC)
 ProcureWise protects user access and ensures strict segregation of duties through a middleware-equivalent Edge Proxy (`src/proxy.ts`):
+> [!NOTE]
+> In this Next.js 16 version, the Edge Proxy is defined at `src/proxy.ts` (replacing the traditional `middleware.ts`). To comply with Next.js 16 file conventions, this file must export the proxy function as a **default export** (i.e., `export default async function proxy(request: NextRequest)`). Named exports will fail to bind at runtime in production.
 * **Authentication Gateway**: Prevents unauthenticated users from accessing any `/dashboard/*` paths, forcing a redirect back to `/` (login).
 * **Separated Registration Flows**: The public registration portal is strictly for Suppliers. Creation of staff accounts (Procurement Officers and Approvers) is restricted to logged-in Administrative Approvers via a dedicated dashboard module, using a cookie-free Supabase client to prevent session invalidation.
 * **Role Guards**: Extracts the user's validated database profile role and restricts route access. If a user tries to access a path outside their authorized scope, they are redirected to their appropriate home dashboard:
