@@ -13,6 +13,19 @@ const createPrismaClient = () => {
   // Strip carriage returns (\r), whitespace, and outer quotes (common Windows CRLF issue)
   connectionString = connectionString.replace(/\r/g, "").trim().replace(/^["']|["']$/g, "").trim();
 
+  // Dynamically rewrite direct IPv6 Supabase connection URLs to the IPv4 transaction pooler URL (port 6543)
+  // to prevent P1001 database connection timeouts in serverless production environments (e.g., Vercel)
+  if (connectionString.includes(".supabase.co") && !connectionString.includes("pooler.supabase.com")) {
+    const match = connectionString.match(/db\.([a-zA-Z0-9]+)\.supabase\.co/);
+    if (match) {
+      const projectRef = match[1];
+      // Map to the transaction pooler (port 6543) in the Singapore region (aws-1-ap-southeast-1)
+      connectionString = connectionString
+        .replace(`db.${projectRef}.supabase.co:5432`, `aws-1-ap-southeast-1.pooler.supabase.com:6543`)
+        .replace(`db.${projectRef}.supabase.co`, `aws-1-ap-southeast-1.pooler.supabase.com:6543`);
+    }
+  }
+
   // Securely log connection details (masking the password) for debugging
   const maskedConn = connectionString.replace(/:[^:@]+@/, ":[MASKED]@");
   console.log(`[PRISMA DIAGNOSTICS] Connecting with URL: ${maskedConn}`);
