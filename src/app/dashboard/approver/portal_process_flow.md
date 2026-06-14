@@ -49,27 +49,37 @@ flowchart TD
 
 ## 📈 System Processes & Subsystem Integrations
 
-### 1. Security & RBAC Gate
+The Administrative Approver's dashboard workflow is organized into three major processes linked by logical connectors:
+
+### 1. Security & RBAC Gate (Portal Entry)
 * **Enforcer**: `requireRole('Administrative Approver')` is executed server-side.
-* **Mechanism**: Validates current session cookies, decodes the Supabase JWT token, reads the matched database profile in `user_profiles`, and confirms the `role` enum equals `AdministrativeApprover`.
+* **Mechanism**: Validates current session cookies, decodes the Supabase JWT token, reads the matched database profile in `user_profiles`, and confirms the `role` enum equals `AdministrativeApprover`. If verification fails, the user is signed out and redirected.
 
-### 2. Canvassing Sign-off & Recommendation Approval
-* **Review Stage**: Displays the candidate lists evaluated by the MCDM best-value engine (composite score, total quote amount, and natural language justification).
-* **Approval execution**: When the Approver authorizes a vendor's recommendation:
-  1. Calls the `approveRecommendation` Server Action.
-  2. Updates `approvalStatus` to `Approved` in the database.
-  3. Records the approver's user ID as `reviewedById`.
-  4. Triggers the audit tracker asynchronously using Next.js 16's `after()` scheduler to record the action (`APPROVE_RECOMMENDATION`) in `audit_trails`.
-  5. Clears page caches via `revalidatePath('/dashboard/approver')` to immediately update metrics.
+### 2. Process 1: Dashboard Loading & Statistics Queries (Left Diagram)
+Upon mounting the Approver Dashboard, the system initiates four parallel components:
+* **Fetch Statistics Summary**: Triggers parallel Prisma queries to query and count:
+  * **Count canvas_abstracts**: Totals the abstract sheets in the system.
+  * **Count pending recommendations**: Computes the number of MCDM evaluations awaiting review.
+  * **Fetch last 5 audit_trails**: Retrieves security/audit records.
+* **Query Pending Recommendations**: Queries MCDM outputs and routes to **Connector B** for review.
+* **Query Recent Audit Trails**: Retrieves the last 5 security events to monitor activities.
+* **Mount Add System User Form**: Displays the administrative onboarding interface, routing execution to **Connector C**.
 
-### 3. Asynchronous Security Audit logs
-* Queries the `audit_trails` database table to display the last 5 security events (actionType, timestamp) to monitor configuration adjustments, bids, or RFQ publishes.
+### 3. Process 2: Canvassing Sign-off & Recommendation Approval — Connector B (Middle Diagram)
+When managing pending approvals (**Connector B**):
+* **Review Stage**: Displays ranked bids, quote amounts, and natural language justifications.
+* **Decision Gate**: The user is presented with a choice to approve:
+  * **No**: The approval action is cancelled and the dashboard state is preserved.
+  * **Yes**: Submits the Server Action form which:
+    1. Invokes the `approveRecommendation()` Server Action.
+    2. Updates the `approvalStatus` to `Approved` in the database.
+    3. Asynchronously triggers `after(logAuditTrail)` to write an `APPROVE_RECOMMENDATION` event to the `audit_trails` table.
+    4. Completes the approval, triggering route/cache revalidation to refresh dashboard metrics.
 
-### 4. Admin Staff Registration Portal (`add-staff-form`)
-* **Objective**: Allows an Administrative Approver to create new staff accounts (e.g. Procurement Officers and other Approvers) without invalidating the active session.
-* **Action**: Invokes `createStaffAccount` Server Action which uses a service-role Supabase client (cookie-free) to register the user in Supabase Auth and save profile records to `user_profiles`.
-
-#### Authentication & Authorization Mechanism
-During this process:
-1. **Authentication**: The system validates session cookies via the server-side Supabase client. It decodes and verifies the Supabase JWT token against the GoTrue authentication service using `supabase.auth.getUser()`. If the session is invalid or expired, the user is redirected to the login/landing portal.
-2. **Authorization**: Once the user identity is validated, the system performs a database lookup on the `user_profiles` table matching the authenticated user's ID (`user.id`). It verifies the account's active status (`profile.isActive === true`) and executes the `requireRole('Administrative Approver')` gate server-side to ensure their `role` matches the expected role. If unauthorized, they are signed out and redirected accordingly.
+### 4. Process 3: Staff Account Registration Portal — Connector C (Right Diagram)
+To onboard new system staff without invalidating the active session (**Connector C**):
+* **Data Entry**: The Administrative Approver fills out the form (`fullName`, `username`, `email`, `password`, `role`).
+* **Form Submission**: Submits the registration request.
+* **Server Action**: Invokes the `createStaffAccount()` Server Action.
+* **User Provisioning**: Uses a cookie-free Supabase client (preventing session hijacking/override) to register the user credential with Supabase Auth.
+* **Profile Synchronization**: Automatically creates the user profile record in the database `user_profiles` table, completing the onboarding workflow.
