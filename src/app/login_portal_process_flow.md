@@ -17,9 +17,9 @@ flowchart TD
     Auth -->|Success| Profile_Check{Is Profile Active?}
     Profile_Check -->|No| Sign_Out[Log out + Show error]
     Profile_Check -->|Yes| Role_Route{Role Home Page}
-    Role_Route -->|Officer| Officer_Home[/dashboard/officer]
-    Role_Route -->|Approver| Approver_Home[/dashboard/approver]
-    Role_Route -->|Supplier| Supplier_Home[/dashboard/supplier]
+    Role_Route -->|Officer| Officer_Home["/dashboard/officer"]
+    Role_Route -->|Approver| Approver_Home["/dashboard/approver"]
+    Role_Route -->|Supplier| Supplier_Home["/dashboard/supplier"]
 
     %% Register
     Choice -->|Register| Sign_Up[Submit company & user info]

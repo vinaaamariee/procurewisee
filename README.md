@@ -1,109 +1,134 @@
 # 🏛️ ProcureWise
+
 ### An Intelligent Procurement Analytics and Automated Canvassing System with Best-Value Recommendation Engine
+
 **Capstone Project for Batanes State College**
 
 ---
 
 ## 🌟 Overview
+
 ProcureWise is a modern web application built to streamline and automate the public procurement process at Batanes State College. By replacing manual paperwork and convoluted spreadsheets with structured workflows, automated canvassing, and objective scoring, the system ensures transparency, speeds up purchasing decisions, and optimizes government budget utilization.
 
 ---
 
 ## 🛠️ Technology Stack
-* **Framework**: Next.js 16.2.7 (Turbopack) & React 19
-* **Language**: TypeScript (Strict Mode)
-* **Authentication**: Supabase Auth (via `@supabase/ssr` cookies and edge proxy validation)
-* **Database & ORM**: PostgreSQL hosted on Supabase, managed through **Prisma ORM**
-* **Styling**: Tailwind CSS & Vanilla CSS (with sleek transitions, gradients, and custom scrollbars)
-* **Theming**: `next-themes` for high-performance Light/Dark Mode toggling
+
+- **Framework**: Next.js 16.2.7 (Turbopack) & React 19
+- **Language**: TypeScript (Strict Mode)
+- **Authentication**: Supabase Auth (via `@supabase/ssr` cookies and edge proxy validation)
+- **Database & ORM**: PostgreSQL hosted on Supabase, managed through **Prisma ORM**
+- **Styling**: Tailwind CSS & Vanilla CSS (with sleek transitions, gradients, and custom scrollbars)
+- **Theming**: `next-themes` for high-performance Light/Dark Mode toggling
 
 ---
 
 ## 📊 Core Features & Functionality
 
 ### 1. Security & Role-Based Access Control (RBAC)
-ProcureWise protects user access and ensures strict segregation of duties through a middleware-equivalent Edge Proxy (`src/proxy.ts`):
-* **Authentication Gateway**: Prevents unauthenticated users from accessing any `/dashboard/*` paths, forcing a redirect back to `/` (login).
-* **Separated Registration Flows**: The public registration portal is strictly for Suppliers. Creation of staff accounts (Procurement Officers and Approvers) is restricted to logged-in Administrative Approvers via a dedicated dashboard module, using a cookie-free Supabase client to prevent session invalidation.
-* **Role Guards**: Extracts the user's validated database profile role and restricts route access. If a user tries to access a path outside their authorized scope, they are redirected to their appropriate home dashboard:
+
+ProcureWise protects user access and ensures strict segregation of duties through a middleware-equivalent Edge Proxy (`src/proxy.ts`, which replaces the deprecated `src/middleware.ts` convention in Next.js 16):
+
+- **Authentication Gateway**: Prevents unauthenticated users from accessing any `/dashboard/*` paths, forcing a redirect back to `/` (login).
+- **Separated Registration Flows**: The public registration portal is strictly for Suppliers. Creation of staff accounts (Procurement Officers and Approvers) is restricted to logged-in Administrative Approvers via a dedicated dashboard module, using a cookie-free Supabase client to prevent session invalidation.
+- **Role Guards**: Extracts the user's validated database profile role and restricts route access. If a user tries to access a path outside their authorized scope, they are redirected to their appropriate home dashboard:
   - **Procurement Officer** $\rightarrow$ `/dashboard/officer`
   - **Administrative Approver** $\rightarrow$ `/dashboard/approver`
   - **Supplier** $\rightarrow$ `/dashboard/supplier`
-* **Profile Synchronization**: PostgreSQL triggers (`on_auth_user_created` running `handle_new_user()`) dynamically sync Supabase Auth sign-ups into the `user_profiles` table, maintaining strict database integrity.
-* **Account Deactivation**: Enforces checks for active status (`isActive`); deactivated profiles are immediately signed out.
+- **Profile Synchronization**: PostgreSQL triggers (`on_auth_user_created` running `handle_new_user()`) dynamically sync Supabase Auth sign-ups into the `user_profiles` table, maintaining strict database integrity.
+- **Account Deactivation**: Enforces checks for active status (`isActive`); deactivated profiles are immediately signed out.
 
 ### 2. Multi-Criteria Decision Making (MCDM) Engine
+
 The highlight of the system is the **Best-Value Recommendation Engine**:
-* Ranks bidding suppliers using a multi-criteria model (MCDM) analyzing three key pillars:
+
+- Ranks bidding suppliers using a multi-criteria model (MCDM) analyzing three key pillars:
   1. **Price Score (50%)**: Normalized value comparing quotation price against the Approved Budget for the Contract (ABC) and competing bids.
   2. **Delivery Score (30%)**: Historical lead times compared against the supplier's commitment.
   3. **Reliability Score (20%)**: Based on quality compliance rates and historical feedback ratings.
-* **Justification Logs**: Generates human-readable compliance logs justifying why a specific supplier has been recommended for the award.
+- **Justification Logs**: Generates human-readable compliance logs justifying why a specific supplier has been recommended for the award.
 
 ### 3. Price Comparison & Canvassing Dashboard (`/price-comparison`)
+
 Allows officers to conduct real-time market surveys and compare supplier quotes:
-* **KPI Metrics**: Real-time cards showing items compared, suppliers evaluated, average savings potential, and the overall budget savings opportunity.
-* **Interactive Table**:
-  * Currency formatted in Philippine Pesos (₱).
-  * Color-coded price highlights (Emerald Green = Best-value/lowest quote, Light Red = Highest quote).
-  * Inventory availability badges (*In Stock*, *Limited*, *Unavailable*).
-  * Dynamic sorting by column.
-  * Expandable detail rows displaying lead times and item-specific notes.
-* **Filter Engine**: Real-time matching by search query, product category, and multi-select supplier checkboxes.
-* **CSS Price Chart**: Responsive horizontal bar charts visualizing price differences between suppliers, auto-highlighting the best-value quote.
+
+- **KPI Metrics**: Real-time cards showing items compared, suppliers evaluated, average savings potential, and the overall budget savings opportunity.
+- **Interactive Table**:
+  - Currency formatted in Philippine Pesos (₱).
+  - Color-coded price highlights (Emerald Green = Best-value/lowest quote, Light Red = Highest quote).
+  - Inventory availability badges (_In Stock_, _Limited_, _Unavailable_).
+  - Dynamic sorting by column.
+  - Expandable detail rows displaying lead times and item-specific notes.
+- **Filter Engine**: Real-time matching by search query, product category, and multi-select supplier checkboxes.
+- **CSS Price Chart**: Responsive horizontal bar charts visualizing price differences between suppliers, auto-highlighting the best-value quote.
 
 ### 4. Dynamic Theming (Light & Dark Mode)
-A polished design matching modern application standards:
-* **Theme Toggle**: Fast, client-side toggle switch (with Sun/Moon icons) matching user system settings.
-* **Adaptive Variables**: Color variables (`--bg-deep`, `--text-primary`, `--border`) transition fluidly from a clean light slate to a deep indigo slate-black background.
-* **Autofill Overrides**: Clean overrides for browser inputs preventing the native bright-yellow or black autofill boxes from breaking the glassmorphic aesthetics.
 
+A polished design matching modern application standards:
+
+- **Theme Toggle**: Fast, client-side toggle switch (with Sun/Moon icons) matching user system settings.
+- **Adaptive Variables**: Color variables (`--bg-deep`, `--text-primary`, `--border`) transition fluidly from a clean light slate to a deep indigo slate-black background.
+- **Autofill Overrides**: Clean overrides for browser inputs preventing the native bright-yellow or black autofill boxes from breaking the glassmorphic aesthetics.
 
 ### 5. Supplier Quote Submission System (Manual & Excel)
+
 A complete workflow for registered suppliers to submit and review bids:
-* **Option A: Manual Submission**: An interactive online form resembling the Batanes State College RFQ document, calculating live totals, showing itemized line costs, and enforcing budget limit constraints (ABC).
-* **Option B: Excel Integration**: Direct integration with spreadsheet templates using `xlsx`. Suppliers download an automated `.xlsx` template pre-filled with RFQ items, fill details offline, and upload it to auto-populate prices and parse availability in real-time.
-* **Server Action Validation**: A secure Next.js Server Action (`src/app/actions/quotes.ts`) processes transactions, computes total bids, and updates database records inside a clean transaction block.
+
+- **Option A: Manual Submission**: An interactive online form resembling the Batanes State College RFQ document, calculating live totals, showing itemized line costs, and enforcing budget limit constraints (ABC).
+- **Option B: Excel Integration**: Direct integration with spreadsheet templates using `xlsx`. Suppliers download an automated `.xlsx` template pre-filled with RFQ items, fill details offline, and upload it to auto-populate prices and parse availability in real-time.
+- **Server Action Validation**: A secure Next.js Server Action (`src/app/actions/quotes.ts`) processes transactions, computes total bids, and updates database records inside a clean transaction block.
 
 ### 6. Modular Server Actions Layer
+
 All database and authentication operations are managed through Next.js Server Actions, providing secure, type-safe API gateways:
-* **User Profile Actions (`src/app/actions/users.ts`)**: Creates user profiles post-signup, retrieves profile details for role-based routing, and toggles profile activation state.
-* **Supplier Actions (`src/app/actions/suppliers.ts`)**: Manages supplier database records, fetches alphabetically ordered lists, and toggles supplier verification status.
-* **RFQ Actions (`src/app/actions/rfq.ts`)**: Auto-generates incremental RFQ references (e.g. `RFQ-2026-06-001`), manages state transitions (`Draft` $\rightarrow$ `Published` $\rightarrow$ `Closed`), and retrieves full RFQ records with nested supplier bids.
-* **Quotation Actions (`src/app/actions/quotes.ts`)**: Validates submitted bid prices against the RFQ budget limits (ABC), processes multi-row quotation lists, and handles transaction-safe updates.
-* **Recommendation Actions (`src/app/actions/recommendations.ts`)**: Runs the MCDM algorithm to normalize price and lead times, fetches reliability rates, ranks suppliers, writes detailed text justifications, and transitions the RFQ status to `Evaluated`.
+
+- **User Profile Actions (`src/app/actions/users.ts`)**: Creates user profiles post-signup, retrieves profile details for role-based routing, and toggles profile activation state.
+- **Supplier Actions (`src/app/actions/suppliers.ts`)**: Manages supplier database records, fetches alphabetically ordered lists, and toggles supplier verification status.
+- **RFQ Actions (`src/app/actions/rfq.ts`)**: Auto-generates incremental RFQ references (e.g. `RFQ-2026-06-001`), manages state transitions (`Draft` $\rightarrow$ `Published` $\rightarrow$ `Closed`), and retrieves full RFQ records with nested supplier bids.
+- **Quotation Actions (`src/app/actions/quotes.ts`)**: Validates submitted bid prices against the RFQ budget limits (ABC), processes multi-row quotation lists, and handles transaction-safe updates.
+- **Recommendation Actions (`src/app/actions/recommendations.ts`)**: Runs the MCDM algorithm to normalize price and lead times, fetches reliability rates, ranks suppliers, writes detailed text justifications, and transitions the RFQ status to `Evaluated`.
 
 ### 7. Supplier Directory & Performance Audit UI (Branch: `feature/supplier-profiles-ui`)
+
 A polished administrative dashboard at `/dashboard/supplier-profiles` that allows Procurement Officers and Administrative Approvers to audit all registered suppliers:
-* **Interactive Client Search & Filtering**: Real-time supplier search by company name, contact, or address, along with filter tabs for verification status (All, Verified, Unverified) and sorting dropdowns (Name, Reliability, Quality, and Lead Time).
-* **Role-Restricted Verification Toggle**: A secure toggle action linked to the `verifySupplier` Server Action. Only Procurement Officers can verify or revoke verification for a vendor; for other roles, the action is disabled.
-* **Performance Intelligence Visualizations**: Renders color-coded metrics highlighting supplier reliability ratings (0.00-5.00), quality compliance percentages, and average lead delivery times.
+
+- **Interactive Client Search & Filtering**: Real-time supplier search by company name, contact, or address, along with filter tabs for verification status (All, Verified, Unverified) and sorting dropdowns (Name, Reliability, Quality, and Lead Time).
+- **Role-Restricted Verification Toggle**: A secure toggle action linked to the `verifySupplier` Server Action. Only Procurement Officers can verify or revoke verification for a vendor; for other roles, the action is disabled.
+- **Performance Intelligence Visualizations**: Renders color-coded metrics highlighting supplier reliability ratings (0.00-5.00), quality compliance percentages, and average lead delivery times.
 
 ### 8. Centralized Product Catalog & Solicitation Pre-fill
+
 A standard supplies and equipment database that streamlines RFQ creation and provides specification references:
-* **Procurement Officer Administration**: A full management interface at `/dashboard/officer/catalog` that allows officers to Add standard catalog items (setting SKU, category, name, unit, and estimated costs), Edit specifications, and Deactivate catalog items.
-* **Solicitation Pre-fill**: When creating a new RFQ, Procurement Officers can select standard products from the catalog via the requisition table. Selecting an item automatically pre-populates description specifications and units.
-* **Universal Catalog Browser**: A read-only browser at `/dashboard/catalog` accessible by all roles (Officers, Suppliers, and Approvers) supporting real-time keywords search and category filtering.
-* **Server Action Management**: All operations are powered by secure Next.js Server Actions (`src/app/actions/catalog.ts`).
+
+- **Procurement Officer Administration**: A full management interface at `/dashboard/officer/catalog` that allows officers to Add standard catalog items (setting SKU, category, name, unit, and estimated costs), Edit specifications, and Deactivate catalog items.
+- **Solicitation Pre-fill**: When creating a new RFQ, Procurement Officers can select standard products from the catalog via the requisition table. Selecting an item automatically pre-populates description specifications and units.
+- **Universal Catalog Browser**: A read-only browser at `/dashboard/catalog` accessible by all roles (Officers, Suppliers, and Approvers) supporting real-time keywords search and category filtering.
+- **Server Action Management**: All operations are powered by secure Next.js Server Actions (`src/app/actions/catalog.ts`).
 
 ### 9. RFQ Publishing Engine & E2E Testing
+
 Allows Procurement Officers to draft RFQs and publish them. To ensure the reliability of this core logic:
-* **E2E Integration Verification**: Created a robust standalone E2E integration test script at `scripts/test-rfq-engine.ts` to programmatically verify the full solicitation flow, including RFQ drafting, pre-filling items from the product catalog, setting ABC limits, database persistence, and status transitions.
+
+- **E2E Integration Verification**: Created a robust standalone E2E integration test script at `scripts/test-rfq-engine.ts` to programmatically verify the full solicitation flow, including RFQ drafting, pre-filling items from the product catalog, setting ABC limits, database persistence, and status transitions.
 
 ### 10. Immutable Audit Trail ("The Security Guard")
+
 A forensic tracking mechanism designed to enforce regulatory compliance and prevent budget creep:
-* **Background Logging**: Executes asynchronously via Next.js 16's stable `after()` scheduler, ensuring logging actions never block client responses or degrade transaction performance.
-* **State Snapshots**: Automatically records structural JSON representations of `oldState` and `newState` for key operations:
+
+- **Background Logging**: Executes asynchronously via Next.js 16's stable `after()` scheduler, ensuring logging actions never block client responses or degrade transaction performance.
+- **State Snapshots**: Automatically records structural JSON representations of `oldState` and `newState` for key operations:
   - **RFQ Transactions**: Logs on `CREATE_RFQ`, `PUBLISH_RFQ`, and `CLOSE_RFQ`.
   - **Supplier Bidding**: Logs on `SUBMIT_BID` (capturing overwrites of existing bids).
   - **Evaluated Recommendations**: Logs on `APPROVE_RECOMMENDATION` status changes.
-* **Audit Metadata**: Automatically stamps records with the active user session ID (fetched inside the `after` callback context) and the requester's IP address (resolved via async `headers()`).
+- **Audit Metadata**: Automatically stamps records with the active user session ID (fetched inside the `after` callback context) and the requester's IP address (resolved via async `headers()`).
 
 ---
 
 ## 💾 Database Schema Details
 
 The database is built on **PostgreSQL** using the following schema mappings (`prisma/schema.prisma`):
+
+[📥 Download Schema Diagram (White Background)](/schema.png)
 
 ```mermaid
 erDiagram
@@ -124,26 +149,29 @@ erDiagram
     CanvasAbstract ||--o{ Recommendation : "recommends"
 ```
 
-* **`UserProfile`**: Stores usernames, emails, roles, and status. Extends Supabase's internal auth table.
-* **`Supplier`**: Holds company name, TIN, contact details, business address, reliability rating, compliance rate, and verification badge.
-* **`AppItem`**: Annual Procurement Plan items mapping PAP codes, object codes, estimated budget, end-user units, and funding source.
-* **`RequestForQuote`**: Master RFQ tracker (Draft, Published, Closed, Evaluated statuses) including title, ABC budget limit, and deadline.
-* **`SupplierQuote`**: Captures quotation amounts, delivery day commitments, and bid evaluation states.
-* **`CanvasAbstract`**: Stores summary files, opening location, and date of bids.
-* **`Recommendation`**: Stores weighted composite scores, ranks, and justifications generated by the MCDM system.
-* **`AuditTrail`**: Logs system mutations (`actionType`, `tableAffected`, `newState`, `ipAddress`) for strict accountability.
-* **`CatalogProduct`**: A centralized repository of standard office items, school supplies, and hardware specifications with benchmark costs.
+- **`UserProfile`**: Stores usernames, emails, roles, and status. Extends Supabase's internal auth table.
+- **`Supplier`**: Holds company name, TIN, contact details, business address, reliability rating, compliance rate, and verification badge.
+- **`AppItem`**: Annual Procurement Plan items mapping PAP codes, object codes, estimated budget, end-user units, and funding source.
+- **`RequestForQuote`**: Master RFQ tracker (Draft, Published, Closed, Evaluated statuses) including title, ABC budget limit, and deadline.
+- **`SupplierQuote`**: Captures quotation amounts, delivery day commitments, and bid evaluation states.
+- **`CanvasAbstract`**: Stores summary files, opening location, and date of bids.
+- **`Recommendation`**: Stores weighted composite scores, ranks, and justifications generated by the MCDM system.
+- **`AuditTrail`**: Logs system mutations (`actionType`, `tableAffected`, `newState`, `ipAddress`) for strict accountability.
+- **`CatalogProduct`**: A centralized repository of standard office items, school supplies, and hardware specifications with benchmark costs.
 
 ---
 
 ## 🚀 Getting Started
 
 ### 1. Prerequisites
+
 - Node.js (v18+)
 - pnpm (recommended) or npm
 
 ### 2. Environment Configuration
+
 Create a `.env` file in the root directory:
+
 ```env
 # Database Connection (Transaction Pooler for Prisma)
 DATABASE_URL="postgresql://<user>:<password>@<host>:6543/postgres?pgbouncer=true"
@@ -155,6 +183,7 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="your-publishable-key"
 ```
 
 ### 3. Installation & Run
+
 ```bash
 # Install dependencies
 pnpm install
@@ -168,4 +197,5 @@ npx prisma db seed
 # Spin up local development server
 pnpm run dev
 ```
+
 Open [http://localhost:3000](http://localhost:3000) to access the login portal.

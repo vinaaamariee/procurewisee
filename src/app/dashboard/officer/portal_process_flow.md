@@ -31,11 +31,11 @@ flowchart TD
     %% Quick Actions navigation
     ActionQuick --> Action_NewRFQ{Action Selected?}
     
-    Action_NewRFQ -->|Create RFQ| Route_NewRFQ[/dashboard/officer/rfq/new]
-    Action_NewRFQ -->|View Suppliers| Route_Suppliers[/dashboard/supplier-profiles]
-    Action_NewRFQ -->|Catalog Admin| Route_Catalog[/dashboard/catalog]
-    Action_NewRFQ -->|Price Canvassing| Route_Comparison[/price-comparison]
-    Action_NewRFQ -->|Review Specific RFQ| Route_RFQDetails[/dashboard/officer/rfq/:id]
+    Action_NewRFQ -->|Create RFQ| Route_NewRFQ["/dashboard/officer/rfq/new"]
+    Action_NewRFQ -->|View Suppliers| Route_Suppliers["/dashboard/supplier-profiles"]
+    Action_NewRFQ -->|Catalog Admin| Route_Catalog["/dashboard/catalog"]
+    Action_NewRFQ -->|Price Canvassing| Route_Comparison["/price-comparison"]
+    Action_NewRFQ -->|Review Specific RFQ| Route_RFQDetails["/dashboard/officer/rfq/:id"]
 
     %% RFQ Detailed Flow
     Route_RFQDetails --> ProcessRFQ{RFQ Status?}
