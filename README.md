@@ -196,3 +196,6 @@ If you encounter a `P1001` database connection error in production (e.g., on Ver
      DIRECT_URL="postgresql://postgres.tfswokhkuxwvpcpxekso:[YOUR_DATABASE_PASSWORD]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
      ```
 
+### Runtime Database Error Feedback UI
+To prevent generic 500 "Server Error" pages (e.g., Error: 2369467324) when database tables are missing or connection errors occur in production, pages fetching data via Prisma (such as RFQ Creation and Catalog Management) now wrap queries in standard try-catch handlers. If a database query fails, they render a clean diagnostic view showing the exact PostgreSQL error message (such as missing relations/tables or pooler connection timeouts) so they can be fixed immediately without needing to search server logs.
+

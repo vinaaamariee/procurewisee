@@ -8,22 +8,30 @@ export default async function ManageCatalogPage() {
   // Enforce role guard
   await requireRole('Procurement Officer');
 
-  // Load all products in the catalog
-  const rawProducts = await prisma.catalogProduct.findMany({
-    orderBy: { sku: 'asc' },
-  });
+  let products: any[] = [];
+  let fetchError: string | null = null;
 
-  // Map database types safely to numbers
-  const products = rawProducts.map((p) => ({
-    id: p.id,
-    sku: p.sku,
-    name: p.name,
-    category: p.category,
-    description: p.description,
-    unitOfMeasure: p.unitOfMeasure,
-    estimatedUnitCost: Number(p.estimatedUnitCost),
-    isActive: p.isActive,
-  }));
+  try {
+    // Load all products in the catalog
+    const rawProducts = await prisma.catalogProduct.findMany({
+      orderBy: { sku: 'asc' },
+    });
+
+    // Map database types safely to numbers
+    products = rawProducts.map((p) => ({
+      id: p.id,
+      sku: p.sku,
+      name: p.name,
+      category: p.category,
+      description: p.description,
+      unitOfMeasure: p.unitOfMeasure,
+      estimatedUnitCost: Number(p.estimatedUnitCost),
+      isActive: p.isActive,
+    }));
+  } catch (error: any) {
+    console.error('[DATABASE FETCH ERROR] Failed to load data for Manage Catalog page:', error);
+    fetchError = error.message || String(error);
+  }
 
   // Brand Colors mapped from your Login Page design
   const theme = {
@@ -37,6 +45,60 @@ export default async function ManageCatalogPage() {
     glassBorder: 'rgba(255, 255, 255, 0.9)',
     shadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
   };
+
+  if (fetchError) {
+    return (
+      <div style={{ maxWidth: '800px', margin: '4rem auto', padding: '2.5rem', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(20px)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '1.25rem', boxShadow: theme.shadow, fontFamily: '"Inter", sans-serif' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#7e191b' }}>
+            <span style={{ fontSize: '2rem' }}>⚠️</span>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>Database Connection Error</h2>
+          </div>
+          
+          <p style={{ color: theme.textMain, fontSize: '0.95rem', margin: 0, lineHeight: '1.6' }}>
+            The application was unable to fetch standard product catalog data from the database. 
+            This usually indicates a database connection issue or that required database tables are missing/out of sync in the production environment.
+          </p>
+
+          <div style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '0.75rem', padding: '1.25rem' }}>
+            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
+              System Error Message
+            </div>
+            <pre style={{ margin: 0, fontSize: '0.85rem', color: '#7e191b', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: 'monospace', lineHeight: '1.5' }}>
+              {fetchError}
+            </pre>
+          </div>
+
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
+            <a
+              href="/dashboard/officer"
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.4rem',
+                backgroundColor: theme.crimson, border: 'none',
+                borderRadius: '999px', color: '#fff', textDecoration: 'none',
+                fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 4px 12px rgba(126, 25, 27, 0.2)',
+                cursor: 'pointer'
+              }}
+            >
+              Back to Dashboard
+            </a>
+            <button
+              onClick={() => { if (typeof window !== 'undefined') window.location.reload(); }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.4rem',
+                backgroundColor: 'rgba(255,255,255,0.8)', border: `1px solid ${theme.glassBorder}`,
+                borderRadius: '999px', color: theme.textMain, textDecoration: 'none',
+                fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
+                cursor: 'pointer'
+              }}
+            >
+              🔄 Retry Connection
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', fontFamily: '"Inter", sans-serif' }}>
