@@ -1,7 +1,7 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { createClient } from '@/lib/supabase/server';
 import AddStaffForm from './add-staff-form';
-import { approveRecommendation } from '@/app/actions/recommendations';
+import ApproveButton from './approve-button';
 
 export const metadata = { title: 'Approver Dashboard — ProcureWise' };
 
@@ -34,11 +34,6 @@ async function getPendingRecommendations() {
     .order('rankPosition', { ascending: true })
     .limit(5);
   return data ?? [];
-}
-
-async function handleApprove(recommId: number) {
-  'use server';
-  await approveRecommendation(recommId);
 }
 
 export default async function ApproverDashboard() {
@@ -165,15 +160,7 @@ export default async function ApproverDashboard() {
                       ₱{Number((rec.quote as any)?.totalQuotedAmount ?? 0).toLocaleString('en-PH')}
                     </div>
                   </div>
-                  <form action={handleApprove.bind(null, rec.id)}>
-                    <button type="submit" style={{
-                      padding: '0.6rem 1.4rem', borderRadius: '999px', border: 'none', cursor: 'pointer',
-                      background: `linear-gradient(90deg, ${theme.crimson} 0%, ${theme.goldDark} 100%)`,
-                      color: 'white', fontSize: '0.85rem', fontWeight: 600, boxShadow: `0 4px 12px rgba(184, 138, 27, 0.25)`
-                    }}>
-                      Approve
-                    </button>
-                  </form>
+                  <ApproveButton recommId={rec.id} />
                 </div>
               </div>
             ))

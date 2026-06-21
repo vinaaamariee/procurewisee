@@ -86,7 +86,7 @@ All database and authentication operations are managed through Next.js Server Ac
 - **Supplier Actions (`src/app/actions/suppliers.ts`)**: Manages supplier database records, fetches alphabetically ordered lists, and toggles supplier verification status.
 - **RFQ Actions (`src/app/actions/rfq.ts`)**: Auto-generates incremental RFQ references (e.g. `RFQ-2026-06-001`), manages state transitions (`Draft` $\rightarrow$ `Published` $\rightarrow$ `Closed`), and retrieves full RFQ records with nested supplier bids.
 - **Quotation Actions (`src/app/actions/quotes.ts`)**: Validates submitted bid prices against the RFQ budget limits (ABC), processes multi-row quotation lists, and handles transaction-safe updates.
-- **Recommendation Actions (`src/app/actions/recommendations.ts`)**: Runs the MCDM algorithm to normalize price and lead times, fetches reliability rates, ranks suppliers, writes detailed text justifications, and transitions the RFQ status to `Evaluated`.
+- **Recommendation Actions (`src/app/actions/recommendations.ts`)**: Runs the MCDM algorithm to normalize price and lead times, fetches reliability rates, ranks suppliers, writes detailed text justifications, and transitions the RFQ status to `Evaluated`. Includes client-side interactive approval triggers (`src/app/dashboard/approver/approve-button.tsx`) with confirmation dialogs, transition loading states, and error handling.
 
 ### 7. Supplier Directory & Performance Audit UI (Branch: `feature/supplier-profiles-ui`)
 
