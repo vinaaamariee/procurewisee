@@ -53,6 +53,7 @@ model UserProfile {
   canvasesCompiled        CanvasAbstract[]  @relation("CanvasCompiledBy")
   recommendationsReviewed Recommendation[]  @relation("RecommendationReviewedBy")
   auditTrails             AuditTrail[]
+  requisitionsReviewed    RequisitionStatusHistory[] @relation("RequisitionReviewedBy")
 
   @@map("user_profiles")
 }
@@ -73,6 +74,11 @@ model Supplier {
   historicalDeliveryDays Int      @default(0)
   isVerified             Boolean  @default(false)
   createdAt              DateTime @default(now())
+
+  // Extended delivery performance metrics
+  onTimeDeliveryRate     Decimal  @default(100.00) @db.Decimal(5, 2)
+  totalDeliveriesCount   Int      @default(0)
+  lateDeliveriesCount    Int      @default(0)
 
   // Relations
   quotes          SupplierQuote[]
@@ -307,3 +313,76 @@ model PriceQuote {
 
   @@unique([supplierId, itemId])
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REQUISITION & TRACKING (No-Login End-User System)
+// ─────────────────────────────────────────────────────────────────────────────
+
+model Requisition {
+  id             Int                      @id @default(autoincrement()) @map("requisition_id")
+  trackingCode   String                   @unique @db.VarChar(50)
+  secureToken    String                   @unique @db.VarChar(100)
+  requesterName  String                   @db.VarChar(100)
+  requesterEmail String                   @db.VarChar(100)
+  department     String                   @db.VarChar(100)
+  status         RequisitionStatus       @default(Pending)
+  rejectionCount Int                      @default(0)
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  // Relations
+  items          RequisitionItem[]
+  statusHistory  RequisitionStatusHistory[]
+
+  @@index([trackingCode])
+  @@index([secureToken])
+  @@map("requisitions")
+}
+
+model RequisitionItem {
+  id                 Int         @id @default(autoincrement()) @map("requisition_item_id")
+  requisitionId      Int
+  requisition        Requisition @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+  productName        String      @db.VarChar(255)
+  quantity           Int
+  estimatedUnitPrice Decimal     @db.Decimal(12, 2)
+  brandPreference    String?     @db.VarChar(100)
+
+  @@map("requisition_items")
+}
+
+model RequisitionStatusHistory {
+  id            Int               @id @default(autoincrement()) @map("history_id")
+  requisitionId Int
+  requisition   Requisition       @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+  status        RequisitionStatus
+  remarks       String?           @db.Text
+  changedById   String?
+  changedBy     UserProfile?      @relation("RequisitionReviewedBy", fields: [changedById], references: [id])
+  createdAt     DateTime          @default(now())
+
+  @@map("requisition_status_history")
+}
+
+enum RequisitionStatus {
+  Pending
+  Approved
+  Rejected
+  Completed
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// BUDGET MONITORING
+// ─────────────────────────────────────────────────────────────────────────────
+
+model DepartmentBudget {
+  id              Int      @id @default(autoincrement()) @map("budget_id")
+  department      String   @unique @db.VarChar(100)
+  allocatedBudget Decimal  @db.Decimal(12, 2)
+  spentBudget     Decimal  @default(0) @db.Decimal(12, 2)
+  fiscalYear      Int      @default(2026)
+  updatedAt       DateTime @updatedAt
+
+  @@map("department_budgets")
+}
+
