@@ -29,6 +29,9 @@ ProcureWise is a modern web application built to streamline and automate the pub
 
 ProcureWise protects user access and ensures strict segregation of duties through a middleware-equivalent Edge Proxy (`src/proxy.ts`, which replaces the deprecated `src/middleware.ts` convention in Next.js 16):
 
+> [!NOTE]
+> In this Next.js 16 version, the Edge Proxy is defined at `src/proxy.ts` (replacing the traditional `middleware.ts`). To comply with Next.js 16 file conventions, this file must export the proxy function as a **default export** (i.e., `export default async function proxy(request: NextRequest)`). Named exports will fail to bind at runtime in production.
+
 - **Authentication Gateway**: Prevents unauthenticated users from accessing any `/dashboard/*` paths, forcing a redirect back to `/` (login).
 - **Separated Registration Flows**: The public registration portal is strictly for Suppliers. Creation of staff accounts (Procurement Officers and Approvers) is restricted to logged-in Administrative Approvers via a dedicated dashboard module, using a cookie-free Supabase client to prevent session invalidation.
 - **Role Guards**: Extracts the user's validated database profile role and restricts route access. If a user tries to access a path outside their authorized scope, they are redirected to their appropriate home dashboard:
@@ -199,3 +202,31 @@ pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to access the login portal.
+
+---
+
+## ⚠️ Troubleshooting & Production Deployment
+
+### P1001: Can't reach database server at `db.tfswokhkuxwvpcpxekso.supabase.co`
+
+If you encounter a `P1001` database connection error in production (e.g., on Vercel), it is because Supabase direct connections (`db.[project-id].supabase.co` on port `5432`) use **IPv6-only** resolution. Most serverless hosting providers (including Vercel) do not support IPv6-only database connections out-of-the-box.
+
+#### Solution (Automatic & Manual):
+1. **Automatic Runtime Safety Net (Code-level)**:
+   The application now includes built-in routing logic in `src/lib/prisma.ts` that automatically intercepts direct IPv6 Supabase connection strings (`db.[project-ref].supabase.co`) at runtime and rewrites them to the IPv4-compatible transaction pooler (`aws-1-ap-southeast-1.pooler.supabase.com:6543`). This prevents runtime P1001 crashes out of the box.
+
+2. **Manual Configuration (Recommended for performance)**:
+   It is still recommended to update the environment variables in your production hosting platform (e.g., Vercel Project Settings) to point directly to the **Supavisor Connection Pooler URL** to ensure optimal connection pooling behavior:
+
+   - **`DATABASE_URL`**: Update this in your production environment settings to point to the Transaction Pooler (port `6543`):
+     ```env
+     DATABASE_URL="postgresql://postgres.tfswokhkuxwvpcpxekso:[YOUR_DATABASE_PASSWORD]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
+     ```
+   - **`DIRECT_URL`**: Update this to also use the IPv4-compatible pooler URL (or transaction/session pooler) to ensure build/migration scripts run without network timeouts:
+     ```env
+     DIRECT_URL="postgresql://postgres.tfswokhkuxwvpcpxekso:[YOUR_DATABASE_PASSWORD]@aws-1-ap-southeast-1.pooler.supabase.com:6543/postgres"
+     ```
+
+### Runtime Database Error Feedback UI
+To prevent generic 500 "Server Error" pages (e.g., Error: 2369467324) when database tables are missing or connection errors occur in production, pages fetching data via Prisma (such as RFQ Creation and Catalog Management) now wrap queries in standard try-catch handlers. If a database query fails, they render a clean diagnostic view showing the exact PostgreSQL error message (such as missing relations/tables or pooler connection timeouts) so they can be fixed immediately without needing to search server logs.
+

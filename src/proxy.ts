@@ -23,7 +23,7 @@ const ROUTE_ROLE: Array<{ prefix: string; role: string }> = [
 // Proxy — runs on every matched request before rendering
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Build a mutable response so Supabase can refresh session cookies
