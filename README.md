@@ -87,7 +87,7 @@ All database and authentication operations are managed through Next.js Server Ac
 
 - **User Profile Actions (`src/app/actions/users.ts`)**: Creates user profiles post-signup, retrieves profile details for role-based routing, and toggles profile activation state.
 - **Supplier Actions (`src/app/actions/suppliers.ts`)**: Manages supplier database records, fetches alphabetically ordered lists, and toggles supplier verification status.
-- **RFQ Actions (`src/app/actions/rfq.ts`)**: Auto-generates incremental RFQ references (e.g. `RFQ-2026-06-001`), manages state transitions (`Draft` $\rightarrow$ `Published` $\rightarrow$ `Closed`), and retrieves full RFQ records with nested supplier bids.
+- **RFQ Actions (`src/app/actions/rfq.ts` & `src/app/actions/rfq-actions.ts`)**: Auto-generates incremental, first-come first-served RFQ references in the format `[YYYY]-[XXX]` (e.g. `2026-001`), manages state transitions (`Draft` $\rightarrow$ `Published` $\rightarrow$ `Closed`), and retrieves full RFQ records. Supports manually overriding the sequential numbering with a mandatory justification reason.
 - **Quotation Actions (`src/app/actions/quotes.ts`)**: Validates submitted bid prices against the RFQ budget limits (ABC), processes multi-row quotation lists, and handles transaction-safe updates.
 - **Recommendation Actions (`src/app/actions/recommendations.ts`)**: Runs the MCDM algorithm to normalize price and lead times, fetches reliability rates, ranks suppliers, writes detailed text justifications, and transitions the RFQ status to `Evaluated`. Includes client-side interactive approval triggers (`src/app/dashboard/approver/approve-button.tsx`) with confirmation dialogs, transition loading states, and error handling.
 
@@ -120,7 +120,7 @@ A forensic tracking mechanism designed to enforce regulatory compliance and prev
 
 - **Background Logging**: Executes asynchronously via Next.js 16's stable `after()` scheduler, ensuring logging actions never block client responses or degrade transaction performance.
 - **State Snapshots**: Automatically records structural JSON representations of `oldState` and `newState` for key operations:
-  - **RFQ Transactions**: Logs on `CREATE_RFQ`, `PUBLISH_RFQ`, and `CLOSE_RFQ`.
+  - **RFQ Transactions**: Logs on `CREATE_RFQ`, `PUBLISH_RFQ`, `CLOSE_RFQ`, and `RFQ_NUMBER_OVERRIDE` (recording the expected number, overwritten number, and override reason).
   - **Supplier Bidding**: Logs on `SUBMIT_BID` (capturing overwrites of existing bids).
   - **Evaluated Recommendations**: Logs on `APPROVE_RECOMMENDATION` status changes.
 - **Audit Metadata**: Automatically stamps records with the active user session ID (fetched inside the `after` callback context) and the requester's IP address (resolved via async `headers()`).
