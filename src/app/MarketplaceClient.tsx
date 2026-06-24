@@ -57,6 +57,8 @@ export default function MarketplaceClient({ products, suppliers, userProfile }: 
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [ppmpList, setPpmpList] = useState<any[]>([]);
   const [checkoutData, setCheckoutData] = useState({
+    requesterName: "",
+    requesterEmail: "",
     department: "",
     office: "",
     purpose: "",
@@ -65,6 +67,7 @@ export default function MarketplaceClient({ products, suppliers, userProfile }: 
   });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   // Load cart from localStorage
   useEffect(() => {
@@ -155,24 +158,22 @@ export default function MarketplaceClient({ products, suppliers, userProfile }: 
   const cartTotal = cart.reduce((sum, item) => sum + (item.estimatedUnitCost * item.quantity), 0);
 
   const handleCheckoutClick = async () => {
-    if (!userProfile) {
-      // Save redirect to login
-      router.push("/login");
-      return;
-    }
-
-    if (userProfile.role !== "End User") {
+    if (userProfile && userProfile.role !== "End User") {
       alert(`Role Restrictions: You are logged in as a ${userProfile.role}. Only End Users can submit Purchase Requests.`);
       return;
     }
 
-    // Load user's approved PPMPs
+    // Load user's approved PPMPs if logged in
     setLoading(true);
     try {
-      const ppmps = await getPpmpList({ department: userProfile.fullName, status: "Approved" });
-      setPpmpList(ppmps || []);
+      if (userProfile) {
+        const ppmps = await getPpmpList({ department: userProfile.fullName, status: "Approved" });
+        setPpmpList(ppmps || []);
+      }
       setCheckoutData({
-        department: userProfile.fullName || "",
+        requesterName: userProfile?.fullName || "",
+        requesterEmail: userProfile?.email || "",
+        department: userProfile?.fullName || "",
         office: "Department Office",
         purpose: "",
         fundingSource: "GAA 2026",
@@ -199,7 +200,9 @@ export default function MarketplaceClient({ products, suppliers, userProfile }: 
         purpose: checkoutData.purpose,
         fundingSource: checkoutData.fundingSource,
         ppmpId: checkoutData.ppmpId ? parseInt(checkoutData.ppmpId) : undefined,
-        requestedById: userProfile.id,
+        requestedById: userProfile?.id || undefined,
+        requesterName: checkoutData.requesterName || undefined,
+        requesterEmail: checkoutData.requesterEmail || undefined,
         items: cart.map(item => ({
           productId: item.id,
           description: item.name,
@@ -215,8 +218,7 @@ export default function MarketplaceClient({ products, suppliers, userProfile }: 
         saveCart([]);
         setIsCheckoutOpen(false);
         setIsCartOpen(false);
-        alert(`Success! Purchase Request ${res.pr?.prNumber} has been generated as a Draft.`);
-        router.push("/dashboard/end-user/pr");
+        setSuccessMessage(`Purchase Request ${res.pr?.prNumber} has been generated successfully! The procurement office has been notified.`);
       } else {
         setErrorMessage(res.error || "Failed to generate Purchase Request.");
       }
@@ -602,15 +604,36 @@ export default function MarketplaceClient({ products, suppliers, userProfile }: 
         </div>
       )}
 
+      {/* ── Success Banner ── */}
+      {successMessage && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-8 shadow-2xl text-center space-y-6">
+            <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto">
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <h3 className="text-lg font-black text-green-700 dark:text-green-400">Requisition Submitted!</h3>
+            <p className="text-xs text-gray-600 dark:text-slate-400 leading-relaxed">{successMessage}</p>
+            <button
+              onClick={() => setSuccessMessage("")}
+              className="bg-[#7e191b] hover:bg-[#962124] text-white px-6 py-2.5 rounded-xl font-bold text-xs transition uppercase tracking-wider"
+            >
+              Continue Shopping
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* ── Checkout / PR Modal ── */}
       {isCheckoutOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white dark:bg-[#0f172a] border border-gray-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
             
             <div className="flex justify-between items-center mb-6">
               <div>
                 <h3 className="text-lg font-black text-[#7e191b] dark:text-white tracking-tight">Generate Purchase Request</h3>
-                <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Submit your cart items for formal procurement processing.</p>
+                <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+                  {userProfile ? "Submit your cart items for formal procurement processing." : "No login required. Fill in your details to submit a requisition."}
+                </p>
               </div>
               <button onClick={() => setIsCheckoutOpen(false)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition">
                 <X className="w-5 h-5" />
@@ -624,6 +647,30 @@ export default function MarketplaceClient({ products, suppliers, userProfile }: 
             )}
 
             <form onSubmit={handlePrSubmit} className="space-y-4 text-xs">
+              {/* Requester Identity — shown for guests, pre-filled for logged-in users */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Requester Full Name</label>
+                  <input 
+                    type="text" required 
+                    value={checkoutData.requesterName} 
+                    onChange={(e) => setCheckoutData({...checkoutData, requesterName: e.target.value})}
+                    className="w-full border border-gray-300 dark:border-slate-700 rounded-lg p-2.5 outline-none focus:border-[#ca8a04] bg-[#FAF9F6] dark:bg-slate-900 transition"
+                    placeholder="E.g., Dr. Juan Dela Cruz"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Email Address</label>
+                  <input 
+                    type="email" required 
+                    value={checkoutData.requesterEmail} 
+                    onChange={(e) => setCheckoutData({...checkoutData, requesterEmail: e.target.value})}
+                    className="w-full border border-gray-300 dark:border-slate-700 rounded-lg p-2.5 outline-none focus:border-[#ca8a04] bg-[#FAF9F6] dark:bg-slate-900 transition"
+                    placeholder="E.g., juan@bsc.edu.ph"
+                  />
+                </div>
+              </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Requisition Unit / Dept</label>

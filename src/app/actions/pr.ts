@@ -23,6 +23,8 @@ interface CreatePrInput {
   fundingSource: string;
   ppmpId?: number;
   requestedById?: string;
+  requesterName?: string;
+  requesterEmail?: string;
   items: PrItemInput[];
 }
 
@@ -77,6 +79,8 @@ export async function createPrFromCartAction(input: CreatePrInput) {
           totalCost: new Prisma.Decimal(totalCost),
           status: PrStatus.Draft,
           requestedById: input.requestedById || null,
+          requesterName: input.requesterName || null,
+          requesterEmail: input.requesterEmail || null,
         }
       });
 

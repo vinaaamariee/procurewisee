@@ -473,6 +473,8 @@ model PurchaseRequest {
   office            String           @db.VarChar(100)
   requestedById     String?
   requestedBy       UserProfile?     @relation("PrRequestedBy", fields: [requestedById], references: [id])
+  requesterName     String?          @db.VarChar(150)
+  requesterEmail    String?          @db.VarChar(150)
   purpose           String           @db.Text
   fundingSource     String           @db.VarChar(100)
   ppmpId            Int?
