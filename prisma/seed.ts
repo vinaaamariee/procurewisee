@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
-import { QuoteStatus, RfqStatus } from "../src/generated/prisma/client";
+import { QuoteStatus, RfqStatus, PpmpStatus, PrStatus, PoStatus, DeliveryStatus, EvaluationType } from "../src/generated/prisma/client";
 import { officeItems } from "../src/lib/mock-price-data";
 
 
@@ -392,6 +392,10 @@ async function main() {
       description: "High-grade photocopy paper, A4 size, 80gsm, 500 sheets/ream.",
       unitOfMeasure: "ream",
       estimatedUnitCost: 220.00,
+      brand: "Hard Copy",
+      popularity: 85,
+      technicalSpecifications: "A4 size, 80gsm, 500 sheets per ream, ultra-white.",
+      preferredSupplierId: suppliers[0].id,
     },
     {
       sku: "INK-HP-85A",
@@ -400,6 +404,10 @@ async function main() {
       description: "Original HP 85A Black LaserJet Toner Cartridge (CE285A).",
       unitOfMeasure: "cart",
       estimatedUnitCost: 4500.00,
+      brand: "HP",
+      popularity: 60,
+      technicalSpecifications: "Laser jet toner, CE285A, black, yields approx 1600 pages.",
+      preferredSupplierId: suppliers[1].id,
     },
     {
       sku: "PEN-PIL-BLK",
@@ -408,6 +416,10 @@ async function main() {
       description: "Retractable rolling ball gel pen, black ink, ultra fine 0.5mm.",
       unitOfMeasure: "box",
       estimatedUnitCost: 950.00,
+      brand: "Pilot",
+      popularity: 90,
+      technicalSpecifications: "G2 retractable, gel ink black, 0.5mm tip, box of 12.",
+      preferredSupplierId: suppliers[0].id,
     },
     {
       sku: "LAP-LEN-L14",
@@ -416,6 +428,10 @@ async function main() {
       description: "Intel Core i5, 16GB DDR4 RAM, 512GB SSD, 14 inch FHD display, Windows 11 Pro.",
       unitOfMeasure: "unit",
       estimatedUnitCost: 55000.00,
+      brand: "Lenovo",
+      popularity: 95,
+      technicalSpecifications: "Core i5-1335U, 16GB RAM, 512GB SSD, Windows 11 Pro, 3 years warranty.",
+      preferredSupplierId: suppliers[3].id,
     },
     {
       sku: "PRN-EPS-L3210",
@@ -424,6 +440,10 @@ async function main() {
       description: "Multifunction ink tank printer with scan, copy, and print functions.",
       unitOfMeasure: "unit",
       estimatedUnitCost: 9800.00,
+      brand: "Epson",
+      popularity: 80,
+      technicalSpecifications: "EcoTank multifunction, print/scan/copy, borderless photo printing.",
+      preferredSupplierId: suppliers[3].id,
     },
     {
       sku: "TAR-STK-MATTE",
@@ -432,18 +452,286 @@ async function main() {
       description: "Custom printed matte vinyl sticker wrap, waterproof and fade resistant.",
       unitOfMeasure: "pcs",
       estimatedUnitCost: 1800.00,
+      brand: "Mactac",
+      popularity: 45,
+      technicalSpecifications: "3ft x 8ft vinyl matte sticker wrap, 1440dpi high resolution print.",
+      preferredSupplierId: suppliers[2].id,
     },
   ];
 
+  const seededProducts = [];
   for (const cp of catalogProductsData) {
-    await prisma.catalogProduct.upsert({
+    const prod = await prisma.catalogProduct.upsert({
       where: { sku: cp.sku },
       update: cp,
       create: cp,
     });
+    seededProducts.push(prod);
     console.log(`  ✔ Catalog Product: ${cp.name} (${cp.sku})`);
   }
   console.log();
+
+  // ── 11. PPMPs ─────────────────────────────────────────────────────────────
+  console.log("📅 Seeding PPMPs...");
+  const ppmp1 = await prisma.ppmp.upsert({
+    where: { ppmpNumber: "PPMP-2026-ICT-001" },
+    update: {},
+    create: {
+      ppmpNumber: "PPMP-2026-ICT-001",
+      projectTitle: "ICT Equipment Upgrades 2026",
+      department: "ICT Department",
+      office: "Information & Communications Technology Office",
+      fundingSource: "GAA 2026",
+      estimatedBudget: 150000.00,
+      status: PpmpStatus.Approved,
+      items: {
+        create: [
+          {
+            generalDescription: "Lenovo ThinkPad L14 Gen 4",
+            quantity: 2,
+            unit: "unit",
+            estimatedUnitCost: 55000.00,
+            estimatedCost: 110000.00,
+            schedule: "Q1-Q2",
+          },
+          {
+            generalDescription: "Epson EcoTank L3210 Printer",
+            quantity: 4,
+            unit: "unit",
+            estimatedUnitCost: 9800.00,
+            estimatedCost: 39200.00,
+            schedule: "Q1-Q2",
+          }
+        ]
+      }
+    }
+  });
+
+  const ppmp2 = await prisma.ppmp.upsert({
+    where: { ppmpNumber: "PPMP-2026-ADM-002" },
+    update: {},
+    create: {
+      ppmpNumber: "PPMP-2026-ADM-002",
+      projectTitle: "Administrative General Supplies 2026",
+      department: "Administrative Division",
+      office: "Office of the Director for Administration",
+      fundingSource: "GAA 2026",
+      estimatedBudget: 85000.00,
+      status: PpmpStatus.Draft,
+      items: {
+        create: [
+          {
+            generalDescription: "Paper A4 80gsm",
+            quantity: 100,
+            unit: "ream",
+            estimatedUnitCost: 220.00,
+            estimatedCost: 22000.00,
+            schedule: "Q3",
+          }
+        ]
+      }
+    }
+  });
+  console.log(`  ✔ PPMP Approved: ${ppmp1.ppmpNumber}`);
+  console.log(`  ✔ PPMP Draft: ${ppmp2.ppmpNumber}\n`);
+
+  // ── 12. PURCHASE REQUESTS (PRs) ───────────────────────────────────────────
+  console.log("🛍️  Seeding Purchase Requests...");
+  const pr1 = await prisma.purchaseRequest.upsert({
+    where: { prNumber: "PR-2026-ICT-001" },
+    update: {},
+    create: {
+      prNumber: "PR-2026-ICT-001",
+      trackingNumber: "PROC-2026-0001",
+      department: "ICT Department",
+      office: "Information & Communications Technology Office",
+      purpose: "Urgent upgrade of developer work laptops and shared scanners",
+      fundingSource: "GAA 2026",
+      ppmpId: ppmp1.id,
+      estimatedBudget: 120000.00,
+      totalCost: 119600.00,
+      status: PrStatus.Received,
+      items: {
+        create: [
+          {
+            productId: seededProducts[3].id,
+            description: seededProducts[3].name,
+            brand: seededProducts[3].brand,
+            quantity: 2,
+            unit: seededProducts[3].unitOfMeasure,
+            estimatedUnitCost: seededProducts[3].estimatedUnitCost,
+            estimatedCost: 110000.00,
+            specification: seededProducts[3].technicalSpecifications,
+          },
+          {
+            productId: seededProducts[4].id,
+            description: seededProducts[4].name,
+            brand: seededProducts[4].brand,
+            quantity: 1,
+            unit: seededProducts[4].unitOfMeasure,
+            estimatedUnitCost: seededProducts[4].estimatedUnitCost,
+            estimatedCost: 9600.00,
+            specification: seededProducts[4].technicalSpecifications,
+          }
+        ]
+      }
+    }
+  });
+
+  const pr2 = await prisma.purchaseRequest.upsert({
+    where: { prNumber: "PR-2026-ADM-002" },
+    update: {},
+    create: {
+      prNumber: "PR-2026-ADM-002",
+      department: "Administrative Division",
+      office: "Office of the Director for Administration",
+      purpose: "Office replenishment",
+      fundingSource: "GAA 2026",
+      estimatedBudget: 50000.00,
+      totalCost: 22000.00,
+      status: PrStatus.Draft,
+      items: {
+        create: [
+          {
+            productId: seededProducts[0].id,
+            description: seededProducts[0].name,
+            brand: seededProducts[0].brand,
+            quantity: 100,
+            unit: seededProducts[0].unitOfMeasure,
+            estimatedUnitCost: seededProducts[0].estimatedUnitCost,
+            estimatedCost: 22000.00,
+            specification: seededProducts[0].technicalSpecifications,
+          }
+        ]
+      }
+    }
+  });
+  console.log(`  ✔ PR Received: ${pr1.prNumber} (${pr1.trackingNumber})`);
+  console.log(`  ✔ PR Draft: ${pr2.prNumber}\n`);
+
+  // ── 13. PURCHASE ORDERS (POs) ─────────────────────────────────────────────
+  console.log("📜 Seeding Purchase Orders...");
+  const po1 = await prisma.purchaseOrder.upsert({
+    where: { poNumber: "PO-2026-0001" },
+    update: {},
+    create: {
+      poNumber: "PO-2026-0001",
+      supplierId: suppliers[0].id, // Batanes General Trading
+      rfqId: rfq1.id,
+      prId: pr1.id,
+      totalCost: 38500.00,
+      deliveryTerms: "FOB Destination, 7 calendar days",
+      paymentTerms: "Charge Account, 30 days after complete delivery",
+      status: PoStatus.Approved,
+      items: {
+        create: [
+          {
+            description: "Matte Vinyl Sticker Wrap with print (3ft x 8ft)",
+            quantity: 10,
+            unitPrice: 1800.00,
+            totalCost: 18000.00,
+          },
+          {
+            description: "Tarpaulin Banner (4ft x 8ft)",
+            quantity: 15,
+            unitPrice: 1250.00,
+            totalCost: 18750.00,
+          },
+          {
+            description: "Foam Board Mounted Print (A2 size)",
+            quantity: 5,
+            unitPrice: 350.00,
+            totalCost: 1750.00,
+          }
+        ]
+      }
+    }
+  });
+  console.log(`  ✔ PO Approved: ${po1.poNumber}\n`);
+
+  // ── 14. ACKNOWLEDGEMENT RECEIPTS ──────────────────────────────────────────
+  console.log("🚛 Seeding Acknowledgement Receipts...");
+  const receipt1 = await prisma.acknowledgementReceipt.upsert({
+    where: { receiptNumber: "REC-2026-0001" },
+    update: {},
+    create: {
+      receiptNumber: "REC-2026-0001",
+      poId: po1.id,
+      supplierId: suppliers[0].id,
+      receivedBy: "Ricardo Santos",
+      dateReceived: new Date("2026-06-22"),
+      deliveryStatus: DeliveryStatus.CompleteDelivery,
+      remarks: "All items inspected and found compliant with specifications.",
+    }
+  });
+  console.log(`  ✔ Receipt Logged: ${receipt1.receiptNumber}\n`);
+
+  // ── 15. SUPPLIER EVALUATIONS ──────────────────────────────────────────────
+  console.log("⭐ Seeding Supplier Evaluations...");
+  await prisma.supplierEvaluation.create({
+    data: {
+      supplierId: suppliers[0].id,
+      evaluationType: EvaluationType.EndUser,
+      evaluatorName: "Dr. Juan Dela Cruz",
+      evaluationDate: new Date("2026-06-23"),
+      productQuality: 4,
+      deliveryCompliance: 4,
+      accuracy: 3,
+      responsiveness: 4,
+      communication: 4,
+      costEffectiveness: 3,
+      overallSatisfaction: 4,
+      comments: "Excellent print quality on the vinyl sticker wraps. Highly recommended.",
+    }
+  });
+
+  await prisma.supplierEvaluation.create({
+    data: {
+      supplierId: suppliers[0].id,
+      evaluationType: EvaluationType.ProcurementOffice,
+      evaluatorName: "Procurement Officer Admin",
+      evaluationDate: new Date("2026-06-23"),
+      rfqResponsiveness: 4,
+      competitivePricing: 3,
+      specificationCompliance: 4,
+      documentCompliance: 4,
+      deliveryPerformance: 4,
+      comments: "Quick bid response and perfect document completeness.",
+    }
+  });
+  console.log("  ✔ 2 supplier evaluations for Batanes General Trading\n");
+
+  // ── 16. FORM TEMPLATES & WORKFLOW CONFIGS ──────────────────────────────────
+  console.log("⚙️  Seeding Form & Workflow Builders...");
+  await prisma.formTemplate.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      id: 1,
+      name: "Supplier Evaluation Form v1",
+      version: 1,
+      fields: [
+        { name: "productQuality", label: "Product Quality", type: "number", required: true },
+        { name: "deliveryCompliance", label: "Delivery Compliance", type: "number", required: true },
+        { name: "comments", label: "Additional Comments", type: "textarea", required: false }
+      ],
+      notes: "Standard form used for end-user evaluations of goods and services."
+    }
+  });
+
+  await prisma.workflowConfig.upsert({
+    where: { moduleName: "PR" },
+    update: {},
+    create: {
+      moduleName: "PR",
+      steps: [
+        { role: "End User", level: 1, action: "Submit" },
+        { role: "Administrative Approver", level: 2, action: "Budget Audit" },
+        { role: "Procurement Officer", level: 3, action: "Final Review & Receive" }
+      ]
+    }
+  });
+  console.log("  ✔ Form and Workflow builder seeded.\n");
 
   console.log("✅ ProcureWise seed complete!\n");
   console.log("Summary:");

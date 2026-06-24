@@ -24,7 +24,7 @@ export async function login(formData: FormData) {
   });
 
   if (error || !authData.user) {
-    return redirect('/?error=Invalid credentials. Please try again.');
+    return redirect('/login?error=Invalid credentials. Please try again.');
   }
 
   // Fetch role from user_profiles — never trust JWT claims alone
@@ -36,12 +36,12 @@ export async function login(formData: FormData) {
 
   if (!profile) {
     await supabase.auth.signOut();
-    return redirect('/?error=Account not configured. Contact your administrator.');
+    return redirect('/login?error=Account not configured. Contact your administrator.');
   }
 
   if (!profile.isActive) {
     await supabase.auth.signOut();
-    return redirect('/?error=Your account has been deactivated.');
+    return redirect('/login?error=Your account has been deactivated.');
   }
 
   revalidatePath('/', 'layout');
@@ -63,7 +63,7 @@ export async function register(formData: FormData) {
   const businessAddress = formData.get('businessAddress') as string;
 
   if (!email || !password || !fullName || !username || !companyName || !businessAddress) {
-    return redirect('/?error=Please fill in all required fields.');
+    return redirect('/login?error=Please fill in all required fields.');
   }
 
   const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -79,7 +79,7 @@ export async function register(formData: FormData) {
   });
 
   if (signUpError) {
-    return redirect(`/?error=${encodeURIComponent(signUpError.message)}`);
+    return redirect(`/login?error=${encodeURIComponent(signUpError.message)}`);
   }
 
   // Create Supplier record using Prisma
@@ -111,7 +111,7 @@ export async function register(formData: FormData) {
     }
   }
 
-  return redirect('/?success=Account created successfully! You can now log in.');
+  return redirect('/login?success=Account created successfully! You can now log in.');
 }
 
 export async function signout() {

@@ -134,6 +134,63 @@ Simplifies the purchase request process for departments by removing authenticati
 - **PO Handoff & Revision Loop**: If a Procurement Officer rejects a request, the rejection count is incremented, and detailed remarks are logged. Requesters see this history on their tracking page, allowing them to adjust items and resubmit.
 - **Budget Compliance**: Requisitions are validated against allocated department budgets (`DepartmentBudget`) to prevent over-allocation.
 
+### 12. End-User Requisitions Tracker
+
+A dashboard page at `/dashboard/end-user/pr` that lists all Purchase Requests submitted by the requisitioner:
+- **Interactive Multi-Step Validation**: Requisitioners can submit draft PRs for officer audits and monitor validation steps (Draft -> Submitted -> Audited & Approved -> Received/PROC Number Issued).
+- **Assigned Officer Status**: Shows the name, email, and status of the Procurement Officer assigned to audit the request.
+- **Revision Logs**: Displays a history of comments and return reasons logged by the officer during reviews.
+
+### 13. End-User Supplier Evaluation Sheet
+
+A performance evaluation form at `/dashboard/end-user/evaluation` enabling requisitioners to rate suppliers:
+- **7-Criteria Grading Form**: Evaluates suppliers on a 1-4 scale (Poor, Fair, Good, Excellent) across: Product Quality, Delivery Compliance, Order Accuracy, Responsiveness, Communication Flow, Cost Effectiveness, and Overall Satisfaction.
+- **Verification Signatures**: Requires typed signature block confirmation before submitting, dynamically logging reviews and recalculating the supplier's overall reliability rating, quality compliance percentage, and delivery rates.
+
+### 14. Officer Requisition Auditing Hub
+
+An audit interface at `/dashboard/officer/pr` where Procurement Officers review submitted requisitions:
+- **Quantity & Specs Checklist**: Requires auditing item descriptions and quantities against specifications before final approval.
+- **Inline Corrections (UOM Conversion)**: Enforces validation rules enabling officers to edit items inline (e.g. converting "1 piece alcohol" to "500 mL alcohol", adjusting quantities, or correcting brands), which automatically recalculates PR totals and modifies department budget spent.
+- **Status Gates**: Officers can mark PRs "Under Review", return them to the requisitioner for corrections (providing feedback remarks), or approve them to issue a unique `PROC-YYYY-XXXX` tracking reference.
+
+### 15. Officer Purchase Order drafting Workspace
+
+A contract drafting workspace at `/dashboard/officer/po` where officers draft and approve Purchase Orders:
+- **Award Queue**: Retrieves approved RFQ Canvas recommendations and drafts POs with pre-filled details (supplier, items, and pricing).
+- **Interactive Clause Editor**: Enables drafting delivery and payment terms directly on the contract.
+- **High-Fidelity Appendix 61 Layout**: Renders standard government Purchase Order layouts (Appendix 61 / standard Philippine Government PO format) complete with conformes, penalty clauses, and signature slots for print-preview or physical printing.
+
+### 16. Supplier Contract & Delivery Acknowledgment Portal
+
+A dedicated contract interface at `/dashboard/supplier/po` that allows suppliers to review and acknowledge POs:
+- **Registry & Print View**: Suppliers list awarded POs and open high-fidelity print layouts of the contract terms.
+- **Receipt Conforme**: Direct upload/form inputs to document Courier/Receiver name, delivery status (Complete, Partial, Rejected, etc.), and digital conforme signatures, moving the PO status to `Delivered`.
+
+### 17. Supplier Performance Scorecard (Supplier View)
+
+A private visual workspace at `/dashboard/supplier/scorecard` displaying supplier metrics:
+- **Key Performance Ratings**: Displays overall reliability rating (out of 5 stars), quality compliance rate (%), and on-time delivery rates (%).
+- **Scorecard Breakdown**: Summarizes requisitioner satisfaction averages vs. office compliance indices, along with a historical review feed of comments from college personnel.
+
+### 18. Dynamic Workflow Builder
+
+An administrative panel at `/dashboard/approver/workflows` to customize routing sequences:
+- **Step Visualizer**: Displays active sequential approval paths for PPMP, PR, and PO modules.
+- **Hierarchy Editors**: Add, edit, or delete steps specifying hierarchical levels, approving roles (Requisitioner, Officer, Approver, Supplier), required actions, and escalation limits.
+
+### 19. Form Template Customizer & Versioning
+
+A custom form builder at `/dashboard/approver/forms` to manage solicitation and evaluation sheets:
+- **Inputs Configurator**: Allows adding and removing input variables, configuring labels, and mapping types (Text, Text Area, Number, Currency, Date, Dropdown, Checkbox, Signature).
+- **Simulated Form Preview**: Renders a live mock preview of how the form will look on front-end inputs.
+- **Automatic Versioning**: Saving templates auto-records modifications to the audit logs and increments the form schema version.
+
+### 20. Institutional Export Panel
+
+A download workspace at `/dashboard/approver/reports` that enables administrative reports compilation:
+- **One-Click Exports**: Generates CSV files on-the-fly directly in the browser, extracting datasets for PPMPs, Purchase Requests, RFQs, POs, and Supplier scorecards.
+
 ---
 
 ## 💾 Database Schema Details

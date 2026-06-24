@@ -86,6 +86,69 @@ export default async function DashboardLayout({
         </div>
       </header>
 
+      {/* ── Sub Navigation ── */}
+      {(() => {
+        const navLinks: Record<string, Array<{ label: string; href: string }>> = {
+          'Procurement Officer': [
+            { label: 'Overview', href: '/dashboard/officer' },
+            { label: 'Purchase Requests', href: '/dashboard/officer/pr' },
+            { label: 'Purchase Orders', href: '/dashboard/officer/po' },
+            { label: 'Supplier Scorecards', href: '/dashboard/officer/evaluations' },
+            { label: 'Product Catalog', href: '/dashboard/catalog' },
+            { label: 'Price Canvassing', href: '/price-comparison' },
+          ],
+          'Administrative Approver': [
+            { label: 'Overview', href: '/dashboard/approver' },
+            { label: 'Workflow Builder', href: '/dashboard/approver/workflows' },
+            { label: 'Form Builder', href: '/dashboard/approver/forms' },
+            { label: 'Reports & Analytics', href: '/dashboard/approver/reports' },
+            { label: 'Product Catalog', href: '/dashboard/catalog' },
+          ],
+          'End User': [
+            { label: 'Overview', href: '/dashboard/end-user' },
+            { label: 'My PPMPs', href: '/dashboard/end-user/ppmp' },
+            { label: 'Purchase Requests', href: '/dashboard/end-user/pr' },
+            { label: 'Supplier Evaluation', href: '/dashboard/end-user/evaluation' },
+          ],
+          'Supplier': [
+            { label: 'Overview', href: '/dashboard/supplier' },
+            { label: 'Purchase Orders', href: '/dashboard/supplier/po' },
+            { label: 'My Scorecard', href: '/dashboard/supplier/scorecard' },
+          ],
+        };
+        const links = navLinks[profile.role] || [];
+        if (links.length === 0) return null;
+        return (
+          <div style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
+            <style dangerouslySetInnerHTML={{ __html: `
+              .nav-sub-link {
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: var(--text-secondary);
+                text-decoration: none;
+                transition: all 0.2s;
+                position: relative;
+                padding: 0.5rem 0.25rem;
+              }
+              .nav-sub-link:hover {
+                color: var(--accent) !important;
+              }
+            ` }} />
+            <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 1.5rem', display: 'flex', gap: '1.5rem', height: 44, alignItems: 'center' }}>
+              {links.map(link => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  className="nav-sub-link"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* ── Page Content ── */}
       <main style={{ flex: 1 }}>
         {children}

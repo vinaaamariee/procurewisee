@@ -10,6 +10,7 @@ const ROLE_HOME: Record<string, string> = {
   'Procurement Officer':    '/dashboard/officer',
   'Administrative Approver': '/dashboard/approver',
   'Supplier':               '/dashboard/supplier',
+  'End User':               '/dashboard/end-user',
 };
 
 // Which role is required to access each dashboard prefix
@@ -17,6 +18,7 @@ const ROUTE_ROLE: Array<{ prefix: string; role: string }> = [
   { prefix: '/dashboard/officer',  role: 'Procurement Officer' },
   { prefix: '/dashboard/approver', role: 'Administrative Approver' },
   { prefix: '/dashboard/supplier', role: 'Supplier' },
+  { prefix: '/dashboard/end-user', role: 'End User' },
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -62,8 +64,8 @@ export default async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // ── PUBLIC ROUTE: Login page (/) ─────────────────────────────────────────
-  if (pathname === '/') {
+  // ── PUBLIC ROUTE: Login page (/login) ─────────────────────────────────────
+  if (pathname === '/login') {
     if (user) {
       // Already signed in → skip login, go to role dashboard
       const { data: profile } = await supabase
