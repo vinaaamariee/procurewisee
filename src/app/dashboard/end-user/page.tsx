@@ -159,13 +159,6 @@ export default async function EndUserDashboard() {
               }}>
                 📅 Manage PPMP Calendars
               </Link>
-              <Link href="/dashboard/end-user/evaluation" style={{
-                display: "block", textDecoration: "none", padding: "0.75rem 1rem", borderRadius: "0.75rem",
-                background: "rgba(255,255,255,0.9)", border: "1px solid var(--border)", color: theme.textMain,
-                fontWeight: 600, fontSize: "0.8rem", textAlign: "center"
-              }}>
-                ⭐ Evaluate Supplier
-              </Link>
             </div>
           </div>
 

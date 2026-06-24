@@ -93,22 +93,14 @@ export default async function DashboardLayout({
             { label: 'Overview', href: '/dashboard/officer' },
             { label: 'Purchase Requests', href: '/dashboard/officer/pr' },
             { label: 'Purchase Orders', href: '/dashboard/officer/po' },
-            { label: 'Supplier Scorecards', href: '/dashboard/officer/evaluations' },
-            { label: 'Product Catalog', href: '/dashboard/catalog' },
-            { label: 'Price Canvassing', href: '/price-comparison' },
           ],
           'Administrative Approver': [
             { label: 'Overview', href: '/dashboard/approver' },
-            { label: 'Workflow Builder', href: '/dashboard/approver/workflows' },
-            { label: 'Form Builder', href: '/dashboard/approver/forms' },
-            { label: 'Reports & Analytics', href: '/dashboard/approver/reports' },
-            { label: 'Product Catalog', href: '/dashboard/catalog' },
           ],
           'End User': [
             { label: 'Overview', href: '/dashboard/end-user' },
             { label: 'My PPMPs', href: '/dashboard/end-user/ppmp' },
             { label: 'Purchase Requests', href: '/dashboard/end-user/pr' },
-            { label: 'Supplier Evaluation', href: '/dashboard/end-user/evaluation' },
           ],
           'Supplier': [
             { label: 'Overview', href: '/dashboard/supplier' },

@@ -64,27 +64,13 @@ export default async function ApproverDashboard() {
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', fontFamily: '"Inter", sans-serif' }}>
 
       {/* Header Section */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1.5rem' }}>
-        <div>
-          <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: theme.textMain, margin: 0, letterSpacing: '-0.5px' }}>
-            Administrative Approver Portal
-          </h1>
-          <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: theme.textMuted, margin: '0.5rem 0 0 0' }}>
-            Review MCDM recommendations, approve canvas abstracts, and monitor audit trails.
-          </p>
-        </div>
-        <a
-          href="/dashboard/catalog"
-          style={{
-            display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.2rem',
-            backgroundColor: 'rgba(255,255,255,0.8)', border: `1px solid ${theme.glassBorder}`,
-            borderRadius: '999px', color: theme.textMain, textDecoration: 'none',
-            fontSize: '0.875rem', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
-            cursor: 'pointer'
-          }}
-        >
-          <span>👁️</span> Product Catalog
-        </a>
+      <div>
+        <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: theme.textMain, margin: 0, letterSpacing: '-0.5px' }}>
+          Administrative Approver Portal
+        </h1>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: theme.textMuted, margin: '0.5rem 0 0 0' }}>
+          Review MCDM recommendations, approve canvas abstracts, and monitor audit trails.
+        </p>
       </div>
 
       {/* Stat Cards Grid */}

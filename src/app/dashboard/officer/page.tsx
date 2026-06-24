@@ -6,10 +6,9 @@ export const metadata = { title: 'Officer Dashboard — ProcureWise' };
 async function getOfficerStats() {
   const supabase = await createClient();
 
-  const [rfqs, suppliers, appItems] = await Promise.all([
+  const [rfqs, suppliers] = await Promise.all([
     supabase.from('requests_for_quote').select('status'),
     supabase.from('suppliers').select('id:supplier_id'),
-    supabase.from('app_items').select('id:app_item_id'),
   ]);
 
   const rfqList = rfqs.data ?? [];
@@ -17,7 +16,6 @@ async function getOfficerStats() {
     totalRfqs:      rfqList.length,
     openRfqs:       rfqList.filter(r => r.status === 'Published').length,
     totalSuppliers: suppliers.data?.length ?? 0,
-    totalAppItems:  appItems.data?.length ?? 0,
   };
 }
 
@@ -60,7 +58,6 @@ export default async function OfficerDashboard() {
     { label: 'Total RFQs',     value: stats.totalRfqs,      icon: '📋', color: '#1f2937', desc: 'All solicitations' },
     { label: 'Open / Active',  value: stats.openRfqs,       icon: '🟢', color: theme.gold, desc: 'Awaiting quotes' },
     { label: 'Suppliers',      value: stats.totalSuppliers, icon: '🏢', color: theme.crimson, desc: 'Registered vendors' },
-    { label: 'APP Items',      value: stats.totalAppItems,  icon: '📦', color: theme.goldDark, desc: 'Annual procurement plan' },
   ];
 
   return (
