@@ -290,11 +290,11 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
         /* registry Tab */
         <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }} className="lg:grid-cols-3">
           {/* PO List */}
-          <div className="no-print" style={{
+          <div className="no-print lg:col-span-1" style={{
             background: theme.glassBg, backdropFilter: "blur(20px)",
             border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "1.5rem",
             boxShadow: theme.shadow, height: "calc(100vh - 250px)", overflowY: "auto"
-          }} className="lg:col-span-1">
+          }}>
             <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, marginBottom: "1rem" }}>Purchase Orders</h2>
             {pos.length === 0 ? (
               <div style={{ textAlign: "center", padding: "2rem", color: theme.textMuted }}>
@@ -341,7 +341,7 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
 
           {/* PO Details & Form Layout (Government PO Appendix 61) */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-2">
-            {selectedPrId && selectedPo ? (
+            {selectedPo ? (
               <>
                 {/* Control Panel (no-print) */}
                 <div className="no-print" style={{
