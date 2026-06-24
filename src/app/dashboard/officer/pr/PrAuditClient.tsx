@@ -458,7 +458,7 @@ export default function PrAuditClient({ initialPrs, officerId, budgets }: PrAudi
               border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", overflow: "hidden",
               boxShadow: theme.shadow
             }}>
-              <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid rgba(0,0,0,0.06)", display: "flex", justifyBetween: "center", justifyContent: "space-between" }}>
+              <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between" }}>
                 <h3 style={{ fontSize: "1rem", fontWeight: 700, color: theme.textMain, margin: 0 }}>PR Requisition Items Verification Checklist</h3>
                 <span style={{ fontSize: "0.9rem", fontWeight: 800, color: theme.crimson }}>
                   Total cost: ₱{Number(selectedPr.totalCost).toLocaleString()}

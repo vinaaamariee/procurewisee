@@ -87,7 +87,7 @@ export default async function EndUserDashboard() {
             background: theme.glassBg, backdropFilter: "blur(20px)",
             border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", overflow: "hidden", boxShadow: theme.shadow
           }}>
-            <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid rgba(0,0,0,0.06)", display: "flex", alignItems: "center", justifyBetween: "center", justifyContent: "space-between", backgroundColor: "rgba(255,255,255,0.4)" }}>
+            <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid rgba(0,0,0,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", backgroundColor: "rgba(255,255,255,0.4)" }}>
               <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, margin: 0 }}>My Recent Purchase Requests</h2>
               <Link href="/dashboard/end-user/pr" style={{ fontSize: "0.75rem", fontWeight: 700, color: theme.crimson, textDecoration: "none" }}>
                 View All →

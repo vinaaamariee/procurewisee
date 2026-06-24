@@ -265,7 +265,7 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
               <div
                 key={index}
                 style={{
-                  display: "flex", alignItems: "center", justifyBetween: "center", justifyContent: "space-between",
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
                   padding: "1rem 1.25rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.08)",
                   background: "#fff", boxShadow: "0 2px 10px rgba(0,0,0,0.01)"
                 }}
