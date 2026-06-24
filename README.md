@@ -173,23 +173,17 @@ A private visual workspace at `/dashboard/supplier/scorecard` displaying supplie
 - **Key Performance Ratings**: Displays overall reliability rating (out of 5 stars), quality compliance rate (%), and on-time delivery rates (%).
 - **Scorecard Breakdown**: Summarizes requisitioner satisfaction averages vs. office compliance indices, along with a historical review feed of comments from college personnel.
 
-### 18. Dynamic Workflow Builder
+### 18. Streamlined Dashboard Navigation
 
-An administrative panel at `/dashboard/approver/workflows` to customize routing sequences:
-- **Step Visualizer**: Displays active sequential approval paths for PPMP, PR, and PO modules.
-- **Hierarchy Editors**: Add, edit, or delete steps specifying hierarchical levels, approving roles (Requisitioner, Officer, Approver, Supplier), required actions, and escalation limits.
+Each role dashboard has been cleaned up to show only relevant, functional links:
 
-### 19. Form Template Customizer & Versioning
+- **Procurement Officer**: Overview → Purchase Requests → Purchase Orders (Quick Actions on overview page still link to RFQ creation, Supplier Directory, Product Catalog, and Price Comparison)
+- **Administrative Approver**: Overview only (MCDM approval queue, audit trail, and staff management are all on the overview page)
+- **End User**: Overview → My PPMPs → Purchase Requests
+- **Supplier**: Overview → Purchase Orders → My Scorecard
 
-A custom form builder at `/dashboard/approver/forms` to manage solicitation and evaluation sheets:
-- **Inputs Configurator**: Allows adding and removing input variables, configuring labels, and mapping types (Text, Text Area, Number, Currency, Date, Dropdown, Checkbox, Signature).
-- **Simulated Form Preview**: Renders a live mock preview of how the form will look on front-end inputs.
-- **Automatic Versioning**: Saving templates auto-records modifications to the audit logs and increments the form schema version.
-
-### 20. Institutional Export Panel
-
-A download workspace at `/dashboard/approver/reports` that enables administrative reports compilation:
-- **One-Click Exports**: Generates CSV files on-the-fly directly in the browser, extracting datasets for PPMPs, Purchase Requests, RFQs, POs, and Supplier scorecards.
+> [!NOTE]
+> Features such as Workflow Builder (`/dashboard/approver/workflows`), Form Template Customizer (`/dashboard/approver/forms`), and Reports Export (`/dashboard/approver/reports`) exist in the codebase but have been **unlinked from navigation** to reduce confusion. They can be re-enabled by adding their links back to the `navLinks` object in `src/app/dashboard/layout.tsx`.
 
 ---
 
