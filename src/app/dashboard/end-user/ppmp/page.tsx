@@ -282,7 +282,7 @@ export default function PpmpPage() {
                   </button>
                 </div>
 
-                <div style={{ spaceY: "0.75rem", maxHeight: "250px", overflowY: "auto", paddingRight: "0.25rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", maxHeight: "250px", overflowY: "auto", paddingRight: "0.25rem" }}>
                   {items.map((item, index) => (
                     <div key={index} style={{ display: "grid", gridTemplateColumns: "2.5fr 1fr 1fr 1.25fr 1fr auto", gap: "0.5rem", alignItems: "center", marginBottom: "0.5rem" }}>
                       <input
