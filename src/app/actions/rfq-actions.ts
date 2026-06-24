@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { revalidatePath } from 'next/cache';
+import { logAuditTrail } from '@/lib/audit';
 
 interface RfqItemInput {
   itemNumber: string;
@@ -19,6 +20,8 @@ export async function createRfqAction({
   deadlineDate,
   status,
   items,
+  overrideReason,
+  originalRfqNumber,
 }: {
   rfqNumber: string;
   title: string;
@@ -26,6 +29,8 @@ export async function createRfqAction({
   deadlineDate: string;
   status: 'Draft' | 'Published';
   items: RfqItemInput[];
+  overrideReason?: string;
+  originalRfqNumber?: string;
 }) {
   try {
     // 1. Enforce Procurement Officer role and retrieve profile
@@ -96,6 +101,25 @@ export async function createRfqAction({
 
       return newRfq;
     });
+
+    // 4. Log creation audit trail
+    logAuditTrail({
+      actionType: 'CREATE_RFQ',
+      tableAffected: 'requests_for_quote',
+      recordId: result.id,
+      newState: result,
+    });
+
+    // 5. If sequence was overridden, log override audit trail
+    if (overrideReason && overrideReason.trim()) {
+      logAuditTrail({
+        actionType: 'RFQ_NUMBER_OVERRIDE',
+        tableAffected: 'requests_for_quote',
+        recordId: result.id,
+        oldState: { expectedRfqNumber: originalRfqNumber || 'unknown' },
+        newState: { overriddenRfqNumber: rfqNumber.trim(), reason: overrideReason.trim() },
+      });
+    }
 
     revalidatePath('/dashboard/officer');
     return { success: true, rfqId: result.id };

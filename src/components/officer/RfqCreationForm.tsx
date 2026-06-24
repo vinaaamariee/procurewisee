@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { createRfqAction } from '@/app/actions/rfq';
+import { createRfqAction } from '@/app/actions/rfq-actions';
 
 interface AppItem {
   id: number;
@@ -35,19 +35,12 @@ interface ItemRow {
 interface RfqCreationFormProps {
   appItems: AppItem[];
   catalogProducts: CatalogProduct[];
+  nextRfqNumber: string;
 }
 
-export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreationFormProps) {
+export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumber }: RfqCreationFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-
-  // 1. Initial State
-  const initialRfqNumber = () => {
-    const year = new Date().getFullYear().toString().slice(-2);
-    const month = String(new Date().getMonth() + 1).padStart(2, '0');
-    const random = Math.floor(100 + Math.random() * 900); // 3 digit random
-    return `${year}${month}-GAS1-${random}`;
-  };
 
   const getDefaultDeadlineDate = () => {
     const date = new Date();
@@ -55,7 +48,18 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
     return date.toISOString().split('T')[0];
   };
 
-  const [rfqNumber, setRfqNumber] = useState(initialRfqNumber());
+  const [rfqNumber, setRfqNumber] = useState(nextRfqNumber);
+  const [isManualOverride, setIsManualOverride] = useState(false);
+  const [overrideCategory, setOverrideCategory] = useState('Urgent Operational Requirement');
+  const [overrideDetails, setOverrideDetails] = useState('');
+
+  // Synchronize with nextRfqNumber if not in manual override mode
+  useEffect(() => {
+    if (!isManualOverride) {
+      setRfqNumber(nextRfqNumber);
+    }
+  }, [nextRfqNumber, isManualOverride]);
+
   const [title, setTitle] = useState('');
   const [approvedBudget, setApprovedBudget] = useState<number | ''>('');
   const [deadlineDate, setDeadlineDate] = useState(getDefaultDeadlineDate());
@@ -171,6 +175,13 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
       return;
     }
 
+    if (isManualOverride) {
+      if (overrideCategory === 'Other (specify below)' && !overrideDetails.trim()) {
+        setErrorMsg('Please specify details for your manual override reason.');
+        return;
+      }
+    }
+
     // Validate items
     for (const item of items) {
       if (!item.particulars.trim()) {
@@ -202,6 +213,10 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
           appItemId: item.appItemId,
           productId: item.productId,
         })),
+        overrideReason: isManualOverride 
+          ? (overrideCategory === 'Other (specify below)' ? `Other: ${overrideDetails.trim()}` : overrideCategory)
+          : undefined,
+        originalRfqNumber: isManualOverride ? nextRfqNumber : undefined,
       });
 
       if (res.success) {
@@ -283,22 +298,101 @@ export default function RfqCreationForm({ appItems, catalogProducts }: RfqCreati
           gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
           gap: '1.5rem',
         }}>
-          {/* RFQ Number */}
+          {/* RFQ Number & Override Controls */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>RFQ Ref No. *</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-secondary)' }}>RFQ Ref No. *</label>
+              <label style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted)', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={isManualOverride}
+                  onChange={(e) => {
+                    setIsManualOverride(e.target.checked);
+                    if (!e.target.checked) {
+                      setRfqNumber(nextRfqNumber);
+                    }
+                  }}
+                  style={{ cursor: 'pointer' }}
+                />
+                Override Sequence
+              </label>
+            </div>
             <input
               type="text"
               required
+              disabled={!isManualOverride}
               value={rfqNumber}
               onChange={(e) => setRfqNumber(e.target.value)}
-              placeholder="e.g. 2606-GAS1-185"
+              placeholder="e.g. 2026-001"
               style={{
                 padding: '0.6rem 0.8rem', borderRadius: 8,
-                background: 'var(--bg-deep)', border: '1px solid var(--border)',
-                color: 'var(--text-primary)', fontSize: '0.85rem'
+                background: isManualOverride ? 'var(--bg-deep)' : 'var(--bg-dark)',
+                border: '1px solid var(--border)',
+                color: isManualOverride ? 'var(--text-primary)' : 'var(--text-muted)',
+                fontSize: '0.85rem',
+                cursor: isManualOverride ? 'text' : 'not-allowed',
+                fontWeight: isManualOverride ? 700 : 500,
               }}
             />
           </div>
+        </div>
+
+        {/* Manual Override Justification Section (appears only when overridden) */}
+        {isManualOverride && (
+          <div style={{
+            background: 'rgba(126, 25, 27, 0.03)',
+            border: '1px dashed rgba(126, 25, 27, 0.2)',
+            borderRadius: 12,
+            padding: '1.25rem',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            marginTop: '-0.5rem',
+          }}>
+            <h4 style={{ margin: 0, fontSize: '0.8rem', fontWeight: 800, color: '#7e191b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              ⚠️ Sequence Override Justification (Audited)
+            </h4>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }} className="grid grid-cols-1 md:grid-cols-3">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Override Reason Category *</label>
+                <select
+                  value={overrideCategory}
+                  onChange={(e) => setOverrideCategory(e.target.value)}
+                  style={{
+                    padding: '0.5rem 0.75rem', borderRadius: 8,
+                    background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                    color: 'var(--text-primary)', fontSize: '0.8rem'
+                  }}
+                >
+                  <option value="Emergency Procurement">Emergency Procurement</option>
+                  <option value="Urgent Operational Requirement">Urgent Operational Requirement</option>
+                  <option value="Other (specify below)">Other (specify below)</option>
+                </select>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', gridColumn: 'span 2' }}>
+                <label style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>Reason details / justification *</label>
+                <textarea
+                  value={overrideDetails}
+                  onChange={(e) => setOverrideDetails(e.target.value)}
+                  placeholder={overrideCategory === 'Other (specify below)' ? 'Provide details for the override sequence...' : 'Provide details (optional for standard reasons, required for Other)'}
+                  rows={2}
+                  style={{
+                    padding: '0.5rem 0.75rem', borderRadius: 8,
+                    background: 'var(--bg-deep)', border: '1px solid var(--border)',
+                    color: 'var(--text-primary)', fontSize: '0.8rem', resize: 'vertical'
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Form Fields Grid Continued */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '1.5rem',
+        }}>
 
           {/* Title */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', gridColumn: 'span 2' }}>

@@ -7,9 +7,9 @@ export const metadata = { title: 'Create RFQ — ProcureWise' };
 export default async function NewRfqPage() {
   // Enforce Procurement Officer role
   await requireRole('Procurement Officer');
-
   let appItems: any[] = [];
   let catalogProducts: any[] = [];
+  let nextRfqNumber = '';
   let fetchError: string | null = null;
 
   try {
@@ -51,6 +51,11 @@ export default async function NewRfqPage() {
       unitOfMeasure: p.unitOfMeasure,
       estimatedUnitCost: Number(p.estimatedUnitCost),
     }));
+
+    // Fetch total RFQ count for sequencing
+    const rfqCount = await prisma.requestForQuote.count();
+    const currentYear = new Date().getFullYear();
+    nextRfqNumber = `${currentYear}-${String(rfqCount + 1).padStart(3, '0')}`;
   } catch (error: any) {
     console.error('[DATABASE FETCH ERROR] Failed to load data for New RFQ page:', error);
     fetchError = error.message || String(error);
@@ -84,7 +89,7 @@ export default async function NewRfqPage() {
 
           <div style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '0.75rem', padding: '1.25rem' }}>
             <div style={{ fontSize: '0.8rem', fontWeight: 700, color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-              System Error Message
+               System Error Message
             </div>
             <pre style={{ margin: 0, fontSize: '0.85rem', color: '#7e191b', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: 'monospace', lineHeight: '1.5' }}>
               {fetchError}
@@ -158,7 +163,7 @@ export default async function NewRfqPage() {
         border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', overflow: 'hidden', 
         boxShadow: theme.shadow, padding: '2.5rem'
       }}>
-        <RfqCreationForm appItems={appItems} catalogProducts={catalogProducts} />
+        <RfqCreationForm appItems={appItems} catalogProducts={catalogProducts} nextRfqNumber={nextRfqNumber} />
       </div>
       
     </div>
