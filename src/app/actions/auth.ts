@@ -10,6 +10,7 @@ const ROLE_HOME: Record<UserRole, string> = {
   'Procurement Officer':    '/dashboard/officer',
   'Administrative Approver': '/dashboard/approver',
   'Supplier':               '/dashboard/supplier',
+  'End User':               '/dashboard/end-user',
 };
 
 export async function login(formData: FormData) {
