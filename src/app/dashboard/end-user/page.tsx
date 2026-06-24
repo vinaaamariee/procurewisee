@@ -22,7 +22,7 @@ export default async function EndUserDashboard() {
   const recentPrs = await prisma.purchaseRequest.findMany({
     where: { requestedById: profile.id },
     orderBy: { createdAt: "desc" },
-    limit: 5,
+    take: 5,
   });
 
   const allocated = Number(budget.allocatedBudget);
