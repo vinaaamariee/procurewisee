@@ -31,12 +31,17 @@ export async function getAuthenticatedUser(): Promise<{
   if (profileError || !profile) {
     // Profile not found — sign out and redirect
     await supabase.auth.signOut();
-    redirect('/?error=Account not configured. Contact your administrator.');
+    redirect('/login?error=Account not configured. Contact your administrator.');
+  }
+
+  if (profile.role === 'Supplier') {
+    await supabase.auth.signOut();
+    redirect('/login?error=Supplier login is disabled. Supplier accounts are for reference only.');
   }
 
   if (!profile.isActive) {
     await supabase.auth.signOut();
-    redirect('/?error=Your account has been deactivated.');
+    redirect('/login?error=Your account has been deactivated.');
   }
 
   return { user, profile: profile as UserProfile };

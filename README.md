@@ -33,12 +33,11 @@ ProcureWise protects user access and ensures strict segregation of duties throug
 > In this Next.js 16 version, the Edge Proxy is defined at `src/proxy.ts` (replacing the traditional `middleware.ts`). To comply with Next.js 16 file conventions, this file must export the proxy function as a **default export** (i.e., `export default async function proxy(request: NextRequest)`). Named exports will fail to bind at runtime in production.
 
 - **Authentication Gateway**: Prevents unauthenticated users from accessing any `/dashboard/*` paths, forcing a redirect back to `/` (login).
-- **Separated Registration Flows**: The public registration portal is strictly for Suppliers. Creation of staff accounts (Procurement Officers and Approvers) is restricted to logged-in Administrative Approvers via a dedicated dashboard module, using a cookie-free Supabase client to prevent session invalidation.
-- **Role Guards**: Extracts the user's validated database profile role and restricts route access. If a user tries to access a path outside their authorized scope, they are redirected to their appropriate home dashboard:
+- **Disabled Supplier Self-Registration & Login**: The public self-registration flow ("Sign Up" tab on `/login`) has been deactivated and removed. Supplier accounts are strictly prohibited from logging into the dashboard. Existing supplier records remain in the database as static reference data (for RFQs, quotes, ratings, and canvassing audits) and cannot be authenticated.
+- **Creation of Staff Accounts**: Creation of staff accounts (Procurement Officers and Administrative Approvers) is restricted to logged-in Administrative Approvers via a dedicated dashboard module, using a cookie-free Supabase client to prevent session invalidation.
+- **Role Guards**: Extracts the user's validated database profile role and restricts route access. If an authorized user tries to access a path outside their authorized scope, they are redirected to their appropriate home dashboard:
   - **Procurement Officer** $\rightarrow$ `/dashboard/officer`
   - **Administrative Approver** $\rightarrow$ `/dashboard/approver`
-  - **Supplier** $\rightarrow$ `/dashboard/supplier`
-- **Profile Synchronization**: PostgreSQL triggers (`on_auth_user_created` running `handle_new_user()`) dynamically sync Supabase Auth sign-ups into the `user_profiles` table, maintaining strict database integrity.
 - **Account Deactivation**: Enforces checks for active status (`isActive`); deactivated profiles are immediately signed out.
 
 ### 2. Multi-Criteria Decision Making (MCDM) Engine

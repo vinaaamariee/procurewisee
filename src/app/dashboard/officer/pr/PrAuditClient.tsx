@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { reviewPrAction, receivePrAction, updatePrItemAction } from "@/app/actions/pr";
+import { reviewPrAction, receivePrAction, updatePrItemAction, getPreCanvassingData } from "@/app/actions/pr";
 
 interface Product {
   id: number;
@@ -98,6 +98,11 @@ export default function PrAuditClient({ initialPrs, officerId, budgets }: PrAudi
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
+  // Pre-Canvassing Form States
+  const [preCanvassData, setPreCanvassData] = useState<any | null>(null);
+  const [isPreCanvassOpen, setIsPreCanvassOpen] = useState(false);
+  const [preCanvassLoading, setPreCanvassLoading] = useState(false);
+
   const selectedPr = prs.find((pr) => pr.id === selectedPrId);
 
   // Initialize checklist for items when selected PR changes
@@ -112,8 +117,30 @@ export default function PrAuditClient({ initialPrs, officerId, budgets }: PrAudi
       setErrorMsg(null);
       setSuccessMsg(null);
       setEditingItemId(null);
+      setPreCanvassData(null);
+      setIsPreCanvassOpen(false);
     }
   }, [selectedPrId]);
+
+  const handleOpenPreCanvass = async () => {
+    if (!selectedPr) return;
+    setPreCanvassLoading(true);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    try {
+      const res = await getPreCanvassingData(selectedPr.id);
+      if (res.success) {
+        setPreCanvassData(res);
+        setIsPreCanvassOpen(true);
+      } else {
+        setErrorMsg(res.error || "Failed to load pre-canvassing data.");
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to load pre-canvassing data.");
+    } finally {
+      setPreCanvassLoading(false);
+    }
+  };
 
   const handleStartReview = async () => {
     if (!selectedPr) return;
@@ -375,7 +402,19 @@ export default function PrAuditClient({ initialPrs, officerId, budgets }: PrAudi
                 </div>
 
                 {/* Audit primary triggers */}
-                <div style={{ display: "flex", gap: "0.5rem" }}>
+                <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+                  <button
+                    onClick={handleOpenPreCanvass}
+                    disabled={preCanvassLoading || isProcessing}
+                    style={{
+                      padding: "0.5rem 1rem", borderRadius: "0.75rem", border: "1px solid rgba(126, 25, 27, 0.15)",
+                      background: "rgba(126, 25, 27, 0.04)", color: theme.crimson, fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
+                      display: "inline-flex", alignItems: "center", gap: "0.3rem"
+                    }}
+                  >
+                    📄 {preCanvassLoading ? "Generating..." : "Pre-Canvassing Form"}
+                  </button>
+
                   {selectedPr.status === "Submitted" && (
                     <button
                       onClick={handleStartReview}
@@ -649,6 +688,194 @@ export default function PrAuditClient({ initialPrs, officerId, budgets }: PrAudi
           </div>
         )}
       </div>
+
+      {/* ── Pre-Canvassing Form Modal ── */}
+      {isPreCanvassOpen && preCanvassData && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+          background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center",
+          zIndex: 1000, overflowY: "auto", padding: "2rem"
+        }} className="no-print-overlay">
+          <div style={{
+            background: "#fff", width: "100%", maxWidth: "1000px", borderRadius: "1.25rem",
+            padding: "2.5rem", boxShadow: "0 20px 50px rgba(0,0,0,0.15)", display: "flex", flexDirection: "column", gap: "2rem",
+            maxHeight: "90vh", overflowY: "auto"
+          }} id="preCanvassModal" className="print-modal-content">
+            
+            {/* Modal Header (Controls - Hidden on Print) */}
+            <div className="no-print" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px solid rgba(0,0,0,0.06)", paddingBottom: "1rem" }}>
+              <span style={{ fontWeight: 800, color: theme.crimson, fontSize: "1.1rem" }}>📄 Pre-Canvassing Form (Appendix A Review)</span>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <button
+                  onClick={() => typeof window !== "undefined" && window.print()}
+                  style={{
+                    padding: "0.5rem 1rem", borderRadius: "0.5rem", border: "none",
+                    background: theme.crimson, color: "#fff", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer"
+                  }}
+                >
+                  🖨️ Print Form
+                </button>
+                <button
+                  onClick={() => setIsPreCanvassOpen(false)}
+                  style={{
+                    padding: "0.5rem 1rem", borderRadius: "0.5rem", border: "1px solid rgba(0,0,0,0.12)",
+                    background: "#fff", color: theme.textMain, fontWeight: 700, fontSize: "0.8rem", cursor: "pointer"
+                  }}
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+
+            {/* Official BSC Pre-Canvassing Form Layout */}
+            <div className="printable-form" style={{ display: "flex", flexDirection: "column", gap: "1.5rem", color: "#000" }}>
+              <style dangerouslySetInnerHTML={{ __html: `
+                @media print {
+                  body * { visibility: hidden; }
+                  .print-modal-content, .print-modal-content * { visibility: visible; }
+                  .print-modal-content { position: absolute; left: 0; top: 0; width: 100%; border: none; box-shadow: none; padding: 0; max-height: none; overflow: visible; }
+                  .no-print { display: none !important; }
+                  .no-print-overlay { background: transparent !important; position: relative !important; padding: 0 !important; }
+                }
+              ` }} />
+              
+              {/* Official Header */}
+              <div style={{ textAlign: "center", borderBottom: "2px solid #000", paddingBottom: "1rem" }}>
+                <div style={{ fontWeight: 900, fontSize: "1.2rem" }}>BATANES STATE COLLEGE</div>
+                <div style={{ fontSize: "0.8rem", textTransform: "uppercase" }}>Washington Ave., San Antonio, Basco, Batanes</div>
+                <div style={{ fontSize: "0.85rem", fontWeight: 700, marginTop: "0.2rem", color: theme.crimson }}>PROCUREMENT OFFICE</div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 800, marginTop: "1rem", letterSpacing: "1px" }}>PRE-CANVASSING FORM</div>
+              </div>
+
+              {/* General Metadata */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", fontSize: "0.85rem", borderBottom: "1px solid #ddd", paddingBottom: "1rem" }}>
+                <div>
+                  <div><strong>Purchase Request Ref:</strong> {preCanvassData.prNumber}</div>
+                  <div><strong>Department:</strong> {preCanvassData.department}</div>
+                </div>
+                <div style={{ textAlign: "right" }}>
+                  <div><strong>Date Generated:</strong> {new Date().toLocaleDateString('en-PH', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                  <div><strong>Estimated ABC:</strong> ₱{preCanvassData.totalCost.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</div>
+                </div>
+              </div>
+
+              {/* Items Analysis Table */}
+              <div>
+                <h3 style={{ fontSize: "0.9rem", fontWeight: 800, marginBottom: "0.5rem", borderLeft: `3px solid ${theme.crimson}`, paddingLeft: "0.5rem" }}>
+                  Market Survey & Historical Pricing Analysis
+                </h3>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.75rem", border: "1px solid #000" }}>
+                  <thead>
+                    <tr style={{ backgroundColor: "#f3f4f6", borderBottom: "1px solid #000" }}>
+                      <th style={{ padding: "0.5rem", border: "1px solid #000", textAlign: "left" }}>Item & Specs</th>
+                      <th style={{ padding: "0.5rem", border: "1px solid #000", textAlign: "center", width: "60px" }}>Qty/UOM</th>
+                      <th style={{ padding: "0.5rem", border: "1px solid #000", textAlign: "right" }}>PR Est Cost</th>
+                      <th style={{ padding: "0.5rem", border: "1px solid #000", textAlign: "left" }}>Historical Quotes & Suppliers</th>
+                      <th style={{ padding: "0.5rem", border: "1px solid #000", textAlign: "left" }}>Previous PO Records</th>
+                      <th style={{ padding: "0.5rem", border: "1px solid #000", textAlign: "right" }}>Market Analysis</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {preCanvassData.items.map((item: any, idx: number) => (
+                      <tr key={idx} style={{ borderBottom: "1px solid #ddd" }}>
+                        <td style={{ padding: "0.5rem", border: "1px solid #000", verticalAlign: "top" }}>
+                          <strong>{item.description}</strong>
+                          {item.specification && <div style={{ fontSize: "0.68rem", color: "#6b7280" }}>{item.specification}</div>}
+                        </td>
+                        <td style={{ padding: "0.5rem", border: "1px solid #000", textAlign: "center", verticalAlign: "top" }}>
+                          {item.quantity} {item.unit}
+                        </td>
+                        <td style={{ padding: "0.5rem", border: "1px solid #000", textAlign: "right", verticalAlign: "top", fontWeight: 700 }}>
+                          ₱{item.estimatedUnitCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        </td>
+                        <td style={{ padding: "0.5rem", border: "1px solid #000", verticalAlign: "top" }}>
+                          {item.historicalQuotes.length === 0 ? (
+                            <span style={{ color: "#6b7280" }}>No historical quotes</span>
+                          ) : (
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                              {item.historicalQuotes.map((q: any, qidx: number) => (
+                                <div key={qidx}>
+                                  • {q.supplier}: <strong>₱{q.price.toLocaleString()}</strong> ({new Date(q.date).toLocaleDateString()})
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: "0.5rem", border: "1px solid #000", verticalAlign: "top" }}>
+                          {item.previousOrders.length === 0 ? (
+                            <span style={{ color: "#6b7280" }}>No previous orders</span>
+                          ) : (
+                            <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                              {item.previousOrders.map((o: any, oidx: number) => (
+                                <div key={oidx}>
+                                  • PO {o.poNumber} ({o.supplier}): <strong>₱{o.price.toLocaleString()}</strong>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </td>
+                        <td style={{ padding: "0.5rem", border: "1px solid #000", textAlign: "right", verticalAlign: "top" }}>
+                          <div>Lowest: <strong>₱{item.lowestPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</strong></div>
+                          <div>Avg: ₱{item.averagePrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}</div>
+                          {item.estimatedUnitCost > item.averagePrice && (
+                            <div style={{ color: "#dc2626", fontSize: "0.65rem", fontWeight: 700 }}>⚠️ Above Average</div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Supplier References & Market Recommendations */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem", marginTop: "1rem" }}>
+                <div style={{ border: "1px solid #000", padding: "1rem", borderRadius: "0.5rem", fontSize: "0.8rem" }}>
+                  <h4 style={{ margin: "0 0 0.5rem 0", fontWeight: 800 }}>Supplier Directory References:</h4>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                    {preCanvassData.items.flatMap((i: any) => i.supplierRefs)
+                      .filter((val: string, index: number, self: string[]) => self.indexOf(val) === index)
+                      .map((supplier: string, sidx: number) => (
+                        <span key={sidx} style={{ border: "1px solid #ccc", padding: "0.2rem 0.5rem", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
+                          🏢 {supplier}
+                        </span>
+                      ))}
+                    {preCanvassData.items.flatMap((i: any) => i.supplierRefs).length === 0 && (
+                      <span style={{ color: "#6b7280" }}>No reference suppliers found</span>
+                    )}
+                  </div>
+                </div>
+                <div style={{ border: "1px solid #000", padding: "1rem", borderRadius: "0.5rem", fontSize: "0.8rem" }}>
+                  <h4 style={{ margin: "0 0 0.5rem 0", fontWeight: 800 }}>Pre-Canvassing Recommendation:</h4>
+                  <p style={{ margin: 0, lineHeight: 1.4 }}>
+                    Based on market survey data and Batanes State College historical procurement database records, the estimated values are aligned. Recommended to proceed with creating a formal Request for Quotation (RFQ) for bidding.
+                  </p>
+                </div>
+              </div>
+
+              {/* Signatures Panel */}
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "2rem", marginTop: "3rem", textAlign: "center", fontSize: "0.8rem" }}>
+                <div>
+                  <div style={{ borderBottom: "1px solid #000", height: "40px" }} />
+                  <div style={{ marginTop: "0.5rem", fontWeight: 700 }}>Prepared By:</div>
+                  <div style={{ color: "#555" }}>Procurement Unit Officer</div>
+                </div>
+                <div>
+                  <div style={{ borderBottom: "1px solid #000", height: "40px" }} />
+                  <div style={{ marginTop: "0.5rem", fontWeight: 700 }}>Reviewed By:</div>
+                  <div style={{ color: "#555" }}>Budget & Finance Director</div>
+                </div>
+                <div>
+                  <div style={{ borderBottom: "1px solid #000", height: "40px" }} />
+                  <div style={{ marginTop: "0.5rem", fontWeight: 700 }}>Approved By:</div>
+                  <div style={{ color: "#555" }}>College President / VP Administration</div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }

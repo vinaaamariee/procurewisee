@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { login, register } from '../actions/auth';
+import { login } from '../actions/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Mail, Lock, User, Building2, Phone, MapPin, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
@@ -156,17 +156,7 @@ function LoginPage() {
   const error = searchParams.get('error');
   const success = searchParams.get('success');
 
-  // Derive initial tab from error query parameter directly to avoid useEffect cascading renders
-  const initialTab = (error && (
-    error.toLowerCase().includes('company') || 
-    error.toLowerCase().includes('tin') || 
-    error.toLowerCase().includes('address') || 
-    error.toLowerCase().includes('full name')
-  )) ? 'register' : 'login';
-
-  const [activeTab, setActiveTab] = useState<'login' | 'register'>(initialTab);
   const [showPassword, setShowPassword] = useState(false);
-  const [showRegPassword, setShowRegPassword] = useState(false);
   const [isPending, startTransition] = useTransition();
 
   const handleClearParams = () => {
@@ -664,13 +654,9 @@ function LoginPage() {
         <div className="right-panel-inner">
           <div className="login-card">
             <div className="card-header">
-              <h2>{activeTab === 'login' ? 'Sign In' : 'Sign Up'}</h2>
-              <h1>{activeTab === 'login' ? 'Welcome Back!' : 'Register Business'}</h1>
-              <p>
-                {activeTab === 'login' 
-                  ? 'Sign in to access your dashboard' 
-                  : 'Join ProcureWise to participate in college RFQs'}
-              </p>
+              <h2>Sign In</h2>
+              <h1>Welcome Back!</h1>
+              <p>Sign in to access your dashboard</p>
             </div>
 
             {/* Error and Success Alerts */}
@@ -703,163 +689,54 @@ function LoginPage() {
             )}
 
             {/* Forms */}
-            {activeTab === 'login' ? (
-              <form onSubmit={(e) => handleFormSubmit(e, login)}>
-                <div className="form-group">
-                  <label>Email Address</label>
-                  <div className="input-wrapper">
-                    <input
-                      name="email"
-                      type="email"
-                      required
-                      placeholder="Email or Username"
-                    />
-                    <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                      <circle cx="9" cy="10" r="3"></circle>
-                      <path d="M15 10h2"></path>
-                      <path d="M15 14h2"></path>
-                      <path d="M4 18c2.67-1.33 5.33-2 8-2s5.33.67 8 2"></path>
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="form-group">
-                  <label>Password</label>
-                  <div className="input-wrapper">
-                    <input
-                      name="password"
-                      type={showPassword ? "text" : "password"}
-                      required
-                      placeholder="Enter your password"
-                    />
-                    {showPassword ? (
-                      <EyeOff className="input-icon" onClick={() => setShowPassword(!showPassword)} />
-                    ) : (
-                      <Eye className="input-icon" onClick={() => setShowPassword(!showPassword)} />
-                    )}
-                  </div>
-                </div>
-
-                <a href="#" className="forgot-password" onClick={(e) => { e.preventDefault(); alert("Please contact the Admin Support to reset your password."); }}>
-                  Forgot Password?
-                </a>
-
-                <button type="submit" className="btn-submit" disabled={isPending} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
-                  <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '10px', boxShadow: '0 2px 6px rgba(0,0,0,0.15)' }}>
-                    <span style={{ color: '#7e191b' }}>P</span><span style={{ color: '#dcb353' }}>W</span>
-                  </div>
-                  {isPending ? "Signing In..." : "Sign In to ProcureWise"}
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={(e) => handleFormSubmit(e, register)}>
-                {/* Full Name & Username in 2 Columns */}
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Full Name *</label>
-                    <input
-                      name="fullName"
-                      type="text"
-                      required
-                      placeholder="Your Full Name"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Username *</label>
-                    <input
-                      name="username"
-                      type="text"
-                      required
-                      placeholder="Username"
-                    />
-                  </div>
-                </div>
-
-                {/* Email Address */}
-                <div className="form-group">
-                  <label>Email Address *</label>
+            <form onSubmit={(e) => handleFormSubmit(e, login)}>
+              <div className="form-group">
+                <label>Email Address</label>
+                <div className="input-wrapper">
                   <input
                     name="email"
                     type="email"
                     required
-                    placeholder="name@company.com"
+                    placeholder="Email or Username"
                   />
+                  <svg className="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                    <circle cx="9" cy="10" r="3"></circle>
+                    <path d="M15 10h2"></path>
+                    <path d="M15 14h2"></path>
+                    <path d="M4 18c2.67-1.33 5.33-2 8-2s5.33.67 8 2"></path>
+                  </svg>
                 </div>
+              </div>
 
-                {/* Password Input with eye toggle */}
-                <div className="form-group">
-                  <label>Password *</label>
-                  <div className="input-wrapper">
-                    <input
-                      name="password"
-                      type={showRegPassword ? "text" : "password"}
-                      required
-                      placeholder="Choose a password"
-                    />
-                    {showRegPassword ? (
-                      <EyeOff className="input-icon" onClick={() => setShowRegPassword(!showRegPassword)} />
-                    ) : (
-                      <Eye className="input-icon" onClick={() => setShowRegPassword(!showRegPassword)} />
-                    )}
-                  </div>
-                </div>
-
-                {/* Company Name */}
-                <div className="form-group">
-                  <label>Company Name *</label>
+              <div className="form-group">
+                <label>Password</label>
+                <div className="input-wrapper">
                   <input
-                    name="companyName"
-                    type="text"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
                     required
-                    placeholder="Registered Company Name"
+                    placeholder="Enter your password"
                   />
+                  {showPassword ? (
+                    <EyeOff className="input-icon" onClick={() => setShowPassword(!showPassword)} />
+                  ) : (
+                    <Eye className="input-icon" onClick={() => setShowPassword(!showPassword)} />
+                  )}
                 </div>
+              </div>
 
-                {/* TIN & Contact Number */}
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>TIN (Optional)</label>
-                    <input
-                      name="tin"
-                      type="text"
-                      placeholder="000-000-000-000"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Contact Number *</label>
-                    <input
-                      name="contactNumber"
-                      type="text"
-                      required
-                      placeholder="Contact number"
-                    />
-                  </div>
-                </div>
-
-                {/* Business Address */}
-                <div className="form-group">
-                  <label>Business Address *</label>
-                  <textarea
-                    name="businessAddress"
-                    required
-                    rows={2}
-                    placeholder="Registered business address"
-                  />
-                </div>
-
-                <button type="submit" className="btn-submit" disabled={isPending}>
-                  {isPending ? "Registering..." : "Create Supplier Account"}
-                </button>
-              </form>
-            )}
-
-            <div className="signup-text">
-              {activeTab === 'login' ? "Don't have an account? " : "Already have an account? "}
-              <a href="#" onClick={(e) => { e.preventDefault(); setActiveTab(activeTab === 'login' ? 'register' : 'login'); handleClearParams(); }}>
-                {activeTab === 'login' ? 'Sign Up' : 'Sign In'}
+              <a href="#" className="forgot-password" onClick={(e) => { e.preventDefault(); alert("Please contact the Admin Support to reset your password."); }}>
+                Forgot Password?
               </a>
-            </div>
+
+              <button type="submit" className="btn-submit" disabled={isPending} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                <div style={{ backgroundColor: '#ffffff', borderRadius: '8px', width: '22px', height: '22px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '10px', boxShadow: '0 2px 6px rgba(0,0,0,0.15)' }}>
+                  <span style={{ color: '#7e191b' }}>P</span><span style={{ color: '#dcb353' }}>W</span>
+                </div>
+                {isPending ? "Signing In..." : "Sign In to ProcureWise"}
+              </button>
+            </form>
           </div>
 
           {/* Right Footer Layout */}

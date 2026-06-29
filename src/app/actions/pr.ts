@@ -77,7 +77,7 @@ export async function createPrFromCartAction(input: CreatePrInput) {
           ppmpId: input.ppmpId || null,
           estimatedBudget: new Prisma.Decimal(totalCost),
           totalCost: new Prisma.Decimal(totalCost),
-          status: PrStatus.Draft,
+          status: PrStatus.Submitted,
           requestedById: input.requestedById || null,
           requesterName: input.requesterName || null,
           requesterEmail: input.requesterEmail || null,
@@ -331,3 +331,120 @@ export async function updatePrItemAction(
   }
 }
 
+export async function getPreCanvassingData(prId: number) {
+  try {
+    const pr = await prisma.purchaseRequest.findUnique({
+      where: { id: prId },
+      include: {
+        items: {
+          include: {
+            product: {
+              include: {
+                preferredSupplier: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!pr) return { success: false, error: "PR not found." };
+
+    const dataItems = [];
+
+    for (const item of pr.items) {
+      // Find historical quote details from other suppliers
+      let historicalQuotes: any[] = [];
+      let previousOrders: any[] = [];
+
+      if (item.productId) {
+        // Query quotes for this product
+        const quotes = await prisma.quoteDetail.findMany({
+          where: { rfqItem: { productId: item.productId } },
+          include: {
+            quote: {
+              include: {
+                supplier: true
+              }
+            }
+          },
+          take: 5,
+          orderBy: { quote: { submissionDate: "desc" } }
+        });
+
+        historicalQuotes = quotes.map(q => ({
+          supplier: q.quote.supplier.companyName,
+          price: Number(q.unitPrice),
+          date: q.quote.submissionDate.toISOString(),
+          isAvailable: q.isAvailable
+        }));
+      }
+
+      // Query PO items for this product/description to get previous procurement records
+      const poItems = await prisma.purchaseOrderItem.findMany({
+        where: { description: { contains: item.description, mode: 'insensitive' } },
+        include: {
+          po: {
+            include: {
+              supplier: true
+            }
+          }
+        },
+        take: 3,
+        orderBy: { po: { createdAt: "desc" } }
+      });
+
+      previousOrders = poItems.map(pi => ({
+        supplier: pi.po.supplier.companyName,
+        price: Number(pi.unitPrice),
+        date: pi.po.createdAt.toISOString(),
+        poNumber: pi.po.poNumber
+      }));
+
+      // Calculate lowest price, average historical price, etc.
+      const catalogPrice = item.product ? Number(item.product.estimatedUnitCost) : Number(item.estimatedUnitCost);
+      const allPrices = [
+        ...historicalQuotes.map(q => q.price),
+        ...previousOrders.map(o => o.price),
+        catalogPrice
+      ];
+
+      const lowestPrice = allPrices.length > 0 ? Math.min(...allPrices) : catalogPrice;
+      const averagePrice = allPrices.length > 0 ? allPrices.reduce((sum, p) => sum + p, 0) / allPrices.length : catalogPrice;
+      
+      // Supplier trends / references
+      const supplierRefs = Array.from(new Set([
+        ...(item.product?.preferredSupplier ? [item.product.preferredSupplier.companyName] : []),
+        ...historicalQuotes.map(q => q.supplier),
+        ...previousOrders.map(o => o.supplier)
+      ]));
+
+      dataItems.push({
+        itemId: item.id,
+        description: item.description,
+        specification: item.specification,
+        quantity: item.quantity,
+        unit: item.unit,
+        estimatedUnitCost: Number(item.estimatedUnitCost),
+        catalogPrice,
+        historicalQuotes,
+        previousOrders,
+        lowestPrice,
+        averagePrice,
+        supplierRefs,
+      });
+    }
+
+    return {
+      success: true,
+      prId: pr.id,
+      prNumber: pr.prNumber,
+      totalCost: Number(pr.totalCost),
+      department: pr.department,
+      items: dataItems
+    };
+  } catch (error: any) {
+    console.error("Error generating pre-canvassing data:", error);
+    return { success: false, error: error.message || "Failed to generate pre-canvassing data." };
+  }
+}

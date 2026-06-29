@@ -31,6 +31,6 @@ export const ROLE_COLORS: Record<UserRole, { bg: string; text: string; border: s
 export const ROLE_HOME: Record<UserRole, string> = {
   'Procurement Officer':    '/dashboard/officer',
   'Administrative Approver': '/dashboard/approver',
-  'Supplier':               '/dashboard/supplier',
+  'Supplier':               '/unauthorized',
   'End User':               '/dashboard/end-user',
 };

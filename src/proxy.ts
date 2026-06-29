@@ -9,7 +9,7 @@ import { createServerClient } from '@supabase/ssr';
 const ROLE_HOME: Record<string, string> = {
   'Procurement Officer':    '/dashboard/officer',
   'Administrative Approver': '/dashboard/approver',
-  'Supplier':               '/dashboard/supplier',
+  'Supplier':               '/unauthorized',
   'End User':               '/dashboard/end-user',
 };
 
@@ -74,6 +74,13 @@ export default async function proxy(request: NextRequest) {
         .eq('id', user.id)
         .single();
 
+      if (profile?.role === 'Supplier') {
+        await supabase.auth.signOut();
+        return NextResponse.redirect(
+          new URL('/login?error=Supplier login is disabled. Supplier accounts are for reference only.', request.url),
+        );
+      }
+
       const dest = profile ? (ROLE_HOME[profile.role] ?? '/dashboard/officer') : '/unauthorized';
       return NextResponse.redirect(new URL(dest, request.url));
     }
@@ -104,7 +111,14 @@ export default async function proxy(request: NextRequest) {
     if (!profile) {
       await supabase.auth.signOut();
       return NextResponse.redirect(
-        new URL('/?error=Account not configured. Contact your administrator.', request.url),
+        new URL('/login?error=Account not configured. Contact your administrator.', request.url),
+      );
+    }
+
+    if (profile.role === 'Supplier') {
+      await supabase.auth.signOut();
+      return NextResponse.redirect(
+        new URL('/login?error=Supplier login is disabled. Supplier accounts are for reference only.', request.url),
       );
     }
 

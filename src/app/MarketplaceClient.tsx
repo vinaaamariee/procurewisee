@@ -276,7 +276,15 @@ export default function MarketplaceClient({ products, suppliers, userProfile }: 
 
             {userProfile ? (
               <a
-                href={userProfile.role === "Supplier" ? "/dashboard/supplier" : userProfile.role === "Administrative Approver" ? "/dashboard/approver" : "/dashboard/end-user"}
+                href={
+                  userProfile.role === "Supplier"
+                    ? "/unauthorized"
+                    : userProfile.role === "Administrative Approver"
+                    ? "/dashboard/approver"
+                    : userProfile.role === "Procurement Officer"
+                    ? "/dashboard/officer"
+                    : "/dashboard/end-user"
+                }
                 className="flex items-center gap-2 bg-[#7e191b] hover:bg-[#962124] text-white px-4 py-2 rounded-full text-xs font-bold transition shadow-sm"
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />

@@ -9,7 +9,7 @@ import type { UserRole } from '@/types/auth';
 const ROLE_HOME: Record<UserRole, string> = {
   'Procurement Officer':    '/dashboard/officer',
   'Administrative Approver': '/dashboard/approver',
-  'Supplier':               '/dashboard/supplier',
+  'Supplier':               '/unauthorized',
   'End User':               '/dashboard/end-user',
 };
 
@@ -40,6 +40,11 @@ export async function login(formData: FormData) {
     return redirect('/login?error=Account not configured. Contact your administrator.');
   }
 
+  if (profile.role === 'Supplier') {
+    await supabase.auth.signOut();
+    return redirect('/login?error=Supplier login is disabled. Supplier accounts are for reference only.');
+  }
+
   if (!profile.isActive) {
     await supabase.auth.signOut();
     return redirect('/login?error=Your account has been deactivated.');
@@ -50,69 +55,7 @@ export async function login(formData: FormData) {
 }
 
 export async function register(formData: FormData) {
-  const supabase = await createClient();
-
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-  const fullName = formData.get('fullName') as string;
-  const username = formData.get('username') as string;
-  const role = 'Supplier';
-  
-  const companyName = formData.get('companyName') as string;
-  const tin = formData.get('tin') as string;
-  const contactNumber = formData.get('contactNumber') as string;
-  const businessAddress = formData.get('businessAddress') as string;
-
-  if (!email || !password || !fullName || !username || !companyName || !businessAddress) {
-    return redirect('/login?error=Please fill in all required fields.');
-  }
-
-  const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      data: {
-        full_name: fullName,
-        username: username,
-        role: role,
-      },
-    },
-  });
-
-  if (signUpError) {
-    return redirect(`/login?error=${encodeURIComponent(signUpError.message)}`);
-  }
-
-  // Create Supplier record using Prisma
-  try {
-    await prisma.supplier.create({
-      data: {
-        companyName,
-        tin: tin || null,
-        contactNumber: contactNumber || null,
-        contactPerson: fullName,
-        businessAddress,
-      },
-    });
-  } catch (error) {
-    console.error('Failed to create supplier database record:', error);
-  }
-
-  // If session is returned (email confirmation disabled), redirect to dashboard
-  if (signUpData.session) {
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('role')
-      .eq('id', signUpData.user!.id)
-      .single();
-
-    if (profile) {
-      revalidatePath('/', 'layout');
-      return redirect(ROLE_HOME[profile.role as UserRole] ?? '/dashboard/officer');
-    }
-  }
-
-  return redirect('/login?success=Account created successfully! You can now log in.');
+  return redirect('/login?error=Supplier registration is disabled. Supplier accounts are for reference only.');
 }
 
 export async function signout() {

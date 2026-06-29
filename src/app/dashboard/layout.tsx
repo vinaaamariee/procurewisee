@@ -102,11 +102,6 @@ export default async function DashboardLayout({
             { label: 'My PPMPs', href: '/dashboard/end-user/ppmp' },
             { label: 'Purchase Requests', href: '/dashboard/end-user/pr' },
           ],
-          'Supplier': [
-            { label: 'Overview', href: '/dashboard/supplier' },
-            { label: 'Purchase Orders', href: '/dashboard/supplier/po' },
-            { label: 'My Scorecard', href: '/dashboard/supplier/scorecard' },
-          ],
         };
         const links = navLinks[profile.role] || [];
         if (links.length === 0) return null;
