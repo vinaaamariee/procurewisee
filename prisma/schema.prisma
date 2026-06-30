@@ -15,10 +15,10 @@ datasource db {
 // ─────────────────────────────────────────────────────────────────────────────
 
 enum UserRole {
+  Administrator
   ProcurementOfficer     @map("Procurement Officer")
-  Supplier               @map("Supplier")
   AdministrativeApprover @map("Administrative Approver")
-  EndUser                @map("End User")
+              
 }
 
 enum RfqStatus {
@@ -67,32 +67,29 @@ model UserProfile {
 // ─────────────────────────────────────────────────────────────────────────────
 
 model Supplier {
-  id                     Int      @id @default(autoincrement()) @map("supplier_id")
-  companyName            String   @db.VarChar(150)
-  tin                    String?  @unique @db.VarChar(15)
-  contactPerson          String?  @db.VarChar(100)
-  contactNumber          String?  @db.VarChar(20)
-  businessAddress        String
-  reliabilityRating      Decimal  @default(5.00) @db.Decimal(3, 2)
-  qualityComplianceRate  Decimal  @default(100.00) @db.Decimal(5, 2)
-  historicalDeliveryDays Int      @default(0)
-  isVerified             Boolean  @default(false)
-  createdAt              DateTime @default(now())
 
-  // Extended delivery performance metrics
-  onTimeDeliveryRate     Decimal  @default(100.00) @db.Decimal(5, 2)
-  totalDeliveriesCount   Int      @default(0)
-  lateDeliveriesCount    Int      @default(0)
+  id              Int @id @default(autoincrement())
 
-  // Relations
-  quotes          SupplierQuote[]
-  recommendations Recommendation[]
-  purchaseOrders  PurchaseOrder[]
-  acknowledgements AcknowledgementReceipt[]
-  evaluations     SupplierEvaluation[]
-  preferredProducts CatalogProduct[]
+  companyName     String
 
-  @@map("suppliers")
+  contactPerson   String?
+
+  contactNumber   String?
+
+  email           String?
+
+  address         String
+
+  tin             String?
+
+  remarks         String?
+
+  isActive        Boolean @default(true)
+
+  createdAt       DateTime @default(now())
+
+  updatedAt       DateTime @updatedAt
+
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -251,6 +248,26 @@ model Recommendation {
   reviewedBy         UserProfile?   @relation("RecommendationReviewedBy", fields: [reviewedById], references: [id])
 
   @@map("recommendations")
+}
+
+model Brand {
+
+  id Int @id @default(autoincrement())
+
+  name String @unique
+
+  manufacturer String?
+
+  description String?
+
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  products CatalogProduct[]
+
 }
 
 // =============================================================================
