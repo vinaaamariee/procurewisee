@@ -15,10 +15,9 @@ datasource db {
 // ─────────────────────────────────────────────────────────────────────────────
 
 enum UserRole {
-  Administrator
+  Administrator          @map("Administrator")
   ProcurementOfficer     @map("Procurement Officer")
   AdministrativeApprover @map("Administrative Approver")
-              
 }
 
 enum RfqStatus {
@@ -66,30 +65,35 @@ model UserProfile {
 // 2. REGISTERED SUPPLIERS
 // ─────────────────────────────────────────────────────────────────────────────
 
-model Supplier {
+model SupplierProductPrice {
 
-  id              Int @id @default(autoincrement())
+  id              Int    @id @default(autoincrement())
 
-  companyName     String
+  supplierId      Int
 
-  contactPerson   String?
+  supplier        Supplier  @relation(fields:[supplierId], references:[id])
 
-  contactNumber   String?
+  productId       Int
 
-  email           String?
+  product         CatalogProduct  @relation(fields:[productId], references:[id])
 
-  address         String
+  unitPrice       Decimal         @db.Decimal(12,2)
 
-  tin             String?
+  available       Boolean         @default(true)
 
   remarks         String?
 
-  isActive        Boolean @default(true)
+  updatedAt       DateTime        @updatedAt
 
-  createdAt       DateTime @default(now())
+  history         ProductPriceHistory[]
 
-  updatedAt       DateTime @updatedAt
+  priceEffectiveDate DateTime
 
+  priceExpiryDate DateTime?
+
+  @@unique([supplierId, productId])
+
+  @@map("supplier_product_prices")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -252,24 +256,110 @@ model Recommendation {
 
 model Brand {
 
+  id          Int      @id @default(autoincrement())
+
+  name        String   @unique @db.VarChar(100)
+
+  description String?  @db.Text
+
+  isActive    Boolean  @default(true)
+
+  createdAt   DateTime @default(now())
+
+  updatedAt   DateTime @updatedAt
+
+  products    CatalogProduct[]
+
+  @@map("brands")
+}
+
+
+model ProductImage {
+
+  id Int
+      @id
+      @default(autoincrement())
+
+  productId Int
+
+  product CatalogProduct
+      @relation(fields:[productId], references:[id], onDelete: Cascade)
+
+  imageUrl String
+
+  caption String?
+
+  isPrimary Boolean
+      @default(false)
+
+  createdAt DateTime
+      @default(now())
+
+  @@map("product_images")
+}
+
+
+model ProductSpecification {
+
   id Int @id @default(autoincrement())
 
-  name String @unique
+  productId Int
 
-  manufacturer String?
+  product CatalogProduct
+      @relation(fields:[productId], references:[id], onDelete: Cascade)
 
-  description String?
+  specificationName String
 
-  isActive Boolean @default(true)
+  specificationValue String
 
-  createdAt DateTime @default(now())
+  @@map("product_specifications")
+}
 
-  updatedAt DateTime @updatedAt
+model SupplierProductPrice {
 
-  products CatalogProduct[]
+  id Int @id @default(autoincrement())
+
+  supplierId Int
+
+  supplier Supplier
+      @relation(fields:[supplierId], references:[id])
+
+  productId Int
+
+  product CatalogProduct
+      @relation(fields:[productId], references:[id])
+
+  unitPrice Decimal @db.Decimal(12,2)
+
+  availability Boolean @default(true)
+
+  lastUpdated DateTime @updatedAt
 
 }
 
+model ProductPriceHistory {
+
+  id Int
+      @id
+      @default(autoincrement())
+
+  supplierPriceId Int
+
+  supplierPrice SupplierProductPrice
+      @relation(fields:[supplierPriceId], references:[id], onDelete: Cascade)
+
+  price Decimal
+      @db.Decimal(12,2)
+
+  effectiveDate DateTime
+
+  remarks String?
+
+  createdAt DateTime
+      @default(now())
+
+  @@map("product_price_history")
+}
 // =============================================================================
 // PROCUREMENT CATALOG
 // =============================================================================
@@ -301,48 +391,49 @@ model UnitOfMeasure {
 
   @@map("units_of_measure")
 }
+
+
 model CatalogProduct {
 
-id Int @id @default(autoincrement()) @map("product_id")
+  id              Int       @id @default(autoincrement()) @map("product_id")
 
-  itemCode String @unique @db.VarChar(50)
+  productCode     String?   @unique @db.VarChar(50)
 
-  name String @db.VarChar(150)
+  name            String    @db.VarChar(150)
 
-  description String @db.Text
+  description     String    @db.Text
 
-  categoryId Int
-  category Category @relation(fields: [categoryId], references: [id])
+  categoryId      Int
+  category        Category  @relation(fields: [categoryId], references: [id])
 
-  unitId Int
-  unit UnitOfMeasure @relation(fields: [unitId], references: [id])
+  brandId         Int?
+  brand           Brand?    @relation(fields: [brandId], references: [id])
 
-  estimatedUnitCost Decimal @db.Decimal(12,2)
+  unitId          Int
+  unit            UnitOfMeasure @relation(fields: [unitId], references: [id])
+  estimatedUnitCost Decimal     @db.Decimal(12,2)
 
-  isActive                Boolean @default(true)
+  imageUrl         String?
 
-  createdAt               DateTime @default(now())
+  isActive        Boolean   @default(true)
 
-  updatedAt               DateTime @updatedAt
+  createdAt       DateTime  @default(now())
 
-  brand                   String? @db.VarChar(100)
+  updatedAt       DateTime  @updatedAt
 
-  latestCanvassedPrice    Decimal? @db.Decimal(12,2)
+  popularity      Int       @default(0)
 
-  preferredSupplierId     Int?
+  supplierPrices SupplierProductPrice[]
 
-  preferredSupplier       Supplier? @relation(fields: [preferredSupplierId], references: [id])
-
-  popularity              Int @default(0)
-
-  technicalSpecifications String? @db.Text
-
-  rfqItems             RfqItem[]
+  images ProductImage[]
 
   purchaseRequestItems PurchaseRequestItem[]
 
-  @@map("catalog_products")
+  rfqItems RfqItem[]
 
+  ppmpItems PpmpItem[]
+
+  @@map("catalog_products")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -472,8 +563,9 @@ model DepartmentBudget {
 enum PpmpStatus {
   Draft
   Submitted
-  Reviewed
+  Returned
   Approved
+  Archived
 }
 
 model Ppmp {
@@ -528,13 +620,16 @@ model PpmpItem {
 // ─────────────────────────────────────────────────────────────────────────────
 // PURCHASE REQUEST (PR)
 // ─────────────────────────────────────────────────────────────────────────────
-enum PrStatus {
+
+  enum PrStatus {
   Draft
   Submitted
-  UnderReview        @map("Under Review")
-  ReturnedForRevision @map("Returned for Revision")
+  UnderReview
+  Returned
   Approved
   Received
+  Rejected
+  Cancelled
 }
 
 model PurchaseRequest {
@@ -561,11 +656,15 @@ model PurchaseRequest {
   assignedOfficer   UserProfile?     @relation("PrAssignedOfficer", fields: [assignedOfficerId], references: [id])
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
-
-
+  procurementRemarks String?         @db.Text
+  trackingCode      String?          @unique
+  submittedAt       DateTime? 
+  reviewedAt        DateTime?
+  approvedAt        DateTime?
+  receivedAt        DateTime?
   items             PurchaseRequestItem[]
   purchaseOrders    PurchaseOrder[]
-
+ statusHistory      PurchaseRequestStatusHistory[]
   @@map("purchase_requests")
 }
 
@@ -632,6 +731,30 @@ model PurchaseOrderItem {
   totalCost   Decimal       @db.Decimal(12, 2)
 
   @@map("purchase_order_items")
+}
+
+model PurchaseRequestStatusHistory {
+
+  id Int @id @default(autoincrement())
+
+  purchaseRequestId Int
+
+  purchaseRequest PurchaseRequest
+      @relation(fields:[purchaseRequestId], references:[id], onDelete: Cascade)
+
+  status PrStatus
+
+  remarks String?
+
+  changedById String?
+
+  changedBy UserProfile?
+      @relation(fields:[changedById], references:[id])
+
+  createdAt DateTime
+      @default(now())
+
+  @@map("purchase_request_status_history")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
