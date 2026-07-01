@@ -59,12 +59,18 @@ export async function createPpmpAction(input: CreatePpmpInput) {
       // 3. Create PPMP Items
       for (const item of input.items) {
         const cost = item.quantity * item.estimatedUnitCost;
+        const unitRecord = await tx.unitOfMeasure.upsert({
+          where: { name: item.unit.trim() },
+          update: {},
+          create: { name: item.unit.trim(), abbreviation: item.unit.trim().slice(0, 15) }
+        });
+
         await tx.ppmpItem.create({
           data: {
             ppmpId: ppmp.id,
             generalDescription: item.generalDescription,
             quantity: item.quantity,
-            unit: item.unit,
+            unitId: unitRecord.id,
             estimatedUnitCost: new Prisma.Decimal(item.estimatedUnitCost),
             estimatedCost: new Prisma.Decimal(cost),
             schedule: item.schedule || null,

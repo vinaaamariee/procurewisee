@@ -181,8 +181,29 @@ Each role dashboard has been cleaned up to show only relevant, functional links:
 - **End User**: Overview → My PPMPs → Purchase Requests
 - **Supplier**: Overview → Purchase Orders → My Scorecard
 
+### 19. Professional Government Procurement Landing Page (Sprint 2.1)
+
+A professional portal homepage at `/` showcasing Batanes State College procurement:
+- **Hero & Search**: High-impact brand section featuring BSC color schemes (Maroon and Gold), college seal style branding, and a functional product search bar redirecting to `/catalog`.
+- **Database Statistics**: Dynamic counter cards showing live database counts for active products, registered vendors, unique categories, and pricing updates.
+- **Category Navigation Grid**: Responsive grid displaying product categories with counts, linking directly to filtered views in the catalog.
+- **Recently Updated Products**: Showcases the 8 most recently updated active products in the database with their current canvassed/estimated pricing and last-update timestamp indicators.
+- **Quick Actions & Footer**: Reusable actions panel linking to core workflows (Planning, Requesting, and Request Tracking) and a comprehensive government footer.
+
+### 20. Public Procurement Marketplace (Sprint 2.2)
+
+A guest-accessible, no-login marketplace at `/catalog` and `/catalog/[id]` allowing end-users and the public to browse and audit procurement materials, compare prices, and explore historical trends:
+
+- **Universal Search & Multi-Filters**: Real-time debounced keyword search on product titles, categories, and brands, paired with category, brand, availability, and min/max price range filters.
+- **URL-Based Pagination**: Clean URL-state persistence of search query, filters, and page numbers ensuring direct link-sharing and navigation persistence.
+- **Procurement Information & Badges**: Displays detailed cards for each product including the Estimated Unit Cost, Latest Canvassed Price, Preferred Supplier, Available Supplier Count, Last Updated time, and a dynamic Market Availability badge (Available, Limited, Unavailable).
+- **SVG Historical Price Trend Chart**: A pure-SVG rendering of historical price adjustments derived from the procurement database without external library overhead, supporting responsive sizing.
+- **Direct Creation Flow Hooks**: Provides direct links to create requisitions for a specific product, linking to `/ppmp/create?product={id}` and `/purchase-request/create?product={id}`.
+- **Relational Schema Migrations & Backward Compatibility**: Converted flat schema fields to relational tables (`Category`, `Brand`, `UnitOfMeasure`, `SupplierProductPrice`) while resolving legacy string fields on the server action layer to keep existing dashboard components unbroken.
+
 > [!NOTE]
 > Features such as Workflow Builder (`/dashboard/approver/workflows`), Form Template Customizer (`/dashboard/approver/forms`), and Reports Export (`/dashboard/approver/reports`) exist in the codebase but have been **unlinked from navigation** to reduce confusion. They can be re-enabled by adding their links back to the `navLinks` object in `src/app/dashboard/layout.tsx`.
+
 
 ---
 

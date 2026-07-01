@@ -92,7 +92,12 @@ export async function createRfqAction({
               itemNumber: item.itemNumber.trim(),
               particulars: item.particulars.trim(),
               quantity: item.quantity,
-              unit: item.unit.trim(),
+              unit: {
+                connectOrCreate: {
+                  where: { name: item.unit.trim() },
+                  create: { name: item.unit.trim(), abbreviation: item.unit.trim().slice(0, 15) }
+                }
+              },
               appItemId: item.appItemId || null,
             })),
           },

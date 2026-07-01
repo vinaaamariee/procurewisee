@@ -87,6 +87,12 @@ export async function createPrFromCartAction(input: CreatePrInput) {
       // 4. Create PR Items
       for (const item of input.items) {
         const cost = item.quantity * item.estimatedUnitCost;
+        const unitRecord = await tx.unitOfMeasure.upsert({
+          where: { name: item.unit.trim() },
+          update: {},
+          create: { name: item.unit.trim(), abbreviation: item.unit.trim().slice(0, 15) }
+        });
+
         await tx.purchaseRequestItem.create({
           data: {
             prId: pr.id,
@@ -94,7 +100,7 @@ export async function createPrFromCartAction(input: CreatePrInput) {
             description: item.description,
             brand: item.brand || null,
             quantity: item.quantity,
-            unit: item.unit,
+            unitId: unitRecord.id,
             estimatedUnitCost: new Prisma.Decimal(item.estimatedUnitCost),
             estimatedCost: new Prisma.Decimal(cost),
             specification: item.specification || null,
@@ -277,6 +283,16 @@ export async function updatePrItemAction(
       const newCost = newQuantity * newUnitCost;
       const costDiff = newCost - Number(item.estimatedCost);
 
+      let unitId: number | undefined;
+      if (data.unit) {
+        const unitRecord = await tx.unitOfMeasure.upsert({
+          where: { name: data.unit.trim() },
+          update: {},
+          create: { name: data.unit.trim(), abbreviation: data.unit.trim().slice(0, 15) }
+        });
+        unitId = unitRecord.id;
+      }
+
       // 2. Update the item
       const updatedItem = await tx.purchaseRequestItem.update({
         where: { id: itemId },
@@ -284,7 +300,7 @@ export async function updatePrItemAction(
           description: data.description !== undefined ? data.description : item.description,
           brand: data.brand !== undefined ? data.brand : item.brand,
           quantity: newQuantity,
-          unit: data.unit !== undefined ? data.unit : item.unit,
+          unitId: unitId !== undefined ? unitId : item.unitId,
           estimatedUnitCost: new Prisma.Decimal(newUnitCost),
           estimatedCost: new Prisma.Decimal(newCost),
           specification: data.specification !== undefined ? data.specification : item.specification,
@@ -338,9 +354,15 @@ export async function getPreCanvassingData(prId: number) {
       include: {
         items: {
           include: {
+            unit: true,
             product: {
               include: {
-                preferredSupplier: true
+                supplierPrices: {
+                  where: { available: true },
+                  include: { supplier: true },
+                  orderBy: { unitPrice: "asc" },
+                  take: 1
+                }
               }
             }
           }
@@ -413,8 +435,9 @@ export async function getPreCanvassingData(prId: number) {
       const averagePrice = allPrices.length > 0 ? allPrices.reduce((sum, p) => sum + p, 0) / allPrices.length : catalogPrice;
       
       // Supplier trends / references
+      const preferredSupplierName = item.product?.supplierPrices?.[0]?.supplier.companyName;
       const supplierRefs = Array.from(new Set([
-        ...(item.product?.preferredSupplier ? [item.product.preferredSupplier.companyName] : []),
+        ...(preferredSupplierName ? [preferredSupplierName] : []),
         ...historicalQuotes.map(q => q.supplier),
         ...previousOrders.map(o => o.supplier)
       ]));
@@ -424,7 +447,7 @@ export async function getPreCanvassingData(prId: number) {
         description: item.description,
         specification: item.specification,
         quantity: item.quantity,
-        unit: item.unit,
+        unit: item.unit.abbreviation,
         estimatedUnitCost: Number(item.estimatedUnitCost),
         catalogPrice,
         historicalQuotes,

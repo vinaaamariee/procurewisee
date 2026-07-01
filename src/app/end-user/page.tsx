@@ -7,16 +7,20 @@ export default async function EndUserRequisitionPage() {
   // Query all products from the catalog
   const products = await prisma.catalogProduct.findMany({
     orderBy: { name: "asc" },
+    include: {
+      category: true,
+      unit: true,
+    },
   });
 
   // Map database Decimals to numbers for client serialization
   const serializedProducts = products.map(product => ({
     id: product.id,
-    sku: product.sku,
+    sku: product.productCode ?? "",
     name: product.name,
-    category: product.category,
+    category: product.category.name,
     description: product.description,
-    unitOfMeasure: product.unitOfMeasure,
+    unitOfMeasure: product.unit.abbreviation,
     estimatedUnitCost: Number(product.estimatedUnitCost),
     isActive: product.isActive,
   }));

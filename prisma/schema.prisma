@@ -18,6 +18,7 @@ enum UserRole {
   Administrator          @map("Administrator")
   ProcurementOfficer     @map("Procurement Officer")
   AdministrativeApprover @map("Administrative Approver")
+  Supplier               @map("Supplier")
 }
 
 enum RfqStatus {
@@ -57,6 +58,7 @@ model UserProfile {
   ppmpsPrepared           Ppmp[]            @relation("PpmpPreparedBy")
   prsRequested            PurchaseRequest[] @relation("PrRequestedBy")
   prsAssigned             PurchaseRequest[] @relation("PrAssignedOfficer")
+  prStatusChanges         PurchaseRequestStatusHistory[] @relation("PrStatusChangedBy")
 
   @@map("user_profiles")
 }
@@ -64,6 +66,33 @@ model UserProfile {
 // ─────────────────────────────────────────────────────────────────────────────
 // 2. REGISTERED SUPPLIERS
 // ─────────────────────────────────────────────────────────────────────────────
+
+model Supplier {
+  id                     Int      @id @default(autoincrement()) @map("supplier_id")
+  companyName            String   @db.VarChar(150)
+  tin                    String?  @unique @db.VarChar(15)
+  contactPerson          String?  @db.VarChar(100)
+  contactNumber          String?  @db.VarChar(20)
+  businessAddress        String   @db.Text
+  reliabilityRating      Decimal  @default(5.00) @db.Decimal(3, 2)
+  qualityComplianceRate  Decimal  @default(100.00) @db.Decimal(5, 2)
+  historicalDeliveryDays Int      @default(0)
+  isVerified             Boolean  @default(false)
+  createdAt              DateTime @default(now())
+  onTimeDeliveryRate     Decimal? @db.Decimal(5, 2)
+  totalDeliveriesCount   Int      @default(0)
+  lateDeliveriesCount    Int      @default(0)
+
+  // Relations
+  productPrices          SupplierProductPrice[]
+  quotes                 SupplierQuote[]
+  recommendations        Recommendation[]
+  purchaseOrders         PurchaseOrder[]
+  acknowledgementReceipts AcknowledgementReceipt[]
+  evaluations            SupplierEvaluation[]
+
+  @@map("suppliers")
+}
 
 model SupplierProductPrice {
 
@@ -275,88 +304,35 @@ model Brand {
 
 
 model ProductImage {
-
-  id Int
-      @id
-      @default(autoincrement())
-
+  id        Int            @id @default(autoincrement())
   productId Int
-
-  product CatalogProduct
-      @relation(fields:[productId], references:[id], onDelete: Cascade)
-
-  imageUrl String
-
-  caption String?
-
-  isPrimary Boolean
-      @default(false)
-
-  createdAt DateTime
-      @default(now())
+  product   CatalogProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  caption   String?
+  isPrimary Boolean        @default(false)
+  createdAt DateTime       @default(now())
 
   @@map("product_images")
 }
 
-
 model ProductSpecification {
-
-  id Int @id @default(autoincrement())
-
-  productId Int
-
-  product CatalogProduct
-      @relation(fields:[productId], references:[id], onDelete: Cascade)
-
-  specificationName String
-
+  id                 Int            @id @default(autoincrement())
+  productId          Int
+  product            CatalogProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+  specificationName  String
   specificationValue String
 
   @@map("product_specifications")
 }
 
-model SupplierProductPrice {
-
-  id Int @id @default(autoincrement())
-
-  supplierId Int
-
-  supplier Supplier
-      @relation(fields:[supplierId], references:[id])
-
-  productId Int
-
-  product CatalogProduct
-      @relation(fields:[productId], references:[id])
-
-  unitPrice Decimal @db.Decimal(12,2)
-
-  availability Boolean @default(true)
-
-  lastUpdated DateTime @updatedAt
-
-}
-
 model ProductPriceHistory {
-
-  id Int
-      @id
-      @default(autoincrement())
-
+  id              Int                  @id @default(autoincrement())
   supplierPriceId Int
-
-  supplierPrice SupplierProductPrice
-      @relation(fields:[supplierPriceId], references:[id], onDelete: Cascade)
-
-  price Decimal
-      @db.Decimal(12,2)
-
-  effectiveDate DateTime
-
-  remarks String?
-
-  createdAt DateTime
-      @default(now())
+  supplierPrice   SupplierProductPrice @relation(fields: [supplierPriceId], references: [id], onDelete: Cascade)
+  price           Decimal              @db.Decimal(12, 2)
+  effectiveDate   DateTime
+  remarks         String?
+  createdAt       DateTime             @default(now())
 
   @@map("product_price_history")
 }
@@ -387,10 +363,14 @@ model UnitOfMeasure {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  products     CatalogProduct[]
+  products             CatalogProduct[]
+  rfqItems             RfqItem[]
+  ppmpItems            PpmpItem[]
+  purchaseRequestItems PurchaseRequestItem[]
 
   @@map("units_of_measure")
 }
+
 
 
 model CatalogProduct {
@@ -426,6 +406,8 @@ model CatalogProduct {
   supplierPrices SupplierProductPrice[]
 
   images ProductImage[]
+
+  specifications ProductSpecification[]
 
   purchaseRequestItems PurchaseRequestItem[]
 
@@ -625,7 +607,7 @@ model PpmpItem {
   Draft
   Submitted
   UnderReview
-  Returned
+  ReturnedForRevision @map("Returned")
   Approved
   Received
   Rejected
@@ -734,25 +716,14 @@ model PurchaseOrderItem {
 }
 
 model PurchaseRequestStatusHistory {
-
-  id Int @id @default(autoincrement())
-
+  id                Int             @id @default(autoincrement())
   purchaseRequestId Int
-
-  purchaseRequest PurchaseRequest
-      @relation(fields:[purchaseRequestId], references:[id], onDelete: Cascade)
-
-  status PrStatus
-
-  remarks String?
-
-  changedById String?
-
-  changedBy UserProfile?
-      @relation(fields:[changedById], references:[id])
-
-  createdAt DateTime
-      @default(now())
+  purchaseRequest   PurchaseRequest @relation(fields: [purchaseRequestId], references: [id], onDelete: Cascade)
+  status            PrStatus
+  remarks           String?
+  changedById       String?
+  changedBy         UserProfile?    @relation("PrStatusChangedBy", fields: [changedById], references: [id])
+  createdAt         DateTime        @default(now())
 
   @@map("purchase_request_status_history")
 }

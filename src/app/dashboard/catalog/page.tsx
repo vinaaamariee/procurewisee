@@ -13,19 +13,9 @@ export default async function ProductCatalogPage() {
   const roleHome = ROLE_HOME[profile.role] || '/';
 
   // Load products and unique categories from DB
-  const rawProducts = await getCatalogProducts();
+  const products = await getCatalogProducts();
   const categories = await getProductCategories();
 
-  // Map database types safely to numbers
-  const products = rawProducts.map((p) => ({
-    id: p.id,
-    sku: p.sku,
-    name: p.name,
-    category: p.category,
-    description: p.description,
-    unitOfMeasure: p.unitOfMeasure,
-    estimatedUnitCost: Number(p.estimatedUnitCost),
-  }));
 
   return (
     <div style={{ maxWidth: 1400, margin: '0 auto', padding: '2rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>

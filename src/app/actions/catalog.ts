@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 
 export interface CatalogProductInput {
-  sku: string;
+  sku?: string;
   name: string;
   category: string;
   description: string;
@@ -12,29 +12,66 @@ export interface CatalogProductInput {
   estimatedUnitCost: number;
 }
 
+// Shape returned to dashboard/catalog — keeps backward compat by flattening relations
+export interface FlatCatalogProduct {
+  id: number;
+  sku: string | null;       // productCode mapped as sku for backward compat
+  name: string;
+  category: string;          // flat category name for backward compat
+  description: string;
+  unitOfMeasure: string;     // unit abbreviation for backward compat
+  estimatedUnitCost: number;
+  isActive: boolean;
+}
+
 /**
- * Retrieves catalog products with optional search and category filters.
+ * Retrieves catalog products with optional search and category (name) filters.
+ * Returns a flattened shape for backward compatibility with the dashboard catalog page.
  */
-export async function getCatalogProducts(filters?: { search?: string; category?: string }) {
+export async function getCatalogProducts(filters?: {
+  search?: string;
+  category?: string;
+}): Promise<FlatCatalogProduct[]> {
   try {
-    const whereClause: any = { isActive: true };
-
-    if (filters?.category && filters.category !== 'All') {
-      whereClause.category = filters.category;
-    }
-
-    if (filters?.search) {
-      whereClause.OR = [
-        { name: { contains: filters.search, mode: 'insensitive' } },
-        { sku: { contains: filters.search, mode: 'insensitive' } },
-        { description: { contains: filters.search, mode: 'insensitive' } },
-      ];
-    }
-
-    return await prisma.catalogProduct.findMany({
-      where: whereClause,
-      orderBy: { name: 'asc' },
+    const products = await prisma.catalogProduct.findMany({
+      where: {
+        isActive: true,
+        ...(filters?.category && filters.category !== "All"
+          ? { category: { name: filters.category } }
+          : {}),
+        ...(filters?.search
+          ? {
+              OR: [
+                { name: { contains: filters.search, mode: "insensitive" } },
+                { productCode: { contains: filters.search, mode: "insensitive" } },
+                { description: { contains: filters.search, mode: "insensitive" } },
+              ],
+            }
+          : {}),
+      },
+      orderBy: { name: "asc" },
+      select: {
+        id: true,
+        productCode: true,
+        name: true,
+        description: true,
+        estimatedUnitCost: true,
+        category: { select: { name: true } },
+        unit: { select: { abbreviation: true } },
+        isActive: true,
+      },
     });
+
+    return products.map((p) => ({
+      id: p.id,
+      sku: p.productCode,
+      name: p.name,
+      category: p.category.name,
+      description: p.description,
+      unitOfMeasure: p.unit.abbreviation,
+      estimatedUnitCost: Number(p.estimatedUnitCost),
+      isActive: p.isActive,
+    }));
   } catch (error) {
     console.error("Error fetching catalog products:", error);
     throw new Error("Failed to fetch catalog products.");
@@ -42,17 +79,29 @@ export async function getCatalogProducts(filters?: { search?: string; category?:
 }
 
 /**
- * Creates a new catalog product.
+ * Creates a new catalog product using the new relational schema.
  */
 export async function createCatalogProduct(data: CatalogProductInput) {
   try {
+    const categoryRecord = await prisma.category.upsert({
+      where: { name: data.category.trim() },
+      update: {},
+      create: { name: data.category.trim() },
+    });
+
+    const unitRecord = await prisma.unitOfMeasure.upsert({
+      where: { name: data.unitOfMeasure.trim() },
+      update: {},
+      create: { name: data.unitOfMeasure.trim(), abbreviation: data.unitOfMeasure.trim().slice(0, 15) },
+    });
+
     const product = await prisma.catalogProduct.create({
       data: {
-        sku: data.sku,
+        productCode: data.sku || null,
         name: data.name,
-        category: data.category,
         description: data.description,
-        unitOfMeasure: data.unitOfMeasure,
+        categoryId: categoryRecord.id,
+        unitId: unitRecord.id,
         estimatedUnitCost: data.estimatedUnitCost,
       },
     });
@@ -70,15 +119,38 @@ export async function createCatalogProduct(data: CatalogProductInput) {
  */
 export async function updateCatalogProduct(id: number, data: Partial<CatalogProductInput>) {
   try {
+    let categoryId: number | undefined;
+    let unitId: number | undefined;
+
+    if (data.category) {
+      const categoryRecord = await prisma.category.upsert({
+        where: { name: data.category.trim() },
+        update: {},
+        create: { name: data.category.trim() },
+      });
+      categoryId = categoryRecord.id;
+    }
+
+    if (data.unitOfMeasure) {
+      const unitRecord = await prisma.unitOfMeasure.upsert({
+        where: { name: data.unitOfMeasure.trim() },
+        update: {},
+        create: { name: data.unitOfMeasure.trim(), abbreviation: data.unitOfMeasure.trim().slice(0, 15) },
+      });
+      unitId = unitRecord.id;
+    }
+
     const product = await prisma.catalogProduct.update({
       where: { id },
       data: {
-        sku: data.sku,
-        name: data.name,
-        category: data.category,
-        description: data.description,
-        unitOfMeasure: data.unitOfMeasure,
-        estimatedUnitCost: data.estimatedUnitCost,
+        ...(data.sku !== undefined ? { productCode: data.sku } : {}),
+        ...(data.name ? { name: data.name } : {}),
+        ...(data.description ? { description: data.description } : {}),
+        ...(categoryId ? { categoryId } : {}),
+        ...(unitId ? { unitId } : {}),
+        ...(data.estimatedUnitCost !== undefined
+          ? { estimatedUnitCost: data.estimatedUnitCost }
+          : {}),
       },
     });
 
@@ -109,17 +181,17 @@ export async function deleteCatalogProduct(id: number) {
 }
 
 /**
- * Retrieves all unique categories present in the catalog.
+ * Retrieves all active category names for use in filter dropdowns.
+ * Returns a flat string array for backward compatibility.
  */
-export async function getProductCategories() {
+export async function getProductCategories(): Promise<string[]> {
   try {
-    const categories = await prisma.catalogProduct.findMany({
-      select: { category: true },
-      distinct: ['category'],
+    const categories = await prisma.category.findMany({
       where: { isActive: true },
+      select: { name: true },
+      orderBy: { name: "asc" },
     });
-
-    return categories.map((c) => c.category).sort();
+    return categories.map((c) => c.name);
   } catch (error) {
     console.error("Error fetching product categories:", error);
     return [];

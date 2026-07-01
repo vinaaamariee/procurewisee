@@ -200,16 +200,37 @@ async function main() {
 
   // ── 4. RFQ ITEMS ──────────────────────────────────────────────────────────
   console.log("🗂  Seeding RFQ line items...");
+  const pcsUnit = await prisma.unitOfMeasure.upsert({
+    where: { name: "pcs" },
+    update: {},
+    create: { name: "pcs", abbreviation: "pcs" }
+  });
+  const reamUnit = await prisma.unitOfMeasure.upsert({
+    where: { name: "ream" },
+    update: {},
+    create: { name: "ream", abbreviation: "ream" }
+  });
+  const cartUnit = await prisma.unitOfMeasure.upsert({
+    where: { name: "cart" },
+    update: {},
+    create: { name: "cart", abbreviation: "cart" }
+  });
+  const boxUnit = await prisma.unitOfMeasure.upsert({
+    where: { name: "box" },
+    update: {},
+    create: { name: "box", abbreviation: "box" }
+  });
+
   const rfq1Items = await Promise.all([
-    prisma.rfqItem.create({ data: { rfqId: rfq1.id, appItemId: appItems[2].id, itemNumber: "001", particulars: "Matte Vinyl Sticker Wrap with full-color print (3ft x 8ft)", quantity: 10, unit: "pcs" } }),
-    prisma.rfqItem.create({ data: { rfqId: rfq1.id, appItemId: appItems[2].id, itemNumber: "002", particulars: "Tarpaulin Banner (4ft x 8ft) with eyelets", quantity: 15, unit: "pcs" } }),
-    prisma.rfqItem.create({ data: { rfqId: rfq1.id, appItemId: appItems[2].id, itemNumber: "003", particulars: "Foam Board Mounted Print (A2 size)", quantity: 5, unit: "pcs" } }),
+    prisma.rfqItem.create({ data: { rfqId: rfq1.id, appItemId: appItems[2].id, itemNumber: "001", particulars: "Matte Vinyl Sticker Wrap with full-color print (3ft x 8ft)", quantity: 10, unitId: pcsUnit.id } }),
+    prisma.rfqItem.create({ data: { rfqId: rfq1.id, appItemId: appItems[2].id, itemNumber: "002", particulars: "Tarpaulin Banner (4ft x 8ft) with eyelets", quantity: 15, unitId: pcsUnit.id } }),
+    prisma.rfqItem.create({ data: { rfqId: rfq1.id, appItemId: appItems[2].id, itemNumber: "003", particulars: "Foam Board Mounted Print (A2 size)", quantity: 5, unitId: pcsUnit.id } }),
   ]);
 
   const rfq2Items = await Promise.all([
-    prisma.rfqItem.create({ data: { rfqId: rfq2.id, appItemId: appItems[1].id, itemNumber: "001", particulars: "Bond Paper, Sub 20, A4 size (500 sheets/ream)", quantity: 50, unit: "ream" } }),
-    prisma.rfqItem.create({ data: { rfqId: rfq2.id, appItemId: appItems[1].id, itemNumber: "002", particulars: "Black Ink Toner Cartridge (compatible HP LaserJet)", quantity: 8, unit: "cart" } }),
-    prisma.rfqItem.create({ data: { rfqId: rfq2.id, appItemId: appItems[1].id, itemNumber: "003", particulars: "Ballpen, Black, 0.5mm (box of 12)", quantity: 20, unit: "box" } }),
+    prisma.rfqItem.create({ data: { rfqId: rfq2.id, appItemId: appItems[1].id, itemNumber: "001", particulars: "Bond Paper, Sub 20, A4 size (500 sheets/ream)", quantity: 50, unitId: reamUnit.id } }),
+    prisma.rfqItem.create({ data: { rfqId: rfq2.id, appItemId: appItems[1].id, itemNumber: "002", particulars: "Black Ink Toner Cartridge (compatible HP LaserJet)", quantity: 8, unitId: cartUnit.id } }),
+    prisma.rfqItem.create({ data: { rfqId: rfq2.id, appItemId: appItems[1].id, itemNumber: "003", particulars: "Ballpen, Black, 0.5mm (box of 12)", quantity: 20, unitId: boxUnit.id } }),
   ]);
 
   console.log(`  ✔ ${rfq1Items.length} items for ${rfq1.rfqNumber}`);
@@ -461,11 +482,73 @@ async function main() {
 
   const seededProducts = [];
   for (const cp of catalogProductsData) {
-    const prod = await prisma.catalogProduct.upsert({
-      where: { sku: cp.sku },
-      update: cp,
-      create: cp,
+    const categoryRecord = await prisma.category.upsert({
+      where: { name: cp.category.trim() },
+      update: {},
+      create: { name: cp.category.trim() },
     });
+
+    const unitRecord = await prisma.unitOfMeasure.upsert({
+      where: { name: cp.unitOfMeasure.trim() },
+      update: {},
+      create: { name: cp.unitOfMeasure.trim(), abbreviation: cp.unitOfMeasure.trim().slice(0, 15) },
+    });
+
+    const brandRecord = await prisma.brand.upsert({
+      where: { name: cp.brand.trim() },
+      update: {},
+      create: { name: cp.brand.trim() },
+    });
+
+    const prod = await prisma.catalogProduct.upsert({
+      where: { productCode: cp.sku },
+      update: {
+        name: cp.name,
+        description: cp.description,
+        categoryId: categoryRecord.id,
+        unitId: unitRecord.id,
+        brandId: brandRecord.id,
+        estimatedUnitCost: cp.estimatedUnitCost,
+        popularity: cp.popularity,
+      },
+      create: {
+        productCode: cp.sku,
+        name: cp.name,
+        description: cp.description,
+        categoryId: categoryRecord.id,
+        unitId: unitRecord.id,
+        brandId: brandRecord.id,
+        estimatedUnitCost: cp.estimatedUnitCost,
+        popularity: cp.popularity,
+      },
+      include: {
+        category: true,
+        unit: true,
+        brand: true,
+      }
+    });
+
+    // Also seed SupplierProductPrice for these products so we have prices!
+    await prisma.supplierProductPrice.upsert({
+      where: {
+        supplierId_productId: {
+          supplierId: cp.preferredSupplierId,
+          productId: prod.id,
+        }
+      },
+      update: {
+        unitPrice: cp.estimatedUnitCost,
+        available: true,
+      },
+      create: {
+        supplierId: cp.preferredSupplierId,
+        productId: prod.id,
+        unitPrice: cp.estimatedUnitCost,
+        available: true,
+        priceEffectiveDate: new Date(),
+      }
+    });
+
     seededProducts.push(prod);
     console.log(`  ✔ Catalog Product: ${cp.name} (${cp.sku})`);
   }
@@ -489,7 +572,12 @@ async function main() {
           {
             generalDescription: "Lenovo ThinkPad L14 Gen 4",
             quantity: 2,
-            unit: "unit",
+            unit: {
+              connectOrCreate: {
+                where: { name: "unit" },
+                create: { name: "unit", abbreviation: "unit" }
+              }
+            },
             estimatedUnitCost: 55000.00,
             estimatedCost: 110000.00,
             schedule: "Q1-Q2",
@@ -497,7 +585,12 @@ async function main() {
           {
             generalDescription: "Epson EcoTank L3210 Printer",
             quantity: 4,
-            unit: "unit",
+            unit: {
+              connectOrCreate: {
+                where: { name: "unit" },
+                create: { name: "unit", abbreviation: "unit" }
+              }
+            },
             estimatedUnitCost: 9800.00,
             estimatedCost: 39200.00,
             schedule: "Q1-Q2",
@@ -523,7 +616,12 @@ async function main() {
           {
             generalDescription: "Paper A4 80gsm",
             quantity: 100,
-            unit: "ream",
+            unit: {
+              connectOrCreate: {
+                where: { name: "ream" },
+                create: { name: "ream", abbreviation: "ream" }
+              }
+            },
             estimatedUnitCost: 220.00,
             estimatedCost: 22000.00,
             schedule: "Q3",
@@ -554,24 +652,24 @@ async function main() {
       items: {
         create: [
           {
-            productId: seededProducts[3].id,
+            product: { connect: { id: seededProducts[3].id } },
             description: seededProducts[3].name,
-            brand: seededProducts[3].brand,
+            brand: seededProducts[3].brand?.name,
             quantity: 2,
-            unit: seededProducts[3].unitOfMeasure,
+            unit: { connect: { id: seededProducts[3].unitId } },
             estimatedUnitCost: seededProducts[3].estimatedUnitCost,
             estimatedCost: 110000.00,
-            specification: seededProducts[3].technicalSpecifications,
+            specification: catalogProductsData[3].technicalSpecifications,
           },
           {
-            productId: seededProducts[4].id,
+            product: { connect: { id: seededProducts[4].id } },
             description: seededProducts[4].name,
-            brand: seededProducts[4].brand,
+            brand: seededProducts[4].brand?.name,
             quantity: 1,
-            unit: seededProducts[4].unitOfMeasure,
+            unit: { connect: { id: seededProducts[4].unitId } },
             estimatedUnitCost: seededProducts[4].estimatedUnitCost,
             estimatedCost: 9600.00,
-            specification: seededProducts[4].technicalSpecifications,
+            specification: catalogProductsData[4].technicalSpecifications,
           }
         ]
       }
@@ -593,14 +691,14 @@ async function main() {
       items: {
         create: [
           {
-            productId: seededProducts[0].id,
+            product: { connect: { id: seededProducts[0].id } },
             description: seededProducts[0].name,
-            brand: seededProducts[0].brand,
+            brand: seededProducts[0].brand?.name,
             quantity: 100,
-            unit: seededProducts[0].unitOfMeasure,
+            unit: { connect: { id: seededProducts[0].unitId } },
             estimatedUnitCost: seededProducts[0].estimatedUnitCost,
             estimatedCost: 22000.00,
-            specification: seededProducts[0].technicalSpecifications,
+            specification: catalogProductsData[0].technicalSpecifications,
           }
         ]
       }

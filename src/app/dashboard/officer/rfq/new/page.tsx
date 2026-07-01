@@ -40,15 +40,19 @@ export default async function NewRfqPage() {
     const rawCatalogProducts = await prisma.catalogProduct.findMany({
       where: { isActive: true },
       orderBy: { name: 'asc' },
+      include: {
+        category: true,
+        unit: true,
+      },
     });
 
     catalogProducts = rawCatalogProducts.map((p) => ({
       id: p.id,
-      sku: p.sku,
+      sku: p.productCode,
       name: p.name,
-      category: p.category,
+      category: p.category.name,
       description: p.description,
-      unitOfMeasure: p.unitOfMeasure,
+      unitOfMeasure: p.unit.abbreviation,
       estimatedUnitCost: Number(p.estimatedUnitCost),
     }));
 

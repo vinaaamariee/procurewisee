@@ -1,57 +1,66 @@
-import { prisma } from "@/lib/prisma";
-import MarketplaceClient from "./MarketplaceClient";
-import { createClient } from "@/lib/supabase/server";
+import type { Metadata } from "next";
+import Header from "@/components/landing/Header";
+import HeroSection from "@/components/landing/HeroSection";
+import QuickActions from "@/components/landing/QuickActions";
+import StatisticsCards from "@/components/landing/StatisticsCards";
+import CategoryGrid from "@/components/landing/CategoryGrid";
+import RecentlyUpdatedProducts from "@/components/landing/RecentlyUpdatedProducts";
+import WhyProcureWise from "@/components/landing/WhyProcureWise";
+import Footer from "@/components/landing/Footer";
+import {
+  getLandingStats,
+  getRecentProducts,
+  getCategoriesWithCounts,
+} from "@/features/landing/server/queries";
+
+export const metadata: Metadata = {
+  title: "ProcureWise — Intelligent Procurement Analytics | Batanes State College",
+  description:
+    "ProcureWise: An Intelligent Procurement Analytics and Automated Canvassing System with Best-Value Recommendation Engine for Batanes State College. Browse products, compare prices, and track procurement requests.",
+  keywords: [
+    "ProcureWise",
+    "procurement",
+    "Batanes State College",
+    "government procurement",
+    "canvassing",
+    "purchase request",
+    "PPMP",
+  ],
+};
 
 export const dynamic = "force-dynamic";
 
-export default async function PublicMarketplacePage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  let profile = null;
-  if (user) {
-    const { data } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', user.id)
-      .single();
-    profile = data;
-  }
-
-  // Retrieve products in catalog
-  const products = await prisma.catalogProduct.findMany({
-    where: { isActive: true },
-    include: { preferredSupplier: true },
-    orderBy: { name: "asc" }
-  });
-
-  // Retrieve registered suppliers
-  const suppliers = await prisma.supplier.findMany({
-    orderBy: { companyName: "asc" }
-  });
-
-  // Map Decimal values to JavaScript numbers for client serialization
-  const serializedProducts = products.map(p => ({
-    id: p.id,
-    sku: p.sku,
-    name: p.name,
-    category: p.category,
-    description: p.description,
-    unitOfMeasure: p.unitOfMeasure,
-    estimatedUnitCost: Number(p.estimatedUnitCost),
-    brand: p.brand || "Generic",
-    popularity: p.popularity,
-    technicalSpecifications: p.technicalSpecifications || "",
-    latestCanvassedPrice: p.latestCanvassedPrice ? Number(p.latestCanvassedPrice) : null,
-    preferredSupplier: p.preferredSupplier ? p.preferredSupplier.companyName : "None",
-    isActive: p.isActive,
-  }));
+/**
+ * Landing Page — Server Component
+ *
+ * Fetches real data from the database and passes it to
+ * server-rendered sections. No placeholder data.
+ */
+export default async function LandingPage() {
+  // Parallel data fetching — all queries run simultaneously
+  const [stats, recentProducts, categories] = await Promise.all([
+    getLandingStats(),
+    getRecentProducts(),
+    getCategoriesWithCounts(),
+  ]);
 
   return (
-    <MarketplaceClient
-      products={serializedProducts}
-      suppliers={suppliers}
-      userProfile={profile}
-    />
+    <div
+      className="flex min-h-screen flex-col"
+      style={{ background: "var(--bg-deep)" }}
+    >
+      <Header />
+
+      <main className="flex-1">
+        <HeroSection />
+        <QuickActions />
+        <StatisticsCards stats={stats} />
+        <CategoryGrid categories={categories} />
+        <RecentlyUpdatedProducts products={recentProducts} />
+        <WhyProcureWise />
+      </main>
+
+      <Footer />
+    </div>
   );
 }

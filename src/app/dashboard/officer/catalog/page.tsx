@@ -14,17 +14,21 @@ export default async function ManageCatalogPage() {
   try {
     // Load all products in the catalog
     const rawProducts = await prisma.catalogProduct.findMany({
-      orderBy: { sku: 'asc' },
+      orderBy: { productCode: 'asc' },
+      include: {
+        category: true,
+        unit: true,
+      },
     });
 
     // Map database types safely to numbers
     products = rawProducts.map((p) => ({
       id: p.id,
-      sku: p.sku,
+      sku: p.productCode,
       name: p.name,
-      category: p.category,
+      category: p.category.name,
       description: p.description,
-      unitOfMeasure: p.unitOfMeasure,
+      unitOfMeasure: p.unit.abbreviation,
       estimatedUnitCost: Number(p.estimatedUnitCost),
       isActive: p.isActive,
     }));

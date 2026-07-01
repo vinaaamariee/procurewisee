@@ -48,7 +48,12 @@ export async function createRfq(data: {
             itemNumber: item.itemNumber,
             particulars: item.particulars,
             quantity: item.quantity,
-            unit: item.unit,
+            unit: {
+              connectOrCreate: {
+                where: { name: item.unit.trim() },
+                create: { name: item.unit.trim(), abbreviation: item.unit.trim().slice(0, 15) }
+              }
+            },
             appItemId: item.appItemId || null,
             productId: item.productId || null,
           })),

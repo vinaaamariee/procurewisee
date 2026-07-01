@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 interface Product {
   id: number;
-  sku: string;
+  sku: string | null;
   name: string;
   category: string;
   description: string;
@@ -28,7 +28,7 @@ export default function CatalogBrowser({ products, categories, role, roleHome }:
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(search.toLowerCase()) ||
-      product.sku.toLowerCase().includes(search.toLowerCase()) ||
+      (product.sku ?? '').toLowerCase().includes(search.toLowerCase()) ||
       product.description.toLowerCase().includes(search.toLowerCase());
     
     const matchesCategory = selectedCategory === 'All' || product.category === selectedCategory;
