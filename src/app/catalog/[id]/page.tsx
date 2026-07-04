@@ -20,6 +20,7 @@ import AvailabilityBadge from "@/components/catalog/AvailabilityBadge";
 import HistoricalPriceCard from "@/components/procurement/HistoricalPriceCard";
 import PriceTrend from "@/components/procurement/PriceTrend";
 import SupplierStatistics from "@/components/procurement/SupplierStatistics";
+import ForecastCard from "@/components/procurement/ForecastCard";
 import {
   getAveragePrice,
   getLowestPrice,
@@ -30,6 +31,7 @@ import {
   getPriceHistory,
   getPriceVariance,
 } from "@/lib/historical-price-queries";
+import { forecastProductPrice } from "@/lib/forecast/engine";
 
 
 interface ProductPageProps {
@@ -89,6 +91,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
   const histHistory = await getPriceHistory(product.id);
   const histVariance = await getPriceVariance(product.id);
   const latestProcurementDate = histHistory.length > 0 ? histHistory[0].procurementDate : null;
+
+  // ARIMA price forecast
+  const priceForecast = await forecastProductPrice(product.id);
 
 
   return (
@@ -427,6 +432,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                       latestProcurementDate={latestProcurementDate}
                     />
                     <PriceTrend trendData={histTrend} />
+                    <ForecastCard
+                      forecast={priceForecast}
+                      currentPrice={product.estimatedUnitCost}
+                    />
                     <SupplierStatistics historyData={histHistory} />
                   </>
                 )}
