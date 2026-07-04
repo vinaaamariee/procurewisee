@@ -414,6 +414,53 @@ Run `scratch/test-forecast.ts` to print the full diagnostic report for the most 
 npx tsx scratch/test-forecast.ts
 ```
 
+---
+
+## 🤖 ARIMA Forecasting Engine (Sprint 4.3)
+
+Implements a dependency-free ARIMA(p,d,q) forecasting pipeline integrated into the Product Details page.
+
+### `autocorrelation.ts`
+- **`calculateACF(values, maxLag)`** — sample autocorrelation function via cross-correlation formula
+- **`calculatePACF(values, maxLag)`** — partial autocorrelation via Durbin-Levinson recursion (removes intermediate lag influence)
+- **`estimateP(pacf, n)`** — AR order from PACF using `2/√N` significance threshold (cap 4)
+- **`estimateQ(acf, n)`** — MA order from ACF using `2/√N` significance threshold (cap 3)
+
+### `arima.ts`
+- **`fitARIMA(diffValues, p, d, q)`** — fits ARIMA on a pre-differenced series:
+  - AR(p): Yule-Walker equations solved with partial-pivot Gauss-Jordan elimination
+  - MA(q): residual OLS — regresses AR residuals on lagged residuals via normal equations
+  - Outputs: `arCoeffs`, `maCoeffs`, `intercept`, `sigma²`, AIC, in-sample fitted values, residuals
+- **`forecastARIMA(fit, diffValues, horizon)`** — h-step ahead point forecasts with 95% confidence intervals (`±1.96·√(σ²·h)`)
+
+### `engine.ts`
+- **`forecastProductPrice(productId, horizon=3)`** — full 9-step pipeline:
+  1. Fetch `getHistoricalSeries` → bail with `null` if `< 6` monthly points
+  2. `isApproximatelyStationary` → choose `d` (0, 1, or 2)
+  3. `differenceSeries` as needed
+  4. `calculateACF / calculatePACF` → estimate `p` and `q`
+  5. `fitARIMA(p, d, q)`
+  6. `forecastARIMA` → 3-month point + CI forecasts
+  7. `invertDifference` back to peso scale (handles d=1 and d=2)
+  8. Price clamping (no negatives)
+  9. Trend detection → `ForecastResult`
+
+### `ForecastCard.tsx`
+A premium UI card on the Product Details page displaying:
+- **Trend badge**: `↑ Increasing`, `↓ Decreasing`, or `→ Stable`
+- **Forecast – Next Month**: point estimate vs current price (with % change)
+- **Forecast – Next 3 Months**: projected price with target date
+- **Monthly Breakdown**: per-month forecast + 95% confidence interval
+- **Recommendation**: `Purchase Now` (increasing), `Delay Purchase` (decreasing), or `Monitor` (stable)
+- **Graceful fallback**: `"Not enough historical data to generate a forecast."` when fewer than 6 monthly data points exist
+
+### Verification
+```bash
+npx tsx scratch/test-arima.ts
+```
+Prints: selected product → series → stationarity → differenced series → ACF/PACF → estimated p/q → 3-month forecast with confidence intervals → model summary.
+
+
 
 
 
