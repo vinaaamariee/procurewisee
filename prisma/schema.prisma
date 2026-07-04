@@ -90,6 +90,7 @@ model Supplier {
   purchaseOrders         PurchaseOrder[]
   acknowledgementReceipts AcknowledgementReceipt[]
   evaluations            SupplierEvaluation[]
+  historicalPrices       HistoricalPrice[]
 
   @@map("suppliers")
 }
@@ -367,6 +368,7 @@ model UnitOfMeasure {
   rfqItems             RfqItem[]
   ppmpItems            PpmpItem[]
   purchaseRequestItems PurchaseRequestItem[]
+  historicalPrices     HistoricalPrice[]
 
   @@map("units_of_measure")
 }
@@ -414,6 +416,8 @@ model CatalogProduct {
   rfqItems RfqItem[]
 
   ppmpItems PpmpItem[]
+
+  historicalPrices HistoricalPrice[]
 
   @@map("catalog_products")
 }
@@ -825,6 +829,43 @@ model WorkflowConfig {
   updatedAt   DateTime @updatedAt
 
   @@map("workflow_configs")
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// HISTORICAL PRICE ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+model HistoricalPrice {
+  id                Int             @id @default(autoincrement()) @map("id")
+  productId         Int?            @map("product_id")
+  product           CatalogProduct? @relation(fields: [productId], references: [id])
+  rawProductName    String          @map("raw_product_name") @db.VarChar(255)
+  
+  supplierId        Int?            @map("supplier_id")
+  supplier          Supplier?       @relation(fields: [supplierId], references: [id])
+  supplierName      String          @map("supplier_name") @db.VarChar(150)
+  
+  procurementNumber String          @map("procurement_number") @db.VarChar(100)
+  procurementDate   DateTime        @map("procurement_date") @db.Date
+  quantity          Int             @map("quantity")
+  
+  unitId            Int?            @map("unit_id")
+  unitRelation      UnitOfMeasure?  @relation(fields: [unitId], references: [id])
+  unit              String          @map("unit") @db.VarChar(50)
+  
+  unitPrice         Decimal         @map("unit_price") @db.Decimal(12, 2)
+  totalPrice        Decimal         @map("total_price") @db.Decimal(12, 2)
+  sourceMonth       String          @map("source_month") @db.VarChar(20)
+  sourceYear        Int             @map("source_year")
+  
+  matchedAt         DateTime?       @map("matched_at")
+  createdAt         DateTime        @default(now()) @map("created_at")
+
+  @@unique([procurementNumber, rawProductName])
+  @@index([productId])
+  @@index([supplierId])
+  @@index([unitId])
+  @@index([procurementDate])
+  @@map("historical_prices")
 }
 
 

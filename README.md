@@ -327,3 +327,45 @@ If you encounter a `P1001` database connection error in production (e.g., on Ver
 ### Runtime Database Error Feedback UI
 To prevent generic 500 "Server Error" pages (e.g., Error: 2369467324) when database tables are missing or connection errors occur in production, pages fetching data via Prisma (such as RFQ Creation and Catalog Management) now wrap queries in standard try-catch handlers. If a database query fails, they render a clean diagnostic view showing the exact PostgreSQL error message (such as missing relations/tables or pooler connection timeouts) so they can be fixed immediately without needing to search server logs.
 
+---
+
+## 📈 Historical Price Engine (Sprint 3.5)
+
+The Historical Price Engine processes legacy procurement records from Batanes State College and provides advanced historical price analytics.
+
+### 1. Database Schema
+Adds the `HistoricalPrice` model linked to the main catalog entities:
+- `productId` (nullable FK to `CatalogProduct`, with a `matchedAt` timestamp)
+- `supplierId` (nullable FK to `Supplier`)
+- `unitId` (nullable FK to `UnitOfMeasure`)
+- Fields for raw values: `rawProductName`, `supplierName`, `unit`, `procurementNumber`, `procurementDate`, `quantity`, `unitPrice`, `totalPrice`, `sourceMonth`, `sourceYear`.
+- Enforces uniqueness via a composite index on `(procurementNumber, rawProductName)` and indexing on `procurementDate` for quick duration queries.
+
+### 2. High-Performance Excel Importer (`scripts/import-historical-prices.ts`)
+An intelligent script to import Excel sheets from the `historical data/` directory:
+- **Fast In-Memory Cache**: Loads suppliers, units of measure, existing keys, and catalog products to perform lookup resolution in memory, minimizing database latency.
+- **Idempotency**: Implements `upsert` queries to safely run the importer repeatedly without creating duplicates.
+- **Fuzzy Catalog Matching**: Uses Descriptive Token Intersection (ignoring noise/stop words) and Substring Matching to map raw product names to Catalog Products.
+- **Dynamic Growth**: If an item name cannot be fuzzy-matched to any catalog product, the importer automatically inserts a new `CatalogProduct` record in the database under the "Uncategorized" category and caches it, growing the product catalog organically.
+- **Detailed Development Logging**: Generates file-by-file metrics (rows read, imported, skipped, failed, matched counts) and a failure summary grouped by exact Postgres error reasons.
+
+### 3. Catalog Seeder (`scripts/seed-catalog-from-historical.ts`)
+A dedicated script to bootstrap the database catalog:
+- Iterates over all historical Excel documents.
+- Extracts unique items, normalizes them, and filters out existing catalog items.
+- Inserts new products in optimized batches of 500 using `createMany` to avoid parameter limit restrictions.
+
+### 4. Analytic Queries Helper (`src/lib/historical-price-queries.ts`)
+Exposes 10 optimized, type-safe API helper queries:
+1. `getAveragePrice(productId)`
+2. `getLowestPrice(productId)`
+3. `getHighestPrice(productId)`
+4. `getLatestPrice(productId)`
+5. `getSupplierCount(productId)`
+6. `getMonthlyTrend(productId)`
+7. `getPriceVariance(productId)`
+8. `getPriceHistory(productId)`
+9. `getMonthlyAverage(productId)`
+10. `getYearlyAverage(productId)`
+
+
