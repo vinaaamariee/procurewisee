@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
-import { QuoteStatus, RfqStatus, PpmpStatus, PrStatus, PoStatus, DeliveryStatus, EvaluationType } from "../src/generated/prisma/client";
+import { QuoteStatus, RfqStatus, PpmpStatus, PrStatus, PoStatus, DeliveryStatus, EvaluationType } from "@prisma/client";
 import { officeItems } from "../src/lib/mock-price-data";
 
 

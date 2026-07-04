@@ -17,7 +17,7 @@ ProcureWise is a modern web application built to streamline and automate the pub
 - **Framework**: Next.js 16.2.7 (Turbopack) & React 19
 - **Language**: TypeScript (Strict Mode)
 - **Authentication**: Supabase Auth (via `@supabase/ssr` cookies and edge proxy validation)
-- **Database & ORM**: PostgreSQL hosted on Supabase, managed through **Prisma ORM**
+- **Database & ORM**: PostgreSQL hosted on Supabase, managed through **Prisma ORM** (generating client to standard `node_modules` path, imported via `@prisma/client`)
 - **Styling**: Tailwind CSS & Vanilla CSS (with sleek transitions, gradients, and custom scrollbars)
 - **Theming**: `next-themes` for high-performance Light/Dark Mode toggling
 
@@ -201,6 +201,16 @@ A guest-accessible, no-login marketplace at `/catalog` and `/catalog/[id]` allow
 - **Direct Creation Flow Hooks**: Provides direct links to create requisitions for a specific product, linking to `/ppmp/create?product={id}` and `/purchase-request/create?product={id}`.
 - **Relational Schema Migrations & Backward Compatibility**: Converted flat schema fields to relational tables (`Category`, `Brand`, `UnitOfMeasure`, `SupplierProductPrice`) while resolving legacy string fields on the server action layer to keep existing dashboard components unbroken.
 
+### 21. Project Procurement Management Plan (PPMP) (Sprint 3)
+
+An interactive, marketplace-first procurement planning workspace at `/dashboard/end-user/ppmp` enabling department employees to prepare annual purchase plans with decision support:
+
+- **Marketplace-First Flow**: Users browse standard catalog products, query detailed specifications, analyze pricing trends, and click "Add to PPMP" to build their draft cart. Selected products are locked to catalog specifications (no free-text entries).
+- **Historical Price Intelligence**: Displays latest unit cost, lowest price, average historical price, supplier counts, and monthly price trends (e.g. `Jan: ₱235 ... Apr: ₱229` with trend indicators `↓ -2.4%`) on every product card.
+- **Budget Utilization Widget**: Computes Allocated, Already Planned, Current Draft, Remaining Budget, and Utilization % (e.g. `54.3%`) dynamically to prevent over-allocation.
+- **Workflow Approval Timeline**: Each planning log displays an active status tracker: `○ Draft` $\rightarrow$ `● Submitted` $\rightarrow$ `● Under Review` $\rightarrow$ `● Approved` $\rightarrow$ `● Converted to PR`.
+- **Automatic Purchase Request (PR) Conversion**: Approved PPMPs show a button to automatically duplicate items into a newly generated `PurchaseRequest` (with unique reference PR-2026-X) and display a direct tracking link on the timeline.
+
 > [!NOTE]
 > Features such as Workflow Builder (`/dashboard/approver/workflows`), Form Template Customizer (`/dashboard/approver/forms`), and Reports Export (`/dashboard/approver/reports`) exist in the codebase but have been **unlinked from navigation** to reduce confusion. They can be re-enabled by adding their links back to the `navLinks` object in `src/app/dashboard/layout.tsx`.
 
@@ -245,6 +255,8 @@ erDiagram
 - **`RequisitionItem`**: Line item breakdowns for requisitions.
 - **`RequisitionStatusHistory`**: Chronological log of comments and state changes for requisitions.
 - **`DepartmentBudget`**: Fiscal budget allocations and spending tracker per department.
+- **`Ppmp`**: Master Project Procurement Management Plan tracker containing title, budget, funding source, preparer, status, and items.
+- **`PpmpItem`**: Individual line items linked to the plan referencing specific `CatalogProduct` objects.
 
 
 ---

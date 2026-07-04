@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { RequisitionStatus, Prisma } from "@/generated/prisma/client";
+import { RequisitionStatus, Prisma } from "@prisma/client";
 import crypto from "crypto";
 
 interface RequisitionItemInput {

@@ -21,7 +21,7 @@ async function runTest() {
   // Load modules dynamically after the require hook is established
   const { createRfqAction, publishRfq } = require('../src/app/actions/rfq');
   const { prisma } = require('../src/lib/prisma');
-  const { RfqStatus } = require('../src/generated/prisma/client');
+  const { RfqStatus } = require('@prisma/client');
 
   try {
     // ── Setup: Ensure we have a catalog product and an APP item to test pre-filling ──

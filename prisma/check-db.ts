@@ -16,9 +16,9 @@ async function main() {
       console.log("Database seeding appears successful!");
       // Print some samples
       const sampleSuppliers = await prisma.supplier.findMany({ take: 3 });
-      console.log("Sample Suppliers:", sampleSuppliers.map(s => s.companyName));
+      console.log("Sample Suppliers:", sampleSuppliers.map((s: any) => s.companyName));
       const sampleItems = await prisma.officeItem.findMany({ take: 3 });
-      console.log("Sample Items:", sampleItems.map(i => i.name));
+      console.log("Sample Items:", sampleItems.map((i: any) => i.name));
     } else {
       console.log("Database contains no seed data or incomplete seed data.");
     }

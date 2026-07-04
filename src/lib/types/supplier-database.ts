@@ -1,4 +1,4 @@
-import { Prisma } from "@/generated/prisma/client";
+import { Prisma } from "@prisma/client";
 
 // 1. User profile representing a fully typed profile
 export type UserProfileWithRole = Prisma.UserProfileGetPayload<{}>;

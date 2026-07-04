@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
-import { UserRole } from "@/generated/prisma/client";
+import { UserRole } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
