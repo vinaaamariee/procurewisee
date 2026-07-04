@@ -368,4 +368,14 @@ Exposes 10 optimized, type-safe API helper queries:
 9. `getMonthlyAverage(productId)`
 10. `getYearlyAverage(productId)`
 
+### 5. UI Integration (Sprint 4.1)
+Integrates legacy procurement records and analytics directly into the Product Details page (`/catalog/[id]`):
+- **Procurement Information Panel**: Shows Current Price, Average Price, Lowest Price, Highest Price, and Supplier Count using live server-side database queries.
+- **HistoricalPriceCard Component**: Displays a grid summarizing the current cost, average/lowest/highest historical prices, unique suppliers, and the latest procurement transaction date.
+- **PriceTrend Component**: Visualizes monthly pricing chronologically over the latest 12 months, calculating the overall percentage change and rendering indicators (`↑ increasing`, `↓ decreasing`, or `→ stable`) styled to match the dark/light mode dashboard theme.
+- **SupplierStatistics Component**: Displays a tabular list of detailed historical transactions showing date, supplier name, quantity, and unit price.
+- **Graceful Fallbacks**: Renders a custom message `"No historical procurement records found."` when there is no historical data available for a catalog product, instead of crashing the page.
+- **Zero Client-Side Overhead**: Data fetching is executed completely on the server-side within Next.js Server Components.
+
+
 

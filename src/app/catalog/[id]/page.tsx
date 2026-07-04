@@ -17,6 +17,20 @@ import SupplierComparisonTable from "@/components/catalog/SupplierComparisonTabl
 import HistoricalPriceChart from "@/components/catalog/HistoricalPriceChart";
 import RelatedProducts from "@/components/catalog/RelatedProducts";
 import AvailabilityBadge from "@/components/catalog/AvailabilityBadge";
+import HistoricalPriceCard from "@/components/procurement/HistoricalPriceCard";
+import PriceTrend from "@/components/procurement/PriceTrend";
+import SupplierStatistics from "@/components/procurement/SupplierStatistics";
+import {
+  getAveragePrice,
+  getLowestPrice,
+  getHighestPrice,
+  getLatestPrice,
+  getSupplierCount,
+  getMonthlyTrend,
+  getPriceHistory,
+  getPriceVariance,
+} from "@/lib/historical-price-queries";
+
 
 interface ProductPageProps {
   params: Promise<{ id: string }>;
@@ -64,6 +78,18 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
     product.supplierPrices.length > 0
       ? Math.min(...product.supplierPrices.filter((sp) => sp.available).map((sp) => sp.unitPrice))
       : null;
+
+  // Fetch Historical Price Analytics data
+  const avgHistPrice = await getAveragePrice(product.id);
+  const minHistPrice = await getLowestPrice(product.id);
+  const maxHistPrice = await getHighestPrice(product.id);
+  const latestHistPrice = await getLatestPrice(product.id);
+  const histSupplierCount = await getSupplierCount(product.id);
+  const histTrend = await getMonthlyTrend(product.id);
+  const histHistory = await getPriceHistory(product.id);
+  const histVariance = await getPriceVariance(product.id);
+  const latestProcurementDate = histHistory.length > 0 ? histHistory[0].procurementDate : null;
+
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
@@ -155,10 +181,10 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               </h2>
             </div>
             <div className="divide-y" style={{ borderColor: "var(--border)" }}>
-              {/* Estimated Unit Cost */}
+              {/* Current Price */}
               <div className="flex items-center justify-between px-5 py-3.5">
                 <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-                  Estimated Unit Cost
+                  Current Price
                 </span>
                 <span
                   className="text-sm font-bold tabular-nums"
@@ -168,43 +194,55 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 </span>
               </div>
 
-              {/* Latest Canvassed Price */}
+              {/* Average Price */}
               <div className="flex items-center justify-between px-5 py-3.5">
                 <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-                  Latest Canvassed Price
+                  Average Price
                 </span>
                 <span
                   className="text-sm font-bold tabular-nums"
-                  style={{ color: latestCanvassedPrice ? "var(--green)" : "var(--text-muted)" }}
-                >
-                  {latestCanvassedPrice ? formatCurrency(latestCanvassedPrice) : "—"}
-                </span>
-              </div>
-
-              {/* Preferred Supplier */}
-              <div className="flex items-center justify-between px-5 py-3.5">
-                <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-                  Preferred Supplier
-                </span>
-                <span
-                  className="max-w-[160px] truncate text-right text-sm font-semibold"
                   style={{ color: "var(--text-primary)" }}
                 >
-                  {product.preferredSupplier ?? "—"}
+                  {avgHistPrice ? formatCurrency(avgHistPrice) : "—"}
                 </span>
               </div>
 
-              {/* Available Suppliers */}
+              {/* Lowest Price */}
               <div className="flex items-center justify-between px-5 py-3.5">
                 <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-                  Available Suppliers
+                  Lowest Price
+                </span>
+                <span
+                  className="text-sm font-bold tabular-nums"
+                  style={{ color: minHistPrice ? "var(--green)" : "var(--text-muted)" }}
+                >
+                  {minHistPrice ? formatCurrency(minHistPrice) : "—"}
+                </span>
+              </div>
+
+              {/* Highest Price */}
+              <div className="flex items-center justify-between px-5 py-3.5">
+                <span className="text-sm" style={{ color: "var(--text-muted)" }}>
+                  Highest Price
+                </span>
+                <span
+                  className="text-sm font-bold tabular-nums"
+                  style={{ color: maxHistPrice ? "var(--accent)" : "var(--text-muted)" }}
+                >
+                  {maxHistPrice ? formatCurrency(maxHistPrice) : "—"}
+                </span>
+              </div>
+
+              {/* Supplier Count */}
+              <div className="flex items-center justify-between px-5 py-3.5">
+                <span className="text-sm" style={{ color: "var(--text-muted)" }}>
+                  Supplier Count
                 </span>
                 <span
                   className="text-sm font-semibold"
                   style={{ color: "var(--text-primary)" }}
                 >
-                  {product.availableSupplierCount}{" "}
-                  {product.availableSupplierCount === 1 ? "supplier" : "suppliers"}
+                  {histSupplierCount} {histSupplierCount === 1 ? "supplier" : "suppliers"}
                 </span>
               </div>
 
@@ -343,26 +381,57 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             </div>
           )}
 
-          {/* Supplier Price Comparison */}
-          <div
-            className="overflow-hidden rounded-xl border"
-            style={{ borderColor: "var(--border)", background: "var(--surface)" }}
-          >
-            <div
-              className="border-b px-5 py-4"
-              style={{ borderColor: "var(--border)" }}
-            >
-              <h2
-                className="text-sm font-bold uppercase tracking-wider"
-                style={{ color: "var(--text-secondary)" }}
+          {/* Supplier Price Comparison / Historical Price Analytics */}
+          <div className="space-y-6">
+            {product.supplierPrices.length > 0 ? (
+              <div
+                className="overflow-hidden rounded-xl border"
+                style={{ borderColor: "var(--border)", background: "var(--surface)" }}
               >
-                Supplier Price Comparison
-              </h2>
-            </div>
-            <SupplierComparisonTable
-              supplierPrices={product.supplierPrices}
-              lowestPrice={product.lowestPrice}
-            />
+                <div
+                  className="border-b px-5 py-4"
+                  style={{ borderColor: "var(--border)" }}
+                >
+                  <h2
+                    className="text-sm font-bold uppercase tracking-wider"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    Supplier Price Comparison
+                  </h2>
+                </div>
+                <SupplierComparisonTable
+                  supplierPrices={product.supplierPrices}
+                  lowestPrice={product.lowestPrice}
+                />
+              </div>
+            ) : (
+              // Historical Price Analytics UI
+              <div className="space-y-6">
+                {avgHistPrice === null ? (
+                  <div
+                    className="rounded-xl border p-10 text-center"
+                    style={{ borderColor: "var(--border)", background: "var(--surface)" }}
+                  >
+                    <p className="text-sm font-medium" style={{ color: "var(--text-muted)" }}>
+                      No historical procurement records found.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <HistoricalPriceCard
+                      currentPrice={product.estimatedUnitCost}
+                      averagePrice={avgHistPrice}
+                      lowestPrice={minHistPrice}
+                      highestPrice={maxHistPrice}
+                      supplierCount={histSupplierCount}
+                      latestProcurementDate={latestProcurementDate}
+                    />
+                    <PriceTrend trendData={histTrend} />
+                    <SupplierStatistics historyData={histHistory} />
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Historical Price Chart */}
