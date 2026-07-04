@@ -377,5 +377,43 @@ Integrates legacy procurement records and analytics directly into the Product De
 - **Graceful Fallbacks**: Renders a custom message `"No historical procurement records found."` when there is no historical data available for a catalog product, instead of crashing the page.
 - **Zero Client-Side Overhead**: Data fetching is executed completely on the server-side within Next.js Server Components.
 
+---
+
+## 📐 Time Series Analytics Infrastructure (Sprint 4.2 — Phase 1)
+
+Prepares ProcureWise for ARIMA-based procurement price forecasting. All files live in `src/lib/forecast/`.
+
+### `forecast-types.ts`
+Shared TypeScript interfaces used across the entire forecasting pipeline:
+- `HistoricalPoint` — `{ date, value }` observation
+- `ForecastPoint` — `{ date, value, lower, upper }` with confidence bounds
+- `ForecastResult` — full forecast run output including trend direction and model used
+- `TrendDirection` — `"increasing" | "decreasing" | "stable"`
+- `StationarityResult` — stationarity verdict with reason and optional rolling stats
+- `DifferencedSeries` — differenced values with the applied order `d`
+
+### `time-series.ts`
+- **`getHistoricalSeries(productId)`** — queries `HistoricalPrice` grouped by `sourceYear`/`sourceMonth`, converts each month-year pair to a `Date`, and returns an array of `HistoricalPoint[]` sorted **oldest → newest**.
+
+### `stationarity.ts`
+Heuristic stationarity check (not ADF — used as a pre-differencing signal):
+- **`calculateMean(values)`** — arithmetic mean
+- **`calculateVariance(values)`** — population variance
+- **`calculateRollingMean(values, window)`** — sliding window average
+- **`calculateRollingVariance(values, window)`** — sliding window variance
+- **`isApproximatelyStationary(points, window=3)`** — returns `{ stationary, reason, rollingMeans, rollingVariances }`. Series is deemed stationary when rolling mean drift ≤ 30% of global mean **and** rolling variance CV < 1.0.
+
+### `differencing.ts`
+- **`differenceSeries(values)`** — first-order differencing (`Δyₜ = yₜ − yₜ₋₁`), returns `DifferencedSeries`
+- **`differenceSeriesOfOrder(values, d)`** — applies d-th order differencing for ARIMA(p,d,q)
+- **`invertDifference(differenced, origin)`** — reconstructs the original scale from differenced forecasts
+
+### Verification
+Run `scratch/test-forecast.ts` to print the full diagnostic report for the most data-rich product in the database:
+```bash
+npx tsx scratch/test-forecast.ts
+```
+
+
 
 
