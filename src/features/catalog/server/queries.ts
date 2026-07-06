@@ -32,6 +32,9 @@ export interface ProductListItem {
   availability: MarketAvailability;
   forecastTrend?: "increasing" | "decreasing" | "stable" | "unknown";
   forecastExpectedChange?: string | null;
+  averageHistoricalPrice?: number;
+  lowestHistoricalPrice?: number;
+  highestHistoricalPrice?: number;
 }
 
 export interface SupplierPrice {
@@ -230,10 +233,31 @@ export async function getCatalogPage(params: {
     prisma.catalogProduct.count({ where }),
   ]);
 
+  const productIds = rawProducts.map((p) => p.id);
+  const allHistPrices = await prisma.historicalPrice.findMany({
+    where: { productId: { in: productIds } }
+  });
+
   let productsRaw = rawProducts.map((p) => {
     const availablePrices = p.supplierPrices.map((sp) => Number(sp.unitPrice));
     const lowestPrice = availablePrices.length > 0 ? Math.min(...availablePrices) : null;
     const availableSupplierCount = p.supplierPrices.length;
+
+    const histPrices = allHistPrices
+      .filter((hp) => hp.productId === p.id)
+      .map((hp) => Number(hp.unitPrice));
+    
+    const averageHistoricalPrice = histPrices.length > 0
+      ? histPrices.reduce((a, b) => a + b, 0) / histPrices.length
+      : Number(p.estimatedUnitCost);
+
+    const lowestHistoricalPrice = histPrices.length > 0
+      ? Math.min(...histPrices)
+      : Number(p.estimatedUnitCost);
+
+    const highestHistoricalPrice = histPrices.length > 0
+      ? Math.max(...histPrices)
+      : Number(p.estimatedUnitCost);
 
     return {
       id: p.id,
@@ -250,6 +274,9 @@ export async function getCatalogPage(params: {
       lowestPrice,
       availableSupplierCount,
       availability: resolveAvailability(availableSupplierCount),
+      averageHistoricalPrice,
+      lowestHistoricalPrice,
+      highestHistoricalPrice,
     };
   });
 

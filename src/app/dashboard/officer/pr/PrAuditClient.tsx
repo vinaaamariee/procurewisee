@@ -310,14 +310,14 @@ export default function PrAuditClient({ initialPrs, officerId, budgets }: PrAudi
   const budgetRemaining = Number(budgetInfo.allocatedBudget) - Number(budgetInfo.spentBudget);
 
   const theme = {
-    crimson: "#7e191b",
-    gold: "#dcb353",
-    goldDark: "#b88a1b",
-    textMain: "#1f2937",
-    textMuted: "#6b7280",
-    glassBg: "rgba(255, 255, 255, 0.75)",
-    glassBorder: "rgba(255, 255, 255, 0.95)",
-    shadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+    crimson: "var(--accent)",
+    gold: "var(--accent-light)",
+    goldDark: "var(--accent)",
+    textMain: "var(--text-primary)",
+    textMuted: "var(--text-muted)",
+    glassBg: "var(--surface)",
+    glassBorder: "var(--border)",
+    shadow: "var(--shadow-card)",
   };
 
   return (
@@ -491,15 +491,14 @@ export default function PrAuditClient({ initialPrs, officerId, budgets }: PrAudi
               </div>
             </div>
 
-            {/* Line Items Auditing & Checklist */}
-            <div style={{
-              background: theme.glassBg, backdropFilter: "blur(20px)",
-              border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", overflow: "hidden",
-              boxShadow: theme.shadow
-            }}>
-              <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between" }}>
-                <h3 style={{ fontSize: "1rem", fontWeight: 700, color: theme.textMain, margin: 0 }}>PR Requisition Items Verification Checklist</h3>
-                <span style={{ fontSize: "0.9rem", fontWeight: 800, color: theme.crimson }}>
+            {/* Official Requisition Form Wrapper */}
+            <div className="bg-white border border-slate-200 shadow-sm p-6 rounded-xl font-mono text-slate-800 space-y-4" style={{ backgroundColor: "var(--surface)", borderColor: "var(--border)" }}>
+              <div className="border-b pb-3 flex justify-between items-center" style={{ borderBottomColor: "var(--border)" }}>
+                <div>
+                  <h4 className="text-[10px] font-black uppercase tracking-wider text-slate-400">Official Requisition Form</h4>
+                  <h3 className="text-sm font-bold text-slate-800" style={{ color: "var(--text-primary)" }}>PURCHASE REQUEST CHECKLIST</h3>
+                </div>
+                <span className="text-xs font-extrabold text-blue-800 bg-blue-50/50 px-3 py-1 rounded-full border border-blue-100/50" style={{ color: "var(--accent)", backgroundColor: "var(--accent-glass)", borderColor: "var(--border)" }}>
                   Total cost: ₱{Number(selectedPr.totalCost).toLocaleString()}
                 </span>
               </div>

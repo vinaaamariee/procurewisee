@@ -166,14 +166,14 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
   };
 
   const theme = {
-    crimson: "#7e191b",
-    gold: "#dcb353",
-    goldDark: "#b88a1b",
-    textMain: "#1f2937",
-    textMuted: "#6b7280",
-    glassBg: "rgba(255, 255, 255, 0.75)",
-    glassBorder: "rgba(255, 255, 255, 0.95)",
-    shadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+    crimson: "var(--accent)",
+    gold: "var(--accent-light)",
+    goldDark: "var(--accent)",
+    textMain: "var(--text-primary)",
+    textMuted: "var(--text-muted)",
+    glassBg: "var(--surface)",
+    glassBorder: "var(--border)",
+    shadow: "var(--shadow-card)",
   };
 
   return (

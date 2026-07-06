@@ -19,14 +19,14 @@ export default async function DashboardLayout({
         position: 'sticky', top: 0, zIndex: 100,
         background: 'var(--bg-header)',
         backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid var(--border-gold)',
+        borderBottom: '1px solid var(--border)',
       }}>
         <div style={{ maxWidth: 1400, margin: '0 auto', padding: '0 1.5rem', height: 64, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
           {/* Brand */}
           <a href={dashboardHome} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-            <div className="h-10 w-10 bg-white dark:bg-[#1e293b] rounded-xl flex items-center justify-center text-[#7e191b] font-black text-sm shadow-md border border-[#ca8a04]/40 shimmer-sweep flex-shrink-0">
+            <div className="h-10 w-10 bg-white dark:bg-[#1e293b] rounded-xl flex items-center justify-center text-[var(--accent)] font-black text-sm shadow-md border border-[var(--accent)]/20 shimmer-sweep flex-shrink-0">
               <span>P</span>
-              <span className="text-[#ca8a04]">W</span>
+              <span className="text-[var(--secondary)]">W</span>
             </div>
             <div>
               <div style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)', letterSpacing: '-0.3px', lineHeight: 1.2 }}>ProcureWise</div>
@@ -40,11 +40,11 @@ export default async function DashboardLayout({
             <div style={{
               display: 'flex', alignItems: 'center', gap: '0.45rem',
               padding: '0.35rem 0.8rem', borderRadius: 999,
-              background: 'var(--accent-glass)', border: '1px solid var(--border-gold)',
+              background: 'var(--accent-glass)', border: '1px solid var(--border-accent)',
               fontSize: '0.7rem', color: 'var(--accent)', fontWeight: 800,
               letterSpacing: '0.5px', textTransform: 'uppercase', whiteSpace: 'nowrap',
             }}>
-              <span className="h-1.5 w-1.5 rounded-full bg-[#ca8a04] animate-pulse" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[var(--secondary)] animate-pulse" />
               {profile.role}
             </div>
 
@@ -58,7 +58,7 @@ export default async function DashboardLayout({
               <div style={{
                 width: 28, height: 28, borderRadius: '50%',
                 background: 'linear-gradient(135deg, var(--accent), var(--accent-light))',
-                border: '1px solid var(--border-gold)',
+                border: '1px solid var(--border-accent)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '0.75rem', fontWeight: 800, color: '#fff', flexShrink: 0,
               }} className="flex items-center justify-center">

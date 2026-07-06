@@ -95,46 +95,50 @@ export default function ProductCard({ product }: ProductCardProps) {
         </p>
 
         {/* Price & Meta */}
-        <div className="mt-auto pt-4">
-          <div className="flex items-end justify-between">
+        <div className="mt-auto pt-4 space-y-3.5">
+          <div className="flex items-start justify-between">
             <div>
               <div
-                className="text-lg font-black tabular-nums"
-                style={{ color: isCanvassedPrice ? "var(--green)" : "var(--text-primary)" }}
+                className="text-base font-extrabold tabular-nums"
+                style={{ color: "var(--accent)" }}
               >
                 {formatCurrency(displayPrice)}
               </div>
-              <div className="mt-0.5 text-[0.65rem]" style={{ color: "var(--text-muted)" }}>
-                {isCanvassedPrice ? "Lowest canvassed" : "Est. unit cost"}
-                {" / "}
-                {product.unit.abbreviation}
+              <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wide">
+                {isCanvassedPrice ? "Lowest Evaluated Bid" : "Estimated Unit Cost"}
               </div>
             </div>
+            
             <div className="text-right">
-              <div
-                className="flex items-center gap-1 text-xs"
-                style={{ color: "var(--text-muted)" }}
-              >
-                <Users className="h-3 w-3" />
-                {product.availableSupplierCount}{" "}
-                {product.availableSupplierCount === 1 ? "supplier" : "suppliers"}
+              <div className="flex items-center justify-end gap-1 text-[11px] font-bold" style={{ color: "var(--text-secondary)" }}>
+                <Users className="h-3.5 w-3.5" />
+                <span>{product.availableSupplierCount} {product.availableSupplierCount === 1 ? "Supplier" : "Suppliers"}</span>
               </div>
-              <div
-                className="mt-0.5 flex items-center gap-1 text-[0.65rem]"
-                style={{ color: "var(--text-muted)" }}
-              >
-                <Clock className="h-2.5 w-2.5" />
-                {timeAgo(product.updatedAt)}
-              </div>
+              <span className="text-[9px] text-gray-400 font-bold block mt-0.5">{product.unit.abbreviation} unit</span>
             </div>
           </div>
 
-          {/* ARIMA Forecast Badge */}
-          {product.forecastTrend && product.forecastTrend !== "unknown" && (
-            <div className="mt-3 flex items-center gap-1.5 text-[10px] font-bold">
-              <span className="text-muted-foreground font-medium">Forecast:</span>
+          {/* Historical price highlights */}
+          <div className="grid grid-cols-2 gap-2 bg-muted/10 border p-2 rounded-xl text-[10px]" style={{ borderColor: "var(--border)" }}>
+            <div>
+              <span className="text-gray-400 block font-bold text-[8px] uppercase tracking-wider">Hist. Average</span>
+              <span className="font-extrabold tabular-nums" style={{ color: "var(--text-secondary)" }}>
+                {formatCurrency(product.averageHistoricalPrice ?? displayPrice)}
+              </span>
+            </div>
+            <div>
+              <span className="text-gray-400 block font-bold text-[8px] uppercase tracking-wider">Hist. Lowest</span>
+              <span className="font-extrabold tabular-nums text-green-600">
+                {formatCurrency(product.lowestHistoricalPrice ?? displayPrice)}
+              </span>
+            </div>
+          </div>
+
+          {/* ARIMA Forecast & Recommendation Badges */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+            {product.forecastTrend && product.forecastTrend !== "unknown" && (
               <span
-                className="px-1.5 py-0.5 rounded"
+                className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase"
                 style={{
                   color:
                     product.forecastTrend === "increasing"
@@ -150,26 +154,35 @@ export default function ProductCard({ product }: ProductCardProps) {
                       : "rgba(107, 114, 128, 0.05)",
                 }}
               >
-                {product.forecastTrend === "increasing" ? "↑" : product.forecastTrend === "decreasing" ? "↓" : "→"}{" "}
-                {product.forecastTrend.toUpperCase()}{" "}
-                {product.forecastExpectedChange ? `(${product.forecastExpectedChange})` : ""}
+                Forecast: {product.forecastTrend === "increasing" ? "↑" : product.forecastTrend === "decreasing" ? "↓" : "→"}{" "}
+                {product.forecastTrend}
               </span>
-            </div>
-          )}
+            )}
+            
+            {product.availableSupplierCount > 0 && (
+              <span className="px-1.5 py-0.5 bg-green-500/10 border border-green-500/20 text-green-600 font-extrabold rounded text-[8px] uppercase">
+                Best-Value Match
+              </span>
+            )}
+          </div>
 
-          {/* View Details */}
-          <Link
-            href={`/catalog/${product.id}`}
-            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border px-4 py-2.5 text-xs font-bold transition-all hover:shadow-sm"
-            style={{
-              borderColor: "var(--border-accent)",
-              color: "var(--accent)",
-              background: "var(--accent-glass)",
-            }}
-          >
-            View Details
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          {/* Action buttons */}
+          <div className="grid grid-cols-2 gap-2 pt-2">
+            <Link
+              href={`/catalog/${product.id}`}
+              className="flex items-center justify-center gap-1 py-2 px-3 rounded-lg border font-bold text-[10px] hover:bg-muted/10 transition duration-150 cursor-pointer"
+              style={{ borderColor: "var(--border)", color: "var(--text-primary)" }}
+            >
+              Details
+            </Link>
+            <Link
+              href={`/dashboard/end-user/ppmp?add_product=${product.id}`}
+              className="flex items-center justify-center gap-1 py-2 px-3 rounded-lg text-white font-bold text-[10px] hover:opacity-90 transition duration-150 cursor-pointer"
+              style={{ background: "linear-gradient(135deg, var(--accent) 0%, #1e40af 100%)" }}
+            >
+              Add to PPMP
+            </Link>
+          </div>
         </div>
       </div>
     </div>

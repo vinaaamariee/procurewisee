@@ -20,6 +20,7 @@ export default async function PrTrackerPage() {
       },
       ppmp: true,
       assignedOfficer: true,
+      requestedBy: true,
     },
     orderBy: {
       createdAt: "desc"

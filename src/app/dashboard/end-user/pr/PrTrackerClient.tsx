@@ -50,6 +50,7 @@ interface PurchaseRequest {
   remarks: string | null;
   status: string;
   assignedOfficer: UserProfile | null;
+  requestedBy: UserProfile | null;
   items: PurchaseRequestItem[];
 }
 
@@ -114,14 +115,14 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
   };
 
   const theme = {
-    crimson: "#7e191b",
-    gold: "#dcb353",
-    goldDark: "#b88a1b",
-    textMain: "#1f2937",
-    textMuted: "#6b7280",
-    glassBg: "rgba(255, 255, 255, 0.75)",
-    glassBorder: "rgba(255, 255, 255, 0.95)",
-    shadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+    crimson: "var(--accent)",
+    gold: "var(--accent-light)",
+    goldDark: "var(--accent)",
+    textMain: "var(--text-primary)",
+    textMuted: "var(--text-muted)",
+    glassBg: "var(--surface)",
+    glassBorder: "var(--border)",
+    shadow: "var(--shadow-card)",
   };
 
   return (
@@ -331,51 +332,92 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                   </span>
                 )}
               </div>
-            </div>
-
-            {/* Line Items Card */}
-            <div style={{
-              background: theme.glassBg, backdropFilter: "blur(20px)",
-              border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", overflow: "hidden",
-              boxShadow: theme.shadow
-            }}>
-              <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid rgba(0,0,0,0.06)", display: "flex", justifyContent: "space-between" }}>
-                <h3 style={{ fontSize: "1rem", fontWeight: 700, color: theme.textMain, margin: 0 }}>PR Requisition Items</h3>
-                <span style={{ fontSize: "0.9rem", fontWeight: 800, color: theme.crimson }}>
-                  Total Estimated: ₱{Number(selectedPr.totalCost).toLocaleString()}
-                </span>
+                     {/* Reengineered Official Government Purchase Request (PR) Layout */}
+            <div className="bg-white border-2 border-slate-400 p-8 shadow-lg max-w-4xl mx-auto rounded-none font-mono text-slate-800 space-y-6" id="pr-print-document" style={{ color: '#000', backgroundColor: '#fff' }}>
+              
+              {/* Header Box */}
+              <div className="text-center space-y-1 pb-4 border-b-2 border-slate-800">
+                <h2 className="text-sm font-bold uppercase tracking-wider">Appendix 60</h2>
+                <h1 className="text-base font-extrabold uppercase">PURCHASE REQUEST</h1>
+                <h3 className="text-sm font-black">BATANES STATE COLLEGE</h3>
+                <p className="text-[10px] text-slate-500 font-bold">Basco, Batanes</p>
               </div>
-              <div style={{ overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+
+              {/* Agency Metadata Grid */}
+              <div className="grid grid-cols-2 border border-slate-800 divide-x divide-slate-800 text-[11px] font-bold">
+                <div className="p-2 space-y-1">
+                  <div>Entity Name: <span className="font-extrabold underline">BATANES STATE COLLEGE</span></div>
+                  <div>Office/Section: <span className="underline">{selectedPr.office || "Procurement Office"}</span></div>
+                </div>
+                <div className="p-2 space-y-1">
+                  <div>PR No.: <span className="font-extrabold underline">{selectedPr.prNumber}</span></div>
+                  <div>Date: <span className="underline">{new Date(selectedPr.requestDate).toLocaleDateString()}</span></div>
+                  <div>Fund Cluster: <span className="underline">{selectedPr.fundingSource || "GAA"}</span></div>
+                </div>
+              </div>
+
+              {/* Table Grid */}
+              <div className="border border-slate-800 overflow-hidden">
+                <table className="w-full text-[11px] border-collapse">
                   <thead>
-                    <tr style={{ backgroundColor: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-                      <th style={{ padding: "0.75rem 1.25rem", textAlign: "left", color: theme.textMuted }}>Product Description</th>
-                      <th style={{ padding: "0.75rem 1.25rem", textAlign: "left", color: theme.textMuted }}>Brand</th>
-                      <th style={{ padding: "0.75rem 1.25rem", textAlign: "center", color: theme.textMuted }}>Quantity</th>
-                      <th style={{ padding: "0.75rem 1.25rem", textAlign: "center", color: theme.textMuted }}>Unit</th>
-                      <th style={{ padding: "0.75rem 1.25rem", textAlign: "right", color: theme.textMuted }}>Unit Cost</th>
-                      <th style={{ padding: "0.75rem 1.25rem", textAlign: "right", color: theme.textMuted }}>Total Cost</th>
+                    <tr className="border-b border-slate-800 bg-slate-100 text-center font-extrabold divide-x divide-slate-800">
+                      <th className="p-2 w-12">Item No</th>
+                      <th className="p-2 w-16">Unit</th>
+                      <th className="p-2">Item Description</th>
+                      <th className="p-2 w-16">Qty</th>
+                      <th className="p-2 w-28 text-right">Unit Cost</th>
+                      <th className="p-2 w-28 text-right">Total Cost</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {selectedPr.items.map((item) => (
-                      <tr key={item.id} style={{ borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
-                        <td style={{ padding: "1rem 1.25rem" }}>
-                          <div style={{ fontWeight: 700, color: theme.textMain }}>{item.description}</div>
+                    {selectedPr.items.map((item, idx) => (
+                      <tr key={item.id} className="border-b border-slate-400 divide-x divide-slate-800 font-semibold">
+                        <td className="p-2 text-center">{idx + 1}</td>
+                        <td className="p-2 text-center">{item.unit}</td>
+                        <td className="p-2">
+                          <div className="font-extrabold">{item.description}</div>
                           {item.specification && (
-                            <div style={{ fontSize: "0.75rem", color: theme.textMuted, marginTop: "0.15rem" }}>{item.specification}</div>
+                            <div className="text-[9px] text-slate-600 mt-0.5 whitespace-pre-wrap">{item.specification}</div>
                           )}
                         </td>
-                        <td style={{ padding: "1rem 1.25rem", color: theme.textMain }}>{item.brand || "—"}</td>
-                        <td style={{ padding: "1rem 1.25rem", textAlign: "center", fontWeight: 600 }}>{item.quantity}</td>
-                        <td style={{ padding: "1rem 1.25rem", textAlign: "center", color: theme.textMuted }}>{item.unit}</td>
-                        <td style={{ padding: "1rem 1.25rem", textAlign: "right", fontWeight: 500 }}>₱{Number(item.estimatedUnitCost).toLocaleString()}</td>
-                        <td style={{ padding: "1rem 1.25rem", textAlign: "right", fontWeight: 700, color: theme.crimson }}>₱{Number(item.estimatedCost).toLocaleString()}</td>
+                        <td className="p-2 text-center">{item.quantity}</td>
+                        <td className="p-2 text-right tabular-nums">₱{Number(item.estimatedUnitCost).toLocaleString()}</td>
+                        <td className="p-2 text-right tabular-nums font-bold">₱{Number(item.estimatedCost).toLocaleString()}</td>
                       </tr>
                     ))}
+                    {/* Purpose row */}
+                    <tr className="border-t border-slate-800 font-extrabold text-[11px]">
+                      <td colSpan={6} className="p-3 bg-slate-50 text-left border-b border-slate-800">
+                        Purpose: <span className="underline normal-case italic font-bold">{selectedPr.purpose}</span>
+                      </td>
+                    </tr>
+                    {/* Summary row */}
+                    <tr className="font-black text-xs">
+                      <td colSpan={5} className="p-2 text-right uppercase">Total Estimated Budget:</td>
+                      <td className="p-2 text-right tabular-nums text-red-700">₱{Number(selectedPr.totalCost).toLocaleString()}</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
+
+              {/* Signatures block */}
+              <div className="grid grid-cols-2 border border-slate-800 divide-x divide-slate-800 text-[11px] font-bold">
+                <div className="p-4 space-y-4">
+                  <span>Requested By:</span>
+                  <div className="pt-6 text-center">
+                    <span className="block font-black underline uppercase">{selectedPr.requestedBy?.fullName || "End-User planner"}</span>
+                    <span className="text-[9px] text-slate-500 font-bold">Designated Head, Requisition Unit</span>
+                  </div>
+                </div>
+                <div className="p-4 space-y-4">
+                  <span>Approved By:</span>
+                  <div className="pt-6 text-center">
+                    <span className="block font-black underline uppercase">Dr. President</span>
+                    <span className="text-[9px] text-slate-500 font-bold">Head of Procuring Entity (HOPE)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
             </div>
           </>
         ) : (

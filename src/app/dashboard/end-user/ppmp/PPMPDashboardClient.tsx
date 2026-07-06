@@ -72,6 +72,23 @@ export default function PPMPDashboardClient({
     setMessage(`"${product.name}" added to your PPMP Draft.`);
   };
 
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const addProductId = urlParams.get("add_product");
+      if (addProductId) {
+        const pId = parseInt(addProductId, 10);
+        const targetProd = products.find((p) => p.id === pId);
+        if (targetProd) {
+          handleAddItem(targetProd);
+          setActiveTab("create");
+        }
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    }
+  }, [products]);
+
   // 2. Remove item from cart
   const handleRemoveItem = (productId: number) => {
     setCartItems(cartItems.filter((item) => item.product.id !== productId));
@@ -257,7 +274,7 @@ export default function PPMPDashboardClient({
               borderRadius: "999px",
               border: "1px solid var(--border)",
               cursor: "pointer",
-              background: activeTab === "list" ? "#7e191b" : "var(--surface)",
+              background: activeTab === "list" ? "var(--accent)" : "var(--surface)",
               color: activeTab === "list" ? "white" : "var(--text-secondary)",
               fontSize: "0.8rem",
               fontWeight: 700,
@@ -272,7 +289,7 @@ export default function PPMPDashboardClient({
               borderRadius: "999px",
               border: "1px solid var(--border)",
               cursor: "pointer",
-              background: activeTab === "create" ? "#7e191b" : "var(--surface)",
+              background: activeTab === "create" ? "var(--accent)" : "var(--surface)",
               color: activeTab === "create" ? "white" : "var(--text-secondary)",
               fontSize: "0.8rem",
               fontWeight: 700,
