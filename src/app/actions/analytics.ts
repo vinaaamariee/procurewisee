@@ -2,10 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { forecastProductPrice } from "@/lib/forecast/engine";
-import { determineProcurementAction } from "@/lib/forecast/decision-engine";
 import { generateForecastSummary } from "@/lib/forecast/forecast-summary";
 import { determineForecastBadge } from "@/lib/forecast/forecast-alerts";
-import { Prisma } from "@prisma/client";
 
 export interface ForecastAnalyticsItem {
   productName: string;
@@ -393,8 +391,6 @@ export async function getIntelligentProcurementAnalytics(): Promise<AnalyticsPay
 
   // 5. Forecast Analytics (Section 1 - confidence categorization)
   const forecastList: ForecastAnalyticsItem[] = [];
-  let sumAccuracy = 0;
-  let forecastCount = 0;
 
   for (const prod of catalogProducts.slice(0, 5)) {
     const forecast = await forecastProductPrice(prod.id).catch(() => null);
@@ -406,8 +402,6 @@ export async function getIntelligentProcurementAnalytics(): Promise<AnalyticsPay
     
     const mape = computeDynamicMape(actuals);
     const accuracy = 100 - mape;
-    sumAccuracy += accuracy;
-    forecastCount++;
 
     if (forecast && forecast.points.length > 0) {
       const forecastPrice = forecast.points[0].value;

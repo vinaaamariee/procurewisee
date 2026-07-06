@@ -2,27 +2,11 @@
 
 import React, { useMemo, useState, useEffect } from "react";
 import {
-  TrendingUp,
-  TrendingDown,
   Sparkles,
-  Award,
-  DollarSign,
-  TrendingUpDown,
-  Building,
-  Activity,
-  CheckCircle2,
-  AlertTriangle,
-  Clock,
-  Briefcase,
-  FileBarChart,
-  Users,
   Download,
   Filter,
-  Eye,
   RefreshCw,
-  Info,
   Printer,
-  ShieldAlert,
   Calendar,
 } from "lucide-react";
 import type { AnalyticsPayload } from "@/app/actions/analytics";
@@ -71,19 +55,22 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
 
   // Timestamp logic (Section 8)
   useEffect(() => {
-    setGenerationTime(
-      new Date().toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      }) +
-        " at " +
-        new Date().toLocaleTimeString("en-US", {
-          hour: "numeric",
-          minute: "2-digit",
-          hour12: true,
-        })
-    );
+    const timer = setTimeout(() => {
+      setGenerationTime(
+        new Date().toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }) +
+          " at " +
+          new Date().toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })
+      );
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // Derive unique options
