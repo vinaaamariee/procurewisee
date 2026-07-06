@@ -459,6 +459,98 @@ A premium UI card on the Product Details page displaying:
 npx tsx scratch/test-arima.ts
 ```
 Prints: selected product → series → stationarity → differenced series → ACF/PACF → estimated p/q → 3-month forecast with confidence intervals → model summary.
+```
+
+
+## 🏆 Best-Value Recommendation Engine (Sprint 5)
+
+Implements a Multi-Criteria Decision-Making (MCDM) Weighted Scoring Model that evaluates suppliers across multiple procurement factors rather than selecting solely based on the lowest quotation.
+
+### Criteria & Weightings
+- **Price (40%)**: Scale to lowest active bid: `(minPrice / bid) * 100`.
+- **Delivery Speed & On-Time (20%)**: Speed score (comparative or absolute fallback) + On-time delivery rate (delivered / total deliveries).
+- **Historical Reliability (20%)**: Rescaled reliability rating (0-5 to 0-100) + PO completion rate + average evaluation score.
+- **Regulatory Compliance (10%)**: Accreditation (`isVerified`) + required documents + status completeness.
+- **Historical Performance (10%)**: Price stability (coefficient of variation) + price variance + ARIMA forecast trend support.
+
+### Robust Fallbacks & Graceful Recovery
+- **No delivery history**: Defaults to `70/100` and adjusts confidence downward.
+- **No evaluation history**: Falls back to rescaled profile rating or a neutral `75/100` score.
+- **No historical prices**: Defaults price stability and variance scores to `100/100`.
+- **No forecast**: ARIMA trend contribution falls back to neutral `75/100`.
+- **Confidence Rating (0-100%)**: Dynamically evaluated based on completeness of supplier info, historical prices, delivery history, and evaluation history.
+
+### User Interface Presentation
+- **`RecommendationCard.tsx`** renders on the product detail page, showing:
+  - Top Recommended Supplier company info and overall score.
+  - Bullet-pointed justification log reasons.
+  - Explainable contribution scores (e.g. Price 39/40, Delivery 18/20, etc.).
+  - Confidence meter and ARIMA trend indicator.
+  - Top 5 alternative suppliers sorted highest to lowest.
+
+---
+
+## ⚖️ RFQ Canvassing & Sensitivity Analysis Integration (Sprint 6.1)
+
+Integrates the MCDM Best-Value Recommendation Engine directly into the Request for Quote (RFQ) procurement canvassing workflow.
+
+### New Components
+- **`RecommendationPanel.tsx`**: Renders recommended supplier metrics, MCDM score, data confidence (High, Medium, Low), ARIMA forecasts, dynamic justifications, and a functional button to draft formal Purchase Orders from the award.
+- **`SupplierRankingTable.tsx`**: Renders all bidding suppliers sorted by overall MCDM score, complete with interactive horizontal progress bars displaying the breakdown of individual criterion contributions.
+- **`RecommendationReason.tsx`**: Automatically translates individual scores into dynamic natural-language explanations (e.g. "Lowest evaluated price among suppliers", "Excellent delivery performance").
+
+### Canvass Evaluation & Sensitivity Analysis
+- Located at `/dashboard/officer/rfq/[id]`.
+- Enforces Procurement Officer access.
+- Allows interactive weighting adjusters (sliders for Price, Delivery, Reliability, Compliance, and Historical Performance) that automatically normalize weights.
+- Recalculates scores and rankings on the client side instantly.
+- Generates a print-ready BAC procurement report view for BAC secretariat and administrative approvals.
+- Stores the full audit trail snapshot (JSON format containing weights, scores, and confidence) inside the `justificationLog` column.
+
+---
+
+## 🔮 Procurement Forecasting & Decision Intelligence (Sprint 6.2)
+
+Transforms ARIMA time-series predictions into interactive procurement decision support.
+
+### Decision Engine & Formatter Core
+- **`decision-engine.ts`**: Evaluates forecast trends against standard budgets to yield procurement strategies (`BUY_NOW` if expected inflation > 1.5%, `WAIT_FOR_PRICE_DROP` if expected decrease < -1.5%, `MONITOR_MARKET`, and `INSUFFICIENT_DATA`).
+- **`forecast-summary.ts`**: Produces human-readable summaries containing current price, forecasted price, percent expected change, and strategy text.
+- **`forecast-alerts.ts`**: Calculates price volatility using the Coefficient of Variation (standard deviation / mean). Classifies series as `Highly Volatile` if variance exceeds 15%; otherwise defaults to ARIMA trend directions.
+
+### Visual Integrations
+- **Catalog Cards (`ProductCard.tsx`)**: Renders inline trend badges showing price directions and expected change percentages (e.g., `↑ INCREASING (+3.2%)`) directly below the item price.
+- **Recommendation Cards (`RecommendationCard.tsx`)**: Integrates strategic procurement advice messages and rebrands the final MCDM criterion as `Historical Procurement Intelligence`.
+- **Officer Dashboard Widgets (`page.tsx`)**: Integrates expected price increases (inflation warnings), expected price decreases (savings opportunities), and total potential procurement savings. Includes dynamic decision tip alerts.
+
+---
+
+## 📈 Intelligent Procurement Analytics Dashboard (Sprint 6.3)
+
+Consolidates all transactional databases and ARIMA models into a centralized executive analytics portal.
+
+### Aggregation API
+- **`analytics.ts`**: Aggregates Monthly, Quarterly, and Yearly spending trends, departmental allocations, category metrics, supplier rankings, historical price distributions, and workflow cycle KPIs in parallel.
+
+### Executive UI
+- **Sub-navigation link**: Placed under `/dashboard/officer/analytics` and exposed to both Procurement Officers and Administrative Approvers.
+- **Spending & Budget Overview**: Includes a responsive SVG line chart representing monthly spending trends, utilization tracking, and alerts for overspent budgets.
+- **Supplier Scorecard**: Captures top awardees, delivery times, verification status counts, and on-time ratios.
+- **Market Intelligence**: Renders historical pricing charts, ARIMA forecasts, expected change percentages, and recommended procurement actions.
+- **Performance metrics**: Details processing speeds, End-to-End procurement cycle times, and registry volume counts.
+- **Explainable Recommendations (`RecommendationCard.tsx`)**: Generates natural-language bullet points dynamically from bidded criteria scores (e.g. price competitiveness, compliance checks, and ARIMA buying windows).
+- **Forecast Accuracy Backtesting (MAPE)**: Integrates dynamic cross-validation backtesting against price histories. Fits ARIMA models on first $N-3$ observations to project final points, computing Mean Absolute Percentage Error (MAPE) diagnostic error rates.
+- **Cost Savings Ledger**: Formulates cost savings as `(Historical Average - Awarded Price) * Quantity`, detailing largest saver, largest overspend, and annual totals.
+- **Supplier Radar Chart (SVG)**: Renders a responsive pure-SVG spider chart mapping bidded criteria profiles.
+- **Dashboard Filters & Exporter**: Adds reactive filters (department, category, supplier, timeframes) and Excel spreadsheet downloads.
+- **Procurement Insights Panel**: Generates rules-based alerts highlighting spend distributions and inflation warnings.
+- **Forecast Confidence Tiers**: Categorizes ARIMA forecast confidence levels: `High` (MAPE < 10%), `Medium` (10-20%), or `Low` (MAPE > 20%).
+- **Supplier Risk Classification**: Classifies suppliers into `LOW`, `MEDIUM`, or `HIGH` risk categories based on delivery, reliability, and compliance metrics.
+- **Procurement Scenario Comparison**: Compares bidded costs against recommended MCDM supplier costs to calculate delta and potential savings.
+- **MCDM Stability Indicator**: Evaluates recommendation rankings under $\pm 10\%$ criteria weight shifts to determine if the choice is `Stable` or `Sensitive`.
+- **Budget Health Tiers**: Translates budget utilization rates into `Healthy` (0-70%), `Watch` (70-90%), or `Critical` (> 90%) status badges.
+- **Dashed Forecast Visualization**: Extends the SVG trend charts to append forecasted prices as dashed line segments.
+- **PDF Report Exporter**: Implements an printable executive PDF layout containing all summary charts, rankings, and cost savings ledgers.
 
 
 

@@ -32,6 +32,8 @@ import {
   getPriceVariance,
 } from "@/lib/historical-price-queries";
 import { forecastProductPrice } from "@/lib/forecast/engine";
+import { recommendBestSupplier } from "@/lib/recommendation-engine";
+import RecommendationCard from "@/components/recommendation/RecommendationCard";
 
 
 interface ProductPageProps {
@@ -94,6 +96,9 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
 
   // ARIMA price forecast
   const priceForecast = await forecastProductPrice(product.id);
+
+  // Fetch best-value recommendation
+  const supplierRecommendation = await recommendBestSupplier(product.id);
 
 
   return (
@@ -383,6 +388,13 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {/* Best-Value Recommendation Section */}
+          {supplierRecommendation && supplierRecommendation.topSupplier && (
+            <div className="space-y-2">
+              <RecommendationCard recommendation={supplierRecommendation} />
             </div>
           )}
 

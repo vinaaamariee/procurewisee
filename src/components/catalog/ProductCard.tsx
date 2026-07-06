@@ -129,6 +129,34 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
           </div>
 
+          {/* ARIMA Forecast Badge */}
+          {product.forecastTrend && product.forecastTrend !== "unknown" && (
+            <div className="mt-3 flex items-center gap-1.5 text-[10px] font-bold">
+              <span className="text-muted-foreground font-medium">Forecast:</span>
+              <span
+                className="px-1.5 py-0.5 rounded"
+                style={{
+                  color:
+                    product.forecastTrend === "increasing"
+                      ? "var(--accent)"
+                      : product.forecastTrend === "decreasing"
+                      ? "var(--green)"
+                      : "var(--text-secondary)",
+                  backgroundColor:
+                    product.forecastTrend === "increasing"
+                      ? "rgba(239, 68, 68, 0.05)"
+                      : product.forecastTrend === "decreasing"
+                      ? "rgba(34, 197, 94, 0.05)"
+                      : "rgba(107, 114, 128, 0.05)",
+                }}
+              >
+                {product.forecastTrend === "increasing" ? "↑" : product.forecastTrend === "decreasing" ? "↓" : "→"}{" "}
+                {product.forecastTrend.toUpperCase()}{" "}
+                {product.forecastExpectedChange ? `(${product.forecastExpectedChange})` : ""}
+              </span>
+            </div>
+          )}
+
           {/* View Details */}
           <Link
             href={`/catalog/${product.id}`}

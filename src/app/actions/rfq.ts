@@ -149,3 +149,7 @@ export async function getRfqWithQuotes(rfqId: number) {
     },
   });
 }
+
+// Re-export recommendation actions to integrate recommendations directly with RFQ workflows
+export { generateRecommendations, getRecommendations } from "./recommendations";
+

@@ -93,9 +93,11 @@ export default async function DashboardLayout({
             { label: 'Overview', href: '/dashboard/officer' },
             { label: 'Purchase Requests', href: '/dashboard/officer/pr' },
             { label: 'Purchase Orders', href: '/dashboard/officer/po' },
+            { label: 'Analytics', href: '/dashboard/officer/analytics' },
           ],
           'Administrative Approver': [
             { label: 'Overview', href: '/dashboard/approver' },
+            { label: 'Analytics', href: '/dashboard/officer/analytics' },
           ],
           'End User': [
             { label: 'Overview', href: '/dashboard/end-user' },

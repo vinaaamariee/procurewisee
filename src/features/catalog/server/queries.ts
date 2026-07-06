@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { forecastProductPrice } from "@/lib/forecast/engine";
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -28,6 +30,8 @@ export interface ProductListItem {
   lowestPrice: number | null;
   availableSupplierCount: number;
   availability: MarketAvailability;
+  forecastTrend?: "increasing" | "decreasing" | "stable" | "unknown";
+  forecastExpectedChange?: string | null;
 }
 
 export interface SupplierPrice {
@@ -226,7 +230,7 @@ export async function getCatalogPage(params: {
     prisma.catalogProduct.count({ where }),
   ]);
 
-  let products: ProductListItem[] = rawProducts.map((p) => {
+  let productsRaw = rawProducts.map((p) => {
     const availablePrices = p.supplierPrices.map((sp) => Number(sp.unitPrice));
     const lowestPrice = availablePrices.length > 0 ? Math.min(...availablePrices) : null;
     const availableSupplierCount = p.supplierPrices.length;
@@ -248,6 +252,26 @@ export async function getCatalogPage(params: {
       availability: resolveAvailability(availableSupplierCount),
     };
   });
+
+  const products: ProductListItem[] = await Promise.all(
+    productsRaw.map(async (p) => {
+      const forecast = await forecastProductPrice(p.id).catch(() => null);
+      let forecastTrend: "increasing" | "decreasing" | "stable" | "unknown" = "unknown";
+      let forecastExpectedChange: string | null = null;
+      if (forecast) {
+        forecastTrend = forecast.trend;
+        if (forecast.points.length > 0 && p.estimatedUnitCost > 0) {
+          const changePct = ((forecast.points[0].value - p.estimatedUnitCost) / p.estimatedUnitCost) * 100;
+          forecastExpectedChange = changePct >= 0 ? `+${changePct.toFixed(1)}%` : `${changePct.toFixed(1)}%`;
+        }
+      }
+      return {
+        ...p,
+        forecastTrend,
+        forecastExpectedChange,
+      };
+    })
+  );
 
   // Client-side sort by price (lowest/highest)
   if (params.sortBy === "lowestPrice") {

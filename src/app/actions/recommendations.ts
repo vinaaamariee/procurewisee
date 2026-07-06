@@ -5,12 +5,15 @@ import { RfqStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
 import { requireRole } from "@/lib/auth/get-user-profile";
+import { scoreRfqQuotesInternal } from "@/lib/recommendation/engine";
+import { WEIGHTS, CriterionWeights } from "@/lib/recommendation/weights";
 
 /**
  * Runs the MCDM (Multi-Criteria Decision Making) scoring algorithm on all submitted quotes
  * for a closed RFQ, generates recommendations, and transitions the RFQ status to Evaluated.
+ * Optionally accepts custom weights to support sensitivity analysis.
  */
-export async function generateRecommendations(rfqId: number) {
+export async function generateRecommendations(rfqId: number, weights?: CriterionWeights) {
   try {
     // 1. Fetch RFQ and verify it exists
     const rfq = await prisma.requestForQuote.findUnique({
@@ -21,15 +24,9 @@ export async function generateRecommendations(rfqId: number) {
       throw new Error(`RFQ with ID ${rfqId} not found.`);
     }
 
-    // 2. Fetch all quotes with supplier profiles
-    const quotes = await prisma.supplierQuote.findMany({
-      where: { rfqId },
-      include: {
-        supplier: true,
-      },
-    });
-
-    if (quotes.length === 0) {
+    // 2. Score quotes using our advanced MCDM engine
+    const canvassResult = await scoreRfqQuotesInternal(rfqId, weights);
+    if (!canvassResult || canvassResult.rankedRecommendations.length === 0) {
       throw new Error("No quotes have been submitted for this RFQ. Cannot evaluate.");
     }
 
@@ -48,51 +45,7 @@ export async function generateRecommendations(rfqId: number) {
       });
     }
 
-    // 4. Calculate bounds for normalization
-    const prices = quotes.map((q) => Number(q.totalQuotedAmount));
-    const minPrice = Math.min(...prices);
-
-    const deliveries = quotes.map((q) => q.offeredDeliveryDays);
-    const minDelivery = Math.min(...deliveries);
-    const maxDelivery = Math.max(...deliveries);
-
-    // 5. Compute MCDM Scores
-    const recommendationsData = quotes.map((quote) => {
-      // Price Score: Lower is better, ratio-based to avoid 0 scores
-      const price = Number(quote.totalQuotedAmount);
-      const priceScore = price === 0 ? 100 : (minPrice / price) * 100;
-
-      // Delivery Score: Lower days is better, mapped between 50 and 100 relative to competitors
-      let deliveryScore = 100;
-      if (maxDelivery !== minDelivery) {
-        deliveryScore = 100 - ((quote.offeredDeliveryDays - minDelivery) / (maxDelivery - minDelivery)) * 50;
-      }
-
-      // Reliability Score: 0 to 5 rating mapped to 0 to 100%
-      const rating = Number(quote.supplier.reliabilityRating);
-      const reliabilityScore = (rating / 5) * 100;
-
-      // Composite Weighted MCDM Score (50% Price, 30% Delivery, 20% Reliability)
-      const compositeMcdmScore = priceScore * 0.5 + deliveryScore * 0.3 + reliabilityScore * 0.2;
-
-      return {
-        supplierId: quote.supplierId,
-        supplierQuoteId: quote.id,
-        priceScore,
-        deliveryScore,
-        reliabilityScore,
-        compositeMcdmScore,
-        companyName: quote.supplier.companyName,
-        price,
-        deliveryDays: quote.offeredDeliveryDays,
-        rating,
-      };
-    });
-
-    // 6. Sort by composite score (highest first) and assign rank position
-    recommendationsData.sort((a, b) => b.compositeMcdmScore - a.compositeMcdmScore);
-
-    // 7. Create recommendations inside a database transaction
+    // 4. Create recommendations inside a database transaction
     const recommendations = await prisma.$transaction(async (tx) => {
       // Clear any existing recommendations for this canvas to avoid unique constraints
       await tx.recommendation.deleteMany({
@@ -101,24 +54,37 @@ export async function generateRecommendations(rfqId: number) {
 
       // Insert new recommendations
       const createdList = [];
-      for (let i = 0; i < recommendationsData.length; i++) {
-        const item = recommendationsData[i];
+      const rankedData = canvassResult.rankedRecommendations;
+      
+      for (let i = 0; i < rankedData.length; i++) {
+        const item = rankedData[i];
         const rankPosition = i + 1;
 
-        const justificationLog = 
-          `${item.companyName} ranked #${rankPosition} with a composite MCDM score of ${item.compositeMcdmScore.toFixed(2)}. ` +
-          `Offered a bid of ₱${item.price.toLocaleString('en-PH', { minimumFractionDigits: 2 })} (within ABC limit of ₱${Number(rfq.approvedBudgetContract).toLocaleString('en-PH', { minimumFractionDigits: 2 })}), ` +
-          `committed delivery of ${item.deliveryDays} days, and carries a reliability rating of ${item.rating.toFixed(2)}/5.00.`;
+        // Store the full snapshot inside the justificationLog JSON audit trail
+        const justificationLog = JSON.stringify({
+          reason: item.reason,
+          complianceScore: item.individualScores.complianceScore,
+          historicalPerformanceScore: item.individualScores.historicalPerformanceScore,
+          confidence: item.confidence,
+          confidenceLabel: item.confidenceLabel,
+          expectedChange: item.expectedChange,
+          forecastTrend: item.forecastTrend,
+          historicalAvgPrice: item.historicalAvgPrice,
+          historicalMinPrice: item.historicalMinPrice,
+          historicalLatestPrice: item.historicalLatestPrice,
+          forecastPrice: item.forecastPrice,
+          weights: weights || WEIGHTS
+        });
 
         const recomm = await tx.recommendation.create({
           data: {
             canvasId: canvas.id,
             supplierId: item.supplierId,
-            supplierQuoteId: item.supplierQuoteId,
-            compositeMcdmScore: item.compositeMcdmScore,
-            priceScore: item.priceScore,
-            deliveryScore: item.deliveryScore,
-            reliabilityScore: item.reliabilityScore,
+            supplierQuoteId: item.quoteId,
+            compositeMcdmScore: item.overallScore,
+            priceScore: item.individualScores.priceScore,
+            deliveryScore: item.individualScores.deliveryScore,
+            reliabilityScore: item.individualScores.reliabilityScore,
             rankPosition,
             justificationLog,
             approvalStatus: "Pending Review",

@@ -1,3 +1,11 @@
+import { recommendBestSupplierInternal } from "./recommendation/engine";
+import type { RecommendationEngineResult } from "./recommendation/types";
+
+export async function recommendBestSupplier(productId: number): Promise<RecommendationEngineResult> {
+  return recommendBestSupplierInternal(productId);
+}
+
+// ─── Legacy Canvas-RFQ Scoring ──────────────────────────────────────────────
 interface QuoteInput {
   quoteId: number;
   supplierId: number;
