@@ -4,6 +4,8 @@ import PPMPDashboardClient from "@/app/dashboard/end-user/ppmp/PPMPDashboardClie
 import { ProductListItem } from "@/features/catalog/server/queries";
 import Link from "next/link";
 
+import DepartmentSelectForm from "./DepartmentSelectForm";
+
 export const metadata = { title: "PPMP Requisition & Planning — ProcureWise" };
 
 interface PageProps {
@@ -51,38 +53,7 @@ export default async function PublicPPMPPage({ searchParams }: PageProps) {
               Identify your department/unit to view allocated budgets, draft new project procurement management plans, or modify existing plan details.
             </p>
 
-            <form method="GET" action="/end-user/ppmp" className="space-y-6">
-              <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-2">
-                  Select Unit / Department
-                </label>
-                <select
-                  name="department"
-                  required
-                  className="w-full border border-gray-300 rounded-lg p-3 text-sm outline-none focus:border-[#ca8a04] bg-[#FAF9F6] transition cursor-pointer font-medium"
-                >
-                  <option value="" disabled selected>
-                    -- Choose Department --
-                  </option>
-                  {budgets.map((b) => (
-                    <option key={b.id} value={b.department}>
-                      {b.department}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-xs leading-relaxed text-[#ca8a04]">
-                <strong>BSC Planning Policy:</strong> PPMP plans are validated against annual departmental budget allocations. No login is required to prepare and save these plans, but all submissions are subject to budget audits.
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-[#7e191b] hover:bg-[#962124] text-white py-3 rounded-lg font-bold text-sm transition uppercase tracking-wider shadow-md hover:shadow-lg flex items-center justify-center gap-2"
-              >
-                Start Planning →
-              </button>
-            </form>
+            <DepartmentSelectForm departments={budgets.map((b) => b.department)} />
           </div>
         </main>
       </div>
