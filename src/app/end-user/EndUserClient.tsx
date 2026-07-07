@@ -49,6 +49,34 @@ export default function EndUserClient({ products }: EndUserClientProps) {
     }
   }, []);
 
+  // Handle deep-linked product prefill
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productParam = urlParams.get("product");
+      if (productParam) {
+        const pId = parseInt(productParam, 10);
+        const targetProd = products.find(p => p.id === pId);
+        if (targetProd && targetProd.isActive) {
+          const existing = cart.find(item => item.id === targetProd.id);
+          if (!existing) {
+            const newCart = [...cart, {
+              id: targetProd.id,
+              name: targetProd.name,
+              estimatedUnitCost: targetProd.estimatedUnitCost,
+              uom: targetProd.unitOfMeasure,
+              quantity: 1
+            }];
+            saveCart(newCart);
+          }
+          setIsCheckoutOpen(true);
+        }
+        const cleanUrl = window.location.pathname;
+        window.history.replaceState({}, document.title, cleanUrl);
+      }
+    }
+  }, [products, cart]);
+
   const saveCart = (newCart: CartItem[]) => {
     setCart(newCart);
     localStorage.setItem("procurewise_cart", JSON.stringify(newCart));

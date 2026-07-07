@@ -122,3 +122,34 @@ export async function submitRequisitionAction(input: RequisitionSubmissionInput)
     };
   }
 }
+
+/**
+ * Looks up a requisition by its tracking code or secureToken, returning the secureToken for routing.
+ */
+export async function getRequisitionTokenAction(trackingCode: string) {
+  try {
+    const trimmed = trackingCode.trim();
+    if (!trimmed) {
+      return { success: false, message: "Please enter a tracking code." };
+    }
+
+    const requisition = await prisma.requisition.findFirst({
+      where: {
+        OR: [
+          { trackingCode: trimmed },
+          { secureToken: trimmed }
+        ]
+      },
+      select: { secureToken: true }
+    });
+
+    if (!requisition) {
+      return { success: false, message: "No requisition found with the provided tracking code." };
+    }
+
+    return { success: true, secureToken: requisition.secureToken };
+  } catch (error: any) {
+    console.error("Error looking up requisition token:", error);
+    return { success: false, message: "An unexpected error occurred during lookup." };
+  }
+}

@@ -41,6 +41,10 @@ export default function PPMPDashboardClient({
   const [fundingSource, setFundingSource] = useState("GAA 2026");
   const [editingPpmpId, setEditingPpmpId] = useState<number | null>(null);
 
+  const [addProductDialogItem, setAddProductDialogItem] = useState<ProductListItem | null>(null);
+  const [addQuantity, setAddQuantity] = useState<number>(1);
+  const [addSpecifications, setAddSpecifications] = useState<string>("");
+
   const [message, setMessage] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -80,7 +84,9 @@ export default function PPMPDashboardClient({
         const pId = parseInt(addProductId, 10);
         const targetProd = products.find((p) => p.id === pId);
         if (targetProd) {
-          handleAddItem(targetProd);
+          setAddProductDialogItem(targetProd);
+          setAddQuantity(1);
+          setAddSpecifications(targetProd.description || "");
           setActiveTab("create");
         }
         const cleanUrl = window.location.pathname;
@@ -253,6 +259,211 @@ export default function PPMPDashboardClient({
 
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
+      
+      {addProductDialogItem && (
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 250,
+            backgroundColor: "rgba(0,0,0,0.6)",
+            backdropFilter: "blur(4px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "1rem",
+          }}
+        >
+          <div
+            style={{
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              borderRadius: "1.25rem",
+              maxWidth: "500px",
+              width: "100%",
+              padding: "2rem",
+              boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "1.25rem",
+              fontFamily: '"Inter", sans-serif',
+            }}
+          >
+            <div>
+              <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
+                Add Item to PPMP Draft
+              </h3>
+              <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                Preselected Product: <strong>{addProductDialogItem.name}</strong>
+              </span>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+              <div>
+                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.35rem" }}>
+                  Product Name
+                </label>
+                <input
+                  type="text"
+                  disabled
+                  value={addProductDialogItem.name}
+                  style={{
+                    width: "100%",
+                    padding: "0.6rem 0.8rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                    background: "rgba(0,0,0,0.03)",
+                    color: "var(--text-muted)",
+                    fontSize: "0.8rem",
+                  }}
+                />
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.35rem" }}>
+                    Unit of Measure
+                  </label>
+                  <input
+                    type="text"
+                    disabled
+                    value={addProductDialogItem.unit.name}
+                    style={{
+                      width: "100%",
+                      padding: "0.6rem 0.8rem",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border)",
+                      background: "rgba(0,0,0,0.03)",
+                      color: "var(--text-muted)",
+                      fontSize: "0.8rem",
+                    }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.35rem" }}>
+                    Estimated Unit Cost
+                  </label>
+                  <input
+                    type="text"
+                    disabled
+                    value={`₱${addProductDialogItem.estimatedUnitCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+                    style={{
+                      width: "100%",
+                      padding: "0.6rem 0.8rem",
+                      borderRadius: "8px",
+                      border: "1px solid var(--border)",
+                      background: "rgba(0,0,0,0.03)",
+                      color: "var(--text-muted)",
+                      fontSize: "0.8rem",
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.35rem" }}>
+                  Quantity *
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  required
+                  value={addQuantity}
+                  onChange={(e) => setAddQuantity(parseInt(e.target.value) || 1)}
+                  style={{
+                    width: "100%",
+                    padding: "0.6rem 0.8rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                    background: "var(--bg-deep)",
+                    color: "var(--text-primary)",
+                    fontSize: "0.8rem",
+                    outline: "none",
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 700, color: "var(--text-secondary)", marginBottom: "0.35rem" }}>
+                  Specifications / Remarks
+                </label>
+                <textarea
+                  value={addSpecifications}
+                  onChange={(e) => setAddSpecifications(e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "0.6rem 0.8rem",
+                    borderRadius: "8px",
+                    border: "1px solid var(--border)",
+                    background: "var(--bg-deep)",
+                    color: "var(--text-primary)",
+                    fontSize: "0.8rem",
+                    outline: "none",
+                    minHeight: "80px",
+                    resize: "vertical",
+                  }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: "flex", gap: "1rem", borderTop: "1px solid var(--border)", paddingTop: "1.25rem" }}>
+              <button
+                type="button"
+                onClick={() => setAddProductDialogItem(null)}
+                style={{
+                  flex: 1,
+                  padding: "0.6rem",
+                  borderRadius: "8px",
+                  border: "1px solid var(--border)",
+                  background: "rgba(0,0,0,0.04)",
+                  color: "var(--text-primary)",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                  fontSize: "0.8rem",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const existingIndex = cartItems.findIndex((item) => item.product.id === addProductDialogItem.id);
+                  if (existingIndex > -1) {
+                    const updated = [...cartItems];
+                    updated[existingIndex].quantity = addQuantity;
+                    updated[existingIndex].description = addSpecifications;
+                    setCartItems(updated);
+                  } else {
+                    setCartItems([
+                      ...cartItems,
+                      {
+                        product: addProductDialogItem,
+                        quantity: addQuantity,
+                        description: addSpecifications,
+                      },
+                    ]);
+                  }
+                  setMessage(`"${addProductDialogItem.name}" added to your PPMP Draft.`);
+                  setAddProductDialogItem(null);
+                }}
+                style={{
+                  flex: 1,
+                  padding: "0.6rem",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: "#7e191b",
+                  color: "white",
+                  cursor: "pointer",
+                  fontWeight: 700,
+                  fontSize: "0.8rem",
+                }}
+              >
+                Add to Draft Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>

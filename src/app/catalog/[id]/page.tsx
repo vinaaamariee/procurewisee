@@ -270,7 +270,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             {/* CTA Buttons */}
             <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2">
               <Link
-                href={`/ppmp/create?product=${product.id}`}
+                href={`/dashboard/end-user/ppmp?add_product=${product.id}`}
                 className="flex items-center justify-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-bold transition-all hover:shadow-md"
                 style={{
                   borderColor: "var(--accent)",
@@ -282,7 +282,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
                 Add to PPMP
               </Link>
               <Link
-                href={`/purchase-request/create?product=${product.id}`}
+                href={`/end-user?product=${product.id}`}
                 className="flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-bold text-white transition-all hover:shadow-md"
                 style={{ background: "var(--accent)" }}
               >
