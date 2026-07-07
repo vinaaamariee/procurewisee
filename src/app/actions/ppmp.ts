@@ -30,7 +30,8 @@ interface CreatePpmpInput {
 
 export async function createPpmpAction(input: CreatePpmpInput) {
   try {
-    await requireRole("End User");
+    // End User is public (NO LOGIN REQUIRED); bypass authenticated role check
+    // await requireRole("End User");
     const calculatedBudget = input.items.reduce(
       (sum, item) => sum + (item.quantity * item.estimatedUnitCost),
       0
@@ -169,7 +170,8 @@ export async function createPpmpAction(input: CreatePpmpInput) {
 
 export async function submitPpmpAction(id: number) {
   try {
-    await requireRole("End User");
+    // End User is public (NO LOGIN REQUIRED); bypass authenticated role check
+    // await requireRole("End User");
     const old = await prisma.ppmp.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PPMP not found." };
 
@@ -196,7 +198,8 @@ export async function submitPpmpAction(id: number) {
 
 export async function deletePpmpAction(id: number) {
   try {
-    await requireRole("End User");
+    // End User is public (NO LOGIN REQUIRED); bypass authenticated role check
+    // await requireRole("End User");
     const old = await prisma.ppmp.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PPMP not found." };
     if (old.status !== PpmpStatus.Draft && old.status !== PpmpStatus.Returned) {
@@ -219,7 +222,8 @@ export async function deletePpmpAction(id: number) {
 
 export async function convertPpmpToPrAction(ppmpId: number) {
   try {
-    await requireRole("End User");
+    // End User is public (NO LOGIN REQUIRED); bypass authenticated role check
+    // await requireRole("End User");
     const result = await prisma.$transaction(async (tx) => {
       // 1. Fetch PPMP and items
       const ppmp = await tx.ppmp.findUnique({

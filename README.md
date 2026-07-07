@@ -132,6 +132,7 @@ Simplifies the purchase request process for departments by removing authenticati
 - **Secure Cryptographic Tracking**: Upon submission, the system generates a secure tracking token (`/track/req_[uuid]`) and a reference code (`PR-2026-X8Y7`). Requesters use this secure link to view request progress.
 - **PO Handoff & Revision Loop**: If a Procurement Officer rejects a request, the rejection count is incremented, and detailed remarks are logged. Requesters see this history on their tracking page, allowing them to adjust items and resubmit.
 - **Budget Compliance**: Requisitions are validated against allocated department budgets (`DepartmentBudget`) to prevent over-allocation.
+- **Public PPMP Planning**: Allows departmental personnel to prepare, save, and manage Project Procurement Management Plans (PPMPs) without logging in. Users select their department to load allocated budget tracking, and build PPMP drafts from the live product catalog. Saved drafts can be submitted directly for review.
 
 ### 12. End-User Requisitions Tracker
 
