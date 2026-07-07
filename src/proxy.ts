@@ -97,7 +97,10 @@ export default async function proxy(request: NextRequest) {
   if (pathname.startsWith('/dashboard')) {
     // 1. Not authenticated → send to login
     if (!user) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      const nextUrl = request.nextUrl.pathname + request.nextUrl.search;
+      return NextResponse.redirect(
+        new URL(`/login?next=${encodeURIComponent(nextUrl)}`, request.url)
+      );
     }
 
     // 2. Fetch the user's role from user_profiles

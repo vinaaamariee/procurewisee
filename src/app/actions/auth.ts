@@ -50,7 +50,12 @@ export async function login(formData: FormData) {
     return redirect('/login?error=Your account has been deactivated.');
   }
 
+  const next = formData.get('next') as string;
+
   revalidatePath('/', 'layout');
+  if (next && next.startsWith('/') && !next.startsWith('/login') && !next.startsWith('/unauthorized')) {
+    return redirect(next);
+  }
   return redirect(ROLE_HOME[profile.role as UserRole] ?? '/dashboard/officer');
 }
 

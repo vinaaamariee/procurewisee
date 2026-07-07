@@ -690,6 +690,7 @@ function LoginPage() {
 
             {/* Forms */}
             <form onSubmit={(e) => handleFormSubmit(e, login)}>
+              <input type="hidden" name="next" value={searchParams.get("next") || ""} />
               <div className="form-group">
                 <label>Email Address</label>
                 <div className="input-wrapper">
