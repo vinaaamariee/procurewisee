@@ -59,7 +59,7 @@ export async function recommendBestSupplierInternal(productId: number): Promise<
 
   // Calculate Expected Change percentage from the forecast
   let expectedChange: string | null = null;
-  if (forecastPrice !== null && product.estimatedUnitCost > 0) {
+  if (forecastPrice !== null && Number(product.estimatedUnitCost) > 0) {
     const changePct = ((forecastPrice - Number(product.estimatedUnitCost)) / Number(product.estimatedUnitCost)) * 100;
     expectedChange = changePct >= 0 ? `+${changePct.toFixed(1)}%` : `${changePct.toFixed(1)}%`;
   }
