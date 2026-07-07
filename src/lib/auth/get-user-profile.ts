@@ -19,7 +19,7 @@ export async function getAuthenticatedUser(): Promise<{
   } = await supabase.auth.getUser();
 
   if (authError || !user) {
-    redirect('/');
+    redirect('/login');
   }
 
   const { data: profile, error: profileError } = await supabase
