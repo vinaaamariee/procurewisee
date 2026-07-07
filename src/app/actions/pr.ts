@@ -5,6 +5,7 @@ import { PrStatus, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
 import crypto from "crypto";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 interface PrItemInput {
   productId?: number;
@@ -140,6 +141,7 @@ export async function createPrFromCartAction(input: CreatePrInput) {
 
 export async function submitPrAction(id: number) {
   try {
+    await requireRole("End User");
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
 
@@ -166,16 +168,61 @@ export async function submitPrAction(id: number) {
 
 export async function reviewPrAction(id: number, status: PrStatus, remarks?: string, officerId?: string) {
   try {
+    await requireRole("Administrative Approver");
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
 
-    const updated = await prisma.purchaseRequest.update({
-      where: { id },
-      data: { 
-        status,
-        remarks: remarks ? `${old.remarks || ""}\n[Review]: ${remarks}` : old.remarks,
-        assignedOfficerId: officerId || old.assignedOfficerId,
-      },
+    const updated = await prisma.$transaction(async (tx) => {
+      const pr = await tx.purchaseRequest.update({
+        where: { id },
+        data: { 
+          status,
+          remarks: remarks ? `${old.remarks || ""}\n[Review]: ${remarks}` : old.remarks,
+          assignedOfficerId: officerId || old.assignedOfficerId,
+        },
+      });
+
+      // Recalculate spent budget if PR is rejected or cancelled
+      if (
+        (status === PrStatus.Rejected || status === PrStatus.Cancelled) &&
+        old.status !== PrStatus.Rejected && old.status !== PrStatus.Cancelled
+      ) {
+        const deptBudget = await tx.departmentBudget.findUnique({
+          where: { department: old.department }
+        });
+        if (deptBudget) {
+          await tx.departmentBudget.update({
+            where: { department: old.department },
+            data: {
+              spentBudget: {
+                decrement: old.totalCost
+              }
+            }
+          });
+        }
+      }
+
+      // Re-increment spent budget if PR transitions back from rejected/cancelled
+      if (
+        (old.status === PrStatus.Rejected || old.status === PrStatus.Cancelled) &&
+        status !== PrStatus.Rejected && status !== PrStatus.Cancelled
+      ) {
+        const deptBudget = await tx.departmentBudget.findUnique({
+          where: { department: old.department }
+        });
+        if (deptBudget) {
+          await tx.departmentBudget.update({
+            where: { department: old.department },
+            data: {
+              spentBudget: {
+                increment: old.totalCost
+              }
+            }
+          });
+        }
+      }
+
+      return pr;
     });
 
     logAuditTrail({
@@ -196,6 +243,7 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
 
 export async function receivePrAction(id: number) {
   try {
+    await requireRole("Procurement Officer");
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
 
@@ -349,6 +397,7 @@ export async function updatePrItemAction(
 
 export async function getPreCanvassingData(prId: number) {
   try {
+    await requireRole("Procurement Officer");
     const pr = await prisma.purchaseRequest.findUnique({
       where: { id: prId },
       include: {

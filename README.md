@@ -552,6 +552,30 @@ Consolidates all transactional databases and ARIMA models into a centralized exe
 - **Dashed Forecast Visualization**: Extends the SVG trend charts to append forecasted prices as dashed line segments.
 - **PDF Report Exporter**: Implements an printable executive PDF layout containing all summary charts, rankings, and cost savings ledgers.
 
+---
+
+## 🔒 Security, Routing & Production Readiness (Sprint 7)
+
+A comprehensive stabilization phase addressing application routing, input validation, server security, and data consistency.
+
+### 1. Centralized Routing & Tracking Portal
+- **Dashboard Gatekeeper**: Added `/dashboard/page.tsx` redirecting logged-in users to their role-specific dashboard (e.g. `/dashboard/end-user`, `/dashboard/officer`, `/dashboard/approver`) to prevent raw `/dashboard` 404s.
+- **Requisition Tracking Portal**: Implemented `/track` routing and [TrackingForm.tsx](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/app/track/TrackingForm.tsx) to query requisitions by human-readable tracking codes and securely redirect to the `/[secureToken]` route without exposing database primary keys.
+- **Audited Navigation Links**: Resolved broken CTA links on the catalog details page (`Add to PPMP` and `Create PR`) to map to active `/dashboard/end-user/ppmp?add_product=ID` and `/end-user?product=ID` endpoints.
+
+### 2. Strict Input Validation & Loading Feedback
+- Enforced bounds checking (e.g., quantities must be $\ge 1$) across deep-linked modals and requisition carts.
+- Added disable-state mechanisms on all primary buttons during server actions to block duplicate submissions.
+- Integrated interactive submitting indicators and spinners on all major transaction flows (Draft PPMP, submit PR, PO creation).
+
+### 3. Server-Side Role Access Enforcement
+- Hardened all server actions inside `src/app/actions/` (`ppmp.ts`, `pr.ts`, `po.ts`) to validate user authorization via `requireRole` on the server layer, preventing client-side bypasses.
+
+### 4. Recalculation & Data Integrity
+- Recalculated PPMP budgets server-side dynamically from line items to guard against spoofed client payloads.
+- Added automatic budget refund transactions: If an administrative reviewer rejects or cancels a Purchase Request, the department's `spentBudget` allocation is automatically refunded.
+
+
 
 
 

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { PpmpStatus, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 interface PpmpItemInput {
   productId: number;
@@ -29,6 +30,11 @@ interface CreatePpmpInput {
 
 export async function createPpmpAction(input: CreatePpmpInput) {
   try {
+    await requireRole("End User");
+    const calculatedBudget = input.items.reduce(
+      (sum, item) => sum + (item.quantity * item.estimatedUnitCost),
+      0
+    );
     const result = await prisma.$transaction(async (tx) => {
       // 1. Server-side budget validation checking the department's remaining allocation
       const budget = await tx.departmentBudget.findUnique({
@@ -46,8 +52,8 @@ export async function createPpmpAction(input: CreatePpmpInput) {
         });
         const totalOtherPlanned = Number(otherPlans._sum.estimatedBudget || 0);
         const remainingBudget = Number(budget.allocatedBudget) - Number(budget.spentBudget) - totalOtherPlanned;
-        if (input.estimatedBudget > remainingBudget) {
-          throw new Error(`Insufficient budget. Remaining allocation is ₱${remainingBudget.toLocaleString()}, but this PPMP requires ₱${input.estimatedBudget.toLocaleString()}.`);
+        if (calculatedBudget > remainingBudget) {
+          throw new Error(`Insufficient budget. Remaining allocation is ₱${remainingBudget.toLocaleString()}, but this PPMP requires ₱${calculatedBudget.toLocaleString()}.`);
         }
       }
 
@@ -80,7 +86,7 @@ export async function createPpmpAction(input: CreatePpmpInput) {
             office: input.office,
             fundingSource: input.fundingSource,
             fiscalYear: input.fiscalYear,
-            estimatedBudget: new Prisma.Decimal(input.estimatedBudget),
+            estimatedBudget: new Prisma.Decimal(calculatedBudget),
             remarks: input.remarks || null,
             attachments: input.attachments || null,
             preparedById: input.preparedById || null,
@@ -109,7 +115,7 @@ export async function createPpmpAction(input: CreatePpmpInput) {
             office: input.office,
             fundingSource: input.fundingSource,
             fiscalYear: input.fiscalYear,
-            estimatedBudget: new Prisma.Decimal(input.estimatedBudget),
+            estimatedBudget: new Prisma.Decimal(calculatedBudget),
             remarks: input.remarks || null,
             attachments: input.attachments || null,
             status: PpmpStatus.Draft,
@@ -163,6 +169,7 @@ export async function createPpmpAction(input: CreatePpmpInput) {
 
 export async function submitPpmpAction(id: number) {
   try {
+    await requireRole("End User");
     const old = await prisma.ppmp.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PPMP not found." };
 
@@ -189,6 +196,7 @@ export async function submitPpmpAction(id: number) {
 
 export async function deletePpmpAction(id: number) {
   try {
+    await requireRole("End User");
     const old = await prisma.ppmp.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PPMP not found." };
     if (old.status !== PpmpStatus.Draft && old.status !== PpmpStatus.Returned) {
@@ -211,6 +219,7 @@ export async function deletePpmpAction(id: number) {
 
 export async function convertPpmpToPrAction(ppmpId: number) {
   try {
+    await requireRole("End User");
     const result = await prisma.$transaction(async (tx) => {
       // 1. Fetch PPMP and items
       const ppmp = await tx.ppmp.findUnique({
@@ -285,6 +294,7 @@ export async function convertPpmpToPrAction(ppmpId: number) {
 
 export async function reviewPpmpAction(id: number, status: PpmpStatus, remarks?: string) {
   try {
+    await requireRole("Administrative Approver");
     const old = await prisma.ppmp.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PPMP not found." };
 

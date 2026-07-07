@@ -428,9 +428,10 @@ export default function PPMPDashboardClient({
                 type="button"
                 onClick={() => {
                   const existingIndex = cartItems.findIndex((item) => item.product.id === addProductDialogItem.id);
+                  const validatedQty = Math.max(1, addQuantity);
                   if (existingIndex > -1) {
                     const updated = [...cartItems];
-                    updated[existingIndex].quantity = addQuantity;
+                    updated[existingIndex].quantity = validatedQty;
                     updated[existingIndex].description = addSpecifications;
                     setCartItems(updated);
                   } else {
@@ -438,7 +439,7 @@ export default function PPMPDashboardClient({
                       ...cartItems,
                       {
                         product: addProductDialogItem,
-                        quantity: addQuantity,
+                        quantity: validatedQty,
                         description: addSpecifications,
                       },
                     ]);

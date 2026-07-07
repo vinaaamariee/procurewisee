@@ -4,9 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { PoStatus, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 export async function createPoFromAwardAction(recommendationId: number) {
   try {
+    await requireRole("Procurement Officer");
     const result = await prisma.$transaction(async (tx) => {
       // 1. Fetch recommendation details
       const rec = await tx.recommendation.findUnique({
@@ -112,6 +114,11 @@ export async function updatePoAction(
   }
 ) {
   try {
+    if (data.status === PoStatus.Approved) {
+      await requireRole("Administrative Approver");
+    } else {
+      await requireRole("Procurement Officer");
+    }
     const old = await prisma.purchaseOrder.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PO not found." };
 

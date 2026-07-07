@@ -22,7 +22,7 @@ const defaultActions = [
     title: "Create PPMP",
     description:
       "Prepare your Project Procurement Management Plan for budget allocation.",
-    href: "/end-user",
+    href: "/dashboard/end-user/ppmp",
     buttonLabel: "Start Planning",
     color: "#ca8a04",
     bgColor: "rgba(202, 138, 4, 0.06)",
