@@ -30,28 +30,34 @@ export default async function EndUserDashboard() {
   const remaining = allocated - spent;
   const spentPercent = Math.min((spent / allocated) * 100, 100);
 
-  const theme = {
-    crimson: "#7e191b",
-    gold: "#dcb353",
-    goldDark: "#b88a1b",
-    textMain: "#1f2937",
-    textMuted: "#6b7280",
-    glassBg: "rgba(255, 255, 255, 0.75)",
-    glassBorder: "rgba(255, 255, 255, 0.95)",
-    shadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+  // CSS variables used from globals.css (navy blue system)
+  const v = {
+    surface: 'var(--surface)',
+    border: 'var(--border)',
+    accent: 'var(--accent)',
+    accentLight: 'var(--accent-light)',
+    textPrimary: 'var(--text-primary)',
+    textSecondary: 'var(--text-secondary)',
+    green: 'var(--green)',
+    shadow: '0 4px 24px rgba(30,58,138,0.07)',
   };
 
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2.5rem", fontFamily: '"Inter", sans-serif' }}>
       
       {/* Header */}
-      <div>
-        <h1 style={{ fontSize: "1.875rem", fontWeight: 800, color: theme.textMain, margin: 0, letterSpacing: "-0.5px" }}>
-          Welcome back, {profile.fullName}!
-        </h1>
-        <p style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: theme.textMuted, margin: "0.5rem 0 0 0" }}>
-          Requisitioner Portal • Manage and track your department's procurement planning and purchase requests.
-        </p>
+      <div style={{ borderBottom: `1px solid ${v.border}`, paddingBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ width: 5, height: 48, borderRadius: 4, background: `linear-gradient(180deg, ${v.accent}, ${v.accentLight})`, flexShrink: 0 }} />
+          <div>
+            <h1 style={{ fontSize: "1.875rem", fontWeight: 800, color: v.textPrimary, margin: 0, letterSpacing: "-0.5px" }}>
+              Welcome back, {profile.fullName}!
+            </h1>
+            <p style={{ marginTop: "0.25rem", fontSize: "0.9rem", color: v.textSecondary, margin: "0.25rem 0 0 0" }}>
+              Requisitioner Portal &bull; Manage and track your department&apos;s procurement planning and purchase requests.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Grid panels */}
@@ -62,34 +68,34 @@ export default async function EndUserDashboard() {
           
           {/* Budget progress panel */}
           <div style={{
-            background: theme.glassBg, backdropFilter: "blur(20px)",
-            border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "2rem",
-            boxShadow: theme.shadow
+            background: v.surface,
+            border: `1px solid ${v.border}`, borderRadius: "1.25rem", padding: "2rem",
+            boxShadow: v.shadow
           }}>
-            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, margin: "0 0 1.5rem 0" }}>Department Fiscal Budget Tracker</h2>
+            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: v.textPrimary, margin: "0 0 1.5rem 0" }}>Department Fiscal Budget Tracker</h2>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.75rem", fontSize: "0.85rem", fontWeight: 700 }}>
-              <span style={{ color: theme.textMuted }}>Allocated: ₱{allocated.toLocaleString()}</span>
-              <span style={{ color: theme.crimson }}>Spent: ₱{spent.toLocaleString()} ({spentPercent.toFixed(1)}%)</span>
+              <span style={{ color: v.textSecondary }}>Allocated: ₱{allocated.toLocaleString()}</span>
+              <span style={{ color: v.accent }}>Spent: ₱{spent.toLocaleString()} ({spentPercent.toFixed(1)}%)</span>
             </div>
             
             {/* Progress Bar */}
-            <div style={{ width: "100%", height: "10px", backgroundColor: "rgba(0,0,0,0.06)", borderRadius: "999px", overflow: "hidden", marginBottom: "1.5rem" }}>
-              <div style={{ width: `${spentPercent}%`, height: "100%", background: `linear-gradient(90deg, ${theme.crimson}, ${theme.gold})`, borderRadius: "999px" }} />
+            <div style={{ width: "100%", height: "10px", backgroundColor: "rgba(30,58,138,0.07)", borderRadius: "999px", overflow: "hidden", marginBottom: "1.5rem" }}>
+              <div style={{ width: `${spentPercent}%`, height: "100%", background: `linear-gradient(90deg, ${v.accent}, ${v.accentLight})`, borderRadius: "999px" }} />
             </div>
 
-            <div style={{ fontSize: "0.85rem", fontWeight: 600, color: theme.textMain }}>
+            <div style={{ fontSize: "0.85rem", fontWeight: 600, color: v.textPrimary }}>
               Remaining Available Allocation: <span style={{ color: "#059669", fontSize: "1rem", fontWeight: 800 }}>₱{remaining.toLocaleString()}</span>
             </div>
           </div>
 
           {/* Recent Requisitions Table */}
           <div style={{
-            background: theme.glassBg, backdropFilter: "blur(20px)",
-            border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", overflow: "hidden", boxShadow: theme.shadow
+            background: v.surface,
+            border: `1px solid ${v.border}`, borderRadius: "1.25rem", overflow: "hidden", boxShadow: v.shadow
           }}>
-            <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid rgba(0,0,0,0.06)", display: "flex", alignItems: "center", justifyContent: "space-between", backgroundColor: "rgba(255,255,255,0.4)" }}>
-              <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, margin: 0 }}>My Recent Purchase Requests</h2>
-              <Link href="/dashboard/end-user/pr" style={{ fontSize: "0.75rem", fontWeight: 700, color: theme.crimson, textDecoration: "none" }}>
+            <div style={{ padding: "1.25rem 1.5rem", borderBottom: `1px solid ${v.border}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: v.textPrimary, margin: 0 }}>My Recent Purchase Requests</h2>
+              <Link href="/dashboard/end-user/pr" style={{ fontSize: "0.75rem", fontWeight: 700, color: v.accent, textDecoration: "none" }}>
                 View All →
               </Link>
             </div>
@@ -97,19 +103,19 @@ export default async function EndUserDashboard() {
             <div style={{ overflowX: "auto" }}>
               <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
                 <thead>
-                  <tr style={{ backgroundColor: "rgba(255,255,255,0.5)", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-                    <th style={{ padding: "1rem 1.5rem", textAlign: "left", color: theme.textMuted }}>PR Number</th>
-                    <th style={{ padding: "1rem 1.5rem", textAlign: "left", color: theme.textMuted }}>Purpose</th>
-                    <th style={{ padding: "1rem 1.5rem", textAlign: "right", color: theme.textMuted }}>Estimated Cost</th>
-                    <th style={{ padding: "1rem 1.5rem", textAlign: "center", color: theme.textMuted }}>Status</th>
+                  <tr style={{ backgroundColor: 'var(--section-bg)', borderBottom: `1px solid ${v.border}` }}>
+                    <th style={{ padding: "0.875rem 1.5rem", textAlign: "left", color: v.textSecondary, fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>PR Number</th>
+                    <th style={{ padding: "0.875rem 1.5rem", textAlign: "left", color: v.textSecondary, fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Purpose</th>
+                    <th style={{ padding: "0.875rem 1.5rem", textAlign: "right", color: v.textSecondary, fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Estimated Cost</th>
+                    <th style={{ padding: "0.875rem 1.5rem", textAlign: "center", color: v.textSecondary, fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {recentPrs.map(pr => (
-                    <tr key={pr.id} style={{ borderBottom: "1px solid rgba(0,0,0,0.04)" }}>
-                      <td style={{ padding: "1rem 1.5rem", fontWeight: 700, color: theme.crimson }}>{pr.prNumber}</td>
-                      <td style={{ padding: "1rem 1.5rem", color: theme.textMain, maxWidth: "250px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pr.purpose}</td>
-                      <td style={{ padding: "1rem 1.5rem", textAlign: "right", fontWeight: 600 }}>₱{Number(pr.totalCost).toLocaleString()}</td>
+                    <tr key={pr.id} style={{ borderBottom: `1px solid ${v.border}` }}>
+                      <td style={{ padding: "1rem 1.5rem", fontWeight: 700, color: v.accent }}>{pr.prNumber}</td>
+                      <td style={{ padding: "1rem 1.5rem", color: v.textPrimary, maxWidth: "250px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{pr.purpose}</td>
+                      <td style={{ padding: "1rem 1.5rem", textAlign: "right", fontWeight: 600, color: v.textPrimary }}>₱{Number(pr.totalCost).toLocaleString()}</td>
                       <td style={{ padding: "1rem 1.5rem", textAlign: "center" }}>
                         <span style={{
                           padding: "0.25rem 0.75rem", borderRadius: "999px", fontSize: "0.7rem", fontWeight: 700,
@@ -123,7 +129,7 @@ export default async function EndUserDashboard() {
                   ))}
                   {recentPrs.length === 0 && (
                     <tr>
-                      <td colSpan={4} style={{ padding: "3rem", textAlign: "center", color: theme.textMuted, fontWeight: 500 }}>
+                      <td colSpan={4} style={{ padding: "3rem", textAlign: "center", color: v.textSecondary, fontWeight: 500 }}>
                         No Purchase Requests filed yet. Go to the marketplace catalog to get started.
                       </td>
                     </tr>
@@ -139,22 +145,22 @@ export default async function EndUserDashboard() {
           
           {/* Quick Actions */}
           <div style={{
-            background: theme.glassBg, backdropFilter: "blur(20px)",
-            border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "1.5rem",
-            boxShadow: theme.shadow
+            background: v.surface,
+            border: `1px solid ${v.border}`, borderRadius: "1.25rem", padding: "1.5rem",
+            boxShadow: v.shadow
           }}>
-            <h2 style={{ fontSize: "1rem", fontWeight: 700, color: theme.textMain, margin: "0 0 1.25rem 0" }}>Quick Actions</h2>
+            <h2 style={{ fontSize: "1rem", fontWeight: 700, color: v.textPrimary, margin: "0 0 1.25rem 0" }}>Quick Actions</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               <Link href="/" style={{
                 display: "block", textDecoration: "none", padding: "0.75rem 1rem", borderRadius: "0.75rem",
-                background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`, color: "#fff",
+                background: `linear-gradient(135deg, ${v.accent}, ${v.accentLight})`, color: "#fff",
                 fontWeight: 700, fontSize: "0.8rem", textAlign: "center"
               }}>
                 🛒 Open Procurement Catalog
               </Link>
               <Link href="/dashboard/end-user/ppmp" style={{
                 display: "block", textDecoration: "none", padding: "0.75rem 1rem", borderRadius: "0.75rem",
-                background: "rgba(255,255,255,0.9)", border: "1px solid var(--border)", color: theme.textMain,
+                background: "transparent", border: `1px solid ${v.border}`, color: v.textPrimary,
                 fontWeight: 600, fontSize: "0.8rem", textAlign: "center"
               }}>
                 📅 Manage PPMP Calendars
@@ -164,17 +170,17 @@ export default async function EndUserDashboard() {
 
           {/* Quick Stats */}
           <div style={{
-            background: theme.glassBg, backdropFilter: "blur(20px)",
-            border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "1.5rem",
-            boxShadow: theme.shadow, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem"
+            background: v.surface,
+            border: `1px solid ${v.border}`, borderRadius: "1.25rem", padding: "1.5rem",
+            boxShadow: v.shadow, display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem"
           }}>
-            <div style={{ textAlign: "center", padding: "1rem", borderRight: "1px solid rgba(0,0,0,0.06)" }}>
-              <span style={{ fontSize: "1.875rem", fontWeight: 900, color: theme.crimson }}>{prCount}</span>
-              <span style={{ display: "block", fontSize: "0.75rem", color: theme.textMuted, fontWeight: 700, marginTop: "0.25rem" }}>PRs File</span>
+            <div style={{ textAlign: "center", padding: "1rem", borderRight: `1px solid ${v.border}` }}>
+              <span style={{ fontSize: "1.875rem", fontWeight: 900, color: v.accent }}>{prCount}</span>
+              <span style={{ display: "block", fontSize: "0.75rem", color: v.textSecondary, fontWeight: 700, marginTop: "0.25rem" }}>PRs Filed</span>
             </div>
             <div style={{ textAlign: "center", padding: "1rem" }}>
-              <span style={{ fontSize: "1.875rem", fontWeight: 900, color: theme.goldDark }}>{ppmpCount}</span>
-              <span style={{ display: "block", fontSize: "0.75rem", color: theme.textMuted, fontWeight: 700, marginTop: "0.25rem" }}>PPMPs Prepared</span>
+              <span style={{ fontSize: "1.875rem", fontWeight: 900, color: v.accentLight }}>{ppmpCount}</span>
+              <span style={{ display: "block", fontSize: "0.75rem", color: v.textSecondary, fontWeight: 700, marginTop: "0.25rem" }}>PPMPs Prepared</span>
             </div>
           </div>
 

@@ -106,41 +106,56 @@ export default async function OfficerDashboard() {
     glassBg: 'rgba(255, 255, 255, 0.7)',
     glassBorder: 'rgba(255, 255, 255, 0.9)',
     shadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
+  };
+
+  const v = {
+    surface: 'var(--surface)',
+    border: 'var(--border)',
+    accent: 'var(--accent)',
+    accentLight: 'var(--accent-light)',
+    textPrimary: 'var(--text-primary)',
+    textSecondary: 'var(--text-secondary)',
     green: '#10b981',
+    shadow: '0 4px 24px rgba(30,58,138,0.07)',
   };
 
   const statCards = [
-    { label: 'Total RFQs',     value: stats.totalRfqs,      icon: '📋', color: '#1f2937', desc: 'All solicitations' },
-    { label: 'Open / Active',  value: stats.openRfqs,       icon: '🟢', color: theme.gold, desc: 'Awaiting quotes' },
-    { label: 'Suppliers',      value: stats.totalSuppliers, icon: '🏢', color: theme.crimson, desc: 'Registered vendors' },
+    { label: 'Total RFQs',    value: stats.totalRfqs,      icon: '📋', color: v.accent,      desc: 'All solicitations' },
+    { label: 'Open / Active', value: stats.openRfqs,       icon: '🟢', color: '#059669',     desc: 'Awaiting quotes' },
+    { label: 'Suppliers',     value: stats.totalSuppliers, icon: '🏢', color: v.accentLight, desc: 'Registered vendors' },
   ];
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', fontFamily: '"Inter", sans-serif' }}>
 
       {/* ── Page Header ── */}
-      <div>
-        <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: theme.textMain, margin: 0, letterSpacing: '-0.5px' }}>
-          Procurement Officer Portal
-        </h1>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: theme.textMuted, margin: '0.5rem 0 0 0' }}>
-          Manage RFQs, review supplier quotes, and track procurement activities.
-        </p>
+      <div style={{ borderBottom: `1px solid ${v.border}`, paddingBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ width: 5, height: 48, borderRadius: 4, background: `linear-gradient(180deg, ${v.accent}, ${v.accentLight})`, flexShrink: 0 }} />
+          <div>
+            <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: v.textPrimary, margin: 0, letterSpacing: '-0.5px' }}>
+              Procurement Officer Portal
+            </h1>
+            <p style={{ marginTop: '0.25rem', fontSize: '0.9rem', color: v.textSecondary, margin: '0.25rem 0 0 0' }}>
+              Manage RFQs, review supplier quotes, and track procurement activities.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* ── Stat Cards Grid ── */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
         {statCards.map(card => (
           <div key={card.label} style={{
-            background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-            border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', padding: '1.5rem',
-            boxShadow: theme.shadow, position: 'relative', overflow: 'hidden'
+            background: v.surface,
+            border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
+            boxShadow: v.shadow, position: 'relative', overflow: 'hidden'
           }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: card.color }} />
             <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{card.icon}</div>
-            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: theme.textMain, lineHeight: 1 }}>{card.value}</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: theme.textMain, marginTop: '0.5rem' }}>{card.label}</div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 500, color: theme.textMuted, marginTop: '0.25rem' }}>{card.desc}</div>
+            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>{card.value}</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: v.textPrimary, marginTop: '0.5rem' }}>{card.label}</div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 500, color: v.textSecondary, marginTop: '0.25rem' }}>{card.desc}</div>
           </div>
         ))}
       </div>
@@ -150,31 +165,31 @@ export default async function OfficerDashboard() {
         
         {/* Left Widget: Expected Price Changes */}
         <div style={{
-          background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-          border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', padding: '1.5rem',
-          boxShadow: theme.shadow, display: 'flex', flexDirection: 'column', gap: '1rem'
+          background: v.surface,
+          border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
+          boxShadow: v.shadow, display: 'flex', flexDirection: 'column', gap: '1rem'
         }}>
           <div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: theme.textMain, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               📊 Forecast Volatility Tracker
             </h3>
-            <span style={{ fontSize: '0.75rem', color: theme.textMuted }}>ARIMA price indicators for current catalog items</span>
+            <span style={{ fontSize: '0.75rem', color: v.textSecondary }}>ARIMA price indicators for current catalog items</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
             {/* Expected to Increase */}
             <div>
-              <span style={{ fontSize: '0.7rem', fontWeight: 800, color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 800, color: v.textSecondary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 Inflation Warning (Expected to Increase)
               </span>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.25rem' }}>
                 {forecastData.expectedToIncrease.length === 0 ? (
-                  <div style={{ fontSize: '0.75rem', color: theme.textMuted, padding: '0.25rem 0' }}>No products expected to increase.</div>
+                  <div style={{ fontSize: '0.75rem', color: v.textSecondary, padding: '0.25rem 0' }}>No products expected to increase.</div>
                 ) : (
                   forecastData.expectedToIncrease.slice(0, 3).map(p => (
                     <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem' }}>
-                      <span style={{ fontWeight: 600, color: theme.textMain }}>{p.name}</span>
-                      <span style={{ fontWeight: 800, color: theme.crimson, background: 'rgba(239, 68, 68, 0.05)', padding: '0.1rem 0.4rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '2px' }}>
+                      <span style={{ fontWeight: 600, color: v.textPrimary }}>{p.name}</span>
+                      <span style={{ fontWeight: 800, color: '#dc2626', background: 'rgba(239, 68, 68, 0.05)', padding: '0.1rem 0.4rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '2px' }}>
                         <TrendingUp style={{ width: 10, height: 10 }} /> +{p.changePct.toFixed(1)}%
                       </span>
                     </div>
@@ -184,18 +199,18 @@ export default async function OfficerDashboard() {
             </div>
 
             {/* Expected to Decrease */}
-            <div style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.75rem' }}>
-              <span style={{ fontSize: '0.7rem', fontWeight: 800, color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <div style={{ borderTop: `1px solid ${v.border}`, paddingTop: '0.75rem' }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 800, color: v.textSecondary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                 Savings Opportunities (Expected to Decrease)
               </span>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.25rem' }}>
                 {forecastData.expectedToDecrease.length === 0 ? (
-                  <div style={{ fontSize: '0.75rem', color: theme.textMuted, padding: '0.25rem 0' }}>No products expected to decrease.</div>
+                  <div style={{ fontSize: '0.75rem', color: v.textSecondary, padding: '0.25rem 0' }}>No products expected to decrease.</div>
                 ) : (
                   forecastData.expectedToDecrease.slice(0, 3).map(p => (
                     <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem' }}>
-                      <span style={{ fontWeight: 600, color: theme.textMain }}>{p.name}</span>
-                      <span style={{ fontWeight: 800, color: theme.green, background: 'rgba(16, 185, 129, 0.05)', padding: '0.1rem 0.4rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '2px' }}>
+                      <span style={{ fontWeight: 600, color: v.textPrimary }}>{p.name}</span>
+                      <span style={{ fontWeight: 800, color: v.green, background: 'rgba(16, 185, 129, 0.05)', padding: '0.1rem 0.4rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '2px' }}>
                         <TrendingDown style={{ width: 10, height: 10 }} /> {p.changePct.toFixed(1)}%
                       </span>
                     </div>
@@ -208,27 +223,27 @@ export default async function OfficerDashboard() {
 
         {/* Right Widget: Potential Savings KPI */}
         <div style={{
-          background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-          border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', padding: '1.5rem',
-          boxShadow: theme.shadow, display: 'flex', flexDirection: 'column', gap: '1rem'
+          background: v.surface,
+          border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
+          boxShadow: v.shadow, display: 'flex', flexDirection: 'column', gap: '1rem'
         }}>
           <div>
-            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: theme.textMain, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               💰 Potential Procurement Savings
             </h3>
-            <span style={{ fontSize: '0.75rem', color: theme.textMuted }}>Estimated budget impact of forecast-guided buying</span>
+            <span style={{ fontSize: '0.75rem', color: v.textSecondary }}>Estimated budget impact of forecast-guided buying</span>
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', gap: '0.25rem', margin: '0.5rem 0', alignItems: 'baseline' }}>
-              <span style={{ fontSize: '2.25rem', fontWeight: 900, color: theme.crimson }}>
+              <span style={{ fontSize: '2.25rem', fontWeight: 900, color: v.accent }}>
                 ₱{forecastData.potentialSavings.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             </div>
 
-            <div style={{ background: 'rgba(220, 179, 83, 0.05)', border: '1px solid rgba(220, 179, 83, 0.15)', borderRadius: '0.75rem', padding: '0.75rem 1rem', display: 'flex', alignItems: 'start', gap: '0.5rem' }}>
+            <div style={{ background: 'rgba(30,58,138,0.05)', border: `1px solid rgba(30,58,138,0.12)`, borderRadius: '0.75rem', padding: '0.75rem 1rem', display: 'flex', alignItems: 'start', gap: '0.5rem' }}>
               <Sparkles style={{ width: 16, height: 16, color: theme.goldDark, flexShrink: 0, marginTop: '2px' }} />
-              <p style={{ fontSize: '0.75rem', color: theme.textMain, margin: 0, lineHeight: 1.4 }}>
+              <p style={{ fontSize: '0.75rem', color: v.textPrimary, margin: 0, lineHeight: 1.4 }}>
                 <strong>Decision Tip:</strong> Procuring products marked with <strong>BUY NOW</strong> immediately avoids upcoming price spikes. Deferring items marked with <strong>WAIT FOR PRICE DROP</strong> captures upcoming savings.
               </p>
             </div>
@@ -239,11 +254,11 @@ export default async function OfficerDashboard() {
 
       {/* ── Recent RFQs Table ── */}
       <div style={{
-        background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: theme.shadow
+        background: v.surface,
+        border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
       }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(255,255,255,0.4)' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: theme.textMain, margin: 0 }}>Recent Solicitations</h2>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: v.textPrimary, margin: 0 }}>Recent Solicitations</h2>
           <span style={{ fontSize: '0.75rem', fontWeight: 600, color: theme.textMuted, background: 'rgba(0,0,0,0.04)', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
             Last {rfqs.length} records
           </span>
@@ -251,9 +266,9 @@ export default async function OfficerDashboard() {
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
             <thead>
-              <tr style={{ backgroundColor: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+              <tr style={{ backgroundColor: 'var(--section-bg)', borderBottom: `1px solid ${v.border}` }}>
                 {['RFQ No.', 'Title', 'Budget (₱)', 'Deadline', 'Status'].map(h => (
-                  <th key={h} style={{ padding: '1rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px', color: theme.textMuted, whiteSpace: 'nowrap' }}>
+                  <th key={h} style={{ padding: '0.875rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: v.textSecondary, whiteSpace: 'nowrap' }}>
                     {h}
                   </th>
                 ))}
@@ -261,21 +276,21 @@ export default async function OfficerDashboard() {
             </thead>
             <tbody>
               {rfqs.map((rfq) => {
-                const s = STATUS_STYLE[rfq.status] ?? { bg: '#f3f4f6', color: '#4b5563', border: '1px solid #e5e7eb' };
+                const s = STATUS_STYLE[rfq.status] ?? { bg: 'rgba(30,58,138,0.05)', color: v.textSecondary, border: `1px solid ${v.border}` };
                 return (
-                  <tr key={rfq.id} style={{ borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                  <tr key={rfq.id} style={{ borderBottom: `1px solid ${v.border}` }}>
                     <td style={{ padding: '1rem 1.5rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                      <a href={`/dashboard/officer/rfq/${rfq.id}`} style={{ color: theme.crimson, textDecoration: 'none' }}>
+                      <a href={`/dashboard/officer/rfq/${rfq.id}`} style={{ color: v.accent, textDecoration: 'none' }}>
                         {rfq.rfqNumber}
                       </a>
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', color: theme.textMain, maxWidth: '280px', fontWeight: 500 }}>
+                    <td style={{ padding: '1rem 1.5rem', color: v.textPrimary, maxWidth: '280px', fontWeight: 500 }}>
                       {rfq.title}
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', color: theme.textMuted, whiteSpace: 'nowrap', fontWeight: 600 }}>
+                    <td style={{ padding: '1rem 1.5rem', color: v.textSecondary, whiteSpace: 'nowrap', fontWeight: 600 }}>
                       ₱{Number(rfq.approvedBudgetContract).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', color: theme.textMuted, whiteSpace: 'nowrap', fontWeight: 500 }}>
+                    <td style={{ padding: '1rem 1.5rem', color: v.textSecondary, whiteSpace: 'nowrap', fontWeight: 500 }}>
                       {rfq.deadlineDate ? new Date(rfq.deadlineDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
                     </td>
                     <td style={{ padding: '1rem 1.5rem' }}>
@@ -292,7 +307,7 @@ export default async function OfficerDashboard() {
               })}
               {rfqs.length === 0 && (
                 <tr>
-                  <td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: theme.textMuted, fontWeight: 500 }}>
+                  <td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: v.textSecondary, fontWeight: 500 }}>
                     No solicitations found.
                   </td>
                 </tr>

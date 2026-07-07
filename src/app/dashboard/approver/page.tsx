@@ -41,69 +41,71 @@ export default async function ApproverDashboard() {
   await requireRole('Administrative Approver');
   const [stats, recs] = await Promise.all([getApproverStats(), getPendingRecommendations()]);
 
-  // Brand Colors
-  const theme = {
-    crimson: '#7e191b',
-    gold: '#dcb353',
-    goldDark: '#b88a1b',
-    dark: '#111827',
-    textMain: '#1f2937',
-    textMuted: '#6b7280',
-    glassBg: 'rgba(255, 255, 255, 0.7)',
-    glassBorder: 'rgba(255, 255, 255, 0.9)',
-    shadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
+  const v = {
+    surface: 'var(--surface)',
+    border: 'var(--border)',
+    accent: 'var(--accent)',
+    accentLight: 'var(--accent-light)',
+    textPrimary: 'var(--text-primary)',
+    textSecondary: 'var(--text-secondary)',
     green: '#10b981',
     yellow: '#d97706',
+    shadow: '0 4px 24px rgba(30,58,138,0.07)',
   };
 
   const statCards = [
-    { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: '📄', color: '#1f2937', desc: 'Bid opening records' },
-    { label: 'Pending Review',   value: stats.pendingReview, icon: '⏳', color: theme.crimson, desc: 'Awaiting approval' },
-    { label: 'Approved',         value: stats.approvedCount, icon: '✅', color: theme.gold, desc: 'Recommendations accepted' },
-    { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: '🔒', color: '#4b5563', desc: 'Recent trail entries' },
+    { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: '📄', color: v.accent,      desc: 'Bid opening records' },
+    { label: 'Pending Review',   value: stats.pendingReview, icon: '⏳', color: '#d97706',     desc: 'Awaiting approval' },
+    { label: 'Approved',         value: stats.approvedCount, icon: '✅', color: '#059669',     desc: 'Recommendations accepted' },
+    { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: '🔒', color: v.accentLight, desc: 'Recent trail entries' },
   ];
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', fontFamily: '"Inter", sans-serif' }}>
 
       {/* Header Section */}
-      <div>
-        <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: theme.textMain, margin: 0, letterSpacing: '-0.5px' }}>
-          Administrative Approver Portal
-        </h1>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: theme.textMuted, margin: '0.5rem 0 0 0' }}>
-          Review MCDM recommendations, approve canvas abstracts, and monitor audit trails.
-        </p>
+      <div style={{ borderBottom: `1px solid ${v.border}`, paddingBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div style={{ width: 5, height: 48, borderRadius: 4, background: `linear-gradient(180deg, ${v.accent}, ${v.accentLight})`, flexShrink: 0 }} />
+          <div>
+            <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: v.textPrimary, margin: 0, letterSpacing: '-0.5px' }}>
+              Administrative Approver Portal
+            </h1>
+            <p style={{ marginTop: '0.25rem', fontSize: '0.9rem', color: v.textSecondary, margin: '0.25rem 0 0 0' }}>
+              Review MCDM recommendations, approve canvas abstracts, and monitor audit trails.
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Stat Cards Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
         {statCards.map(card => (
           <div key={card.label} style={{
-            background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-            border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', padding: '1.5rem',
-            boxShadow: theme.shadow, position: 'relative', overflow: 'hidden'
+            background: v.surface,
+            border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
+            boxShadow: v.shadow, position: 'relative', overflow: 'hidden'
           }}>
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: card.color }} />
             <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{card.icon}</div>
-            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: theme.textMain, lineHeight: 1 }}>{card.value}</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: theme.textMain, marginTop: '0.5rem' }}>{card.label}</div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 500, color: theme.textMuted, marginTop: '0.25rem' }}>{card.desc}</div>
+            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>{card.value}</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: v.textPrimary, marginTop: '0.5rem' }}>{card.label}</div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 500, color: v.textSecondary, marginTop: '0.25rem' }}>{card.desc}</div>
           </div>
         ))}
       </div>
 
       {/* Pending MCDM Recommendations */}
       <div style={{
-        background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: theme.shadow
+        background: v.surface,
+        border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
       }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.4)', justifyContent: 'space-between' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: theme.textMain, margin: 0 }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: v.textPrimary, margin: 0 }}>
             Pending MCDM Recommendations
           </h2>
           {stats.pendingReview > 0 && (
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, background: 'rgba(126, 25, 27, 0.1)', color: theme.crimson, padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, background: 'rgba(30,58,138,0.08)', color: v.accent, padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
               {stats.pendingReview} awaiting review
             </span>
           )}
@@ -111,7 +113,7 @@ export default async function ApproverDashboard() {
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1.5rem' }}>
           {recs.length === 0 ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: theme.textMuted, fontSize: '0.9rem' }}>
+            <div style={{ padding: '3rem', textAlign: 'center', color: v.textSecondary, fontSize: '0.9rem' }}>
               All submissions cleared. No pending reviews at this time.
             </div>
           ) : (
@@ -163,22 +165,22 @@ export default async function ApproverDashboard() {
 
               const confidenceColor =
                 snapshot.confidenceLabel === "High"
-                  ? theme.green
+                  ? v.green
                   : snapshot.confidenceLabel === "Medium"
-                  ? theme.yellow
-                  : theme.crimson;
+                  ? v.yellow
+                  : v.accent;
 
               return (
                 <div
                   key={rec.id}
                   style={{
-                    border: '1px solid rgba(0,0,0,0.06)',
+                    border: `1px solid ${v.border}`,
                     borderRadius: '1.25rem',
-                    background: 'white',
+                    background: v.surface,
                     overflow: 'hidden',
                     display: 'flex',
                     flexDirection: 'column',
-                    boxShadow: '0 4px 15px rgba(0,0,0,0.02)'
+                    boxShadow: v.shadow
                   }}
                 >
                   {/* Card Header Banner */}
@@ -188,8 +190,8 @@ export default async function ApproverDashboard() {
                       alignItems: 'center',
                       justifyContent: 'space-between',
                       padding: '1rem 1.5rem',
-                      background: 'rgba(126,25,27,0.02)',
-                      borderBottom: '1px solid rgba(0,0,0,0.04)',
+                      background: 'rgba(30,58,138,0.03)',
+                      borderBottom: `1px solid ${v.border}`,
                       flexWrap: 'wrap',
                       gap: '1rem'
                     }}
@@ -203,35 +205,35 @@ export default async function ApproverDashboard() {
                           width: '28px',
                           height: '28px',
                           borderRadius: '50%',
-                          background: `linear-gradient(135deg, ${theme.gold}, ${theme.goldDark})`,
+                          background: `linear-gradient(135deg, ${v.accent}, ${v.accentLight})`,
                           color: 'white',
                           fontWeight: 800,
                           fontSize: '0.75rem',
-                          boxShadow: '0 2px 5px rgba(220,179,83,0.3)'
+                          boxShadow: '0 2px 5px rgba(30,58,138,0.3)'
                         }}
                       >
                         #{rec.rank}
                       </span>
                       <div>
-                        <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: theme.textMain, margin: 0 }}>
+                        <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: v.textPrimary, margin: 0 }}>
                           {(rec.supplier as any)?.companyName ?? 'Unknown Supplier'}
                         </h3>
-                        <span style={{ fontSize: '0.75rem', color: theme.textMuted }}>
+                        <span style={{ fontSize: '0.75rem', color: v.textSecondary }}>
                           Submitted for RFQ Ref: {rec.quote?.rfqId ? `RFQ-${rec.quote.rfqId}` : 'N/A'}
                         </span>
                       </div>
                     </div>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                      <div style={{ textAlign: 'right' }}>
-                        <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', fontWeight: 700, color: theme.textMuted }}>Overall MCDM Score</span>
-                        <div style={{ fontSize: '1.25rem', fontWeight: 900, color: theme.crimson, lineHeight: 1 }}>
-                          {Number(rec.compositeScore).toFixed(2)}
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', fontWeight: 700, color: v.textSecondary }}>Overall MCDM Score</span>
+                          <div style={{ fontSize: '1.25rem', fontWeight: 900, color: v.accent, lineHeight: 1 }}>
+                            {Number(rec.compositeScore).toFixed(2)}
+                          </div>
                         </div>
-                      </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', fontWeight: 700, color: theme.textMuted }}>Quoted Price</span>
-                        <div style={{ fontSize: '1.1rem', fontWeight: 800, color: theme.textMain, lineHeight: 1 }}>
+                        <div style={{ textAlign: 'right' }}>
+                          <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', fontWeight: 700, color: v.textSecondary }}>Quoted Price</span>
+                          <div style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>
                           ₱{Number((rec.quote as any)?.totalQuotedAmount ?? 0).toLocaleString('en-PH')}
                         </div>
                       </div>
@@ -243,7 +245,7 @@ export default async function ApproverDashboard() {
                     
                     {/* Left: Criteria score progress bars */}
                     <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', borderRight: '1px solid rgba(0,0,0,0.04)' }}>
-                      <h4 style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: theme.textMuted, letterSpacing: '0.5px', margin: '0 0 0.5rem 0' }}>
+                      <h4 style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: v.textSecondary, letterSpacing: '0.5px', margin: '0 0 0.5rem 0' }}>
                         Explainable Criteria Breakdown (Normalized)
                       </h4>
                       
@@ -253,9 +255,9 @@ export default async function ApproverDashboard() {
                           <span>Price Score ({(w.price * 100).toFixed(0)}%)</span>
                           <span>{priceCont} / {priceLimit}</span>
                         </div>
-                        <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                          <div style={{ width: `${rec.priceScore}%`, height: '100%', background: theme.crimson, borderRadius: '3px' }} />
-                        </div>
+                          <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                            <div style={{ width: `${rec.priceScore}%`, height: '100%', background: v.accent, borderRadius: '3px' }} />
+                          </div>
                       </div>
 
                       {/* Delivery */}
@@ -264,9 +266,9 @@ export default async function ApproverDashboard() {
                           <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><Truck style={{ width: 12, height: 12 }} /> Delivery</span>
                           <span>{deliveryCont} / {deliveryLimit}</span>
                         </div>
-                        <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                          <div style={{ width: `${rec.deliveryScore}%`, height: '100%', background: theme.gold, borderRadius: '3px' }} />
-                        </div>
+                          <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                            <div style={{ width: `${rec.deliveryScore}%`, height: '100%', background: v.accentLight, borderRadius: '3px' }} />
+                          </div>
                       </div>
 
                       {/* Reliability */}
@@ -275,9 +277,9 @@ export default async function ApproverDashboard() {
                           <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><ShieldCheck style={{ width: 12, height: 12 }} /> Reliability</span>
                           <span>{reliabilityCont} / {reliabilityLimit}</span>
                         </div>
-                        <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                          <div style={{ width: `${rec.reliabilityScore}%`, height: '100%', background: theme.green, borderRadius: '3px' }} />
-                        </div>
+                          <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
+                            <div style={{ width: `${rec.reliabilityScore}%`, height: '100%', background: v.green, borderRadius: '3px' }} />
+                          </div>
                       </div>
 
                       {/* Compliance */}
@@ -308,13 +310,13 @@ export default async function ApproverDashboard() {
                       
                       {/* Explanations */}
                       <div>
-                        <h4 style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: theme.textMuted, letterSpacing: '0.5px', margin: '0 0 0.5rem 0' }}>
+                        <h4 style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: v.textSecondary, letterSpacing: '0.5px', margin: '0 0 0.5rem 0' }}>
                           Recommendation Justification
                         </h4>
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
                           {snapshot.reason.split("\n").map((line, idx) => (
-                            <div key={idx} style={{ display: 'flex', alignItems: 'start', gap: '0.5rem', fontSize: '0.75rem', color: theme.textMain }}>
-                              <CheckCircle2 style={{ width: 14, height: 14, color: theme.green, marginTop: '1px', flexShrink: 0 }} />
+                            <div key={idx} style={{ display: 'flex', alignItems: 'start', gap: '0.5rem', fontSize: '0.75rem', color: v.textPrimary }}>
+                              <CheckCircle2 style={{ width: 14, height: 14, color: v.green, marginTop: '1px', flexShrink: 0 }} />
                               <span>{line.replace(/^•\s*/, "")}</span>
                             </div>
                           ))}
@@ -322,30 +324,30 @@ export default async function ApproverDashboard() {
                       </div>
 
                       {/* Historical Prices & ARIMA Forecasting Link */}
-                      <div style={{ background: '#f9fafb', border: '1px solid rgba(0,0,0,0.04)', borderRadius: '0.75rem', padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                        <h5 style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: theme.textMuted, margin: 0, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <div style={{ background: 'var(--section-bg)', border: `1px solid ${v.border}`, borderRadius: '0.75rem', padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          <h5 style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: v.textSecondary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
                           <TrendingUpDown style={{ width: 12, height: 12 }} /> Historical Price Intelligence
                         </h5>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.7rem' }}>
-                          <div>Average: <strong>{snapshot.historicalAvgPrice ? formatCurrency(snapshot.historicalAvgPrice) : 'N/A'}</strong></div>
-                          <div>Lowest: <strong>{snapshot.historicalMinPrice ? formatCurrency(snapshot.historicalMinPrice) : 'N/A'}</strong></div>
-                          <div>Latest: <strong>{snapshot.historicalLatestPrice ? formatCurrency(snapshot.historicalLatestPrice) : 'N/A'}</strong></div>
-                          <div>Forecast: <strong style={{ color: snapshot.forecastTrend === 'increasing' ? theme.crimson : theme.green }}>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.7rem' }}>
+                            <div>Average: <strong>{snapshot.historicalAvgPrice ? formatCurrency(snapshot.historicalAvgPrice) : 'N/A'}</strong></div>
+                            <div>Lowest: <strong>{snapshot.historicalMinPrice ? formatCurrency(snapshot.historicalMinPrice) : 'N/A'}</strong></div>
+                            <div>Latest: <strong>{snapshot.historicalLatestPrice ? formatCurrency(snapshot.historicalLatestPrice) : 'N/A'}</strong></div>
+                            <div>Forecast: <strong style={{ color: snapshot.forecastTrend === 'increasing' ? v.accent : v.green }}>
                             {snapshot.forecastTrend ? snapshot.forecastTrend.toUpperCase() : 'UNKNOWN'}
                           </strong></div>
                         </div>
-                        {snapshot.expectedChange && (
-                          <div style={{ fontSize: '0.7rem', color: theme.textMuted, borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.25rem', marginTop: '0.25rem', display: 'flex', justifyContent: 'space-between' }}>
-                            <span>Expected Change:</span>
-                            <span style={{ fontWeight: 800, color: snapshot.expectedChange.startsWith('+') ? theme.crimson : theme.green }}>{snapshot.expectedChange}</span>
-                          </div>
-                        )}
+                          {snapshot.expectedChange && (
+                            <div style={{ fontSize: '0.7rem', color: v.textSecondary, borderTop: `1px solid ${v.border}`, paddingTop: '0.25rem', marginTop: '0.25rem', display: 'flex', justifyContent: 'space-between' }}>
+                              <span>Expected Change:</span>
+                              <span style={{ fontWeight: 800, color: snapshot.expectedChange.startsWith('+') ? v.accent : v.green }}>{snapshot.expectedChange}</span>
+                            </div>
+                          )}
                       </div>
 
                       {/* Confidence & Action Bar */}
-                      <div style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', flexWrap: 'wrap', gap: '0.75rem' }}>
-                        <div>
-                          <span style={{ fontSize: '0.65rem', color: theme.textMuted }}>Confidence: </span>
+                        <div style={{ borderTop: `1px solid ${v.border}`, paddingTop: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', flexWrap: 'wrap', gap: '0.75rem' }}>
+                          <div>
+                            <span style={{ fontSize: '0.65rem', color: v.textSecondary }}>Confidence: </span>
                           <span style={{ fontSize: '0.8rem', fontWeight: 800, color: confidenceColor }}>
                             {snapshot.confidenceLabel} ({snapshot.confidence}%)
                           </span>
@@ -364,26 +366,26 @@ export default async function ApproverDashboard() {
 
       {/* Audit Trail */}
       <div style={{
-        background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: theme.shadow
+        background: v.surface,
+        border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
       }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(0,0,0,0.06)', backgroundColor: 'rgba(255,255,255,0.4)' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: theme.textMain, margin: 0 }}>Recent Audit Trail</h2>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}` }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: v.textPrimary, margin: 0 }}>Recent Audit Trail</h2>
         </div>
         <div>
           {stats.recentAuditLogs.map((log: any) => (
-            <div key={log.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.5rem', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
-              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: theme.gold, flexShrink: 0, boxShadow: `0 0 8px ${theme.gold}` }} />
-              <div style={{ flex: 1, fontSize: '0.85rem', fontWeight: 600, color: theme.textMain }}>
+            <div key={log.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.5rem', borderBottom: `1px solid ${v.border}` }}>
+              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: v.accent, flexShrink: 0, boxShadow: `0 0 8px ${v.accent}` }} />
+              <div style={{ flex: 1, fontSize: '0.85rem', fontWeight: 600, color: v.textPrimary }}>
                 {log.action}
               </div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: theme.textMuted, backgroundColor: '#f3f4f6', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
+              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: v.textSecondary, backgroundColor: 'var(--section-bg)', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
                 {new Date(log.createdAt).toLocaleString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
               </div>
             </div>
           ))}
           {stats.recentAuditLogs.length === 0 && (
-            <div style={{ padding: '2rem', textAlign: 'center', color: theme.textMuted, fontSize: '0.9rem' }}>
+            <div style={{ padding: '2rem', textAlign: 'center', color: v.textSecondary, fontSize: '0.9rem' }}>
               No audit entries recorded yet.
             </div>
           )}
