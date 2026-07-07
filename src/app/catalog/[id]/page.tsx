@@ -270,7 +270,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
             {/* CTA Buttons */}
             <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2">
               <Link
-                href={`/dashboard/end-user/ppmp?add_product=${product.id}`}
+                href={`/end-user/ppmp?add_product=${product.id}`}
                 className="flex items-center justify-center gap-2 rounded-xl border-2 px-4 py-3 text-sm font-bold transition-all hover:shadow-md"
                 style={{
                   borderColor: "var(--accent)",

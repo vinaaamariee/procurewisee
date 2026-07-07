@@ -176,7 +176,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               Details
             </Link>
             <Link
-              href={`/dashboard/end-user/ppmp?add_product=${product.id}`}
+              href={`/end-user/ppmp?add_product=${product.id}`}
               className="flex items-center justify-center gap-1 py-2 px-3 rounded-lg text-white font-bold text-[10px] hover:opacity-90 transition duration-150 cursor-pointer"
               style={{ background: "linear-gradient(135deg, var(--accent) 0%, #1e40af 100%)" }}
             >
