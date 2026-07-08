@@ -41,4 +41,3 @@ flowchart TD
 ### 2. Supplier Registration
 * **Account Creation**: Registers credentials on Supabase Auth, triggering an automatic sync into the `user_profiles` database table.
 * **Vendor Database**: Saves business details (TIN, contact numbers, and business address) into the `suppliers` database table.
-
