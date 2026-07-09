@@ -1,5 +1,8 @@
 # ProcureWise System Flowcharts
 
+> [!NOTE]
+> This document presents the logical workflows of the ProcureWise Procurement Management System. Certain implementation details such as middleware execution, validation routines, API layers, and database transactions have been abstracted for clarity while preserving the actual business workflow.
+
 This document consolidates the system workflows and process architectures of the **ProcureWise Procurement Management System** at Batanes State College. These flowcharts are designed to be thesis-ready, professional, fully connected, and directly representative of the actual system implementation.
 
 ---
@@ -9,7 +12,7 @@ This document consolidates the system workflows and process architectures of the
 Every flowchart in this documentation adheres to the following strict modeling criteria:
 * **Start / End**: Represented by a Terminator `([Start])` / `([End])`. Exactly one Start and one End node are present per diagram.
 * **Process**: Represented by a Rectangle `[Process]`.
-* **Decision**: Represented by a Diamond `{"Decision?"}`. All decisions contain explicit `Yes` and `No` branches (or equivalent logical binaries).
+* **Decision**: Represented by a Diamond `{"Decision?"}`. All decisions contain explicit `Yes` and `No` (or equivalent logical selection) branches.
 * **Input / Output**: Represented by a Parallelogram `[\Input / Output/]` for data exchange or document generation.
 * **Database**: Represented by a Cylinder `[(Database)]` when reading or writing persistent database records.
 * **Structure**: Clean, top-to-bottom layout with zero orphan/floating nodes and no crossing connectors.
@@ -17,120 +20,79 @@ Every flowchart in this documentation adheres to the following strict modeling c
 ---
 
 ## 1. Overall ProcureWise System Workflow
-This master workflow maps the entire procurement lifecycle from initial user entry down to forecasting updates and analytics.
-
-```mermaid
-flowchart TD
-    %% Node Definitions
-    StartNode([Start])
-    Access[User Accesses ProcureWise Portal]
-    
-    %% Decision Chain for Entry Mode
-    DecidePublic{"Choose Public Requisition?"}
-    DecidePPMP{"Choose PPMP Planning?"}
-    DecideOfficer{"Choose Officer Operations?"}
-    DecideSupplier{"Choose Supplier Quotation?"}
-    
-    %% Branch Paths
-    PubReq[[\Submit Public Requisition/]]
-    PPMPPlan[[\Draft & Submit PPMP/]]
-    OffOps[Review Requisitions & Manage RFQs]
-    SupQuot[[\Submit Supplier Quotations/]]
-    
-    %% Requisition/Planning to PR
-    GenPR[Generate Purchase Request]
-    CreateRFQ[Create RFQ Solicitation]
-    PublishRFQ[Publish RFQ to Suppliers]
-    
-    %% Canvassing and Recommendation
-    MCDMEval[Run MCDM Evaluation Engine]
-    DecideApprove{"Is Recommendation Approved?"}
-    GenPO[Generate Purchase Order]
-    Deliver[Supplier Delivery & Inspection]
-    Evaluate[Perform Supplier Evaluation]
-    RecordPrice[Record Historical Price]
-    DB_Price[(historical_prices DB)]
-    ARIMAForecast[Run ARIMA Price Forecasting]
-    UpdateDash[Update Analytics Dashboard]
-    
-    Revise[Return to Procurement Officer for Revision]
-    
-    EndNode([End])
-
-    %% Flow Connections
-    StartNode --> Access
-    Access --> DecidePublic
-    
-    DecidePublic -->|Yes| PubReq
-    DecidePublic -->|No| DecidePPMP
-    
-    DecidePPMP -->|Yes| PPMPPlan
-    DecidePPMP -->|No| DecideOfficer
-    
-    DecideOfficer -->|Yes| OffOps
-    DecideOfficer -->|No| DecideSupplier
-    
-    DecideSupplier -->|Yes| SupQuot
-    DecideSupplier -->|No| EndNode
-    
-    PubReq --> GenPR
-    PPMPPlan --> GenPR
-    GenPR --> CreateRFQ
-    
-    OffOps --> CreateRFQ
-    CreateRFQ --> PublishRFQ
-    
-    PublishRFQ --> SupQuot
-    SupQuot --> MCDMEval
-    
-    MCDMEval --> DecideApprove
-    
-    DecideApprove -->|Yes| GenPO
-    DecideApprove -->|No| Revise
-    
-    Revise --> OffOps
-    
-    GenPO --> Deliver
-    Deliver --> Evaluate
-    Evaluate --> RecordPrice
-    RecordPrice --> DB_Price
-    DB_Price --> ARIMAForecast
-    ARIMAForecast --> UpdateDash
-    UpdateDash --> EndNode
-```
-
----
-
-## 2. Procurement Workflow
-This diagram illustrates the unified, continuous procurement pipeline: planning (PPMP), purchase requesting (PR), solicitation (RFQ), bidding, objective scoring (MCDM), purchasing (PO), delivery, evaluation, and pricing audits.
+This master workflow maps the high-level stages of the complete procurement lifecycle, branching into planned or public requisition paths before compiling purchase requests, solicitude RFQs, recommendations, delivery, and time-series forecasting.
 
 ```mermaid
 flowchart TD
     %% Node Definitions
     StartNode([Start])
     IdentifyNeed[Identify Procurement Need]
-    CreatePPMP[Create Project Procurement Management Plan]
-    DecidePPMP{"Is PPMP Approved?"}
+    DecideRoute{"Planned Procurement (PPMP)?"}
+    PPMP[PPMP Planning]
+    Requisition[Public Requisition]
+    PurchaseRequest[Purchase Request]
+    RFQ[Request for Quotation - RFQ]
+    SupQuotes[[\Supplier Quotations/]]
+    BestValueRecommend[Best-Value Recommendation]
+    GenPO[Generate Purchase Order]
+    Deliver[Supplier Delivery & Inspection]
+    Evaluate[Supplier Evaluation]
+    PriceUpdate[Historical Price Update]
+    AnalyticsForecast[Analytics & Forecasting]
+    EndNode([End])
+
+    %% Connections
+    StartNode --> IdentifyNeed
+    IdentifyNeed --> DecideRoute
+    DecideRoute -->|Yes| PPMP
+    DecideRoute -->|No| Requisition
+    PPMP --> PurchaseRequest
+    Requisition --> PurchaseRequest
+    PurchaseRequest --> RFQ
+    RFQ --> SupQuotes
+    SupQuotes --> BestValueRecommend
+    BestValueRecommend --> GenPO
+    GenPO --> Deliver
+    Deliver --> Evaluate
+    Evaluate --> PriceUpdate
+    PriceUpdate --> AnalyticsForecast
+    AnalyticsForecast --> EndNode
+```
+
+---
+
+## 2. Procurement Workflow
+This diagram illustrates the detailed operational procurement pipeline, incorporating the planning, approval, canvassing, scoring, and performance evaluation stages.
+
+```mermaid
+flowchart TD
+    %% Node Definitions
+    StartNode([Start])
+    IdentifyNeed[Identify Procurement Need]
+    CreatePPMP[Create PPMP]
+    DecidePPMP{"PPMP Approved?"}
     ReturnPPMP[Return PPMP for Revision]
     
-    GenPR[[\Generate Purchase Request/]]
-    DecidePR{"Is Purchase Request Approved?"}
+    CreatePR[Create Purchase Request]
+    DecidePR{"Purchase Request Approved?"}
     ReturnPR[Return PR for Revision]
     
-    CreateRFQ[Create Request for Quotation]
+    CreateRFQ[Create RFQ]
     ReceiveQuotes[[\Receive Supplier Quotations/]]
     GenAbstract[Generate Canvas Abstract]
     RunMCDM[Run MCDM Recommendation Engine]
     
-    DecideRec{"Is Recommendation Approved?"}
+    DecideRec{"Recommendation Approved?"}
     ReturnOfficer[Return to Procurement Officer for Revision]
     
     GenPO[Generate Purchase Order]
-    Delivery[Supplier Delivery & Inspection]
+    Delivery[Supplier Delivery]
     Receipt[[\Acknowledgement Receipt/]]
-    Evaluate[Perform Supplier Evaluation]
-    UpdatePrice[Update Historical Price]
-    DB_Price[(historical_prices DB)]
+    Evaluate[Supplier Evaluation]
+    UpdateRating[Update Supplier Rating]
+    UpdatePrice[Historical Price Update]
+    DB_Price[(Historical Prices Database)]
+    ForecastRefresh[Analytics & Forecast Refresh]
     
     EndNode([End])
 
@@ -139,14 +101,14 @@ flowchart TD
     IdentifyNeed --> CreatePPMP
     CreatePPMP --> DecidePPMP
     
-    DecidePPMP -->|Yes| GenPR
+    DecidePPMP -->|Yes| CreatePR
     DecidePPMP -->|No| ReturnPPMP
     ReturnPPMP --> CreatePPMP
     
-    GenPR --> DecidePR
+    CreatePR --> DecidePR
     DecidePR -->|Yes| CreateRFQ
     DecidePR -->|No| ReturnPR
-    ReturnPR --> GenPR
+    ReturnPR --> CreatePR
     
     CreateRFQ --> ReceiveQuotes
     ReceiveQuotes --> GenAbstract
@@ -160,65 +122,66 @@ flowchart TD
     GenPO --> Delivery
     Delivery --> Receipt
     Receipt --> Evaluate
-    Evaluate --> UpdatePrice
+    Evaluate --> UpdateRating
+    UpdateRating --> UpdatePrice
     UpdatePrice --> DB_Price
-    DB_Price --> EndNode
+    DB_Price --> ForecastRefresh
+    ForecastRefresh --> EndNode
 ```
 
 ---
 
 ## 3. Intelligent Procurement Analytics Workflow
-This diagram isolates the forecasting and analytical components, illustrating how historical price feeds are parsed, validated using MAPE backtesting, and evaluated for purchasing optimization.
+This diagram illustrates the time-series pricing analysis and decision support system workflow, verifying the minimum historical dataset before executing the ARIMA forecasting model.
 
 ```mermaid
 flowchart TD
     %% Node Definitions
     StartNode([Start])
     POCompleted[Purchase Order Completed]
-    StorePrice[Record Historical Price]
-    DB_Price[(historical_prices DB)]
-    UpdateDataset[Update Historical Dataset]
+    RecordPrice[Record Historical Price]
+    DB_Price[(Historical Prices Database)]
     
-    DecideData{"Enough Historical Records? >= 6 Months"}
-    FallbackPrice[Use Current Estimated Cost from Catalog]
+    DecideData{"Minimum Historical Data Available?"}
+    EstimatedCost[Use Estimated Catalog Cost]
     
-    FitARIMA[Fit ARIMA Model]
-    RunForecast[Run ARIMA Forecast Pipeline]
-    CalcMAPE[Calculate MAPE via Backtesting]
-    Confidence[Determine Forecast Confidence Tier]
-    Trend[Generate Forecast Trend]
-    DecisionEngine[Run Strategic Decision Engine]
+    RunARIMA[Run ARIMA]
+    GenForecast[Generate Forecast]
+    Trend[Generate Trend]
+    CalcMAPE[Calculate MAPE]
+    Confidence[Determine Confidence Tier]
+    DecisionEngine[Strategic Decision Engine]
     UpdateDash[Update Analytics Dashboard]
-    Recommend[Provide Strategic Procurement Recommendation]
+    Recommend[Generate Procurement Recommendation]
     
     EndNode([End])
 
     %% Flow Connections
     StartNode --> POCompleted
-    POCompleted --> StorePrice
-    StorePrice --> DB_Price
-    DB_Price --> UpdateDataset
-    UpdateDataset --> DecideData
+    POCompleted --> RecordPrice
+    RecordPrice --> DB_Price
+    DB_Price --> DecideData
     
-    DecideData -->|Yes| FitARIMA
-    DecideData -->|No| FallbackPrice
+    DecideData -->|Yes| RunARIMA
+    DecideData -->|No| EstimatedCost
     
-    FitARIMA --> RunForecast
-    RunForecast --> CalcMAPE
+    RunARIMA --> GenForecast
+    GenForecast --> Trend
+    Trend --> CalcMAPE
     CalcMAPE --> Confidence
-    Confidence --> Trend
-    Trend --> DecisionEngine
+    Confidence --> DecisionEngine
     DecisionEngine --> UpdateDash
     UpdateDash --> Recommend
     Recommend --> EndNode
     
-    FallbackPrice --> UpdateDash
+    EstimatedCost --> UpdateDashNo[Update Analytics Dashboard]
+    UpdateDashNo --> EndNode
 ```
 
 ---
 
 ## 4. Public User Workflow
-This workflow displays the application paths accessible to public, unauthenticated end-users on the platform.
+This flowchart outlines the transaction routes available to public, unauthenticated platform visitors: catalog browsing, drafting plans, requisitions, and checking tracking status.
 
 ```mermaid
 flowchart TD
@@ -226,146 +189,125 @@ flowchart TD
     StartNode([Start])
     OpenWeb[Open Website]
     BrowseCatalog[[\Browse Procurement Catalog/]]
-    
-    DecidePPMP{"Choose Action: Create PPMP?"}
-    DecidePR{"Choose Action: Submit Purchase Request?"}
-    DecideTrack{"Choose Action: Track Request?"}
+    DecideTx{"Select Transaction"}
     
     %% PPMP Branch
-    SelectDeptPPMP[Select Department]
-    AddProdPPMP[Add Products from Catalog]
+    DeptSelect[Department Selection]
+    AddProdPPMP[Add Products]
     SubmitPPMP[[\Submit PPMP/]]
     
     %% PR Branch
-    FillPR[Fill Request Information]
-    AddProdPR[Add Products from Catalog]
-    SubmitPR[[\Submit Requisition/]]
-    ReceiveCode[[\Receive Tracking Code/]]
+    FillReqInfo[Fill Request Information]
+    AddProdPR[Add Products]
+    SubmitReq[[\Submit Requisition/]]
+    ReceiveTrackCode[[\Receive Tracking Code/]]
     
     %% Track Branch
-    EnterCode[[\Enter Tracking Code/]]
-    QueryDB[Retrieve Request Status]
-    DB_Requisitions[(requisitions DB)]
-    ShowTimeline[[\Display Timeline/]]
+    EnterTrackCode[[\Enter Tracking Code/]]
+    RetrieveReq[Retrieve Request]
+    DB_Requisitions[(Requisitions Database)]
+    DisplayTracking[[\Display Requisition Tracking Page/]]
     
     EndNode([End])
 
     %% Flow Connections
     StartNode --> OpenWeb
     OpenWeb --> BrowseCatalog
-    BrowseCatalog --> DecidePPMP
+    BrowseCatalog --> DecideTx
     
-    DecidePPMP -->|Yes| SelectDeptPPMP
-    DecidePPMP -->|No| DecidePR
+    DecideTx -->|Create PPMP| DeptSelect
+    DecideTx -->|Submit Purchase Request| FillReqInfo
+    DecideTx -->|Track Request| EnterTrackCode
     
-    SelectDeptPPMP --> AddProdPPMP
+    DeptSelect --> AddProdPPMP
     AddProdPPMP --> SubmitPPMP
     SubmitPPMP --> EndNode
     
-    DecidePR -->|Yes| FillPR
-    DecidePR -->|No| DecideTrack
+    FillReqInfo --> AddProdPR
+    AddProdPR --> SubmitReq
+    SubmitReq --> ReceiveTrackCode
+    ReceiveTrackCode --> EndNode
     
-    FillPR --> AddProdPR
-    AddProdPR --> SubmitPR
-    SubmitPR --> ReceiveCode
-    ReceiveCode --> EndNode
-    
-    DecideTrack -->|Yes| EnterCode
-    DecideTrack -->|No| EndNode
-    
-    EnterCode --> QueryDB
-    QueryDB --> DB_Requisitions
-    DB_Requisitions --> ShowTimeline
-    ShowTimeline --> EndNode
+    EnterTrackCode --> RetrieveReq
+    RetrieveReq --> DB_Requisitions
+    DB_Requisitions --> DisplayTracking
+    DisplayTracking --> EndNode
 ```
 
 ---
 
 ## 5. User Access Workflow
-This flowchart maps the user roles authenticated by the security gateway, outlining the actions and dashboards each role can access.
+This flowchart details user dashboard routing based on role credentials resolved by the secure database profile gate.
 
 ```mermaid
 flowchart TD
     %% Node Definitions
     StartNode([Start])
-    Access[Access ProcureWise Portal]
+    AccessPortal[Access ProcureWise Portal]
     DecideAuth{"Is User Authenticated?"}
     
-    %% Public User Branch
-    PublicPortal[Redirect to Public Portal]
-    PublicActions[[\Browse Catalog, Submit PPMP/PR, & Track/]]
+    %% Unauthenticated Path
+    RedirectLogin[Redirect to Login / Public Portal]
+    PublicActions[[\Public Actions/]]
     
-    %% Authenticated Branch
-    GetRole[Retrieve User Profile & Role]
-    DB_Profiles[(user_profiles DB)]
+    %% Authenticated Path
+    RetrieveProfile[Retrieve User Profile]
+    DB_Profiles[(User Profiles Database)]
+    DetermineRole[Determine User Role]
     
-    DecideAdmin{"Is Role: Administrator?"}
-    DecideOfficer{"Is Role: Procurement Officer?"}
-    DecideApprover{"Is Role: Administrative Approver?"}
-    DecideSupplier{"Is Role: Supplier?"}
-    DecideEndUser{"Is Role: End User?"}
+    %% Admin Branch
+    AdminDash[Administrator Dashboard]
+    AdminActions[Administrator Actions]
     
-    AdminDash[Load Administrator Dashboard]
-    AdminActions[Manage Users, Catalog, Budgets, & System Settings]
+    %% Officer Branch
+    OfficerDash[Officer Dashboard]
+    OfficerActions[Officer Actions]
     
-    OfficerDash[Load Officer Dashboard]
-    OfficerActions[Review Requisitions, Manage PPMP, Create RFQs, Generate POs, & Manage Suppliers]
+    %% Approver Branch
+    ApproverDash[Approver Dashboard]
+    ApproverActions[Approver Actions]
     
-    ApproverDash[Load Approver Dashboard]
-    ApproverActions[Approve PPMP, Approve PR, & Review/Approve Recommendations]
+    %% Supplier Branch
+    SupplierDash[Supplier Dashboard]
+    SupplierActions[Supplier Actions]
     
-    SupplierDash[Load Supplier Portal]
-    SupplierActions[View RFQs, Submit Quotations, & Track Purchase Orders]
-    
+    %% End User Branch
     EndUserDash[Load End User Dashboard]
-    EndUserActions[Manage PPMP, View Requests, & Evaluate Suppliers]
-    
-    AccessDenied[Access Denied / Redirect to Login]
+    EndUserActions[End User Actions]
     
     EndNode([End])
 
     %% Flow Connections
-    StartNode --> Access
-    Access --> DecideAuth
+    StartNode --> AccessPortal
+    AccessPortal --> DecideAuth
     
-    DecideAuth -->|No| PublicPortal
-    DecideAuth -->|Yes| GetRole
+    DecideAuth -->|No| RedirectLogin
+    DecideAuth -->|Yes| RetrieveProfile
     
-    PublicPortal --> PublicActions
+    RedirectLogin --> PublicActions
     PublicActions --> EndNode
     
-    GetRole --> DB_Profiles
-    DB_Profiles --> DecideAdmin
+    RetrieveProfile --> DB_Profiles
+    DB_Profiles --> DetermineRole
     
-    DecideAdmin -->|Yes| AdminDash
-    DecideAdmin -->|No| DecideOfficer
+    DetermineRole -->|Administrator| AdminDash
+    DetermineRole -->|Procurement Officer| OfficerDash
+    DetermineRole -->|Administrative Approver| ApproverDash
+    DetermineRole -->|Supplier| SupplierDash
+    DetermineRole -->|End User| EndUserDash
     
     AdminDash --> AdminActions
     AdminActions --> EndNode
     
-    DecideOfficer -->|Yes| OfficerDash
-    DecideOfficer -->|No| DecideApprover
-    
     OfficerDash --> OfficerActions
     OfficerActions --> EndNode
-    
-    DecideApprover -->|Yes| ApproverDash
-    DecideApprover -->|No| DecideSupplier
     
     ApproverDash --> ApproverActions
     ApproverActions --> EndNode
     
-    DecideSupplier -->|Yes| SupplierDash
-    DecideSupplier -->|No| DecideEndUser
-    
     SupplierDash --> SupplierActions
     SupplierActions --> EndNode
     
-    DecideEndUser -->|Yes| EndUserDash
-    DecideEndUser -->|No| AccessDenied
-    
     EndUserDash --> EndUserActions
     EndUserActions --> EndNode
-    
-    AccessDenied --> EndNode
 ```

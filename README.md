@@ -586,12 +586,22 @@ The flowcharts include:
 1. **Overall ProcureWise System Workflow**: Master procurement lifecycle from public user entry to time-series forecasting.
 2. **Procurement Workflow**: Continuous process detailing planning (PPMP), requisitions (PR), solicitations (RFQ), scoring (MCDM), purchasing (PO), delivery, evaluation, and price updates.
 3. **Intelligent Procurement Analytics Workflow**: Focused workflow of time-series feeds, ARIMA pipeline execution, MAPE validation, confidence tiers, and strategic recommendation output.
-4. **Public User Workflow**: Action path for unauthenticated users accessing catalog browsing, requisitions, and tracking.
+4. **Public User Workflow**: Browse Catalog, Create PPMP Planning Draft, Submit Purchase Requisition, Track Requisition Status.
 5. **User Access Workflow**: Authenticated system entry mapping roles (Administrator, Procurement Officer, Administrative Approver, Supplier, and End User) to dashboard options.
 
 Access the full interactive flowcharts here:
 * [ProcureWise System Flowcharts](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/system_flowcharts.md)
 * [Archived Legacy Flowcharts](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/archived-flowcharts/)
+
+---
+
+## 📚 System Documentation
+
+The system workflows, database relationships, and logical data flows are documented in the following reference guides:
+* [System Flowcharts](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/system_flowcharts.md)
+* [Entity Relationship Diagram](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/erd.md)
+* [Data Flow Diagrams](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/data_flow_diagrams.md)
+
 
 
 
