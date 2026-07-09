@@ -72,6 +72,80 @@ export async function createReceiptAction(input: CreateReceiptInput) {
             }
           });
         }
+
+        // Generate HistoricalPrice records for each item in the PO
+        const poItems = await tx.purchaseOrderItem.findMany({
+          where: { poId: po.id }
+        });
+
+        const rfq = po.rfqId ? await tx.requestForQuote.findUnique({
+          where: { id: po.rfqId },
+          include: {
+            items: {
+              include: {
+                unit: true,
+                product: true
+              }
+            }
+          }
+        }) : null;
+
+        if (rfq) {
+          for (const item of poItems) {
+            const rfqItem = rfq.items.find(ri => ri.particulars === item.description) || rfq.items[0];
+            if (rfqItem) {
+              const productId = rfqItem.productId || null;
+              const unitId = rfqItem.unitId || null;
+              const unitName = rfqItem.unit?.name || "piece";
+
+              const date = new Date();
+              const sourceMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+              const sourceMonth = sourceMonths[date.getMonth()];
+              const sourceYear = date.getFullYear();
+
+              try {
+                await tx.historicalPrice.upsert({
+                  where: {
+                    procurementNumber_rawProductName: {
+                      procurementNumber: po.poNumber,
+                      rawProductName: item.description
+                    }
+                  },
+                  update: {
+                    productId,
+                    supplierId: po.supplierId,
+                    supplierName: supplier?.companyName || "Unknown",
+                    quantity: item.quantity,
+                    unitPrice: item.unitPrice,
+                    totalPrice: item.totalCost,
+                    procurementDate: date,
+                    sourceMonth,
+                    sourceYear,
+                    unit: unitName,
+                    unitId
+                  },
+                  create: {
+                    productId,
+                    supplierId: po.supplierId,
+                    supplierName: supplier?.companyName || "Unknown",
+                    procurementNumber: po.poNumber,
+                    rawProductName: item.description,
+                    quantity: item.quantity,
+                    unitPrice: item.unitPrice,
+                    totalPrice: item.totalCost,
+                    procurementDate: date,
+                    sourceMonth,
+                    sourceYear,
+                    unit: unitName,
+                    unitId
+                  }
+                });
+              } catch (e) {
+                console.warn("[HISTORICAL PRICE] Failed to record item:", item.description, e);
+              }
+            }
+          }
+        }
       }
 
       return receipt;
