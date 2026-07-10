@@ -597,10 +597,11 @@ Access the full interactive flowcharts here:
 
 ## 📚 System Documentation
 
-The system workflows, database relationships, and logical data flows are documented in the following reference guides:
+The system workflows, database relationships, logical data flows, and use case diagrams are documented in the following reference guides:
 * [System Flowcharts](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/system_flowcharts.md)
 * [Entity Relationship Diagram](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/erd.md)
 * [Data Flow Diagrams](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/data_flow_diagrams.md)
+* [UML Use Case Diagram](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/use_case_diagram.md)
 * [Development Roadmap](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/development_roadmap.md)
 * [Final Development Roadmap](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/final_development_roadmap.md)
 
