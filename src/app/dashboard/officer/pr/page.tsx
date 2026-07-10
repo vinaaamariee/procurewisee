@@ -5,39 +5,28 @@ import PrAuditClient from "./PrAuditClient";
 export const metadata = { title: "Purchase Request Auditing — ProcureWise" };
 
 export default async function PrAuditingPage() {
-  const { profile } = await requireRole("Procurement Officer");
+  await requireRole("Procurement Officer");
 
-  // Fetch all Purchase Requests that are submitted or being audited
+  // Fetch only lightweight Purchase Request summary data for the cards grid
   const prs = await prisma.purchaseRequest.findMany({
     where: {
       status: {
         in: ["Submitted", "UnderReview", "ReturnedForRevision", "Approved", "Received"]
       }
     },
-    include: {
-      items: {
-        include: {
-          product: true
-        }
-      },
-      ppmp: true,
-      requestedBy: true,
-      assignedOfficer: true
+    select: {
+      id: true,
+      prNumber: true,
+      department: true,
+      requestDate: true,
+      totalCost: true,
+      status: true,
+      purpose: true,
     },
     orderBy: {
       updatedAt: "desc"
     }
   });
-
-  // Fetch all department budgets to feed into the checker
-  const budgetsList = await prisma.departmentBudget.findMany({});
-  const budgets = budgetsList.reduce((acc, b) => {
-    acc[b.department] = {
-      allocatedBudget: Number(b.allocatedBudget),
-      spentBudget: Number(b.spentBudget)
-    };
-    return acc;
-  }, {} as Record<string, { allocatedBudget: number; spentBudget: number }>);
 
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
@@ -50,7 +39,7 @@ export default async function PrAuditingPage() {
         </p>
       </div>
 
-      <PrAuditClient initialPrs={prs as any} officerId={profile.id} budgets={budgets} />
+      <PrAuditClient initialPrs={prs as any} />
     </div>
   );
 }
