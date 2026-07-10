@@ -101,7 +101,7 @@ The system has been verified under standard user personas:
 
 | Role / Persona | Completed Actions Checked | Status |
 | :--- | :--- | :--- |
-| **Administrator** | User Account creation, Catalog specifications curation, Budget allocations setup. | `✅ Pass` |
+| **Administrator** | User Account creation, Catalog specifications curation, System configuration setup. | `✅ Pass` |
 | **Procurement Officer** | Requisition checklist auditing, RFQ sequential drafting, MCDM canvas evaluation. | `✅ Pass` |
 | **Administrative Approver** | Audit queue approvals for PPMP drafts, PR forms, and recommendations. | `✅ Pass` |
 | **Supplier** | Bid quotation submissions, PO conforme agreements. | `✅ Pass` |
