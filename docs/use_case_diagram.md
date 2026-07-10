@@ -5,7 +5,13 @@
 
 ---
 
-## 1. System Actors & Use Cases
+## 1. Introduction
+
+The UML Use Case Diagram presents the functional requirements of the ProcureWise Procurement Management System from the users' perspective. It identifies the system actors, their interactions with the system, and the major services provided by the application. The diagram serves as a high-level representation of the system's functional behavior without describing internal implementation details.
+
+---
+
+## 2. System Actors & Use Cases
 
 This section lists the system actors defined in ProcureWise and details the specific use cases each actor performs.
 
@@ -30,7 +36,7 @@ This section lists the system actors defined in ProcureWise and details the spec
   * **UC-08: Review Purchase Requests**: Inspect incoming department requisitions, adjust specifications or UOMs, edit budget spent allocations, check budget limits, and forward approved requests to the bidding pipeline.
   * **UC-09: Prepare & Publish RFQs**: Set deadlines and publish Requests for Quotation (RFQs) featuring sequential reference numbering.
   * **UC-10: Record Supplier Quotations**: Encode quotes or upload and parse Excel quote spreadsheets submitted offline by suppliers.
-  * **UC-11: Prepare Abstract of Quotations**: Consolidate active bids, pricing tiers, and delivery parameters into a canvas board.
+  * **UC-11: Prepare Abstract of Quotations (Canvass Abstract)**: Consolidate active bids, pricing tiers, and delivery parameters into a canvas board.
   * **UC-12: Generate Best-Value Recommendation**: Run the Multi-Criteria Decision-Making (MCDM) scoring engine to generate ranked recommendations and compliance justifications.
   * **UC-13: Generate & Print Purchase Orders**: Draft standard government Purchase Orders (Appendix 61) with custom clauses and record conforme statuses.
   * **UC-14: View Procurement Analytics**: Analyze spending trends, budget utilization, radar profile spider charts, and ARIMA forecast alerts.
@@ -44,23 +50,23 @@ This section lists the system actors defined in ProcureWise and details the spec
   * **UC-18: Review Procurement Reports**: View executive analytics and download CSV data exports.
 
 ### ⚙️ Administrator (IT Admin)
-* **Description**: Manage user accounts, manage departments, manage budget allocations, and view system reports.
+* **Description**: Manage user accounts, manage departments, manage system configuration, and view system reports.
 * **Use Cases**:
   * **UC-19: Manage User Accounts**: Register staff, activate or deactivate user accounts, and monitor user roles.
   * **UC-20: Manage Departments**: Create, update, and manage departmental profiles and units.
-  * **UC-21: Manage Budget Allocations**: Allocate, monitor, and adjust annual fiscal budgets for departments.
-  * **UC-22: View System Reports**: Access administrative logs, user activity reports, and system statistics.
+  * **UC-21: Manage System Configuration**: Configure system-wide parameters, workflow routes, and form templates.
+  * **UC-22: View System Reports**: View system reports, user activities, and administrative logs.
 
 ### 🏢 Supplier (External / Secondary Actor)
 * **Description**: Provide supplier quotations through the procurement process (encoded into the system by the Procurement Officer) and acknowledge approved Purchase Orders and deliveries.
 * **Use Cases**:
-  * **UC-09: Prepare & Publish RFQs** *(Secondary)*: Submit quotes for published RFQs.
+  * **UC-09: Respond to Published RFQs** *(Secondary)*: Submit quotations for published Requests for Quotation.
   * **UC-10: Record Supplier Quotations** *(Secondary)*: Submit quotations to be input into the system.
-  * **UC-13: Generate & Print Purchase Orders** *(Secondary)*: Acknowledge approved Purchase Orders (sign conforming slips) and deliver supplies.
+  * **UC-13: Receive Purchase Orders** *(Secondary)*: Receive approved Purchase Orders, acknowledge them through conforme, and deliver awarded items.
 
 ---
 
-## 2. Use Case Description Table
+## 3. Use Case Description Table
 
 The following table provides detailed descriptions of all system use cases, identifying their primary actors.
 
@@ -76,7 +82,7 @@ The following table provides detailed descriptions of all system use cases, iden
 | **UC-08** | Review Purchase Requests | Procurement Officer | Allows the officer to review, process, and adjust incoming purchase requests. |
 | **UC-09** | Prepare & Publish RFQs | Procurement Officer | Allows the officer to create and publish RFQs for supplier bidding. |
 | **UC-10** | Record Supplier Quotations | Procurement Officer | Allows the officer to encode quotations and parse uploaded Excel bid sheets. |
-| **UC-11** | Prepare Abstract of Quotations | Procurement Officer | Allows the officer to generate canvas sheets comparing bids. |
+| **UC-11** | Prepare Abstract of Quotations (Canvass Abstract) | Procurement Officer | Allows the officer to generate canvas sheets comparing bids. |
 | **UC-12** | Generate Best-Value Recommendation | Procurement Officer | Allows the officer to run the MCDM engine and generate recommended awards. |
 | **UC-13** | Generate & Print Purchase Orders | Procurement Officer | Allows the officer to draft, manage conforme for, and print Purchase Orders. |
 | **UC-14** | View Procurement Analytics | Procurement Officer | Allows the officer to view spending, budget utilization, and price forecasts. |
@@ -86,12 +92,12 @@ The following table provides detailed descriptions of all system use cases, iden
 | **UC-18** | Review Procurement Reports | Administrative Approver | Allows the approver to view system reports and export CSV data dumps. |
 | **UC-19** | Manage User Accounts | Administrator | Allows the IT admin to create, edit, and toggle activation of user accounts. |
 | **UC-20** | Manage Departments | Administrator | Allows the IT admin to configure departments and academic units. |
-| **UC-21** | Manage Budget Allocations | Administrator | Allows the IT admin to set and adjust department budget limits. |
-| **UC-22** | View System Reports | Administrator | Allows the IT admin to inspect database statistics and activity logs. |
+| **UC-21** | Manage System Configuration | Administrator | Allows the IT admin to configure system settings, workflow pathways, and templates. |
+| **UC-22** | View System Reports | Administrator | Allows the IT admin to view system reports, user activities, and administrative logs. |
 
 ---
 
-## 3. Traceability Matrix
+## 4. Traceability Matrix
 
 The following matrix maps the defined ProcureWise system Use Cases to their corresponding user roles, system modules, flowcharts, and Data Flow Diagram (DFD) processes.
 
@@ -107,9 +113,9 @@ The following matrix maps the defined ProcureWise system Use Cases to their corr
 | **UC-08** | Review Purchase Requests | Procurement Officer | — | Requisitions Module | Section 2: Procurement Workflow | DFD 2.0 |
 | **UC-09** | Prepare & Publish RFQs | Procurement Officer | Supplier | RFQ Module | Section 2: Procurement Workflow | DFD 3.0 |
 | **UC-10** | Record Supplier Quotations | Procurement Officer | Supplier | Bidding Module | Section 2: Procurement Workflow | DFD 3.0 |
-| **UC-11** | Prepare Abstract of Quotations | Procurement Officer | — | Canvassing Module | Section 2: Procurement Workflow | DFD 4.0 |
+| **UC-11** | Prepare Abstract of Quotations (Canvass Abstract) | Procurement Officer | — | Canvassing Module | Section 2: Procurement Workflow | DFD 4.0 |
 | **UC-12** | Generate Best-Value Recommendation | Procurement Officer | — | Decision Engine | Section 2: Procurement Workflow | DFD 4.0 |
-| **UC-13** | Generate & Print Purchase Orders | Procurement Officer | Supplier | Purchase Order | Section 2: Procurement Workflow | DFD 5.0 |
+| **UC-13** | Generate & Print Purchase Orders | Procurement Officer | Supplier | Purchase Order Module | Section 2: Procurement Workflow | DFD 5.0 |
 | **UC-14** | View Procurement Analytics | Procurement Officer | — | Analytics Module | Section 3: Intelligent Analytics | DFD 6.0 |
 | **UC-15** | Approve PPMPs | Administrative Approver | — | Planning Module | Section 2: Procurement Workflow | DFD 1.0 |
 | **UC-16** | Approve Purchase Requests | Administrative Approver | — | Requisitions Module | Section 2: Procurement Workflow | DFD 2.0 |
@@ -117,17 +123,17 @@ The following matrix maps the defined ProcureWise system Use Cases to their corr
 | **UC-18** | Review Procurement Reports | Administrative Approver | — | Reports Module | Section 5: User Access Workflow | DFD 6.0 |
 | **UC-19** | Manage User Accounts | Administrator | — | Admin Module | Section 5: User Access Workflow | DFD 2.0 |
 | **UC-20** | Manage Departments | Administrator | — | Catalog Module | Section 5: User Access Workflow | DFD 1.0 |
-| **UC-21** | Manage Budget Allocations | Administrator | — | Admin Module | Section 5: User Access Workflow | DFD 1.0 |
+| **UC-21** | Manage System Configuration | Administrator | — | Admin Module | Section 5: User Access Workflow | DFD 1.0 |
 | **UC-22** | View System Reports | Administrator | — | Admin Module | Section 5: User Access Workflow | DFD 2.0 |
 
 ---
 
-## 4. Academic Thesis Guidelines
+## 5. Academic Thesis Guidelines
 
 > [!TIP]
 > **Thesis Manuscript Recommendation**: The official Use Case Diagram included in the thesis should be created using standard UML notation in a professional diagramming tool such as Draw.io, Visual Paradigm, or StarUML. This ensures compliance with academic UML standards:
 >
-> 1. Use standard stick figure icons for the five primary actors and secondary external actor.
+> 1. Use standard stick figure icons for the five primary actors and secondary external actor. Use oval shapes for all use cases following standard UML Use Case Diagram notation.
 > 2. Model the system boundary as a clean rectangle housing all the ovals representing use cases.
 > 3. Connect primary actors using standard solid lines (association relationships).
 > 4. Represent secondary external actors on the right side of the system boundary.
