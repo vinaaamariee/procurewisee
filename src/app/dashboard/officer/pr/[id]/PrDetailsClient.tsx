@@ -56,6 +56,8 @@ interface PurchaseRequest {
   status: string;
   assignedOfficer: UserProfile | null;
   requestedBy: UserProfile | null;
+  requesterName?: string | null;
+  requesterEmail?: string | null;
   items: PurchaseRequestItem[];
 }
 
