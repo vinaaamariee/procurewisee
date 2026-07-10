@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
 import type { UserRole } from '@/types/auth';
 
 const ROLE_HOME: Record<UserRole, string> = {
@@ -50,6 +51,15 @@ export async function login(formData: FormData) {
     return redirect('/login?error=Your account has been deactivated.');
   }
 
+  // Set role cookie
+  const cookieStore = await cookies();
+  cookieStore.set('pw-user-role', profile.role, {
+    path: '/',
+    maxAge: 60 * 60 * 24, // 1 day
+    secure: true,
+    sameSite: 'lax',
+  });
+
   const next = formData.get('next') as string;
 
   revalidatePath('/', 'layout');
@@ -66,6 +76,9 @@ export async function register(formData: FormData) {
 export async function signout() {
   const supabase = await createClient();
   await supabase.auth.signOut();
+
+  const cookieStore = await cookies();
+  cookieStore.delete('pw-user-role');
 
   revalidatePath('/', 'layout');
   return redirect('/');
