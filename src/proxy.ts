@@ -66,11 +66,10 @@ export default async function proxy(request: NextRequest) {
     return response;
   }
 
-  // ── Verify session locally (getSession is fast, cookie-only) ──────────────
+  // ── Verify session via getUser (robust and secure) ────────────────────────
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  const user = session?.user;
+    data: { user },
+  } = await supabase.auth.getUser();
 
   // If there's no active session
   if (!user) {
