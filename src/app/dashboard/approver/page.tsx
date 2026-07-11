@@ -11,8 +11,8 @@ async function getApproverStats() {
   const timer = startTimer('getApproverStats');
   const [totalCanvases, pendingReview, approvedCount, recentAuditLogs] = await Promise.all([
     prisma.canvasAbstract.count(),
-    prisma.recommendation.count({ where: { approvalStatus: 'Pending Review' } }),
-    prisma.recommendation.count({ where: { approvalStatus: 'Approved' } }),
+    prisma.purchaseRequest.count({ where: { status: { in: ['Submitted', 'UnderReview'] } } }),
+    prisma.purchaseRequest.count({ where: { status: { in: ['Approved', 'Received'] } } }),
     prisma.auditTrail.findMany({
       select: {
         id: true,
@@ -86,9 +86,41 @@ async function getPendingRecommendations() {
   }));
 }
 
+async function getPendingPurchaseRequests() {
+  const timer = startTimer('getPendingPurchaseRequests');
+  const prs = await prisma.purchaseRequest.findMany({
+    where: {
+      status: {
+        in: ['Submitted', 'UnderReview']
+      }
+    },
+    include: {
+      requestedBy: true
+    },
+    orderBy: {
+      updatedAt: 'desc'
+    }
+  });
+  timer.end();
+  return prs.map(pr => ({
+    id: pr.id,
+    prNumber: pr.prNumber,
+    department: pr.department,
+    office: pr.office,
+    requesterName: pr.requestedBy?.fullName || pr.requesterName || 'N/A',
+    totalCost: Number(pr.totalCost),
+    status: pr.status,
+    createdAt: pr.createdAt
+  }));
+}
+
 export default async function ApproverDashboard() {
   await requireRole('Administrative Approver');
-  const [stats, recs] = await Promise.all([getApproverStats(), getPendingRecommendations()]);
+  const [stats, recs, pendingPrs] = await Promise.all([
+    getApproverStats(),
+    getPendingRecommendations(),
+    getPendingPurchaseRequests()
+  ]);
 
   const v = {
     surface: 'var(--surface)',
@@ -103,10 +135,10 @@ export default async function ApproverDashboard() {
   };
 
   const statCards = [
-    { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: '📄', color: v.accent,      desc: 'Bid opening records' },
-    { label: 'Pending Review',   value: stats.pendingReview, icon: '⏳', color: '#d97706',     desc: 'Awaiting approval' },
-    { label: 'Approved',         value: stats.approvedCount, icon: '✅', color: '#059669',     desc: 'Recommendations accepted' },
-    { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: '🔒', color: v.accentLight, desc: 'Recent trail entries' },
+    { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: '📄', color: v.accent,      desc: 'Bid opening records', href: '#pending-reviews' },
+    { label: 'Pending Review',   value: stats.pendingReview, icon: '⏳', color: '#d97706',     desc: 'Awaiting approval', href: '/dashboard/approver/history?tab=pending' },
+    { label: 'Approved',         value: stats.approvedCount, icon: '✅', color: '#059669',     desc: 'Recommendations accepted', href: '/dashboard/approver/history?tab=approved' },
+    { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: '🔒', color: v.accentLight, desc: 'Recent trail entries', href: '#audit-trail' },
   ];
 
   return (
@@ -130,22 +162,110 @@ export default async function ApproverDashboard() {
       {/* Stat Cards Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
         {statCards.map(card => (
-          <div key={card.label} style={{
+          <a href={card.href} key={card.label} style={{
             background: v.surface,
             border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
-            boxShadow: v.shadow, position: 'relative', overflow: 'hidden'
-          }}>
+            boxShadow: v.shadow, position: 'relative', overflow: 'hidden',
+            display: 'block', textDecoration: 'none', cursor: 'pointer',
+            transition: 'all 0.2s ease-in-out'
+          }} className="hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/40 group">
             <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: card.color }} />
             <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{card.icon}</div>
             <div style={{ fontSize: '2.25rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>{card.value}</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: v.textPrimary, marginTop: '0.5rem' }}>{card.label}</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: v.textPrimary, marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {card.label}
+              <span style={{ fontSize: '0.75rem', opacity: 0, transition: 'opacity 0.25s ease' }} className="group-hover:opacity-100 text-[var(--accent)]">
+                →
+              </span>
+            </div>
             <div style={{ fontSize: '0.75rem', fontWeight: 500, color: v.textSecondary, marginTop: '0.25rem' }}>{card.desc}</div>
-          </div>
+          </a>
         ))}
       </div>
 
+      {/* Purchase Requests Pending Review & Approval */}
+      <div id="pending-prs" style={{
+        background: v.surface,
+        border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
+      }}>
+        <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: v.textPrimary, margin: 0 }}>
+            Purchase Requests Pending Review & Approval
+          </h2>
+          {pendingPrs.length > 0 && (
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, background: 'rgba(30,58,138,0.08)', color: v.accent, padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+              {pendingPrs.length} awaiting decision
+            </span>
+          )}
+        </div>
+        
+        <div style={{ overflowX: 'auto', padding: '1.5rem' }}>
+          {pendingPrs.length === 0 ? (
+            <div style={{ padding: '3rem', textAlign: 'center', color: v.textSecondary, fontSize: '0.9rem' }}>
+              All purchase requests cleared. No pending PR approvals at this time.
+            </div>
+          ) : (
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ borderBottom: `1px solid ${v.border}`, color: v.textSecondary }}>
+                  <th style={{ padding: '0.75rem 1rem' }}>PR Number</th>
+                  <th style={{ padding: '0.75rem 1rem' }}>Department / Office</th>
+                  <th style={{ padding: '0.75rem 1rem' }}>Prepared By</th>
+                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Total Cost</th>
+                  <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Status</th>
+                  <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pendingPrs.map((pr) => (
+                  <tr key={pr.id} style={{ borderBottom: `1px solid ${v.border}` }}>
+                    <td style={{ padding: '1rem', fontWeight: 700, color: v.textPrimary }}>
+                      {pr.prNumber}
+                    </td>
+                    <td style={{ padding: '1rem', color: v.textPrimary }}>
+                      {pr.department} ({pr.office})
+                    </td>
+                    <td style={{ padding: '1rem', color: v.textPrimary }}>
+                      {pr.requesterName}
+                    </td>
+                    <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: v.accent }}>
+                      ₱{pr.totalCost.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
+                    </td>
+                    <td style={{ padding: '1rem', textAlign: 'center' }}>
+                      <span style={{
+                        padding: '0.25rem 0.6rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 700,
+                        backgroundColor: pr.status === 'UnderReview' ? 'rgba(217, 119, 6, 0.1)' : 'rgba(30, 58, 138, 0.08)',
+                        color: pr.status === 'UnderReview' ? '#d97706' : v.accent
+                      }}>
+                        {pr.status === 'UnderReview' ? 'Under Review' : pr.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: '1rem', textAlign: 'center' }}>
+                      <a href={`/dashboard/approver/history/${pr.id}`} style={{
+                        display: 'inline-block',
+                        padding: '0.4rem 1rem',
+                        background: `linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%)`,
+                        color: 'white',
+                        fontWeight: 600,
+                        fontSize: '0.75rem',
+                        textDecoration: 'none',
+                        borderRadius: '0.5rem',
+                        boxShadow: '0 2px 6px rgba(30,58,138,0.15)',
+                        transition: 'opacity 0.2s'
+                      }} className="hover:opacity-90">
+                        Review PR
+                      </a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+
       {/* Pending MCDM Recommendations */}
-      <div style={{
+      <div id="pending-reviews" style={{
         background: v.surface,
         border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
       }}>
@@ -414,7 +534,7 @@ export default async function ApproverDashboard() {
       </div>
 
       {/* Audit Trail */}
-      <div style={{
+      <div id="audit-trail" style={{
         background: v.surface,
         border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
       }}>

@@ -172,19 +172,7 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
     });
   }
 
-  // 6. Fetch existing recommendations if any
-  const recommendations = await prisma.recommendation.findMany({
-    where: {
-      canvas: { rfqId }
-    },
-    include: {
-      supplier: true,
-      supplierQuote: true
-    },
-    orderBy: {
-      rankPosition: 'asc'
-    }
-  });
+
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem', fontFamily: '"Inter", sans-serif' }}>

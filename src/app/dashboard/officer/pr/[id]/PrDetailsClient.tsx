@@ -39,6 +39,16 @@ interface DepartmentBudget {
   spentBudget: number;
 }
 
+interface StatusHistory {
+  id: number;
+  status: string;
+  remarks: string | null;
+  createdAt: string;
+  changedBy: {
+    fullName: string;
+  } | null;
+}
+
 interface PurchaseRequest {
   id: number;
   prNumber: string;
@@ -59,6 +69,7 @@ interface PurchaseRequest {
   requesterName?: string | null;
   requesterEmail?: string | null;
   items: PurchaseRequestItem[];
+  statusHistory?: StatusHistory[];
 }
 
 interface PrDetailsClientProps {
@@ -166,7 +177,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
       const res = await receivePrAction(pr.id);
       if (res.success && res.pr) {
         setPr(prev => ({ ...prev, status: "Received", trackingNumber: res.pr.trackingNumber }));
-        setSuccessMsg(`PR approved and received. Tracking number ${res.pr.trackingNumber} issued!`);
+        setSuccessMsg(`Requisition received. Tracking number ${res.pr.trackingNumber} issued!`);
       } else {
         setErrorMsg(res.error || "Failed to receive Purchase Request.");
       }
@@ -356,7 +367,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
                 </button>
               )}
 
-              {["Submitted", "UnderReview"].includes(pr.status) && (
+              {pr.status === "Approved" && (
                 <button
                   onClick={handleApproveReceive}
                   disabled={isProcessing}
@@ -367,7 +378,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
                     boxShadow: "0 4px 12px rgba(16, 185, 129, 0.2)"
                   }}
                 >
-                  ✅ Approve & Receive
+                  ✅ Receive Requisition
                 </button>
               )}
             </div>
@@ -618,6 +629,53 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
             >
               🔄 Return for Revision
             </button>
+          </div>
+        )}
+
+        {/* Decision History & Comments */}
+        {pr.statusHistory && pr.statusHistory.length > 0 && (
+          <div style={{
+            background: theme.glassBg,
+            border: `1px solid ${theme.glassBorder}`,
+            borderRadius: "1.25rem",
+            padding: "1.5rem",
+            boxShadow: theme.shadow,
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem"
+          }}>
+            <h3 style={{ fontSize: "0.95rem", fontWeight: 800, color: theme.textMain, margin: 0 }}>📋 Decision History & Comments</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxHeight: "300px", overflowY: "auto" }}>
+              {pr.statusHistory?.map((history, idx) => (
+                <div key={idx} style={{ fontSize: "0.78rem", borderBottom: idx < (pr.statusHistory?.length || 0) - 1 ? "1px solid rgba(0,0,0,0.04)" : "none", paddingBottom: "0.5rem" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
+                    <span style={{
+                      color: 
+                        history.status === "Approved" || history.status === "Received" ? "#10b981" :
+                        history.status === "ReturnedForRevision" ? "#ef4444" :
+                        history.status === "Rejected" ? "#7f1d1d" : "#d97706"
+                    }}>
+                      {history.status === "ReturnedForRevision" ? "Returned for Revision" : history.status}
+                    </span>
+                    <span style={{ fontSize: "0.7rem", color: theme.textMuted }}>
+                      {new Date(history.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: "0.72rem", color: theme.textMuted, marginTop: "0.1rem" }}>
+                    By: {history.changedBy?.fullName || "Administrative Approver"}
+                  </div>
+                  {history.remarks && (
+                    <div style={{
+                      marginTop: "0.25rem", fontStyle: "italic", color: theme.textMain,
+                      padding: "0.3rem 0.5rem", borderRadius: "4px", backgroundColor: "rgba(0,0,0,0.02)",
+                      borderLeft: `2px solid ${theme.crimson}`
+                    }}>
+                      "{history.remarks}"
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

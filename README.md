@@ -581,6 +581,33 @@ A comprehensive stabilization phase addressing application routing, input valida
 
 ---
 
+## 🔄 Advanced Procurement Approval & Resubmission Workflow (Sprint 8)
+
+A high-fidelity enhancement to the procurement approval process, establishing full accountability and process alignment for Administrative Approvers and Procurement Officers:
+
+### 1. Unified Requisitions Workflow Center
+- **Approver History Log (`/dashboard/approver/history`)**: Implemented a comprehensive history board categorized into five tabs: **`Pending`**, **`Under Review`**, **`Approved`**, **`Returned`**, and **`Rejected`** for full process visibility.
+- **Workflow Detail & Action Panel (`/dashboard/approver/history/[id]`)**: Developed a deep-linked detail page where Administrative Approvers can inspect PR items, check department budget balance, view the chronological timeline, and perform action reviews.
+- **Dynamic Decision Controls**: Added transitions supporting:
+  - **Start Review**: Moves `Submitted` PRs to `Under Review` to indicate the evaluation has started.
+  - **Approve**: Updates status to `Approved` with optional remarks.
+  - **Return for Revision**: Open modal gathering mandatory revision remarks, transitioning PR to `ReturnedForRevision` and releasing the reserved budget.
+  - **Reject**: Open modal gathering mandatory rejection remarks, transitioning PR to `Rejected` and releasing the reserved budget.
+
+### 2. End-User Resubmission Workflow
+- **Revision and Resubmit Panel**: In the requisitioner tracker (`PrTrackerClient.tsx`), when a request is returned for revision, an editing mode is unlocked inline.
+- **Budget Adjustments**: When resubmitting, the department's `spentBudget` is automatically re-reserved and adjusted based on the new computed total cost difference.
+- **Chronological Feedback Logs**: Decision history and comments are permanently recorded in `PurchaseRequestStatusHistory` and rendered chronologically for requisitioners and auditing officers.
+
+### 3. Procurement Officer Integration & Bidding Restrictions
+- **Active Queue Restrictions**: Modified the officer's Requisitions Auditing Hub (`/dashboard/officer/pr`) and dropdowns to filter out `Returned` or `Rejected` requests, ensuring only `Approved` and `Received` PRs proceed to RFQ drafting and bidding.
+- **Approved PR Receiving**: Officers can now only mark PRs as `Received` once approved by the Administrative Approver, ensuring correct hierarchical alignment.
+
+### 4. Unified Public Tracking
+- **Search and Tracking Integration**: Hardened the public `/track` portal search engine and token pages to support searching and tracking both `Requisitions` and official `PurchaseRequests` using a single lookup interface.
+
+---
+
 ## 🔄 System Flowcharts & Process Architecture
 
 ProcureWise's system workflows and operational logic are documented in a centralized, thesis-ready format. This resource includes comprehensive Mermaid flowcharts adhering to strict modeling standards (Start/End terminators, process rectangles, decision diamonds, input/output parallelograms, and database cylinders with Yes/No branches).

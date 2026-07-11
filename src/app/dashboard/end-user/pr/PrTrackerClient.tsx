@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { submitPrAction } from "@/app/actions/pr";
+import { submitPrAction, resubmitPrAction } from "@/app/actions/pr";
 
 interface Product {
   id: number;
@@ -34,6 +34,16 @@ interface UserProfile {
   email: string;
 }
 
+interface StatusHistory {
+  id: number;
+  status: string;
+  remarks: string | null;
+  createdAt: string;
+  changedBy: {
+    fullName: string;
+  } | null;
+}
+
 interface PurchaseRequest {
   id: number;
   prNumber: string;
@@ -52,6 +62,7 @@ interface PurchaseRequest {
   assignedOfficer: UserProfile | null;
   requestedBy: UserProfile | null;
   items: PurchaseRequestItem[];
+  statusHistory: StatusHistory[];
 }
 
 interface PrTrackerClientProps {
@@ -67,6 +78,10 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  // Edit / Revision Mode States
+  const [isEditing, setIsEditing] = useState(false);
+  const [editableItems, setEditableItems] = useState<any[]>([]);
+
   const selectedPr = prs.find((pr) => pr.id === selectedPrId);
 
   const handleSubmit = async (id: number) => {
@@ -76,7 +91,6 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
     try {
       const res = await submitPrAction(id);
       if (res.success && res.pr) {
-        // Update local state status to Submitted
         setPrs((prev) =>
           prev.map((pr) =>
             pr.id === id ? { ...pr, status: res.pr.status } : pr
@@ -85,6 +99,116 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
         setSuccessMessage("Purchase Request submitted successfully!");
       } else {
         setErrorMessage(res.error || "Failed to submit Purchase Request.");
+      }
+    } catch (err: any) {
+      setErrorMessage(err.message || "An unexpected error occurred.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleStartEdit = () => {
+    if (!selectedPr) return;
+    setEditableItems(
+      selectedPr.items.map((item) => ({
+        id: item.id,
+        description: item.description,
+        brand: item.brand || "",
+        quantity: item.quantity,
+        unit: item.unit,
+        estimatedUnitCost: Number(item.estimatedUnitCost),
+        specification: item.specification || "",
+      }))
+    );
+    setIsEditing(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditableItems([]);
+  };
+
+  const handleItemChange = (index: number, field: string, value: any) => {
+    setEditableItems((prev) =>
+      prev.map((item, idx) =>
+        idx === index ? { ...item, [field]: value } : item
+      )
+    );
+  };
+
+  const handleResubmit = async () => {
+    if (!selectedPr) return;
+
+    // Client validation
+    const invalidItem = editableItems.some(
+      (item) => !item.description.trim() || item.quantity <= 0 || item.estimatedUnitCost <= 0 || !item.unit.trim()
+    );
+
+    if (invalidItem) {
+      setErrorMessage("Please fill in description, unit, positive quantity, and unit cost for all items.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    try {
+      const payload = editableItems.map((item) => ({
+        description: item.description.trim(),
+        brand: item.brand.trim() || undefined,
+        quantity: Number(item.quantity),
+        unit: item.unit.trim(),
+        estimatedUnitCost: Number(item.estimatedUnitCost),
+        specification: item.specification.trim() || undefined,
+      }));
+
+      const res = await resubmitPrAction(selectedPr.id, payload);
+      if (res.success && res.pr) {
+        setPrs((prev) =>
+          prev.map((p) =>
+            p.id === selectedPr.id
+              ? {
+                  ...p,
+                  status: res.pr.status,
+                  totalCost: Number(res.pr.totalCost),
+                  estimatedBudget: Number(res.pr.estimatedBudget),
+                  items: (res.pr.items as any[]).map((item: any) => ({
+                    id: item.id,
+                    description: item.description,
+                    brand: item.brand,
+                    quantity: item.quantity,
+                    unit: item.unit.abbreviation,
+                    estimatedUnitCost: Number(item.estimatedUnitCost),
+                    estimatedCost: Number(item.estimatedCost),
+                    specification: item.specification,
+                    product: item.product ? {
+                      id: item.product.id,
+                      name: item.product.name,
+                      category: "",
+                      unitOfMeasure: item.unit.abbreviation
+                    } : null
+                  })),
+                  statusHistory: [
+                    {
+                      id: Date.now(),
+                      status: "Submitted",
+                      remarks: "Resubmitted for review.",
+                      createdAt: new Date().toISOString(),
+                      changedBy: { fullName: p.requestedBy?.fullName || "Requisitioner" },
+                    },
+                    ...p.statusHistory,
+                  ],
+                }
+              : p
+          )
+        );
+        setIsEditing(false);
+        setSuccessMessage("Purchase Request resubmitted successfully for approval!");
+      } else {
+        setErrorMessage(res.error || "Failed to resubmit Purchase Request.");
       }
     } catch (err: any) {
       setErrorMessage(err.message || "An unexpected error occurred.");
@@ -109,6 +233,8 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
         return { bg: "rgba(16, 185, 129, 0.1)", text: "#10b981" };
       case "Received":
         return { bg: "rgba(79, 70, 229, 0.1)", text: "#4f46e5" };
+      case "Rejected":
+        return { bg: "rgba(127, 29, 29, 0.15)", text: "#7f1d1d" };
       default:
         return { bg: "rgba(0, 0, 0, 0.05)", text: "#000" };
     }
@@ -124,6 +250,13 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
     glassBorder: "var(--border)",
     shadow: "var(--shadow-card)",
   };
+
+  // Calculate current revised total cost
+  const currentTotalCost = isEditing
+    ? editableItems.reduce((sum, item) => sum + Number(item.quantity) * Number(item.estimatedUnitCost), 0)
+    : selectedPr
+    ? Number(selectedPr.totalCost)
+    : 0;
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }} className="lg:grid-cols-3">
@@ -146,12 +279,18 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
               return (
                 <button
                   key={pr.id}
-                  onClick={() => setSelectedPrId(pr.id)}
+                  disabled={isEditing}
+                  onClick={() => {
+                    setSelectedPrId(pr.id);
+                    setErrorMessage(null);
+                    setSuccessMessage(null);
+                  }}
                   style={{
                     width: "100%", textAlign: "left", padding: "1rem", borderRadius: "0.75rem",
                     border: active ? `1px solid ${theme.crimson}` : "1px solid rgba(0,0,0,0.06)",
                     background: active ? "rgba(126, 25, 27, 0.04)" : "rgba(255,255,255,0.6)",
-                    cursor: "pointer", transition: "all 0.2s", display: "flex", flexDirection: "column", gap: "0.4rem"
+                    cursor: isEditing ? "not-allowed" : "pointer", transition: "all 0.2s", display: "flex", flexDirection: "column", gap: "0.4rem",
+                    opacity: isEditing && !active ? 0.5 : 1
                   }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
@@ -160,7 +299,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                       padding: "0.2rem 0.5rem", borderRadius: "999px", fontSize: "0.65rem", fontWeight: 700,
                       backgroundColor: statusColors.bg, color: statusColors.text
                     }}>
-                      {pr.status}
+                      {pr.status === "ReturnedForRevision" ? "Returned for Revision" : pr.status}
                     </span>
                   </div>
                   <div style={{ fontSize: "0.78rem", color: theme.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", width: "100%" }}>
@@ -168,7 +307,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                   </div>
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: theme.textMuted, marginTop: "0.2rem" }}>
                     <span>{new Date(pr.requestDate).toLocaleDateString()}</span>
-                    <span style={{ fontWeight: 600, color: theme.textMain }}>₱{Number(pr.totalCost).toLocaleString()}</span>
+                    <span style={{ fontWeight: 600, color: theme.textMain }}>₱{Number(pr.totalCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</span>
                   </div>
                 </button>
               );
@@ -210,10 +349,10 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                     padding: "0.35rem 1rem", borderRadius: "999px", fontSize: "0.8rem", fontWeight: 800,
                     backgroundColor: getStatusColor(selectedPr.status).bg, color: getStatusColor(selectedPr.status).text
                   }}>
-                    Status: {selectedPr.status}
+                    Status: {selectedPr.status === "ReturnedForRevision" ? "Returned for Revision" : selectedPr.status}
                   </span>
                   
-                  {selectedPr.status === "Draft" && (
+                  {selectedPr.status === "Draft" && !isEditing && (
                     <button
                       onClick={() => handleSubmit(selectedPr.id)}
                       disabled={isSubmitting}
@@ -223,10 +362,51 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                         fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s",
                         boxShadow: "0 4px 12px rgba(126, 25, 27, 0.2)"
                       }}
-                      className="hover:scale-105 duration-200"
                     >
                       {isSubmitting ? "Submitting..." : "🚀 Submit PR for Review"}
                     </button>
+                  )}
+
+                  {selectedPr.status === "ReturnedForRevision" && !isEditing && (
+                    <button
+                      onClick={handleStartEdit}
+                      style={{
+                        padding: "0.5rem 1.25rem", borderRadius: "0.75rem", border: "none",
+                        background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`, color: "#fff",
+                        fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s",
+                        boxShadow: "0 4px 12px rgba(126, 25, 27, 0.2)"
+                      }}
+                    >
+                      📝 Edit & Resubmit
+                    </button>
+                  )}
+
+                  {isEditing && (
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      <button
+                        onClick={handleCancelEdit}
+                        disabled={isSubmitting}
+                        style={{
+                          padding: "0.5rem 1.25rem", borderRadius: "0.75rem", border: `1px solid ${theme.glassBorder}`,
+                          background: "#fff", color: theme.textMain,
+                          fontWeight: 700, fontSize: "0.8rem", cursor: "pointer"
+                        }}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleResubmit}
+                        disabled={isSubmitting}
+                        style={{
+                          padding: "0.5rem 1.25rem", borderRadius: "0.75rem", border: "none",
+                          background: "linear-gradient(90deg, #10b981, #059669)", color: "#fff",
+                          fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
+                          boxShadow: "0 4px 12px rgba(16, 185, 129, 0.2)"
+                        }}
+                      >
+                        {isSubmitting ? "Submitting..." : "💾 Submit Revision"}
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -248,21 +428,21 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                 <h3 style={{ fontSize: "0.85rem", fontWeight: 700, color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "1rem" }}>Procurement Flow Progress</h3>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0.5rem", position: "relative" }}>
                   {[
-                    { label: "Draft", active: true },
-                    { label: "Submitted", active: ["Submitted", "UnderReview", "Under Review", "ReturnedForRevision", "Returned for Revision", "Approved", "Received"].includes(selectedPr.status) },
-                    { label: "Audited & Approved", active: ["Approved", "Received"].includes(selectedPr.status) },
-                    { label: "Received (PROC # Issued)", active: selectedPr.status === "Received" }
+                    { label: "Draft", active: true, error: false },
+                    { label: "Submitted / Under Review", active: ["Submitted", "UnderReview", "Under Review", "ReturnedForRevision", "Returned for Revision", "Approved", "Received", "Rejected"].includes(selectedPr.status), error: false },
+                    { label: selectedPr.status === "ReturnedForRevision" ? "Returned for Revision" : selectedPr.status === "Rejected" ? "Rejected" : "Audited & Approved", active: ["Approved", "Received", "ReturnedForRevision", "Rejected"].includes(selectedPr.status), error: ["ReturnedForRevision", "Rejected"].includes(selectedPr.status) },
+                    { label: "Received (PROC # Issued)", active: selectedPr.status === "Received", error: false }
                   ].map((step, idx) => (
                     <div key={idx} style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem" }}>
                       <div style={{
                         width: 24, height: 24, borderRadius: "50%",
-                        background: step.active ? `linear-gradient(135deg, ${theme.crimson}, ${theme.gold})` : "rgba(0,0,0,0.06)",
+                        background: step.error ? "#ef4444" : step.active ? `linear-gradient(135deg, ${theme.crimson}, ${theme.gold})` : "rgba(0,0,0,0.06)",
                         display: "flex", alignItems: "center", justifyContent: "center",
                         color: step.active ? "#fff" : theme.textMuted, fontSize: "0.7rem", fontWeight: 800
                       }}>
-                        {idx + 1}
+                        {step.error ? "⚠️" : idx + 1}
                       </div>
-                      <span style={{ fontSize: "0.7rem", fontWeight: 700, color: step.active ? theme.textMain : theme.textMuted }}>
+                      <span style={{ fontSize: "0.7rem", fontWeight: 700, color: step.error ? "#ef4444" : step.active ? theme.textMain : theme.textMuted }}>
                         {step.label}
                       </span>
                     </div>
@@ -270,39 +450,39 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                 </div>
               </div>
 
-              <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", paddingTop: "1.5rem", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
-                <div>
-                  <span style={{ display: "block", fontSize: "0.7rem", color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px" }}>Purpose / Description</span>
-                  <span style={{ fontSize: "0.9rem", fontWeight: 600, color: theme.textMain }}>{selectedPr.purpose}</span>
-                </div>
-                <div>
-                  <span style={{ display: "block", fontSize: "0.7rem", color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px" }}>Funding Source</span>
-                  <span style={{ fontSize: "0.9rem", fontWeight: 600, color: theme.textMain }}>{selectedPr.fundingSource}</span>
-                </div>
-                <div>
-                  <span style={{ display: "block", fontSize: "0.7rem", color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px" }}>Department / Office</span>
-                  <span style={{ fontSize: "0.9rem", fontWeight: 600, color: theme.textMain }}>{selectedPr.department} ({selectedPr.office})</span>
-                </div>
-                <div>
-                  <span style={{ display: "block", fontSize: "0.7rem", color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px" }}>Linked PPMP</span>
-                  <span style={{ fontSize: "0.9rem", fontWeight: 600, color: theme.textMain }}>
-                    {selectedPr.ppmp ? `${selectedPr.ppmp.ppmpNumber} - ${selectedPr.ppmp.projectTitle}` : "None"}
-                  </span>
-                </div>
-              </div>
-
-              {selectedPr.remarks && (
+              {/* Status History Logs / Remarks */}
+              {selectedPr.statusHistory && selectedPr.statusHistory.length > 0 && (
                 <div style={{
-                  padding: "1rem", borderRadius: "0.75rem",
-                  backgroundColor: selectedPr.status.includes("Revision") ? "rgba(239, 68, 68, 0.05)" : "rgba(0,0,0,0.03)",
-                  borderLeft: `4px solid ${selectedPr.status.includes("Revision") ? "#ef4444" : theme.gold}`,
+                  padding: "1.25rem", borderRadius: "0.75rem",
+                  backgroundColor: "rgba(0,0,0,0.01)",
+                  border: `1px solid ${theme.glassBorder}`,
+                  marginTop: "0.5rem"
                 }}>
-                  <span style={{ display: "block", fontSize: "0.75rem", fontWeight: 800, color: selectedPr.status.includes("Revision") ? "#ef4444" : theme.textMain, textTransform: "uppercase", marginBottom: "0.25rem" }}>
-                    Revision Logs & Remarks
+                  <span style={{ display: "block", fontSize: "0.75rem", fontWeight: 800, color: theme.textMain, textTransform: "uppercase", marginBottom: "0.75rem", letterSpacing: "0.5px" }}>
+                    Workflow Remarks & Feedback History
                   </span>
-                  <pre style={{ margin: 0, fontSize: "0.8rem", color: theme.textMain, fontFamily: "inherit", whiteSpace: "pre-wrap" }}>
-                    {selectedPr.remarks}
-                  </pre>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                    {selectedPr.statusHistory.map((h, idx) => (
+                      <div key={idx} style={{ fontSize: "0.8rem", borderBottom: idx < selectedPr.statusHistory.length - 1 ? "1px solid rgba(0,0,0,0.04)" : "none", paddingBottom: "0.5rem" }}>
+                        <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 600 }}>
+                          <span style={{ color: h.status === 'ReturnedForRevision' ? '#ef4444' : h.status === 'Rejected' ? '#7f1d1d' : theme.crimson }}>
+                            {h.status === 'ReturnedForRevision' ? 'Returned for Revision' : h.status === 'UnderReview' ? 'Under Review' : h.status}
+                          </span>
+                          <span style={{ color: theme.textMuted, fontSize: "0.7rem" }}>{new Date(h.createdAt).toLocaleString()}</span>
+                        </div>
+                        <div style={{ fontSize: "0.75rem", color: theme.textMuted, marginTop: "0.15rem" }}>By: {h.changedBy?.fullName || "Administrative Approver"}</div>
+                        {h.remarks && (
+                          <div style={{
+                            fontStyle: "italic", marginTop: "0.35rem", color: theme.textMain,
+                            padding: "0.4rem 0.6rem", borderRadius: "0.35rem", backgroundColor: "rgba(0,0,0,0.02)",
+                            borderLeft: `3px solid ${h.status === 'ReturnedForRevision' ? '#ef4444' : h.status === 'Rejected' ? '#7f1d1d' : theme.goldDark}`
+                          }}>
+                            "{h.remarks}"
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -332,7 +512,9 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                   </span>
                 )}
               </div>
-                     {/* Reengineered Official Government Purchase Request (PR) Layout */}
+            </div>
+
+            {/* Reengineered Official Government Purchase Request (PR) Layout */}
             <div className="bg-white border-2 border-slate-400 p-8 shadow-lg max-w-4xl mx-auto rounded-none font-mono text-slate-800 space-y-6" id="pr-print-document" style={{ color: '#000', backgroundColor: '#fff' }}>
               
               {/* Header Box */}
@@ -370,21 +552,73 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                     </tr>
                   </thead>
                   <tbody>
-                    {selectedPr.items.map((item, idx) => (
-                      <tr key={item.id} className="border-b border-slate-400 divide-x divide-slate-800 font-semibold">
-                        <td className="p-2 text-center">{idx + 1}</td>
-                        <td className="p-2 text-center">{item.unit}</td>
-                        <td className="p-2">
-                          <div className="font-extrabold">{item.description}</div>
-                          {item.specification && (
-                            <div className="text-[9px] text-slate-600 mt-0.5 whitespace-pre-wrap">{item.specification}</div>
-                          )}
-                        </td>
-                        <td className="p-2 text-center">{item.quantity}</td>
-                        <td className="p-2 text-right tabular-nums">₱{Number(item.estimatedUnitCost).toLocaleString()}</td>
-                        <td className="p-2 text-right tabular-nums font-bold">₱{Number(item.estimatedCost).toLocaleString()}</td>
-                      </tr>
-                    ))}
+                    {/* Editable Items vs Static View */}
+                    {isEditing ? (
+                      editableItems.map((item, idx) => (
+                        <tr key={item.id || idx} className="border-b border-slate-400 divide-x divide-slate-800 font-semibold text-[10px]">
+                          <td className="p-2 text-center">{idx + 1}</td>
+                          <td className="p-1">
+                            <input
+                              type="text"
+                              value={item.unit}
+                              onChange={(e) => handleItemChange(idx, "unit", e.target.value)}
+                              className="w-full p-1 border border-slate-300 font-mono text-[10px]"
+                            />
+                          </td>
+                          <td className="p-1 space-y-1">
+                            <input
+                              type="text"
+                              value={item.description}
+                              onChange={(e) => handleItemChange(idx, "description", e.target.value)}
+                              placeholder="Item description"
+                              className="w-full p-1 border border-slate-300 font-mono font-bold text-[10px]"
+                            />
+                            <textarea
+                              value={item.specification}
+                              onChange={(e) => handleItemChange(idx, "specification", e.target.value)}
+                              placeholder="Specifications"
+                              rows={2}
+                              className="w-full p-1 border border-slate-300 font-mono text-[9px]"
+                            />
+                          </td>
+                          <td className="p-1">
+                            <input
+                              type="number"
+                              value={item.quantity}
+                              onChange={(e) => handleItemChange(idx, "quantity", Number(e.target.value))}
+                              className="w-full p-1 border border-slate-300 font-mono text-center text-[10px]"
+                            />
+                          </td>
+                          <td className="p-1">
+                            <input
+                              type="number"
+                              value={item.estimatedUnitCost}
+                              onChange={(e) => handleItemChange(idx, "estimatedUnitCost", Number(e.target.value))}
+                              className="w-full p-1 border border-slate-300 font-mono text-right text-[10px]"
+                            />
+                          </td>
+                          <td className="p-2 text-right tabular-nums font-bold">
+                            ₱{(item.quantity * item.estimatedUnitCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      selectedPr.items.map((item, idx) => (
+                        <tr key={item.id} className="border-b border-slate-400 divide-x divide-slate-800 font-semibold">
+                          <td className="p-2 text-center">{idx + 1}</td>
+                          <td className="p-2 text-center">{item.unit}</td>
+                          <td className="p-2">
+                            <div className="font-extrabold">{item.description}</div>
+                            {item.specification && (
+                              <div className="text-[9px] text-slate-600 mt-0.5 whitespace-pre-wrap">{item.specification}</div>
+                            )}
+                          </td>
+                          <td className="p-2 text-center">{item.quantity}</td>
+                          <td className="p-2 text-right tabular-nums">₱{Number(item.estimatedUnitCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                          <td className="p-2 text-right tabular-nums font-bold">₱{Number(item.estimatedCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                        </tr>
+                      ))
+                    )}
                     {/* Purpose row */}
                     <tr className="border-t border-slate-800 font-extrabold text-[11px]">
                       <td colSpan={6} className="p-3 bg-slate-50 text-left border-b border-slate-800">
@@ -394,7 +628,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                     {/* Summary row */}
                     <tr className="font-black text-xs">
                       <td colSpan={5} className="p-2 text-right uppercase">Total Estimated Budget:</td>
-                      <td className="p-2 text-right tabular-nums text-red-700">₱{Number(selectedPr.totalCost).toLocaleString()}</td>
+                      <td className="p-2 text-right tabular-nums text-red-700">₱{currentTotalCost.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -417,7 +651,6 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                   </div>
                 </div>
               </div>
-            </div>
             </div>
           </>
         ) : (

@@ -32,7 +32,15 @@ export default async function PrDetailPage({ params }: PageProps) {
         },
         ppmp: true,
         requestedBy: true,
-        assignedOfficer: true
+        assignedOfficer: true,
+        statusHistory: {
+          include: {
+            changedBy: true
+          },
+          orderBy: {
+            createdAt: "desc"
+          }
+        }
       }
     }),
     prisma.departmentBudget.findMany({})

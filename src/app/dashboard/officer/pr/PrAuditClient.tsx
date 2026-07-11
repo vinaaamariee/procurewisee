@@ -117,7 +117,6 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
             <option value="all">All Statuses</option>
             <option value="Submitted">Submitted</option>
             <option value="UnderReview">Under Review</option>
-            <option value="ReturnedForRevision">Returned for Revision</option>
             <option value="Approved">Approved</option>
             <option value="Received">Received</option>
           </select>

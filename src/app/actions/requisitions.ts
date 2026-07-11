@@ -133,6 +133,23 @@ export async function getRequisitionTokenAction(trackingCode: string) {
       return { success: false, message: "Please enter a tracking code." };
     }
 
+    // 1. Check PurchaseRequest table first
+    const pr = await prisma.purchaseRequest.findFirst({
+      where: {
+        OR: [
+          { prNumber: trimmed },
+          { trackingCode: trimmed },
+          { trackingNumber: trimmed }
+        ]
+      },
+      select: { prNumber: true }
+    });
+
+    if (pr) {
+      return { success: true, secureToken: pr.prNumber };
+    }
+
+    // 2. Check Requisition table
     const requisition = await prisma.requisition.findFirst({
       where: {
         OR: [
@@ -144,7 +161,7 @@ export async function getRequisitionTokenAction(trackingCode: string) {
     });
 
     if (!requisition) {
-      return { success: false, message: "No requisition found with the provided tracking code." };
+      return { success: false, message: "No requisition or purchase request found with the provided reference." };
     }
 
     return { success: true, secureToken: requisition.secureToken };

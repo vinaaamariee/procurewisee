@@ -73,7 +73,7 @@ export async function login(formData: FormData) {
   if (next && next.startsWith('/') && !next.startsWith('/login') && !next.startsWith('/unauthorized')) {
     return redirect(next);
   }
-  return redirect(ROLE_HOME[profile.role as UserRole] ?? '/dashboard/officer');
+  return redirect(ROLE_HOME[appRole as UserRole] ?? '/dashboard/officer');
 }
 
 export async function register(formData: FormData) {

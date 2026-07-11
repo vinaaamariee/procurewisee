@@ -11,7 +11,7 @@ export default async function PrAuditingPage() {
   const prs = await prisma.purchaseRequest.findMany({
     where: {
       status: {
-        in: ["Submitted", "UnderReview", "ReturnedForRevision", "Approved", "Received"]
+        in: ["Submitted", "UnderReview", "Approved", "Received"]
       }
     },
     select: {

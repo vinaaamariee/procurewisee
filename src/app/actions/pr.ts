@@ -5,7 +5,7 @@ import { PrStatus, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
 import crypto from "crypto";
-import { requireRole } from "@/lib/auth/get-user-profile";
+import { requireRole, getAuthenticatedUser } from "@/lib/auth/get-user-profile";
 
 interface PrItemInput {
   productId?: number;
@@ -168,7 +168,11 @@ export async function submitPrAction(id: number) {
 
 export async function reviewPrAction(id: number, status: PrStatus, remarks?: string, officerId?: string) {
   try {
-    await requireRole("Administrative Approver");
+    const { profile } = await getAuthenticatedUser();
+    if (profile.role !== "Procurement Officer" && profile.role !== "Administrative Approver") {
+      return { success: false, error: "Unauthorized role for this action." };
+    }
+
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
 
@@ -182,10 +186,10 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
         },
       });
 
-      // Recalculate spent budget if PR is rejected or cancelled
+      // Recalculate spent budget if PR is rejected, cancelled, or returned for revision
       if (
-        (status === PrStatus.Rejected || status === PrStatus.Cancelled) &&
-        old.status !== PrStatus.Rejected && old.status !== PrStatus.Cancelled
+        (status === PrStatus.Rejected || status === PrStatus.Cancelled || status === PrStatus.ReturnedForRevision) &&
+        old.status !== PrStatus.Rejected && old.status !== PrStatus.Cancelled && old.status !== PrStatus.ReturnedForRevision
       ) {
         const deptBudget = await tx.departmentBudget.findUnique({
           where: { department: old.department }
@@ -202,10 +206,10 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
         }
       }
 
-      // Re-increment spent budget if PR transitions back from rejected/cancelled
+      // Re-increment spent budget if PR transitions back from rejected/cancelled/returned
       if (
-        (old.status === PrStatus.Rejected || old.status === PrStatus.Cancelled) &&
-        status !== PrStatus.Rejected && status !== PrStatus.Cancelled
+        (old.status === PrStatus.Rejected || old.status === PrStatus.Cancelled || old.status === PrStatus.ReturnedForRevision) &&
+        status !== PrStatus.Rejected && status !== PrStatus.Cancelled && status !== PrStatus.ReturnedForRevision
       ) {
         const deptBudget = await tx.departmentBudget.findUnique({
           where: { department: old.department }
@@ -221,6 +225,16 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
           });
         }
       }
+
+      // Record in status history table if history logger exists
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: id,
+          status,
+          remarks: remarks || "Status changed during review.",
+          changedById: profile.id
+        }
+      });
 
       return pr;
     });
@@ -518,5 +532,123 @@ export async function getPreCanvassingData(prId: number) {
   } catch (error: any) {
     console.error("Error generating pre-canvassing data:", error);
     return { success: false, error: error.message || "Failed to generate pre-canvassing data." };
+  }
+}
+
+export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) {
+  try {
+    const { profile } = await requireRole("End User");
+
+    const old = await prisma.purchaseRequest.findUnique({
+      where: { id },
+      include: { items: true }
+    });
+
+    if (!old) {
+      return { success: false, error: "Purchase Request not found." };
+    }
+
+    if (old.status !== PrStatus.ReturnedForRevision) {
+      return { success: false, error: `Only requests that are Returned for Revision can be resubmitted.` };
+    }
+
+    const newTotalCost = updatedItems.reduce((sum, item) => sum + (item.quantity * item.estimatedUnitCost), 0);
+
+    const result = await prisma.$transaction(async (tx) => {
+      // 1. Validate department budget
+      const deptBudget = await tx.departmentBudget.findUnique({
+        where: { department: old.department }
+      });
+
+      if (deptBudget) {
+        const remaining = Number(deptBudget.allocatedBudget) - Number(deptBudget.spentBudget);
+        if (newTotalCost > remaining) {
+          throw new Error(`Resubmission total (₱${newTotalCost.toLocaleString()}) exceeds remaining department budget (₱${remaining.toLocaleString()}).`);
+        }
+        
+        // Re-reserve budget: Increment by new total cost
+        await tx.departmentBudget.update({
+          where: { department: old.department },
+          data: {
+            spentBudget: {
+              increment: new Prisma.Decimal(newTotalCost)
+            }
+          }
+        });
+      }
+
+      // 2. Delete existing items
+      await tx.purchaseRequestItem.deleteMany({
+        where: { prId: id }
+      });
+
+      // 3. Create updated items
+      for (const item of updatedItems) {
+        const cost = item.quantity * item.estimatedUnitCost;
+        const unitRecord = await tx.unitOfMeasure.upsert({
+          where: { name: item.unit.trim() },
+          update: {},
+          create: { name: item.unit.trim(), abbreviation: item.unit.trim().slice(0, 15) }
+        });
+
+        await tx.purchaseRequestItem.create({
+          data: {
+            prId: id,
+            productId: item.productId || null,
+            description: item.description,
+            brand: item.brand || null,
+            quantity: item.quantity,
+            unitId: unitRecord.id,
+            estimatedUnitCost: new Prisma.Decimal(item.estimatedUnitCost),
+            estimatedCost: new Prisma.Decimal(cost),
+            specification: item.specification || null,
+          }
+        });
+      }
+
+      // 4. Update PR Master
+      const pr = await tx.purchaseRequest.update({
+        where: { id },
+        data: {
+          status: PrStatus.Submitted,
+          totalCost: new Prisma.Decimal(newTotalCost),
+          estimatedBudget: new Prisma.Decimal(newTotalCost)
+        },
+        include: {
+          items: {
+            include: {
+              product: true,
+              unit: true
+            }
+          }
+        }
+      });
+
+      // 5. Create Status History
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: id,
+          status: PrStatus.Submitted,
+          remarks: "Resubmitted for review.",
+          changedById: profile.id
+        }
+      });
+
+      return pr;
+    });
+
+    logAuditTrail({
+      actionType: "RESUBMIT_PR",
+      tableAffected: "purchase_requests",
+      recordId: id,
+      oldState: old,
+      newState: result,
+    });
+
+    revalidatePath("/", "layout");
+    return { success: true, pr: result };
+  } catch (error: any) {
+    console.error("Error resubmitting PR:", error);
+    return { success: false, error: error.message || "Failed to resubmit PR." };
   }
 }

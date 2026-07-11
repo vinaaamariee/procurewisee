@@ -71,10 +71,6 @@ export default async function OfficerDashboard() {
     glassBorder: 'rgba(255, 255, 255, 0.9)',
     shadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
   };
-    glassBg: 'rgba(255, 255, 255, 0.7)',
-    glassBorder: 'rgba(255, 255, 255, 0.9)',
-    shadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
-  };
 
   const v = {
     surface: 'var(--surface)',
