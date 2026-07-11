@@ -1,40 +1,89 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
-import { createClient } from '@/lib/supabase/server';
+import { prisma } from '@/lib/prisma';
 import AddStaffForm from './add-staff-form';
 import ApproveButton from './approve-button';
 import { ShieldCheck, Truck, FileText, CheckCircle2, TrendingUpDown, AlertCircle, HelpCircle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { startTimer } from '@/lib/performance-logger';
 
 export const metadata = { title: 'Approver Dashboard — ProcureWise' };
 
 async function getApproverStats() {
-  const supabase = await createClient();
-
-  const [canvases, recommendations, auditEntries] = await Promise.all([
-    supabase.from('canvas_abstracts').select('id:canvas_id'),
-    supabase.from('recommendations').select('id:recomm_id, approvalStatus'),
-    supabase.from('audit_trails').select('id:audit_id, action:actionType, createdAt:timestamp').order('timestamp', { ascending: false }).limit(5),
+  const timer = startTimer('getApproverStats');
+  const [totalCanvases, pendingReview, approvedCount, recentAuditLogs] = await Promise.all([
+    prisma.canvasAbstract.count(),
+    prisma.recommendation.count({ where: { approvalStatus: 'Pending Review' } }),
+    prisma.recommendation.count({ where: { approvalStatus: 'Approved' } }),
+    prisma.auditTrail.findMany({
+      select: {
+        id: true,
+        actionType: true,
+        timestamp: true,
+      },
+      orderBy: {
+        timestamp: 'desc',
+      },
+      take: 5,
+    }),
   ]);
-
-  const canvasList = canvases.data ?? [];
-  const recList = recommendations.data ?? [];
+  timer.end();
 
   return {
-    totalCanvases:    canvasList.length,
-    pendingReview:    recList.filter(r => r.approvalStatus === 'Pending Review').length,
-    approvedCount:    recList.filter(r => r.approvalStatus === 'Approved').length,
-    recentAuditLogs:  auditEntries.data ?? [],
+    totalCanvases,
+    pendingReview,
+    approvedCount,
+    recentAuditLogs: recentAuditLogs.map(log => ({
+      id: log.id,
+      action: log.actionType,
+      createdAt: log.timestamp,
+    })),
   };
 }
 
 async function getPendingRecommendations() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('recommendations')
-    .select('id:recomm_id, compositeScore:compositeMcdmScore, priceScore, deliveryScore, reliabilityScore, rank:rankPosition, reasoning:justificationLog, approvalStatus, supplier:suppliers(companyName), quote:supplier_quotes(rfqId, totalQuotedAmount)')
-    .eq('approvalStatus', 'Pending Review')
-    .order('rankPosition', { ascending: true })
-    .limit(5);
-  return data ?? [];
+  const timer = startTimer('getPendingRecommendations');
+  const data = await prisma.recommendation.findMany({
+    where: { approvalStatus: 'Pending Review' },
+    select: {
+      id: true,
+      compositeMcdmScore: true,
+      priceScore: true,
+      deliveryScore: true,
+      reliabilityScore: true,
+      rankPosition: true,
+      justificationLog: true,
+      approvalStatus: true,
+      supplier: {
+        select: {
+          companyName: true,
+        },
+      },
+      supplierQuote: {
+        select: {
+          rfqId: true,
+          totalQuotedAmount: true,
+        },
+      },
+    },
+    orderBy: { rankPosition: 'asc' },
+    take: 5,
+  });
+  timer.end();
+
+  return data.map(rec => ({
+    id: rec.id,
+    compositeScore: rec.compositeMcdmScore,
+    priceScore: rec.priceScore,
+    deliveryScore: rec.deliveryScore,
+    reliabilityScore: rec.reliabilityScore,
+    rank: rec.rankPosition,
+    reasoning: rec.justificationLog,
+    approvalStatus: rec.approvalStatus,
+    supplier: rec.supplier,
+    quote: rec.supplierQuote ? {
+      rfqId: rec.supplierQuote.rfqId,
+      totalQuotedAmount: rec.supplierQuote.totalQuotedAmount,
+    } : null,
+  }));
 }
 
 export default async function ApproverDashboard() {

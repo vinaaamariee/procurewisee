@@ -30,30 +30,37 @@ export async function login(formData: FormData) {
   }
 
   // Fetch role from user_profiles — never trust JWT claims alone
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('role, "isActive"')
-    .eq('id', authData.user.id)
-    .single();
+  const profileRow = await prisma.userProfile.findUnique({
+    where: { id: authData.user.id },
+    select: { role: true, isActive: true },
+  });
 
-  if (!profile) {
+  if (!profileRow) {
     await supabase.auth.signOut();
     return redirect('/login?error=Account not configured. Contact your administrator.');
   }
 
-  if (profile.role === 'Supplier') {
+  // Convert Prisma UserRole to App UserRole (with space)
+  let appRole = profileRow.role as string;
+  if (appRole === 'ProcurementOfficer') {
+    appRole = 'Procurement Officer';
+  } else if (appRole === 'AdministrativeApprover') {
+    appRole = 'Administrative Approver';
+  }
+
+  if (appRole === 'Supplier') {
     await supabase.auth.signOut();
     return redirect('/login?error=Supplier login is disabled. Supplier accounts are for reference only.');
   }
 
-  if (!profile.isActive) {
+  if (!profileRow.isActive) {
     await supabase.auth.signOut();
     return redirect('/login?error=Your account has been deactivated.');
   }
 
   // Set role cookie
   const cookieStore = await cookies();
-  cookieStore.set('pw-user-role', profile.role, {
+  cookieStore.set('pw-user-role', appRole, {
     path: '/',
     maxAge: 60 * 60 * 24, // 1 day
     secure: true,

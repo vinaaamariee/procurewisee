@@ -2,6 +2,7 @@ import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import PrDetailsClient from "./PrDetailsClient";
+import { startTimer } from "@/lib/performance-logger";
 
 export const metadata = { title: "Purchase Request Details — ProcureWise" };
 
@@ -18,27 +19,30 @@ export default async function PrDetailPage({ params }: PageProps) {
     return notFound();
   }
 
-  // 1. Fetch full Purchase Request with deep inclusions for details and audits
-  const pr = await prisma.purchaseRequest.findUnique({
-    where: { id },
-    include: {
-      items: {
-        include: {
-          product: true
-        }
-      },
-      ppmp: true,
-      requestedBy: true,
-      assignedOfficer: true
-    }
-  });
+  // 1. Fetch full Purchase Request and budgets in parallel
+  const timer = startTimer(`PrDetailPageQueries-id-${id}`);
+  const [pr, budgetsList] = await Promise.all([
+    prisma.purchaseRequest.findUnique({
+      where: { id },
+      include: {
+        items: {
+          include: {
+            product: true
+          }
+        },
+        ppmp: true,
+        requestedBy: true,
+        assignedOfficer: true
+      }
+    }),
+    prisma.departmentBudget.findMany({})
+  ]);
+  timer.end();
 
   if (!pr) {
     return notFound();
   }
 
-  // 2. Fetch all department budgets to feed into the checker
-  const budgetsList = await prisma.departmentBudget.findMany({});
   const budgets = budgetsList.reduce((acc, b) => {
     acc[b.department] = {
       allocatedBudget: Number(b.allocatedBudget),
