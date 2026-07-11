@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { submitPrAction, resubmitPrAction } from "@/app/actions/pr";
+import DocumentLayout from "@/components/documents/DocumentLayout";
 
 interface Product {
   id: number;
@@ -299,7 +300,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                       padding: "0.2rem 0.5rem", borderRadius: "999px", fontSize: "0.65rem", fontWeight: 700,
                       backgroundColor: statusColors.bg, color: statusColors.text
                     }}>
-                      {pr.status === "ReturnedForRevision" ? "Returned for Revision" : pr.status}
+                       {["ReturnedForRevision", "Returned for Revision"].includes(pr.status) ? "Returned for Revision" : pr.status}
                     </span>
                   </div>
                   <div style={{ fontSize: "0.78rem", color: theme.textMuted, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", width: "100%" }}>
@@ -320,6 +321,49 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-2">
         {selectedPr ? (
           <>
+            {/* Approval Details Card (Section 6) */}
+            {["Approved", "Received", "ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status) && (
+              <div style={{
+                background: "rgba(255,255,255,0.9)",
+                borderLeft: `5px solid ${
+                  selectedPr.status === "Approved" || selectedPr.status === "Received" ? "#10b981" : "#ef4444"
+                }`,
+                borderRadius: "1rem",
+                padding: "1.5rem",
+                boxShadow: theme.shadow,
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem"
+              }} className="no-print">
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{ fontSize: "0.85rem", fontWeight: 800, color: theme.textMain, textTransform: "uppercase" }}>
+                    📋 Approval/Review Details
+                  </span>
+                  <span style={{
+                    fontSize: "0.7rem",
+                    fontWeight: 700,
+                    padding: "0.2rem 0.5rem",
+                    borderRadius: "999px",
+                    backgroundColor: getStatusColor(selectedPr.status).bg,
+                    color: getStatusColor(selectedPr.status).text
+                  }}>
+                    {["ReturnedForRevision", "Returned for Revision"].includes(selectedPr.status) ? "Returned for Revision" : selectedPr.status}
+                  </span>
+                </div>
+                <div style={{ fontSize: "0.82rem", color: theme.textMain }}>
+                  <strong>Remarks / Reasons:</strong>{" "}
+                  <span className="italic font-semibold">
+                    "{selectedPr.statusHistory?.[0]?.remarks 
+                      || selectedPr.remarks 
+                      || "No remarks provided."}"
+                  </span>
+                </div>
+                <div style={{ fontSize: "0.75rem", color: theme.textMuted }}>
+                  Reviewed by: {selectedPr.statusHistory?.[0]?.changedBy?.fullName || "Administrative Approver"} on {selectedPr.statusHistory?.[0]?.createdAt ? new Date(selectedPr.statusHistory[0].createdAt).toLocaleString() : "Date N/A"}
+                </div>
+              </div>
+            )}
+
             {/* PR Status & Primary Actions Card */}
             <div style={{
               background: theme.glassBg, backdropFilter: "blur(20px)",
@@ -349,9 +393,23 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                     padding: "0.35rem 1rem", borderRadius: "999px", fontSize: "0.8rem", fontWeight: 800,
                     backgroundColor: getStatusColor(selectedPr.status).bg, color: getStatusColor(selectedPr.status).text
                   }}>
-                    Status: {selectedPr.status === "ReturnedForRevision" ? "Returned for Revision" : selectedPr.status}
+                    Status: {["ReturnedForRevision", "Returned for Revision"].includes(selectedPr.status) ? "Returned for Revision" : selectedPr.status}
                   </span>
                   
+                  {!isEditing && (
+                    <button
+                      onClick={() => window.print()}
+                      className="no-print"
+                      style={{
+                        padding: "0.5rem 1.25rem", borderRadius: "0.75rem", border: `1px solid ${theme.glassBorder}`,
+                        background: "#fff", color: theme.textMain,
+                        fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s"
+                      }}
+                    >
+                      🖨️ Print Request
+                    </button>
+                  )}
+
                   {selectedPr.status === "Draft" && !isEditing && (
                     <button
                       onClick={() => handleSubmit(selectedPr.id)}
@@ -367,7 +425,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                     </button>
                   )}
 
-                  {selectedPr.status === "ReturnedForRevision" && !isEditing && (
+                  {["ReturnedForRevision", "Returned for Revision"].includes(selectedPr.status) && !isEditing && (
                     <button
                       onClick={handleStartEdit}
                       style={{
@@ -426,12 +484,13 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
               {/* Status workflow timeline visualization */}
               <div>
                 <h3 style={{ fontSize: "0.85rem", fontWeight: 700, color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "1rem" }}>Procurement Flow Progress</h3>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "0.5rem", position: "relative" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "0.5rem", position: "relative" }}>
                   {[
                     { label: "Draft", active: true, error: false },
-                    { label: "Submitted / Under Review", active: ["Submitted", "UnderReview", "Under Review", "ReturnedForRevision", "Returned for Revision", "Approved", "Received", "Rejected"].includes(selectedPr.status), error: false },
-                    { label: selectedPr.status === "ReturnedForRevision" ? "Returned for Revision" : selectedPr.status === "Rejected" ? "Rejected" : "Audited & Approved", active: ["Approved", "Received", "ReturnedForRevision", "Rejected"].includes(selectedPr.status), error: ["ReturnedForRevision", "Rejected"].includes(selectedPr.status) },
-                    { label: "Received (PROC # Issued)", active: selectedPr.status === "Received", error: false }
+                    { label: "Submitted", active: ["Submitted", "Received", "UnderReview", "Under Review", "ReturnedForRevision", "Returned for Revision", "Approved", "Rejected"].includes(selectedPr.status), error: false },
+                    { label: "Received", active: ["Received", "UnderReview", "Under Review", "Approved"].includes(selectedPr.status) || selectedPr.trackingNumber !== null, error: false },
+                    { label: "Under Review", active: ["UnderReview", "Under Review", "Approved", "ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status), error: false },
+                    { label: selectedPr.status === "ReturnedForRevision" || selectedPr.status === "Returned for Revision" ? "Returned for Revision" : selectedPr.status === "Rejected" ? "Rejected" : "Approved", active: ["Approved", "ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status), error: ["ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status) }
                   ].map((step, idx) => (
                     <div key={idx} style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem" }}>
                       <div style={{
@@ -465,8 +524,8 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                     {selectedPr.statusHistory.map((h, idx) => (
                       <div key={idx} style={{ fontSize: "0.8rem", borderBottom: idx < selectedPr.statusHistory.length - 1 ? "1px solid rgba(0,0,0,0.04)" : "none", paddingBottom: "0.5rem" }}>
                         <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 600 }}>
-                          <span style={{ color: h.status === 'ReturnedForRevision' ? '#ef4444' : h.status === 'Rejected' ? '#7f1d1d' : theme.crimson }}>
-                            {h.status === 'ReturnedForRevision' ? 'Returned for Revision' : h.status === 'UnderReview' ? 'Under Review' : h.status}
+                          <span style={{ color: ['ReturnedForRevision', 'Returned for Revision'].includes(h.status) ? '#ef4444' : h.status === 'Rejected' ? '#7f1d1d' : theme.crimson }}>
+                            {['ReturnedForRevision', 'Returned for Revision'].includes(h.status) ? 'Returned for Revision' : h.status === 'UnderReview' ? 'Under Review' : h.status}
                           </span>
                           <span style={{ color: theme.textMuted, fontSize: "0.7rem" }}>{new Date(h.createdAt).toLocaleString()}</span>
                         </div>
@@ -475,7 +534,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                           <div style={{
                             fontStyle: "italic", marginTop: "0.35rem", color: theme.textMain,
                             padding: "0.4rem 0.6rem", borderRadius: "0.35rem", backgroundColor: "rgba(0,0,0,0.02)",
-                            borderLeft: `3px solid ${h.status === 'ReturnedForRevision' ? '#ef4444' : h.status === 'Rejected' ? '#7f1d1d' : theme.goldDark}`
+                            borderLeft: `3px solid ${['ReturnedForRevision', 'Returned for Revision'].includes(h.status) ? '#ef4444' : h.status === 'Rejected' ? '#7f1d1d' : theme.goldDark}`
                           }}>
                             "{h.remarks}"
                           </div>
@@ -515,15 +574,16 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
             </div>
 
             {/* Reengineered Official Government Purchase Request (PR) Layout */}
-            <div className="bg-white border-2 border-slate-400 p-8 shadow-lg max-w-4xl mx-auto rounded-none font-mono text-slate-800 space-y-6" id="pr-print-document" style={{ color: '#000', backgroundColor: '#fff' }}>
-              
-              {/* Header Box */}
-              <div className="text-center space-y-1 pb-4 border-b-2 border-slate-800">
-                <h2 className="text-sm font-bold uppercase tracking-wider">Appendix 60</h2>
-                <h1 className="text-base font-extrabold uppercase">PURCHASE REQUEST</h1>
-                <h3 className="text-sm font-black">BATANES STATE COLLEGE</h3>
-                <p className="text-[10px] text-slate-500 font-bold">Basco, Batanes</p>
-              </div>
+            <DocumentLayout title="PURCHASE REQUEST" documentRef={selectedPr.prNumber} printAreaId="pr-print-document">
+              <div className="bg-white border-2 border-slate-400 p-8 shadow-lg max-w-4xl mx-auto rounded-none font-mono text-slate-800 space-y-6" id="pr-print-document" style={{ color: '#000', backgroundColor: '#fff' }}>
+                
+                {/* Header Box - hidden during print to prioritize official graphic header */}
+                <div className="text-center space-y-1 pb-4 border-b-2 border-slate-800 print:hidden">
+                  <h2 className="text-sm font-bold uppercase tracking-wider">Appendix 60</h2>
+                  <h1 className="text-base font-extrabold uppercase">PURCHASE REQUEST</h1>
+                  <h3 className="text-sm font-black">BATANES STATE COLLEGE</h3>
+                  <p className="text-[10px] text-slate-500 font-bold">Basco, Batanes</p>
+                </div>
 
               {/* Agency Metadata Grid */}
               <div className="grid grid-cols-2 border border-slate-800 divide-x divide-slate-800 text-[11px] font-bold">
@@ -652,6 +712,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                 </div>
               </div>
             </div>
+          </DocumentLayout>
           </>
         ) : (
           <div style={{

@@ -577,7 +577,7 @@ A comprehensive stabilization phase addressing application routing, input valida
 
 ### 4. Recalculation & Data Integrity
 - Recalculated PPMP budgets server-side dynamically from line items to guard against spoofed client payloads.
-- Added automatic budget refund transactions: If an administrative reviewer rejects or cancels a Purchase Request, the department's `spentBudget` allocation is automatically refunded.
+- **Realigned Budget Commitment System**: Adjusted department budget allocation rules so that budget spent is only committed (incremented) upon official PR approval or receipt. Budgets are no longer reserved on submission, meaning no decrement occurs when requests are rejected or returned.
 
 ---
 
@@ -608,6 +608,35 @@ A high-fidelity enhancement to the procurement approval process, establishing fu
 
 ---
 
+## 🖨️ Unified Document Branding, Print Engine & Realigned Budgets (Sprint 9)
+
+A comprehensive upgrade to the document output and budget tracking pipeline to mirror official Batanes State College administrative guidelines:
+
+### 1. Realigned Budget Spent Logic
+- **Commit on Approval**: Realigned budget tracking so that department spent budgets are only committed (incremented) when a Purchase Request is officially approved by the Administrative Approver or marked as received.
+- **No Pre-Reservation**: Submission of PR drafts and revisions does not alter the spent budget. If a PR is rejected or returned while in review/draft, the budget remains untouched.
+
+### 2. Full-Lifecycle Status Audit Trails
+- **Chronological Logs**: Every state change (Draft, Submitted, UnderReview, ReturnedForRevision (mapped to `"Returned for Revision"`), Approved, Received, and Rejected) now records a corresponding status log inside `PurchaseRequestStatusHistory`, detailing the review comments, dates, and active actor names.
+
+### 3. Unified Print Layout Engine
+- **Fixed Branding Headers/Footers**: Introduced a graphic layout wrapper (`DocumentLayout.tsx`) utilizing College branding assets (`bsc-header.png` and `bsc-footer.png`) which automatically repeat at the top and bottom of every printed page.
+- **Overflow Prevention**: Defined strict CSS printing layout rules ensuring that content margins and print boundaries align beautifully without text page overlapping.
+- **Target Views Integration**: Integrated the branding layout into the following printable items, keeping them clean and dashboard-only on the screen view:
+  - Purchase Orders (Appendix 61) (`PoDetailsClient.tsx`)
+  - BAC Procurement Recommendation Report (`RfqEvaluationClient.tsx`)
+  - Executive Procurement Analytics Reports (`AnalyticsDashboardClient.tsx`)
+  - Purchase Requests (Appendix 60) for End-Users, Officers, and Approvers (`PrTrackerClient.tsx`, `PrDetailsClient.tsx`, `PrReviewClient.tsx`)
+
+### 4. Direct Action Controls & Approval cards
+- **Action buttons**: Added print action buttons to the Requisition tracker, Officer detail, and Approver history views.
+- **Approval Cards**: Added high-visibility "Approval / Review Details" alerts displaying status comments, reviewer names, and decision timestamps on processed Purchase Requests.
+
+### 5. Re-Branded status "Returned for Revision"
+- **Clearer Nomenclature**: Renamed the database status map, badges, timelines, tracker view, history tab, and reports from `"Returned"` to `"Returned for Revision"` to reassure requisitioners that their requests only need corrections.
+
+---
+
 ## 🔄 System Flowcharts & Process Architecture
 
 ProcureWise's system workflows and operational logic are documented in a centralized, thesis-ready format. This resource includes comprehensive Mermaid flowcharts adhering to strict modeling standards (Start/End terminators, process rectangles, decision diamonds, input/output parallelograms, and database cylinders with Yes/No branches).
@@ -634,6 +663,8 @@ The system workflows, database relationships, logical data flows, and use case d
 * [UML Use Case Diagram](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/use_case_diagram.md)
 * [Development Roadmap](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/development_roadmap.md)
 * [Final Development Roadmap](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/final_development_roadmap.md)
+* [System Audit & Production Readiness Report](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/system_audit_report.md)
+* [Sprint 9 Walkthrough & Validation](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/walkthrough.md)
 
 
 

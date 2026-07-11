@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { updatePoAction, approvePoAction } from "@/app/actions/po";
+import DocumentLayout from "@/components/documents/DocumentLayout";
 
 interface Supplier {
   id: number;
@@ -119,33 +120,6 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }} className="lg:grid-cols-3">
-      {/* Print custom override styles */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @media print {
-          body * {
-            visibility: hidden;
-            background: #fff !important;
-            color: #000 !important;
-          }
-          .print-section, .print-section * {
-            visibility: visible;
-          }
-          .print-section {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            padding: 0;
-            margin: 0;
-            border: none !important;
-            box-shadow: none !important;
-          }
-          header, footer, nav, button, .no-print {
-            display: none !important;
-          }
-        }
-      ` }} />
-
       {/* Main PO Government Layout (Appendix 61) */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-2">
         {/* Control and feedback panel */}
@@ -162,135 +136,146 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
         )}
 
         {/* Appendix 61 Government PO Layout Sheet */}
-        <div
-          className="print-section"
-          style={{
-            background: "#fff",
-            color: "#000",
-            border: "2px solid #000",
-            borderRadius: "0.25rem",
-            padding: "2.5rem",
-            boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
-            fontFamily: "Arial, sans-serif",
-            display: "flex",
-            flexDirection: "column"
-          }}
-        >
-          {/* Header block */}
-          <div style={{ textAlign: "center", marginBottom: "1.5rem", borderBottom: "2px double #000", paddingBottom: "1rem" }}>
-            <span style={{ fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", display: "block" }}>Appendix 61</span>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "0.5rem 0 0.1rem 0" }}>PURCHASE ORDER</h2>
-            <div style={{ fontSize: "1.1rem", fontWeight: "bold", letterSpacing: "1px" }}>BATANES STATE COLLEGE</div>
-            <div style={{ fontSize: "0.8rem", fontStyle: "italic" }}>Basco, Batanes, Philippines</div>
-          </div>
+        <DocumentLayout title="PURCHASE ORDER" documentRef={po.poNumber} printAreaId="poPrintArea">
+          <div
+            id="poPrintArea"
+            className="print-section"
+            style={{
+              background: "#fff",
+              color: "#000",
+              border: "2px solid #000",
+              borderRadius: "0.25rem",
+              padding: "2.5rem",
+              boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
+              fontFamily: "Arial, sans-serif",
+              display: "flex",
+              flexDirection: "column"
+            }}
+          >
+            {/* Header block - hidden during print to prioritize official graphic header */}
+            <div className="print:hidden" style={{ textAlign: "center", marginBottom: "1.5rem", borderBottom: "2px double #000", paddingBottom: "1rem" }}>
+              <span style={{ fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", display: "block" }}>Appendix 61</span>
+              <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "0.5rem 0 0.1rem 0" }}>PURCHASE ORDER</h2>
+              <div style={{ fontSize: "1.1rem", fontWeight: "bold", letterSpacing: "1px" }}>BATANES STATE COLLEGE</div>
+              <div style={{ fontSize: "0.8rem", fontStyle: "italic" }}>Basco, Batanes, Philippines</div>
+            </div>
 
-          {/* PO metadata fields */}
-          <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #000", marginBottom: "1rem" }}>
-            <tbody>
-              <tr>
-                <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem", verticalAlign: "top" }}>
-                  <strong>Supplier:</strong> {po.supplier.companyName}<br />
-                  <strong>Address:</strong> {po.supplier.businessAddress}<br />
-                  <strong>TIN:</strong> {po.supplier.tin || "N/A"}
-                </td>
-                <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem", verticalAlign: "top" }}>
-                  <strong>P.O. No:</strong> {po.poNumber}<br />
-                  <strong>Date:</strong> {new Date(po.createdAt).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}<br />
-                  <strong>Mode of Procurement:</strong> Small Value Procurement
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <p style={{ margin: "1rem 0", fontSize: "0.8rem" }}>
-            Gentlemen:<br />
-            Please furnish this Office the following articles subject to the terms and conditions contained herein:
-          </p>
-
-          {/* Delivery terms block */}
-          <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #000", marginBottom: "1.5rem" }}>
-            <tbody>
-              <tr>
-                <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
-                  <strong>Place of Delivery:</strong> BSC Supply Office, Basco, Batanes
-                </td>
-                <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
-                  <strong>Delivery Term:</strong> {po.deliveryTerms || "FOB Destination"}
-                </td>
-              </tr>
-              <tr>
-                <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
-                  <strong>Date of Delivery:</strong> Within 7 calendar days upon receipt of PO
-                </td>
-                <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
-                  <strong>Payment Term:</strong> {po.paymentTerms || "Charge Account"}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          {/* Item List Breakdown */}
-          <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #000", marginBottom: "1.5rem" }}>
-            <thead>
-              <tr style={{ backgroundColor: "#f9fafb" }}>
-                <th style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "center", width: "10%", fontSize: "0.8rem", fontWeight: "bold" }}>Item No.</th>
-                <th style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "left", width: "50%", fontSize: "0.8rem", fontWeight: "bold" }}>Description</th>
-                <th style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "center", width: "10%", fontSize: "0.8rem", fontWeight: "bold" }}>Qty</th>
-                <th style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", width: "15%", fontSize: "0.8rem", fontWeight: "bold" }}>Unit Cost</th>
-                <th style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", width: "15%", fontSize: "0.8rem", fontWeight: "bold" }}>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-              {po.items.map((item, index) => (
-                <tr key={item.id}>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "center", fontSize: "0.8rem" }}>{index + 1}</td>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", fontSize: "0.8rem" }}>{item.description}</td>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "center", fontSize: "0.8rem" }}>{item.quantity}</td>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", fontSize: "0.8rem" }}>₱{Number(item.unitPrice).toLocaleString()}</td>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", fontSize: "0.8rem" }}>₱{Number(item.totalCost).toLocaleString()}</td>
+            {/* PO metadata fields */}
+            <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #000", marginBottom: "1rem" }}>
+              <tbody>
+                <tr>
+                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem", verticalAlign: "top" }}>
+                    <strong>Supplier:</strong> {po.supplier.companyName}<br />
+                    <strong>Address:</strong> {po.supplier.businessAddress}<br />
+                    <strong>TIN:</strong> {po.supplier.tin || "N/A"}
+                  </td>
+                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem", verticalAlign: "top" }}>
+                    <strong>P.O. No:</strong> {po.poNumber}<br />
+                    <strong>Date:</strong> {new Date(po.createdAt).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}<br />
+                    <strong>Mode of Procurement:</strong> Small Value Procurement
+                  </td>
                 </tr>
-              ))}
-              <tr>
-                <td colSpan={4} style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", fontWeight: "bold", fontSize: "0.8rem" }}>TOTAL AMOUNT</td>
-                <td style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", fontWeight: "bold", fontSize: "0.85rem" }}>
-                  ₱{Number(po.totalCost).toLocaleString()}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+              </tbody>
+            </table>
 
-          {/* Legal penalty notice */}
-          <p style={{ fontSize: "0.7rem", lineHeight: 1.4, margin: "1rem 0" }}>
-            In case of failure to make the full delivery within the time specified above, a penalty of one-tenth (1/10) of one percent for every day of delay shall be imposed on the undelivered item/s.
-          </p>
+            <p style={{ margin: "1rem 0", fontSize: "0.8rem" }}>
+              Gentlemen:<br />
+              Please furnish this Office the following articles subject to the terms and conditions contained herein:
+            </p>
 
-          {/* Signatures conforme blocks */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginTop: "2rem" }}>
-            <div>
-              <p style={{ margin: "0 0 1.5rem 0", fontSize: "0.8rem" }}>Conforme:</p>
-              <div style={{ borderBottom: "1.5px solid #000", width: "80%", height: "20px" }}></div>
-              <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", color: "#333" }}>Signature over Printed Name of Supplier</p>
-              <div style={{ borderBottom: "1.5px solid #000", width: "80%", height: "20px", marginTop: "1rem" }}></div>
-              <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", color: "#333" }}>Date</p>
+            {/* Delivery terms block */}
+            <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #000", marginBottom: "1.5rem" }}>
+              <tbody>
+                <tr>
+                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
+                    <strong>Place of Delivery:</strong> BSC Supply Office, Basco, Batanes
+                  </td>
+                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
+                    <strong>Delivery Term:</strong> {po.deliveryTerms || "FOB Destination"}
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
+                    <strong>Date of Delivery:</strong> Within lead time upon PO approval
+                  </td>
+                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
+                    <strong>Payment Term:</strong> {po.paymentTerms || "Charge Account"}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            {/* Items Table */}
+            <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #000", fontSize: "0.82rem", marginBottom: "1rem" }}>
+              <thead>
+                <tr style={{ backgroundColor: "#f9fafb" }}>
+                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "8%", textAlign: "center" }}>Stock No.</th>
+                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "8%", textAlign: "center" }}>Unit</th>
+                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "44%", textAlign: "left" }}>Description</th>
+                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "10%", textAlign: "center" }}>Quantity</th>
+                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "12%", textAlign: "right" }}>Unit Cost</th>
+                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "18%", textAlign: "right" }}>Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {po.items.map((item, idx) => (
+                  <tr key={item.id}>
+                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "center" }}>{idx + 1}</td>
+                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "center" }}>unit</td>
+                    <td style={{ border: "1px solid #000", padding: "0.4rem" }}>{item.description}</td>
+                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "center" }}>{item.quantity}</td>
+                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "right" }}>₱{Number(item.unitPrice).toLocaleString()}</td>
+                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "right", fontWeight: "bold" }}>₱{Number(item.totalCost).toLocaleString()}</td>
+                  </tr>
+                ))}
+                <tr>
+                  <td colSpan={5} style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", fontWeight: "bold" }}>
+                    TOTAL AMOUNT
+                  </td>
+                  <td style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", fontWeight: "black", color: "#7e191b", fontSize: "0.9rem" }}>
+                    ₱{Number(po.totalCost).toLocaleString()}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            {/* Total in words */}
+            <div style={{ border: "1px solid #000", padding: "0.6rem", fontSize: "0.78rem", marginBottom: "1.5rem" }}>
+              <strong>(Total Amount in Words):</strong> <span style={{ textTransform: "uppercase", fontStyle: "italic" }}>Pesos Only</span>
             </div>
 
-            <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-              <p style={{ margin: "0 0 1.5rem 0", fontSize: "0.8rem", width: "80%", textAlign: "left" }}>Very truly yours,</p>
-              {po.status === "Approved" ? (
-                <div style={{ fontStyle: "italic", fontSize: "1rem", fontWeight: "bold", color: "#7e191b", width: "80%", textAlign: "left", fontFamily: "cursive", height: "20px" }}>
-                  ✓ Digitally Signed
-                </div>
-              ) : (
-                <div style={{ height: "20px" }}></div>
-              )}
-              <div style={{ borderBottom: "1.5px solid #000", width: "80%", marginTop: "0.5rem" }}></div>
-              <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", width: "80%", textAlign: "left" }}>
-                <strong>DR. ELIZABETH T. CHIARRE</strong><br />
-                College President, Batanes State College
-              </p>
+            <p style={{ fontSize: "0.78rem", lineHeight: "1.4", margin: "0 0 2rem 0" }}>
+              In case of failure to make the full delivery within the time specified above, a penalty of one-tenth (1/10) of one percent for every day of delay shall be imposed on the undelivered item/s.
+            </p>
+
+            {/* Signatures */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginTop: "1rem" }}>
+              <div>
+                <p style={{ margin: "0 0 1.5rem 0", fontSize: "0.8rem" }}>Conforme:</p>
+                <div style={{ borderBottom: "1.5px solid #000", width: "80%", height: "20px" }}></div>
+                <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", color: "#333" }}>Signature over Printed Name of Supplier</p>
+                <div style={{ borderBottom: "1.5px solid #000", width: "80%", height: "20px", marginTop: "1rem" }}></div>
+                <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", color: "#333" }}>Date</p>
+              </div>
+
+              <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
+                <p style={{ margin: "0 0 1.5rem 0", fontSize: "0.8rem", width: "80%", textAlign: "left" }}>Very truly yours,</p>
+                {po.status === "Approved" ? (
+                  <div style={{ fontStyle: "italic", fontSize: "1rem", fontWeight: "bold", color: "#7e191b", width: "80%", textAlign: "left", fontFamily: "cursive", height: "20px" }}>
+                    ✓ Digitally Signed
+                  </div>
+                ) : (
+                  <div style={{ height: "20px" }}></div>
+                )}
+                <div style={{ borderBottom: "1.5px solid #000", width: "80%", marginTop: "0.5rem" }}></div>
+                <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", width: "80%", textAlign: "left" }}>
+                  <strong>DR. ELIZABETH T. CHIARRE</strong><br />
+                  College President, Batanes State College
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </DocumentLayout>
       </div>
 
       {/* Right Column: PO Configuration, Edit Terms & Document Timeline */}

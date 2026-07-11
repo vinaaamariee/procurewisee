@@ -17,8 +17,8 @@ export async function startPrReview(prId: number) {
     const old = await prisma.purchaseRequest.findUnique({ where: { id: prId } });
     if (!old) return { success: false, error: 'Purchase Request not found.' };
 
-    if (old.status !== 'Submitted') {
-      return { success: false, error: `Purchase Request is in ${old.status} state. Review can only be started for Submitted requests.` };
+    if (old.status !== 'Submitted' && old.status !== 'Received') {
+      return { success: false, error: `Purchase Request is in ${old.status} state. Review can only be started for Submitted or Received requests.` };
     }
 
     const updated = await prisma.$transaction(async (tx) => {
@@ -90,6 +90,22 @@ export async function approvePr(prId: number, remarks?: string) {
         },
       });
 
+      // Increment spent budget upon approval
+      const deptBudget = await tx.departmentBudget.findUnique({
+        where: { department: old.department },
+      });
+
+      if (deptBudget) {
+        await tx.departmentBudget.update({
+          where: { department: old.department },
+          data: {
+            spentBudget: {
+              increment: old.totalCost,
+            },
+          },
+        });
+      }
+
       return pr;
     });
 
@@ -145,22 +161,6 @@ export async function returnPr(prId: number, remarks: string) {
         },
       });
 
-      // Release reserved budget from department spent budget
-      const deptBudget = await tx.departmentBudget.findUnique({
-        where: { department: old.department },
-      });
-
-      if (deptBudget) {
-        await tx.departmentBudget.update({
-          where: { department: old.department },
-          data: {
-            spentBudget: {
-              decrement: old.totalCost,
-            },
-          },
-        });
-      }
-
       return pr;
     });
 
@@ -215,22 +215,6 @@ export async function rejectPr(prId: number, remarks: string) {
           changedById: profile.id,
         },
       });
-
-      // Release reserved budget from department spent budget
-      const deptBudget = await tx.departmentBudget.findUnique({
-        where: { department: old.department },
-      });
-
-      if (deptBudget) {
-        await tx.departmentBudget.update({
-          where: { department: old.department },
-          data: {
-            spentBudget: {
-              decrement: old.totalCost,
-            },
-          },
-        });
-      }
 
       return pr;
     });
