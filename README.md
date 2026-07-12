@@ -230,6 +230,20 @@ A real-time notification dispatch hub designed to provide visibility across proc
   - **Supplier Evaluation Submitted**: Dispatched to Procurement Officers upon scorecard submissions.
 - **Background Polling**: Uses client-side React polling intervals to query server actions every 10 seconds for frictionless updates.
 
+### 23. Spotlight Global Search
+
+A command palette-style universal search bar integrated into the dashboard header:
+- **Shortcut Trigger**: Opens instantly by pressing `Ctrl + K` (or `Cmd + K`) on any page, or by clicking the header search input button.
+- **Simultaneous Registry Search**: Searches across seven core entities simultaneously using high-efficiency query grouping:
+  - **Products**: Search title/description fields.
+  - **Purchase Requests**: Search PR codes and department names.
+  - **PPMPs**: Search procurement plan titles and department names.
+  - **Purchase Orders**: Search PO tracking codes.
+  - **RFQs**: Search solicitation reference codes and titles.
+  - **Suppliers**: Search vendor company names and contact persons.
+  - **Departments**: Search department budget registries.
+- **Grouped Search Results**: Displays outcomes organized into neat categories with metadata subtitles and focus transitions, facilitating fast navigation directly to the corresponding detail layouts.
+
 > [!NOTE]
 > Features such as Workflow Builder (`/dashboard/approver/workflows`), Form Template Customizer (`/dashboard/approver/forms`), and Reports Export (`/dashboard/approver/reports`) exist in the codebase but have been **unlinked from navigation** to reduce confusion. They can be re-enabled by adding their links back to the `navLinks` object in `src/app/dashboard/layout.tsx`.
 

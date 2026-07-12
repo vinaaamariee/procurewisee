@@ -3,6 +3,7 @@ import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
 import { ROLE_COLORS, ROLE_HOME } from '@/types/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
 import NotificationBell from '@/components/notifications/NotificationBell';
+import GlobalSearch from '@/components/search/GlobalSearch';
 
 export default async function DashboardLayout({
   children,
@@ -70,6 +71,9 @@ export default async function DashboardLayout({
                 <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{profile.email}</div>
               </div>
             </div>
+
+            {/* Global Search */}
+            <GlobalSearch />
 
             {/* Notification Bell */}
             <NotificationBell currentUser={profile} />
