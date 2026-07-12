@@ -200,7 +200,7 @@ A professional portal homepage at `/` showcasing Batanes State College procureme
 
 A guest-accessible, no-login marketplace at `/catalog` and `/catalog/[id]` allowing end-users and the public to browse and audit procurement materials, compare prices, and explore historical trends:
 
-- **Universal Search & Multi-Filters**: Real-time debounced keyword search on product titles, categories, and brands, paired with a scrollable **top horizontal category filter** pill-bar, category sidebar, and brand/price range filters.
+- **Universal Search & Multi-Filters**: Real-time debounced keyword search on product titles, categories, and brands, paired with a scrollable **top horizontal category filter** pill-bar, category sidebar, brand filter, price range slider, and multiple sorting options (Lowest Price, Highest Price, Recently Added, Recently Updated, and Most Requested), with expanded card grid gaps for enhanced readability.
 - **URL-Based Pagination**: Clean URL-state persistence of search query, filters, and page numbers ensuring direct link-sharing and navigation persistence.
 - **Procurement Information & Badges**: Displays detailed cards for each product including product image preview (or generic package fallback), the Estimated Unit Cost, Latest Canvassed Price, Preferred Supplier, Available Supplier Count, Last Updated time, and a dynamic Market Availability badge (Available, Limited, Unavailable).
 - **SVG Historical Price Trend Chart**: A pure-SVG rendering of historical price adjustments derived from the procurement database without external library overhead, supporting responsive sizing.

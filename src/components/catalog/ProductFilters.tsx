@@ -28,9 +28,10 @@ interface ProductFiltersProps {
 }
 
 const SORT_OPTIONS = [
-  { value: "recentlyUpdated", label: "Recently Updated" },
+  { value: "recentlyAdded", label: "Recently Added" },
   { value: "lowestPrice", label: "Lowest Price" },
   { value: "highestPrice", label: "Highest Price" },
+  { value: "recentlyUpdated", label: "Recently Updated" },
   { value: "mostRequested", label: "Most Requested" },
 ] as const;
 

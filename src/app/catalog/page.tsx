@@ -46,7 +46,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   const minPrice = params.minPrice ? parseFloat(params.minPrice) : undefined;
   const maxPrice = params.maxPrice ? parseFloat(params.maxPrice) : undefined;
   const page = params.page ? parseInt(params.page, 10) : 1;
-  const sortBy = (params.sort as "lowestPrice" | "highestPrice" | "recentlyUpdated" | "mostRequested") || "recentlyUpdated";
+  const sortBy = (params.sort as "lowestPrice" | "highestPrice" | "recentlyUpdated" | "mostRequested" | "recentlyAdded") || "recentlyAdded";
 
   const [{ products, totalCount, totalPages }, filters] = await Promise.all([
     getCatalogPage({

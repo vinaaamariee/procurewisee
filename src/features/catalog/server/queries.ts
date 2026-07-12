@@ -156,7 +156,7 @@ export async function getCatalogPage(params: {
   minPrice?: number;
   maxPrice?: number;
   onlyAvailable?: boolean;
-  sortBy?: "lowestPrice" | "highestPrice" | "recentlyUpdated" | "mostRequested";
+  sortBy?: "lowestPrice" | "highestPrice" | "recentlyUpdated" | "mostRequested" | "recentlyAdded";
   page?: number;
   pageSize?: number;
 }): Promise<CatalogPageResult> {
@@ -204,6 +204,7 @@ export async function getCatalogPage(params: {
   let orderBy: Prisma.CatalogProductOrderByWithRelationInput = { updatedAt: "desc" };
   if (params.sortBy === "mostRequested") orderBy = { popularity: "desc" };
   else if (params.sortBy === "recentlyUpdated") orderBy = { updatedAt: "desc" };
+  else if (params.sortBy === "recentlyAdded") orderBy = { createdAt: "desc" };
   // lowestPrice / highestPrice require post-sort (below)
 
   const [rawProducts, totalCount] = await Promise.all([
