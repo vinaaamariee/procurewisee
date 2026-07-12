@@ -361,8 +361,47 @@ export default async function OfficerDashboard() {
                     <td style={{ padding: '1rem 1.5rem', color: v.textSecondary, whiteSpace: 'nowrap', fontWeight: 600 }}>
                       ₱{Number(rfq.approvedBudgetContract).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', color: v.textSecondary, whiteSpace: 'nowrap', fontWeight: 500 }}>
-                      {rfq.deadlineDate ? new Date(rfq.deadlineDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                    <td style={{ padding: '1rem 1.5rem', whiteSpace: 'nowrap' }}>
+                      {rfq.deadlineDate ? (
+                        (() => {
+                          const deadline = new Date(rfq.deadlineDate);
+                          const formattedDeadline = deadline.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+                          
+                          const now = new Date();
+                          const dDate = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
+                          const nDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                          const diffTime = dDate.getTime() - nDate.getTime();
+                          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                          
+                          let remainingLabel = "";
+                          let textColor = "#059669"; // Green
+                          
+                          if (diffDays < 0) {
+                            remainingLabel = "Expired";
+                            textColor = "#dc2626"; // Red
+                          } else if (diffDays === 0) {
+                            remainingLabel = "Expiring Today";
+                            textColor = "#dc2626"; // Red
+                          } else if (diffDays === 1) {
+                            remainingLabel = "1 Day Remaining";
+                            textColor = "#dc2626"; // Red
+                          } else {
+                            remainingLabel = `${diffDays} Days Remaining`;
+                            if (diffDays <= 5) {
+                              textColor = "#d97706"; // Yellow
+                            } else {
+                              textColor = "#059669"; // Green
+                            }
+                          }
+                          
+                          return (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                              <span style={{ color: v.textSecondary, fontWeight: 600 }}>{formattedDeadline}</span>
+                              <span style={{ fontSize: '0.72rem', fontWeight: 800, color: textColor }}>{remainingLabel}</span>
+                            </div>
+                          );
+                        })()
+                      ) : '—'}
                     </td>
                     <td style={{ padding: '1rem 1.5rem' }}>
                       <span style={{ 

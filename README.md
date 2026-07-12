@@ -181,7 +181,7 @@ A private visual workspace at `/dashboard/supplier/scorecard` displaying supplie
 Each role dashboard has been cleaned up to show only relevant, functional links:
 
 - **Procurement Officer**: Overview &rarr; Purchase Requests &rarr; Purchase Orders
-  - **Overview Dashboard**: Integrates system counter statistics (Total RFQs, Open/Active, Registered Suppliers) with a dynamic **Today's Tasks** widget displaying detailed line items of Purchase Requests awaiting audit, RFQs nearing deadline, Purchase Orders awaiting printing, and pending supplier quotations (each with specialized badges, due dates, and quick action buttons).
+  - **Overview Dashboard**: Integrates system counter statistics (Total RFQs, Open/Active, Registered Suppliers) with a dynamic **Today's Tasks** widget displaying detailed line items of Purchase Requests awaiting audit, RFQs nearing deadline, Purchase Orders awaiting printing, and pending supplier quotations. Includes a **Recent Solicitations** registry showing remaining days with red/yellow/green color-coding based on deadline proximity.
 - **Administrative Approver**: Overview only (MCDM approval queue, audit trail, and staff management are all on the overview page)
 - **End User**: Overview → My PPMPs → Purchase Requests
   - **Overview Dashboard**: Features a Department Fiscal Budget Tracker with real-time progress indicators, quick statistics summaries, recent PR history, and an interactive **My Pending Actions** panel displaying status badges, short descriptions, and action buttons for draft/returned PPMPs, returned PRs, and pending supplier evaluations.
