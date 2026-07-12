@@ -28,9 +28,9 @@ export default function Header() {
           className="flex items-center gap-3 no-underline"
           aria-label="ProcureWise Home"
         >
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border border-[#ca8a04]/40 bg-white font-black text-sm shadow-md dark:bg-[#1e293b]">
-            <span className="text-[#7e191b]">P</span>
-            <span className="text-[#ca8a04]">W</span>
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border bg-white font-black text-sm shadow-md dark:bg-[#1e293b]" style={{ borderColor: "var(--border)" }}>
+            <span style={{ color: "var(--maroon)" }}>P</span>
+            <span style={{ color: "var(--gold)" }}>W</span>
           </div>
           <div>
             <div className="text-base font-extrabold leading-tight tracking-tight" style={{ color: "var(--text-primary)" }}>

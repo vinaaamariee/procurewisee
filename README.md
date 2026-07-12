@@ -190,7 +190,7 @@ Each role dashboard has been cleaned up to show only relevant, functional links:
 ### 19. Professional Government Procurement Landing Page (Sprint 2.1)
 
 A professional portal homepage at `/` showcasing Batanes State College procurement:
-- **Hero & Search**: High-impact split-column brand section featuring BSC color schemes (Maroon and Gold), college seal style branding, a functional product search bar redirecting to `/catalog`, and a dynamic **BSC Info Center** panel displaying active RFQs (from the database), system announcements, and news feeds.
+- **Hero & Search**: High-impact split-column brand section mapping dynamically to the **blue-and-white ProcureWise design system** in light mode (and Maroon/Gold on dark theme), college seal style branding, a functional product search bar redirecting to `/catalog`, and a dynamic **BSC Info Center** panel displaying active RFQs (from the database), system announcements, and news feeds.
 - **Database Statistics**: Dynamic counter cards showing live database counts for active products, registered vendors, unique categories, and pricing updates.
 - **Category Navigation Grid**: Responsive grid displaying product categories with counts, linking directly to filtered views in the catalog.
 - **Recently Updated Products**: Showcases the 8 most recently updated active products in the database with their current canvassed/estimated pricing and last-update timestamp indicators.

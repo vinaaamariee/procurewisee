@@ -13,7 +13,7 @@ const ANNOUNCEMENTS = [
     content: "All active suppliers are required to upload their updated 2026 Platinum membership certificate before participating in upcoming bids.",
     date: "July 10, 2026",
     tag: "Urgent",
-    tagColor: "#7e191b"
+    tagColor: "var(--maroon)"
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ const ANNOUNCEMENTS = [
     content: "Please ensure to download the latest Excel RFQ bidding template format for all bids starting July 15. Previous template formats will fail verification.",
     date: "July 07, 2026",
     tag: "Guide",
-    tagColor: "#3b82f6"
+    tagColor: "var(--accent-light)"
   },
   {
     id: 3,
@@ -29,7 +29,7 @@ const ANNOUNCEMENTS = [
     content: "A virtual workshop for Batanes State College department heads on budget execution and Best-Value vendor rating factors will be held on July 18.",
     date: "July 05, 2026",
     tag: "Training",
-    tagColor: "#ca8a04"
+    tagColor: "var(--gold)"
   }
 ];
 
@@ -101,8 +101,8 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
       </div>
 
       {/* Gradient orbs */}
-      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-[#7e191b]/5 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[#ca8a04]/5 blur-3xl" />
+      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: "var(--accent-glass)" }} />
+      <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: "var(--secondary-dim)" }} />
 
       <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -117,7 +117,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                 background: "var(--surface)",
               }}
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-[#ca8a04] animate-pulse" />
+              <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: "var(--gold)" }} />
               Batanes State College
             </div>
 
@@ -125,8 +125,8 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
             <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
               style={{ color: "var(--text-primary)" }}
             >
-              <span className="text-[#7e191b] dark:text-[#e23a3e]">PROCURE</span>
-              <span className="text-[#ca8a04] dark:text-[#facc15]">WISE</span>
+              <span style={{ color: "var(--maroon)" }}>PROCURE</span>
+              <span style={{ color: "var(--gold)" }}>WISE</span>
             </h1>
 
             {/* Subtitle */}
@@ -156,7 +156,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                 href="/catalog"
                 className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:shadow-xl hover:translate-y-[-1px]"
                 style={{
-                  background: "linear-gradient(135deg, #7e191b, #962124)",
+                  background: "linear-gradient(135deg, var(--accent), var(--accent-light))",
                 }}
               >
                 Browse Procurement Catalog
@@ -177,7 +177,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
               {/* Widget Header */}
               <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-800/60">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-[#ca8a04]" />
+                  <Sparkles className="h-4 w-4" style={{ color: "var(--gold)" }} />
                   <h3 
                     className="font-extrabold text-xs uppercase tracking-widest"
                     style={{ color: "var(--text-primary)" }}
@@ -206,9 +206,10 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                       onClick={() => setActiveTab(tab.id as any)}
                       className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-1 rounded-lg text-[11px] font-bold transition-all duration-200 cursor-pointer ${
                         isActive
-                          ? 'bg-white dark:bg-slate-700 text-[#7e191b] dark:text-[#facc15] shadow-sm font-extrabold scale-[1.02]'
+                          ? 'bg-white dark:bg-slate-700 shadow-sm font-extrabold scale-[1.02]'
                           : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
                       }`}
+                      style={{ color: isActive ? "var(--maroon)" : undefined }}
                     >
                       <Icon className="h-3.5 w-3.5" />
                       <span>{tab.label.split(' ')[isActive ? 0 : 0]}</span>
@@ -229,7 +230,9 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                           style={{ borderColor: "var(--border)" }}
                         >
                           <div className="flex items-center justify-between mb-1.5">
-                            <span className="px-2 py-0.5 rounded text-[9px] font-bold text-[#ca8a04] bg-[#ca8a04]/10 uppercase tracking-wider border border-[#ca8a04]/20">
+                            <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border"
+                              style={{ color: "var(--gold)", backgroundColor: "var(--gold-dim)", borderColor: "var(--border-gold)" }}
+                            >
                               {rfq.rfqNumber}
                             </span>
                             <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold flex items-center gap-1">
@@ -238,7 +241,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                             </span>
                           </div>
                           <h4 
-                            className="text-xs font-bold leading-relaxed line-clamp-2 group-hover:text-[#7e191b] dark:group-hover:text-[#e23a3e] transition-colors"
+                            className="text-xs font-bold leading-relaxed line-clamp-2 group-hover:text-[var(--maroon)] transition-colors"
                             style={{ color: "var(--text-primary)" }}
                           >
                             {rfq.title}
