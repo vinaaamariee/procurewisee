@@ -183,6 +183,7 @@ Each role dashboard has been cleaned up to show only relevant, functional links:
 - **Procurement Officer**: Overview → Purchase Requests → Purchase Orders (Quick Actions on overview page still link to RFQ creation, Supplier Directory, Product Catalog, and Price Comparison)
 - **Administrative Approver**: Overview only (MCDM approval queue, audit trail, and staff management are all on the overview page)
 - **End User**: Overview → My PPMPs → Purchase Requests
+  - **Overview Dashboard**: Features a Department Fiscal Budget Tracker with real-time progress indicators, quick statistics summaries, recent PR history, and an interactive **My Pending Actions** panel showing draft/returned PPMPs, returned PRs, and pending supplier evaluations.
 - **Supplier**: Overview → Purchase Orders → My Scorecard
 
 ### 19. Professional Government Procurement Landing Page (Sprint 2.1)

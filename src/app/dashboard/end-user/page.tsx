@@ -12,10 +12,58 @@ export default async function EndUserDashboard() {
     where: { department: profile.fullName }
   }) || { allocatedBudget: 250000.00, spentBudget: 119600.00 };
 
-  // Fetch count statistics for PRs and PPMPs
-  const [prCount, ppmpCount] = await Promise.all([
+  // Fetch count statistics and pending actions data
+  const [
+    prCount,
+    ppmpCount,
+    pendingPpmps,
+    pendingPrs,
+    deliveredPos,
+    evaluatedSupplierIds
+  ] = await Promise.all([
     prisma.purchaseRequest.count({ where: { requestedById: profile.id } }),
     prisma.ppmp.count({ where: { preparedById: profile.id } }),
+    prisma.ppmp.findMany({
+      where: {
+        preparedById: profile.id,
+        status: { in: ["Draft", "Returned"] }
+      },
+      select: { id: true, projectTitle: true, status: true },
+      take: 3
+    }),
+    prisma.purchaseRequest.findMany({
+      where: {
+        requestedById: profile.id,
+        status: { in: ["Draft", "ReturnedForRevision"] }
+      },
+      select: { id: true, prNumber: true, status: true, purpose: true },
+      take: 3
+    }),
+    prisma.purchaseOrder.findMany({
+      where: {
+        pr: {
+          requestedById: profile.id
+        },
+        status: { in: ["Delivered", "Closed"] }
+      },
+      select: {
+        supplierId: true,
+        supplier: {
+          select: {
+            id: true,
+            companyName: true
+          }
+        }
+      }
+    }),
+    prisma.supplierEvaluation.findMany({
+      where: {
+        evaluatorName: profile.fullName
+      },
+      select: {
+        supplierId: true
+      }
+    }).then(list => list.map(e => e.supplierId))
   ]);
 
   // Fetch recent PR submissions
@@ -23,6 +71,57 @@ export default async function EndUserDashboard() {
     where: { requestedById: profile.id },
     orderBy: { createdAt: "desc" },
     take: 5,
+  });
+
+  // Filter delivered PO suppliers that have not been evaluated yet
+  const uniqueDeliveredSuppliers = Array.from(
+    new Map(
+      deliveredPos
+        .filter(po => po.supplier !== null)
+        .map(po => [po.supplierId, po.supplier])
+    ).values()
+  );
+
+  const pendingEvaluations = uniqueDeliveredSuppliers.filter(
+    sup => !evaluatedSupplierIds.includes(sup.id)
+  );
+
+  // Compile Actions List
+  const actionsList: Array<{
+    type: "planning" | "requisition" | "evaluation";
+    title: string;
+    description: string;
+    link: string;
+    statusLabel?: string;
+  }> = [];
+
+  pendingPpmps.forEach(ppmp => {
+    actionsList.push({
+      type: "planning",
+      title: ppmp.status === "Returned" ? "Revise Returned PPMP" : "Complete PPMP Planning",
+      description: ppmp.projectTitle,
+      link: `/dashboard/end-user/ppmp?id=${ppmp.id}`,
+      statusLabel: ppmp.status
+    });
+  });
+
+  pendingPrs.forEach(pr => {
+    actionsList.push({
+      type: "requisition",
+      title: pr.status === "ReturnedForRevision" ? "Revise Returned PR" : "Complete PR Requisition",
+      description: pr.purpose,
+      link: `/dashboard/end-user/pr?id=${pr.id}`,
+      statusLabel: pr.status === "ReturnedForRevision" ? "Returned" : "Draft"
+    });
+  });
+
+  pendingEvaluations.forEach(sup => {
+    actionsList.push({
+      type: "evaluation",
+      title: "Supplier Evaluation Pending",
+      description: `Rate performance for ${sup.companyName}`,
+      link: `/dashboard/end-user/evaluation?supplierId=${sup.id}`
+    });
   });
 
   const allocated = Number(budget.allocatedBudget);
@@ -143,6 +242,70 @@ export default async function EndUserDashboard() {
         {/* Right sidebar: Actions and quick stats */}
         <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
           
+          {/* My Pending Actions */}
+          <div style={{
+            background: v.surface,
+            border: `1px solid ${v.border}`, borderRadius: "1.25rem", padding: "1.5rem",
+            boxShadow: v.shadow
+          }}>
+            <h2 style={{ fontSize: "1rem", fontWeight: 700, color: v.textPrimary, margin: "0 0 1.25rem 0", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+              📋 My Pending Actions
+            </h2>
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              {actionsList.length > 0 ? (
+                actionsList.map((action, i) => {
+                  const badgeColor = 
+                    action.type === "planning" 
+                      ? { bg: "rgba(245,158,11,0.1)", text: "#d97706" }
+                      : action.type === "requisition"
+                      ? { bg: "rgba(239,68,68,0.1)", text: "#dc2626" }
+                      : { bg: "rgba(16,185,129,0.1)", text: "#059669" };
+
+                  return (
+                    <Link 
+                      key={i} 
+                      href={action.link} 
+                      style={{
+                        display: "block", textDecoration: "none", padding: "0.875rem", borderRadius: "0.85rem",
+                        background: "var(--bg-dark)", border: `1px solid ${v.border}`,
+                        transition: "all 0.15s ease",
+                      }}
+                      className="hover:border-[var(--accent)] hover:-translate-y-0.5 block transition-all"
+                    >
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.35rem" }}>
+                        <span style={{ 
+                          fontSize: "0.65rem", fontWeight: 800, padding: "0.15rem 0.5rem", borderRadius: "4px",
+                          backgroundColor: badgeColor.bg, color: badgeColor.text, textTransform: "uppercase", letterSpacing: "0.5px"
+                        }}>
+                          {action.type}
+                        </span>
+                        {action.statusLabel && (
+                          <span style={{ fontSize: "0.65rem", color: "var(--text-muted)", fontWeight: 700 }}>
+                            {action.statusLabel}
+                          </span>
+                        )}
+                      </div>
+                      <div style={{ fontSize: "0.8rem", fontWeight: 700, color: v.textPrimary, marginBottom: "0.15rem" }}>
+                        {action.title}
+                      </div>
+                      <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {action.description}
+                      </div>
+                    </Link>
+                  );
+                })
+              ) : (
+                <div style={{
+                  padding: "1.5rem", border: `1px dashed ${v.border}`, borderRadius: "0.85rem",
+                  textAlign: "center", color: "var(--text-muted)", fontSize: "0.8rem", fontWeight: 500
+                }}>
+                  <div style={{ fontSize: "1.5rem", marginBottom: "0.25rem" }}>✅</div>
+                  All caught up! No pending actions.
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Quick Actions */}
           <div style={{
             background: v.surface,
