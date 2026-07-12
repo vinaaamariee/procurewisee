@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import ForecastIntelligenceSection from './ForecastIntelligenceSection';
 import ForecastSkeleton from './ForecastSkeleton';
 import { startTimer } from '@/lib/performance-logger';
+import EmptyState from '@/components/ui/EmptyState';
 
 export const metadata = { title: 'Officer Dashboard — ProcureWise' };
 
@@ -417,8 +418,13 @@ export default async function OfficerDashboard() {
               })}
               {rfqs.length === 0 && (
                 <tr>
-                  <td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: v.textSecondary, fontWeight: 500 }}>
-                    No solicitations found.
+                  <td colSpan={5} style={{ padding: '1rem' }}>
+                    <EmptyState
+                      preset="rfq"
+                      title="No Active Solicitations"
+                      description="No requests for quotation have been created yet. Draft a new RFQ from the solicitation workspace."
+                      action={{ label: '+ New RFQ', href: '/dashboard/officer/rfq/new' }}
+                    />
                   </td>
                 </tr>
               )}

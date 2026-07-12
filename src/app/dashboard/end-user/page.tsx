@@ -1,6 +1,7 @@
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
+import EmptyState from "@/components/ui/EmptyState";
 
 export const metadata = { title: "End User Dashboard — ProcureWise" };
 
@@ -228,8 +229,14 @@ export default async function EndUserDashboard() {
                   ))}
                   {recentPrs.length === 0 && (
                     <tr>
-                      <td colSpan={4} style={{ padding: "3rem", textAlign: "center", color: v.textSecondary, fontWeight: 500 }}>
-                        No Purchase Requests filed yet. Go to the marketplace catalog to get started.
+                      <td colSpan={4} style={{ padding: '1rem' }}>
+                        <EmptyState
+                          preset="purchase-requests"
+                          title="No Purchase Requests Yet"
+                          description="You haven't submitted any purchase requests. Browse the marketplace catalog to get started."
+                          action={{ label: '→ Browse Catalog', href: '/end-user' }}
+                          compact
+                        />
                       </td>
                     </tr>
                   )}

@@ -244,6 +244,15 @@ A command palette-style universal search bar integrated into the dashboard heade
   - **Departments**: Search department budget registries.
 - **Grouped Search Results**: Displays outcomes organized into neat categories with metadata subtitles and focus transitions, facilitating fast navigation directly to the corresponding detail layouts.
 
+### 24. Professional Empty State System
+
+Replaced all bare "no results" text across dashboard pages with a fully illustrated, branded empty state system:
+- **Shared `EmptyState` component** (`src/components/ui/EmptyState.tsx`): Reusable React component with 11 SVG illustration presets, a title, short explanation, and optional primary action button.
+- **Illustration Presets**: Covers `purchase-requests`, `purchase-orders`, `rfq`, `evaluations`, `reports`, `ppmp`, `suppliers`, `search`, `departments`, `audit`, and `generic`.
+- **Pages Upgraded**: Purchase Requests (officer audit view, end-user tracker, approver dashboard), Purchase Orders (awards + registry), RFQs (officer solicitations table, officer dashboard), PPMP (end-user planner), Supplier Evaluations (officer evaluation scorecard), Approver History, MCDM Recommendations.
+- **Context-Aware Actions**: Each empty state includes a relevant primary CTA (e.g. "Browse Catalog", "+ New RFQ", "← Clear Filters") so users know exactly what to do next.
+- **Compact Mode**: Inline `compact` prop for smaller cards and sidebar panels.
+
 > [!NOTE]
 > Features such as Workflow Builder (`/dashboard/approver/workflows`), Form Template Customizer (`/dashboard/approver/forms`), and Reports Export (`/dashboard/approver/reports`) exist in the codebase but have been **unlinked from navigation** to reduce confusion. They can be re-enabled by adding their links back to the `navLinks` object in `src/app/dashboard/layout.tsx`.
 

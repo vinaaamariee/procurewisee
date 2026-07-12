@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import EmptyState from "@/components/ui/EmptyState";
 import { createPoFromAwardAction } from "@/app/actions/po";
 
 interface Supplier {
@@ -173,9 +174,12 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
         }}>
           <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, marginBottom: "1.5rem" }}>Awarded RFQ Bids (Pending PO drafting)</h2>
           {awards.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "3rem", color: theme.textMuted }}>
-              No pending awarded RFQs. Ensure that the Administrative Approver has reviewed and approved the canvas recommendations first.
-            </div>
+            <EmptyState
+              preset="rfq"
+              title="No Pending RFQ Awards"
+              description="All awarded RFQ bids have already been converted to Purchase Orders, or the Administrative Approver hasn't approved any canvas recommendations yet."
+              compact
+            />
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
               {awards.map((award) => (
@@ -251,17 +255,12 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
           </div>
 
           {filteredPos.length === 0 ? (
-            <div style={{
-              textAlign: "center",
-              padding: "4rem 2rem",
-              background: theme.glassBg,
-              border: `1px solid ${theme.glassBorder}`,
-              borderRadius: "1.25rem",
-              color: theme.textMuted,
-              boxShadow: theme.shadow
-            }}>
-              No Purchase Orders match your search.
-            </div>
+            <EmptyState
+              preset="purchase-orders"
+              title="No Purchase Orders Found"
+              description={search ? `No purchase orders match "${search}". Try a different search term.` : "No purchase orders have been drafted yet. Start by converting an awarded RFQ bid into a PO."}
+              action={search ? { label: '✕ Clear Search', onClick: () => setSearch('') } : undefined}
+            />
           ) : (
             <div style={{
               display: "grid",

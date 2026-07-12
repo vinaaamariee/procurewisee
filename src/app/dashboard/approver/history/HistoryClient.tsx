@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface SerializedPr {
   id: number;
@@ -225,9 +226,11 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
       }}>
         <div style={{ overflowX: 'auto', padding: '1.5rem' }}>
           {filteredPrs.length === 0 ? (
-            <div style={{ padding: '4rem 2rem', textAlign: 'center', color: theme.textSecondary, fontSize: '0.9rem' }}>
-              No purchase requests found matching the current filters.
-            </div>
+            <EmptyState
+              preset="purchase-requests"
+              title="No Records Found"
+              description="No purchase requests match your active filters. Try changing the status tab or clearing your search terms."
+            />
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
               <thead>

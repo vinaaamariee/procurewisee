@@ -4,6 +4,7 @@ import AddStaffForm from './add-staff-form';
 import ApproveButton from './approve-button';
 import { ShieldCheck, Truck, FileText, CheckCircle2, TrendingUpDown, AlertCircle, HelpCircle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { startTimer } from '@/lib/performance-logger';
+import EmptyState from '@/components/ui/EmptyState';
 
 export const metadata = { title: 'Approver Dashboard — ProcureWise' };
 
@@ -172,9 +173,12 @@ export default async function ApproverDashboard() {
     return (
       <div style={{ overflowX: 'auto', padding: '1rem' }}>
         {prs.length === 0 ? (
-          <div style={{ padding: '2rem', textAlign: 'center', color: v.textSecondary, fontSize: '0.85rem' }}>
-            {emptyMessage}
-          </div>
+          <EmptyState
+            preset="purchase-requests"
+            title="No Requests Here"
+            description={emptyMessage}
+            compact
+          />
         ) : (
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
             <thead>
@@ -348,9 +352,11 @@ export default async function ApproverDashboard() {
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1.5rem' }}>
           {recs.length === 0 ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: v.textSecondary, fontSize: '0.9rem' }}>
-              All submissions cleared. No pending reviews at this time.
-            </div>
+            <EmptyState
+              preset="rfq"
+              title="No Pending Recommendations"
+              description="All MCDM canvas recommendations have been reviewed. No submissions require approval at this time."
+            />
           ) : (
             recs.map((rec: any) => {
               // Parse audit snapshot JSON safely

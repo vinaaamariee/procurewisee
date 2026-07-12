@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import EmptyState from "@/components/ui/EmptyState";
 
 interface PurchaseRequest {
   id: number;
@@ -125,17 +126,12 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
 
       {/* PR Cards Grid */}
       {filteredPrs.length === 0 ? (
-        <div style={{
-          textAlign: "center",
-          padding: "4rem 2rem",
-          background: theme.glassBg,
-          border: `1px solid ${theme.glassBorder}`,
-          borderRadius: "1.25rem",
-          color: theme.textMuted,
-          boxShadow: theme.shadow
-        }}>
-          No Purchase Requests match your search criteria.
-        </div>
+        <EmptyState
+          preset="purchase-requests"
+          title="No Purchase Requests Found"
+          description="There are no purchase requests matching your current search or filter criteria. Try adjusting your filters or wait for new submissions."
+          action={{ label: '← Clear Filters', onClick: () => { setSearch(''); setStatusFilter('All'); } }}
+        />
       ) : (
         <div style={{
           display: "grid",

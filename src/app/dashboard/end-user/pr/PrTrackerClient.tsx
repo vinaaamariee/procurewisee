@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { submitPrAction, resubmitPrAction } from "@/app/actions/pr";
 import DocumentLayout from "@/components/documents/DocumentLayout";
+import EmptyState from "@/components/ui/EmptyState";
 
 interface Product {
   id: number;
@@ -269,9 +270,13 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
       }} className="lg:col-span-1">
         <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, marginBottom: "1rem" }}>My Purchase Requests</h2>
         {prs.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "2rem", color: theme.textMuted }}>
-            No Purchase Requests found.
-          </div>
+          <EmptyState
+            preset="purchase-requests"
+            title="No Purchase Requests Yet"
+            description="You haven't submitted any purchase requests. Start by browsing the catalog and building your request from the available procurement items."
+            action={{ label: '+ New Request', href: '/end-user' }}
+            compact
+          />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
             {prs.map((pr) => {
