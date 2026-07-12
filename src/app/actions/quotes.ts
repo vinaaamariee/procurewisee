@@ -3,6 +3,7 @@
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { logAuditTrail } from '@/lib/audit';
+import { createNotificationHelper } from './notifications';
 
 interface QuoteDetailInput {
   rfqItemId: number;
@@ -100,6 +101,19 @@ export async function submitQuoteAction({
       recordId: result.newQuote.id,
       oldState: result.existingQuote,
       newState: result.newQuote,
+    });
+
+    // Notify Procurement Officer of Bid Submission
+    const [supplier, rfq] = await Promise.all([
+      prisma.supplier.findUnique({ where: { id: supplierId }, select: { companyName: true } }),
+      prisma.requestForQuote.findUnique({ where: { id: rfqId }, select: { rfqNumber: true } })
+    ]);
+
+    await createNotificationHelper({
+      title: 'Supplier Quote Received',
+      description: `Supplier "${supplier?.companyName || 'Unknown'}" submitted a bid quote for RFQ ${rfq?.rfqNumber || 'N/A'}. Total quoted: ₱${Number(totalQuotedAmount).toLocaleString('en-PH', { minimumFractionDigits: 2 })}`,
+      icon: '💵',
+      role: 'Procurement Officer'
     });
 
     revalidatePath('/dashboard/supplier');

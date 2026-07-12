@@ -59,6 +59,7 @@ model UserProfile {
   prsRequested            PurchaseRequest[] @relation("PrRequestedBy")
   prsAssigned             PurchaseRequest[] @relation("PrAssignedOfficer")
   prStatusChanges         PurchaseRequestStatusHistory[] @relation("PrStatusChangedBy")
+  notifications           Notification[]
 
   @@map("user_profiles")
 }
@@ -916,6 +917,21 @@ model HistoricalPrice {
   @@index([unitId])
   @@index([procurementDate])
   @@map("historical_prices")
+}
+
+model Notification {
+  id          String   @id @default(uuid()) @map("notification_id")
+  title       String   @db.VarChar(150)
+  description String   @db.Text
+  icon        String   @db.VarChar(50)
+  role        String?  @db.VarChar(50)
+  userId      String?  @map("user_id")
+  isRead      Boolean  @default(false) @map("is_read")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user        UserProfile? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
 }
 
 

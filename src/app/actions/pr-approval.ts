@@ -5,6 +5,7 @@ import { PrStatus } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { logAuditTrail } from '@/lib/audit';
 import { requireRole } from '@/lib/auth/get-user-profile';
+import { createNotificationHelper } from './notifications';
 
 /**
  * Administrative Approver starts review on a submitted PR.
@@ -117,6 +118,23 @@ export async function approvePr(prId: number, remarks?: string) {
       newState: updated,
     });
 
+    // Notify Requisitioner (End User)
+    if (old.requestedById) {
+      await createNotificationHelper({
+        title: 'Purchase Request Approved',
+        description: `Your Purchase Request ${old.prNumber} has been approved by the Administrative Approver.`,
+        icon: '✅',
+        userId: old.requestedById
+      });
+    }
+    // Notify Procurement Officers
+    await createNotificationHelper({
+      title: 'PR Approved (Awaiting RFQ)',
+      description: `Purchase Request ${old.prNumber} has been approved and is ready for RFQ drafting.`,
+      icon: '📋',
+      role: 'Procurement Officer'
+    });
+
     revalidatePath('/', 'layout');
     revalidatePath('/dashboard/approver');
     revalidatePath('/dashboard/approver/history');
@@ -172,6 +190,16 @@ export async function returnPr(prId: number, remarks: string) {
       newState: updated,
     });
 
+    // Notify Requisitioner (End User)
+    if (old.requestedById) {
+      await createNotificationHelper({
+        title: 'Purchase Request Returned',
+        description: `Your Purchase Request ${old.prNumber} has been returned for revision. Remarks: "${remarks}"`,
+        icon: '↩️',
+        userId: old.requestedById
+      });
+    }
+
     revalidatePath('/', 'layout');
     revalidatePath('/dashboard/approver');
     revalidatePath('/dashboard/approver/history');
@@ -226,6 +254,16 @@ export async function rejectPr(prId: number, remarks: string) {
       oldState: old,
       newState: updated,
     });
+
+    // Notify Requisitioner (End User)
+    if (old.requestedById) {
+      await createNotificationHelper({
+        title: 'Purchase Request Rejected',
+        description: `Your Purchase Request ${old.prNumber} has been rejected. Reason: "${remarks}"`,
+        icon: '❌',
+        userId: old.requestedById
+      });
+    }
 
     revalidatePath('/', 'layout');
     revalidatePath('/dashboard/approver');

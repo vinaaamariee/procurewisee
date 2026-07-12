@@ -218,6 +218,18 @@ An interactive, marketplace-first procurement planning workspace at `/dashboard/
 - **Workflow Approval Timeline**: Each planning log displays an active status tracker: `○ Draft` $\rightarrow$ `● Submitted` $\rightarrow$ `● Under Review` $\rightarrow$ `● Approved` $\rightarrow$ `● Converted to PR`.
 - **Automatic Purchase Request (PR) Conversion**: Approved PPMPs show a button to automatically duplicate items into a newly generated `PurchaseRequest` (with unique reference PR-2026-X) and display a direct tracking link on the timeline.
 
+### 22. Role-Based Notification Center
+
+A real-time notification dispatch hub designed to provide visibility across procurement events:
+- **Notification Bell UI**: Renders a state-of-the-art interactive dropdown beside the user profile card with unread count badges, read/unread status dots, type-specific icons/emojis, and relative timestamps (e.g. "5m ago", "1h ago").
+- **Automatic Event Triggers**: Generates database notifications for critical lifecycle events:
+  - **Purchase Request Approved/Returned/Rejected**: Dispatched to the requisitioner user.
+  - **RFQ Published**: Dispatched to Suppliers (for bidding) and Procurement Officers.
+  - **Supplier Quote Received**: Dispatched to Procurement Officers upon bid submission.
+  - **Purchase Order Generated/Printed**: Dispatched to Procurement Officers and Approvers.
+  - **Supplier Evaluation Submitted**: Dispatched to Procurement Officers upon scorecard submissions.
+- **Background Polling**: Uses client-side React polling intervals to query server actions every 10 seconds for frictionless updates.
+
 > [!NOTE]
 > Features such as Workflow Builder (`/dashboard/approver/workflows`), Form Template Customizer (`/dashboard/approver/forms`), and Reports Export (`/dashboard/approver/reports`) exist in the codebase but have been **unlinked from navigation** to reduce confusion. They can be re-enabled by adding their links back to the `navLinks` object in `src/app/dashboard/layout.tsx`.
 

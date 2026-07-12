@@ -2,6 +2,7 @@ import { signout } from '@/app/actions/auth';
 import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
 import { ROLE_COLORS, ROLE_HOME } from '@/types/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
+import NotificationBell from '@/components/notifications/NotificationBell';
 
 export default async function DashboardLayout({
   children,
@@ -69,6 +70,9 @@ export default async function DashboardLayout({
                 <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>{profile.email}</div>
               </div>
             </div>
+
+            {/* Notification Bell */}
+            <NotificationBell currentUser={profile} />
 
             {/* Theme Toggle */}
             <ThemeToggle />

@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { EvaluationType, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
+import { createNotificationHelper } from "./notifications";
 
 interface SubmitEvaluationInput {
   supplierId: number;
@@ -160,6 +161,19 @@ export async function submitSupplierEvaluationAction(input: SubmitEvaluationInpu
       tableAffected: "supplier_evaluations",
       recordId: result.id,
       newState: result,
+    });
+
+    // Notify Procurement Officers
+    const supplier = await prisma.supplier.findUnique({
+      where: { id: input.supplierId },
+      select: { companyName: true }
+    });
+    
+    await createNotificationHelper({
+      title: 'Supplier Evaluation Submitted',
+      description: `A new performance evaluation for "${supplier?.companyName || 'Supplier'}" has been submitted by ${input.evaluatorName}.`,
+      icon: '📊',
+      role: 'Procurement Officer'
     });
 
     revalidatePath("/", "layout");

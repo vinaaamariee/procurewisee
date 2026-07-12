@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { updatePoAction, approvePoAction } from "@/app/actions/po";
+import { updatePoAction, approvePoAction, logPoPrintedAction } from "@/app/actions/po";
 import DocumentLayout from "@/components/documents/DocumentLayout";
 
 interface Supplier {
@@ -103,7 +103,12 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
     }
   };
 
-  const handlePrint = () => {
+  const handlePrint = async () => {
+    try {
+      await logPoPrintedAction(po.id);
+    } catch (e) {
+      console.error("Error logging PO print:", e);
+    }
     window.print();
   };
 
