@@ -309,18 +309,120 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
     shadow: "var(--shadow-card)",
   };
 
+  const stages = [
+    { label: "Draft", active: true, error: false },
+    { 
+      label: "Submitted", 
+      active: ["Submitted", "UnderReview", "Under Review", "ReturnedForRevision", "Returned for Revision", "Approved", "Received", "Rejected"].includes(pr.status), 
+      error: false 
+    },
+    { 
+      label: "Received", 
+      active: ["Received", "Approved"].includes(pr.status) || pr.trackingNumber !== null, 
+      error: false 
+    },
+    { 
+      label: "Under Review", 
+      active: ["UnderReview", "Under Review", "Approved", "Received"].includes(pr.status) && pr.status !== "Submitted", 
+      error: false 
+    },
+    { 
+      label: ["ReturnedForRevision", "Returned for Revision"].includes(pr.status)
+        ? "Returned" 
+        : pr.status === "Rejected"
+        ? "Rejected"
+        : "Approved", 
+      active: ["Approved", "Received", "ReturnedForRevision", "Returned for Revision", "Rejected"].includes(pr.status), 
+      error: ["ReturnedForRevision", "Returned for Revision", "Rejected"].includes(pr.status) 
+    }
+  ];
+
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }} className="lg:grid-cols-3">
       {/* Left Columns: Main Purchase Request Information & Checklist */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-2">
         
-        {/* Approval Details Card (Section 6) */}
-        {["Approved", "Received", "ReturnedForRevision", "Returned for Revision", "Rejected"].includes(pr.status) && (
+        {/* Workflow progress timeline */}
+        <div style={{
+          background: theme.glassBg,
+          border: `1px solid ${theme.glassBorder}`,
+          borderRadius: "1.25rem",
+          padding: "1.5rem 2rem",
+          boxShadow: theme.shadow,
+        }} className="no-print">
+          <h3 style={{ fontSize: "0.85rem", fontWeight: 700, color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "1.25rem" }}>
+            Purchase Request Workflow Progress
+          </h3>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "0.5rem", position: "relative" }}>
+            {stages.map((step, idx) => {
+              const isActive = step.active;
+              const isError = step.error;
+              
+              return (
+                <div key={idx} style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem", position: "relative" }}>
+                  {/* Connector Line on the right of each step (except the last) */}
+                  {idx < 4 && (
+                    <div style={{
+                      position: "absolute",
+                      top: "12px",
+                      left: "calc(50% + 16px)",
+                      right: "calc(-50% + 16px)",
+                      height: "2px",
+                      backgroundColor: stages[idx + 1].active ? "var(--accent)" : "rgba(0,0,0,0.06)",
+                      zIndex: 1
+                    }} />
+                  )}
+                  
+                  <div style={{
+                    width: 26, height: 26, borderRadius: "50%",
+                    background: isError ? "#ef4444" : isActive ? `linear-gradient(135deg, ${theme.crimson}, ${theme.gold})` : "rgba(0,0,0,0.06)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: isActive ? "#fff" : theme.textMuted, fontSize: "0.72rem", fontWeight: 800,
+                    zIndex: 2, position: "relative"
+                  }}>
+                    {isError ? "⚠️" : idx + 1}
+                  </div>
+                  <span style={{ fontSize: "0.72rem", fontWeight: 700, color: isError ? "#ef4444" : isActive ? theme.textMain : theme.textMuted }}>
+                    {step.label}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Returned or Rejected Review Remarks Card */}
+        {(["ReturnedForRevision", "Returned for Revision", "Rejected"].includes(pr.status)) && (
+          <div style={{
+            background: "rgba(239, 68, 68, 0.04)",
+            border: "1px solid rgba(239, 68, 68, 0.15)",
+            borderLeft: "5px solid #ef4444",
+            borderRadius: "1rem",
+            padding: "1.25rem 1.5rem",
+            boxShadow: theme.shadow,
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.35rem"
+          }} className="no-print">
+            <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#dc2626", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+              ⚠️ Revision / Rejection Review Remarks
+            </span>
+            <p style={{ fontSize: "0.82rem", color: theme.textMain, margin: 0, lineHeight: 1.4 }}>
+              <strong>Remarks:</strong> <span className="font-semibold italic">"{pr.remarks || pr.statusHistory?.[0]?.remarks || "No comments provided."}"</span>
+            </p>
+            {pr.statusHistory?.[0]?.changedBy && (
+              <span style={{ fontSize: "0.72rem", color: theme.textMuted }}>
+                Reviewed by: {pr.statusHistory[0].changedBy.fullName} on {new Date(pr.statusHistory[0].createdAt).toLocaleString()}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Approval Details Card (Approved / Received) */}
+        {["Approved", "Received"].includes(pr.status) && (
           <div style={{
             background: "rgba(255,255,255,0.9)",
-            borderLeft: `5px solid ${
-              pr.status === "Approved" || pr.status === "Received" ? "#10b981" : "#ef4444"
-            }`,
+            borderLeft: "5px solid #10b981",
             borderRadius: "1rem",
             padding: "1.5rem",
             boxShadow: theme.shadow,
@@ -330,7 +432,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
           }} className="no-print">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <span style={{ fontSize: "0.85rem", fontWeight: 800, color: theme.textMain, textTransform: "uppercase" }}>
-                📋 Approval/Review Details
+                📋 Approval Details
               </span>
               <span style={{
                 fontSize: "0.7rem",
@@ -340,19 +442,17 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
                 backgroundColor: getStatusColor(pr.status).bg,
                 color: getStatusColor(pr.status).text
               }}>
-                {["ReturnedForRevision", "Returned for Revision"].includes(pr.status) ? "Returned for Revision" : pr.status}
+                {pr.status}
               </span>
             </div>
             <div style={{ fontSize: "0.82rem", color: theme.textMain }}>
-              <strong>Remarks / Reasons:</strong>{" "}
+              <strong>Remarks:</strong>{" "}
               <span className="italic font-semibold">
-                "{pr.statusHistory?.[0]?.remarks 
-                  || pr.remarks 
-                  || "No remarks provided."}"
+                "{pr.remarks || pr.statusHistory?.[0]?.remarks || "No remarks provided."}"
               </span>
             </div>
             <div style={{ fontSize: "0.75rem", color: theme.textMuted }}>
-              Reviewed by: {pr.statusHistory?.[0]?.changedBy?.fullName || "Administrative Approver"} on {pr.statusHistory?.[0]?.createdAt ? new Date(pr.statusHistory[0].createdAt).toLocaleString() : "Date N/A"}
+              Reviewed on: {pr.statusHistory?.[0]?.createdAt ? new Date(pr.statusHistory[0].createdAt).toLocaleString() : "Date N/A"}
             </div>
           </div>
         )}

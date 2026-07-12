@@ -151,7 +151,7 @@ A performance evaluation form at `/dashboard/end-user/evaluation` enabling requi
 
 An audit interface at `/dashboard/officer/pr` where Procurement Officers review submitted requisitions:
 - **Lightweight Cards Grid & Search**: Displays incoming requisitions as a clean, searchable list of cards linking to individual details.
-- **Dynamic Route Details (`/dashboard/officer/pr/[id]`)**: Renders full auditing workflows, department budget balance monitors, and tracking trails on a dedicated details page, complete with skeleton loading states, error boundaries, and breadcrumb context.
+- **Dynamic Route Details (`/dashboard/officer/pr/[id]`)**: Renders full auditing workflows, department budget balance monitors, and tracking trails on a dedicated details page, featuring an interactive horizontal workflow progress timeline (Draft &rarr; Submitted &rarr; Received &rarr; Under Review &rarr; Approved/Returned/Rejected) with status highlights and review remarks card placement, complete with skeleton loading states, error boundaries, and breadcrumb context.
 - **Quantity & Specs Checklist**: Requires auditing item descriptions and quantities against specifications before final approval.
 - **Inline Corrections (UOM Conversion)**: Enforces validation rules enabling officers to edit items inline (e.g. converting "1 piece alcohol" to "500 mL alcohol", adjusting quantities, or correcting brands), which automatically recalculates PR totals and modifies department budget spent.
 - **Status Gates**: Officers can mark PRs "Under Review", return them to the requisitioner for corrections (providing feedback remarks), or approve them to issue a unique `PROC-YYYY-XXXX` tracking reference.
