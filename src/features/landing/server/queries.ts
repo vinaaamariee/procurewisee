@@ -109,3 +109,39 @@ export async function getCategoriesWithCounts(): Promise<CategoryCount[]> {
     _count: c._count.products,
   }));
 }
+
+export interface ActiveRfq {
+  id: string;
+  rfqNumber: string;
+  title: string;
+  publishDate: string | null;
+  closingDate: string | null;
+}
+
+/**
+ * Fetches the 3 most recently published active RFQs.
+ */
+export async function getActiveRfqs(): Promise<ActiveRfq[]> {
+  const rfqs = await prisma.requestForQuote.findMany({
+    where: { status: "Published" },
+    orderBy: { createdAt: "desc" },
+    take: 3,
+    select: {
+      id: true,
+      rfqNumber: true,
+      title: true,
+      createdAt: true,
+      deadlineDate: true,
+    },
+  });
+
+  return rfqs.map((r) => ({
+    id: r.id.toString(),
+    rfqNumber: r.rfqNumber,
+    title: r.title,
+    publishDate: r.createdAt ? r.createdAt.toISOString() : null,
+    closingDate: r.deadlineDate ? r.deadlineDate.toISOString() : null,
+  }));
+}
+
+
