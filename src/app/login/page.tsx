@@ -174,12 +174,15 @@ function LoginPage() {
   return (
     <div className="login-container-wrapper min-h-screen relative overflow-x-hidden">
       <style dangerouslySetInnerHTML={{ __html: `
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
         /* --- Stylesheet adapted for ProcureWise login layout --- */
         .login-container-wrapper {
             display: flex;
             min-height: 100vh;
             width: 100%;
             background-color: #f6f8fb;
+            font-family: 'Outfit', 'Inter', sans-serif;
             transition: background-color 0.3s ease;
         }
         .dark .login-container-wrapper {
@@ -304,20 +307,20 @@ function LoginPage() {
 
         /* Login Card */
         .login-card {
-            background: rgba(255, 255, 255, 0.65);
+            background: rgba(255, 255, 255, 0.72);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            border-radius: 20px;
-            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 24px;
+            padding: 44px;
             width: 100%;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 10px 40px rgba(30, 58, 138, 0.03);
             z-index: 10;
-            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
             margin: auto 0;
         }
         .dark .login-card {
-            background: rgba(15, 23, 42, 0.65);
+            background: rgba(15, 23, 42, 0.72);
             border-color: rgba(255, 255, 255, 0.08);
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
         }
@@ -388,18 +391,18 @@ function LoginPage() {
 
         .form-group input, .form-group textarea {
             width: 100%;
-            padding: 13px 40px 13px 16px;
+            padding: 14px 44px 14px 16px;
             border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 12px;
+            font-size: 14.5px;
             background-color: #ffffff;
             color: #111;
             outline: none;
-            transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .dark .form-group input, .dark .form-group textarea {
-            border-color: rgba(255, 255, 255, 0.08);
-            background-color: rgba(15, 23, 42, 0.4);
+            border-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(15, 23, 42, 0.5);
             color: #ffffff;
         }
 
@@ -412,9 +415,11 @@ function LoginPage() {
 
         .form-group input:focus, .form-group textarea:focus {
             border-color: #dcb353;
+            box-shadow: 0 0 0 3px rgba(220, 179, 83, 0.18);
         }
         .dark .form-group input:focus, .dark .form-group textarea:focus {
             border-color: #dcb353;
+            box-shadow: 0 0 0 3px rgba(220, 179, 83, 0.28);
         }
 
         .input-icon {
@@ -622,7 +627,7 @@ function LoginPage() {
         {/* Top Header Identity Group */}
         <div style={{ zIndex: 10 }}>
           <div className="logo-container" style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-            <div style={{ backgroundColor: '#ffffff', border: '1.5px solid #e5e7eb', boxShadow: '0 8px 24px rgba(220, 179, 83, 0.2)', borderRadius: '16px', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Inter', sans-serif", fontWeight: 900, fontSize: '24px', letterSpacing: '-1.5px', flexShrink: 0 }}>
+            <div style={{ backgroundColor: '#ffffff', border: '1.5px solid #e5e7eb', boxShadow: '0 8px 24px rgba(220, 179, 83, 0.2)', borderRadius: '16px', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Outfit', 'Inter', sans-serif", fontWeight: 900, fontSize: '24px', letterSpacing: '-1.5px', flexShrink: 0 }}>
               <span style={{ color: '#7e191b' }}>P</span><span style={{ color: '#dcb353' }}>W</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

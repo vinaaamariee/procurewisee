@@ -311,6 +311,7 @@ The authentication portal layout features:
 - **Split-Screen Layout**: Modern UI split-screen styling, featuring a dynamic network constellation visualizer on the left representing bid and price correlations, and a glassmorphic login card on the right.
 - **Identity & Subtitle Branding**: Displays the "ProcureWise" brand with sub-titles "Procurement Management System" and "Batanes State College".
 - **Product Scope Summary**: Includes a clear system summary outlining the streamlining of planning, bidding, supplier evaluation, and purchase order management.
+- **Premium Spacing & Typography**: Integrated Google Font 'Outfit' for titles and headers, refined form group spacing, and added an interactive gold-ring focus glow state to form fields.
 
 ---
 
