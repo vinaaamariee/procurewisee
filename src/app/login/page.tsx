@@ -620,14 +620,22 @@ function LoginPage() {
       {/* Left Panel */}
       <div className="left-panel">
         {/* Top Header Identity Group */}
-        <div className="logo-container" style={{ display: 'flex', alignItems: 'center', gap: '14px', zIndex: 10, marginBottom: '20px' }}>
-          <div style={{ backgroundColor: '#ffffff', border: '1.5px solid #e5e7eb', boxShadow: '0 4px 15px rgba(220, 179, 83, 0.15)', borderRadius: '14px', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Inter', sans-serif", fontWeight: 900, fontSize: '22px', letterSpacing: '-1px' }}>
-            <span style={{ color: '#7e191b' }}>P</span><span style={{ color: '#dcb353' }}>W</span>
+        <div style={{ zIndex: 10 }}>
+          <div className="logo-container" style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+            <div style={{ backgroundColor: '#ffffff', border: '1.5px solid #e5e7eb', boxShadow: '0 8px 24px rgba(220, 179, 83, 0.2)', borderRadius: '16px', width: '56px', height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Inter', sans-serif", fontWeight: 900, fontSize: '24px', letterSpacing: '-1.5px', flexShrink: 0 }}>
+              <span style={{ color: '#7e191b' }}>P</span><span style={{ color: '#dcb353' }}>W</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div style={{ color: '#ffffff', fontSize: '32px', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.5px' }}>ProcureWise</div>
+              <div style={{ color: '#dcb353', fontSize: '11px', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', marginTop: '4px' }}>Procurement Management System</div>
+              <div style={{ color: '#cbd5e1', fontSize: '10px', fontWeight: 600, letterSpacing: '0.5px', marginTop: '2px' }}>Batanes State College</div>
+            </div>
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ color: '#ffffff', fontSize: '26px', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.5px' }}>ProcureWise</div>
-            <div style={{ color: '#94a3b8', fontSize: '11px', fontWeight: 700, letterSpacing: '0.5px', marginTop: '2px' }}>BATANES STATE COLLEGE</div>
-          </div>
+
+          {/* Short System Description */}
+          <p style={{ color: '#94a3b8', fontSize: '13.5px', lineHeight: '1.6', fontWeight: 400, maxWidth: '440px', margin: '0' }}>
+            ProcureWise streamlines procurement planning, bidding, supplier evaluation, and purchase order management to optimize transparency and institutional efficiency.
+          </p>
         </div>
 
         {/* Network Constellation Graphic */}
@@ -638,6 +646,7 @@ function LoginPage() {
           <span>© 2026 Batanes State College</span>
         </div>
       </div>
+
 
 
       {/* Right Panel */}

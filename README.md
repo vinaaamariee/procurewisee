@@ -304,6 +304,12 @@ pnpm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to access the login portal.
 
+### 🏛️ Login Portal Visual Enhancements
+The authentication portal layout features:
+- **Split-Screen Layout**: Modern UI split-screen styling, featuring a dynamic network constellation visualizer on the left representing bid and price correlations, and a glassmorphic login card on the right.
+- **Identity & Subtitle Branding**: Displays the "ProcureWise" brand with sub-titles "Procurement Management System" and "Batanes State College".
+- **Product Scope Summary**: Includes a clear system summary outlining the streamlining of planning, bidding, supplier evaluation, and purchase order management.
+
 ---
 
 ## ⚠️ Troubleshooting & Production Deployment
