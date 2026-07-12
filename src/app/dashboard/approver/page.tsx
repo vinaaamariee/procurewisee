@@ -5,6 +5,7 @@ import ApproveButton from './approve-button';
 import { ShieldCheck, Truck, FileText, CheckCircle2, TrendingUpDown, AlertCircle, HelpCircle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { startTimer } from '@/lib/performance-logger';
 import EmptyState from '@/components/ui/EmptyState';
+import ActivityFeed from '@/components/dashboard/ActivityFeed';
 
 export const metadata = { title: 'Approver Dashboard — ProcureWise' };
 
@@ -629,33 +630,8 @@ export default async function ApproverDashboard() {
         ))}
       </div>
 
-      {/* Audit Trail */}
-      <div id="audit-trail" style={{
-        background: v.surface,
-        border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
-      }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}` }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: v.textPrimary, margin: 0 }}>Recent Audit Trail</h2>
-        </div>
-        <div>
-          {stats.recentAuditLogs.map((log: any) => (
-            <div key={log.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.5rem', borderBottom: `1px solid ${v.border}` }}>
-              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: v.accent, flexShrink: 0, boxShadow: `0 0 8px ${v.accent}` }} />
-              <div style={{ flex: 1, fontSize: '0.85rem', fontWeight: 600, color: v.textPrimary }}>
-                {log.action}
-              </div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: v.textSecondary, backgroundColor: 'var(--section-bg)', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
-                {new Date(log.createdAt).toLocaleString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-              </div>
-            </div>
-          ))}
-          {stats.recentAuditLogs.length === 0 && (
-            <div style={{ padding: '2rem', textAlign: 'center', color: v.textSecondary, fontSize: '0.9rem' }}>
-              No audit entries recorded yet.
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Activity Feed */}
+      <ActivityFeed limit={12} />
 
       {/* Add Staff Form Section */}
       <div style={{ marginTop: '1rem' }}>

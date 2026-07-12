@@ -251,7 +251,20 @@ Replaced all bare "no results" text across dashboard pages with a fully illustra
 - **Illustration Presets**: Covers `purchase-requests`, `purchase-orders`, `rfq`, `evaluations`, `reports`, `ppmp`, `suppliers`, `search`, `departments`, `audit`, and `generic`.
 - **Pages Upgraded**: Purchase Requests (officer audit view, end-user tracker, approver dashboard), Purchase Orders (awards + registry), RFQs (officer solicitations table, officer dashboard), PPMP (end-user planner), Supplier Evaluations (officer evaluation scorecard), Approver History, MCDM Recommendations.
 - **Context-Aware Actions**: Each empty state includes a relevant primary CTA (e.g. "Browse Catalog", "+ New RFQ", "← Clear Filters") so users know exactly what to do next.
+- **Context-Aware Actions**: Each empty state includes a relevant primary CTA (e.g. "Browse Catalog", "+ New RFQ", "← Clear Filters") so users know exactly what to do next.
 - **Compact Mode**: Inline `compact` prop for smaller cards and sidebar panels.
+
+### 25. Dashboard Activity Feed
+
+Added a live **Recent Activity** widget to the Officer, Approver, and End User dashboards:
+- **[`ActivityFeed`](src/components/dashboard/ActivityFeed.tsx)**: Server-rendered component that fetches the latest `AuditTrail` entries from the database and renders them as a chronological, visual timeline.
+- **User Avatars**: Each entry shows colour-coded initials avatar (deterministic hash of the user's name) with an event icon badge overlaid.
+- **Category Chips**: Colour-coded category labels (`Purchase Request`, `RFQ`, `Purchase Order`, `Supplier Quote`, `Evaluation`) for instant visual scanning.
+- **Relative Timestamps**: Human-readable relative times (e.g. "3m ago", "2h ago") with the full timestamp on hover.
+- **Timeline Connector Lines**: Vertical line linking adjacent events for a polished, feed-style feel.
+- **Live Pulse Indicator**: Animated green dot in the header signals the feed is fresh on page load.
+- **Event Mapping**: 15+ audit action types are mapped to descriptive titles and icons via the `getRecentActivity` server action (`src/app/actions/activity.ts`).
+- **Placements**: Officer dashboard — inline alongside Recent Solicitations table; Approver dashboard — replaces the old basic audit trail; End User dashboard — full-width below the main grid.
 
 > [!NOTE]
 > Features such as Workflow Builder (`/dashboard/approver/workflows`), Form Template Customizer (`/dashboard/approver/forms`), and Reports Export (`/dashboard/approver/reports`) exist in the codebase but have been **unlinked from navigation** to reduce confusion. They can be re-enabled by adding their links back to the `navLinks` object in `src/app/dashboard/layout.tsx`.

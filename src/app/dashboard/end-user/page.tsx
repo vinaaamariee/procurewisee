@@ -2,6 +2,7 @@ import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import EmptyState from "@/components/ui/EmptyState";
+import ActivityFeed from "@/components/dashboard/ActivityFeed";
 
 export const metadata = { title: "End User Dashboard — ProcureWise" };
 
@@ -381,6 +382,9 @@ export default async function EndUserDashboard() {
         </div>
 
       </div>
+
+      {/* ── Activity Feed ── */}
+      <ActivityFeed limit={8} compact />
 
     </div>
   );

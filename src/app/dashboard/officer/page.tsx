@@ -5,6 +5,7 @@ import ForecastIntelligenceSection from './ForecastIntelligenceSection';
 import ForecastSkeleton from './ForecastSkeleton';
 import { startTimer } from '@/lib/performance-logger';
 import EmptyState from '@/components/ui/EmptyState';
+import ActivityFeed from '@/components/dashboard/ActivityFeed';
 
 export const metadata = { title: 'Officer Dashboard — ProcureWise' };
 
@@ -323,7 +324,16 @@ export default async function OfficerDashboard() {
         <ForecastIntelligenceSection />
       </Suspense>
 
-      {/* ── Recent RFQs Table ── */}
+      {/* ── Activity Feed + Recent Solicitations ── */}
+      <div style={{ display: 'grid', gap: '2rem' }} className="grid grid-cols-1 xl:grid-cols-5">
+        {/* Activity feed — spans 2 of 5 cols */}
+        <div className="xl:col-span-2">
+          <ActivityFeed limit={10} />
+        </div>
+
+        {/* Recent RFQs Table — spans 3 of 5 cols */}
+        <div className="xl:col-span-3">
+
       <div id="recent-solicitations" style={{
         background: v.surface,
         border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow,
@@ -432,6 +442,8 @@ export default async function OfficerDashboard() {
           </table>
         </div>
       </div>
+        </div>{/* end xl:col-span-3 */}
+      </div>{/* end activity+solicitations grid */}
 
     </div>
   );
