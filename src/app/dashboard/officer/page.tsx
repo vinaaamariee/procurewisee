@@ -22,39 +22,104 @@ async function getOfficerStats() {
   };
 }
 
-async function getOfficerTasks() {
+interface DashboardTask {
+  id: string;
+  type: 'pr' | 'rfq' | 'po' | 'quote';
+  title: string;
+  badge: string;
+  dueDate: string;
+  link: string;
+  btnLabel: string;
+}
+
+async function getOfficerTasks(): Promise<DashboardTask[]> {
   const timer = startTimer('getOfficerTasks');
   
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-
-  const endOfToday = new Date();
-  endOfToday.setHours(23, 59, 59, 999);
-
-  const [prsAwaitingAudit, rfqsExpiringToday, posAwaitingSignature] = await Promise.all([
-    prisma.purchaseRequest.count({
-      where: { status: { in: ['Submitted', 'UnderReview'] } }
+  const [prs, rfqs, pos, quotes] = await Promise.all([
+    prisma.purchaseRequest.findMany({
+      where: { status: { in: ['Submitted', 'UnderReview'] } },
+      select: { id: true, prNumber: true, purpose: true, requestDate: true },
+      orderBy: { requestDate: 'asc' },
+      take: 2
     }),
-    prisma.requestForQuote.count({
-      where: {
-        status: 'Published',
-        deadlineDate: {
-          gte: startOfToday,
-          lte: endOfToday
-        }
-      }
+    prisma.requestForQuote.findMany({
+      where: { status: 'Published' },
+      select: { id: true, rfqNumber: true, title: true, deadlineDate: true },
+      orderBy: { deadlineDate: 'asc' },
+      take: 2
     }),
-    prisma.purchaseOrder.count({
-      where: { status: 'Draft' }
+    prisma.purchaseOrder.findMany({
+      where: { status: { in: ['Draft', 'Approved'] } },
+      select: { id: true, poNumber: true, createdAt: true },
+      orderBy: { createdAt: 'asc' },
+      take: 2
+    }),
+    prisma.supplierQuote.findMany({
+      where: { status: { in: ['Submitted', 'UnderReview'] } },
+      select: { 
+        id: true, 
+        rfq: { select: { id: true, rfqNumber: true, title: true } }, 
+        supplier: { select: { companyName: true } },
+        submissionDate: true 
+      },
+      orderBy: { submissionDate: 'asc' },
+      take: 2
     })
   ]);
 
   timer.end();
-  return {
-    prsAwaitingAudit,
-    rfqsExpiringToday,
-    posAwaitingSignature
-  };
+
+  const taskList: DashboardTask[] = [];
+
+  prs.forEach(pr => {
+    taskList.push({
+      id: `pr-${pr.id}`,
+      type: 'pr',
+      title: `${pr.prNumber}: ${pr.purpose}`,
+      badge: 'PR Audit',
+      dueDate: new Date(pr.requestDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
+      link: `/dashboard/officer/pr/${pr.id}`,
+      btnLabel: 'Audit PR'
+    });
+  });
+
+  rfqs.forEach(rfq => {
+    taskList.push({
+      id: `rfq-${rfq.id}`,
+      type: 'rfq',
+      title: `${rfq.rfqNumber}: ${rfq.title}`,
+      badge: 'RFQ Deadline',
+      dueDate: new Date(rfq.deadlineDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
+      link: `/dashboard/officer/rfq/${rfq.id}`,
+      btnLabel: 'View RFQ'
+    });
+  });
+
+  pos.forEach(po => {
+    taskList.push({
+      id: `po-${po.id}`,
+      type: 'po',
+      title: `${po.poNumber}: Purchase Order Draft`,
+      badge: 'PO Print',
+      dueDate: new Date(po.createdAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
+      link: `/dashboard/officer/po/${po.id}`,
+      btnLabel: 'Print PO'
+    });
+  });
+
+  quotes.forEach(q => {
+    taskList.push({
+      id: `quote-${q.id}`,
+      type: 'quote',
+      title: `Quote from ${q.supplier.companyName} for ${q.rfq.rfqNumber}`,
+      badge: 'Quote Review',
+      dueDate: new Date(q.submissionDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
+      link: `/dashboard/officer/rfq/${q.rfq.id}`,
+      btnLabel: 'Review Quote'
+    });
+  });
+
+  return taskList;
 }
 
 async function getRecentRfqs() {
@@ -145,69 +210,86 @@ export default async function OfficerDashboard() {
 
       {/* ── Dashboard Action Grid ── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr lg:grid-cols-3', gap: '2rem' }} className="grid grid-cols-1 lg:grid-cols-3">
-        {/* Left Column: Today's Action Items */}
+        {/* Left Column: Today's Tasks */}
         <div style={{ gridColumn: 'span 2' }} className="lg:col-span-2">
           <div style={{
             background: v.surface,
             border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
-            boxShadow: v.shadow, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
+            boxShadow: v.shadow, display: 'flex', flexDirection: 'column', gap: '1.25rem'
           }}>
             <div>
-              <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: '0 0 1.25rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                🎯 Today's Action Items
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                🎯 Today&apos;s Tasks
               </h2>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-                {/* PR Audit Task */}
-                <a href="/dashboard/officer/pr" style={{
-                  display: 'flex', alignItems: 'center', padding: '1rem', borderRadius: '1rem',
-                  background: 'var(--bg-dark)', border: `1px solid ${v.border}`, textDecoration: 'none', transition: 'all 0.15s ease'
-                }} className="hover:border-[var(--accent)] hover:-translate-y-0.5 block transition-all">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ fontSize: '1.5rem' }}>🔍</div>
-                    <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: v.textPrimary }}>Purchase Requests Pending Audit</div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>Verify item specifications and validate department budget lines</div>
-                    </div>
-                  </div>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '0.25rem 0.75rem', borderRadius: '999px', background: 'rgba(220,179,83,0.15)', color: '#b88a1b', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
-                    {tasks.prsAwaitingAudit} awaiting
-                  </span>
-                </a>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+                A list of urgent workflows requiring immediate review, validation, or contract execution.
+              </p>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {tasks.length > 0 ? (
+                tasks.map((task) => {
+                  const badgeColor = 
+                    task.type === 'pr' 
+                      ? { bg: 'rgba(220,179,83,0.15)', text: '#b88a1b' }
+                      : task.type === 'rfq'
+                      ? { bg: 'rgba(239,68,68,0.1)', text: '#dc2626' }
+                      : task.type === 'po'
+                      ? { bg: 'rgba(79,70,229,0.1)', text: '#4f46e5' }
+                      : { bg: 'rgba(16,185,129,0.1)', text: '#059669' };
 
-                {/* RFQs Expiring Task */}
-                <a href="#recent-solicitations" style={{
-                  display: 'flex', alignItems: 'center', padding: '1rem', borderRadius: '1rem',
-                  background: 'var(--bg-dark)', border: `1px solid ${v.border}`, textDecoration: 'none', transition: 'all 0.15s ease'
-                }} className="hover:border-[var(--accent)] hover:-translate-y-0.5 block transition-all">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ fontSize: '1.5rem' }}>⏳</div>
-                    <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: v.textPrimary }}>Active RFQs Expiring Today</div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>Compile supplier bid quotations and prepare recommendation abstracts</div>
+                  return (
+                    <div 
+                      key={task.id} 
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderRadius: '1rem',
+                        background: 'var(--bg-dark)', border: `1px solid ${v.border}`, gap: '1rem'
+                      }}
+                      className="flex-col sm:flex-row gap-4"
+                    >
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: 'flex-start', flexGrow: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                          <span style={{ 
+                            fontSize: '0.65rem', fontWeight: 800, padding: '0.15rem 0.5rem', borderRadius: '4px',
+                            backgroundColor: badgeColor.bg, color: badgeColor.text, textTransform: 'uppercase', letterSpacing: '0.5px'
+                          }}>
+                            {task.badge}
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                            Due: {task.dueDate}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: v.textPrimary, textAlign: 'left' }}>
+                          {task.title}
+                        </div>
+                      </div>
+                      
+                      <a 
+                        href={task.link} 
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                          textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.5rem',
+                          background: `linear-gradient(135deg, ${v.accent}, ${v.accentLight})`, color: '#fff',
+                          fontWeight: 700, fontSize: '0.75rem', whiteSpace: 'nowrap',
+                          boxShadow: '0 2px 8px rgba(30,58,138,0.1)',
+                          transition: 'all 0.15s ease'
+                        }}
+                        className="hover:opacity-90 hover:shadow-md w-full sm:w-auto"
+                      >
+                        {task.btnLabel} &rarr;
+                      </a>
                     </div>
-                  </div>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '0.25rem 0.75rem', borderRadius: '999px', background: 'rgba(239,68,68,0.1)', color: '#dc2626', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
-                    {tasks.rfqsExpiringToday} expiring
-                  </span>
-                </a>
-
-                {/* PO Awaiting Signature Task */}
-                <a href="/dashboard/officer/po" style={{
-                  display: 'flex', alignItems: 'center', padding: '1rem', borderRadius: '1rem',
-                  background: 'var(--bg-dark)', border: `1px solid ${v.border}`, textDecoration: 'none', transition: 'all 0.15s ease'
-                }} className="hover:border-[var(--accent)] hover:-translate-y-0.5 block transition-all">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ fontSize: '1.5rem' }}>✍️</div>
-                    <div style={{ textAlign: 'left' }}>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: v.textPrimary }}>POs Awaiting Signature</div>
-                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>Review drafted purchase orders and execute digital conforme signatures</div>
-                    </div>
-                  </div>
-                  <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '0.25rem 0.75rem', borderRadius: '999px', background: 'rgba(16,185,129,0.1)', color: '#059669', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
-                    {tasks.posAwaitingSignature} pending
-                  </span>
-                </a>
-              </div>
+                  );
+                })
+              ) : (
+                <div style={{
+                  padding: '2.5rem 1.5rem', border: `1px dashed ${v.border}`, borderRadius: '1rem',
+                  textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 500
+                }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎉</div>
+                  All caught up! No tasks awaiting attention today.
+                </div>
+              )}
             </div>
           </div>
         </div>
