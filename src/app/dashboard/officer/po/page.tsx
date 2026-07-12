@@ -25,7 +25,8 @@ export default async function PoDraftingPage() {
       },
       totalCost: true,
       status: true,
-      createdAt: true
+      createdAt: true,
+      deliveryTerms: true
     },
     orderBy: {
       createdAt: "desc"

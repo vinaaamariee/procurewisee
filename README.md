@@ -160,7 +160,7 @@ An audit interface at `/dashboard/officer/pr` where Procurement Officers review 
 
 A contract drafting workspace at `/dashboard/officer/po` where officers draft and approve Purchase Orders:
 - **Drafting Queue**: Retrieves approved RFQ Canvas recommendations and drafts POs with pre-filled details (supplier, items, and pricing) and automatically redirects the user to the details page upon creation.
-- **Lightweight Registry Cards**: Lists drafted POs as clickable cards that lift on hover and redirect to their dynamic details page.
+- **Lightweight Registry Cards**: Lists drafted POs as clickable cards that lift on hover, showing the supplier's name, logo initials avatar fallback, PO status, delivery schedule terms, linked RFQ context, and pricing summaries, redirecting to their dynamic details page.
 - **Dynamic PO Details (`/dashboard/officer/po/[id]`)**: Displays a dedicated government Purchase Order layout (Appendix 61 / standard Philippine Government PO format) complete with conformes, penalty clauses, and signature slots for print-preview or physical printing.
 - **Interactive Clause Editor**: Enables configuring delivery and payment terms directly on the details page.
 
