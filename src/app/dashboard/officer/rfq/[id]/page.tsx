@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
 import { forecastProductPrice } from '@/lib/forecast/engine';
 import RfqEvaluationClient from './RfqEvaluationClient';
+import { startTimer } from '@/lib/performance-logger';
 
 export const metadata = { title: 'Evaluate Solicitations — ProcureWise' };
 
@@ -19,37 +20,89 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
   // 1. Enforce Procurement Officer role
   await requireRole('Procurement Officer');
 
-  // 2. Fetch RFQ details with its items
-  const rfq = await prisma.requestForQuote.findUnique({
-    where: { id: rfqId },
-    include: {
-      items: {
-        include: {
-          product: true
+  // 2. Fetch RFQ, Quotes, and existing recommendations in parallel
+  const timer1 = startTimer(`RfqEvaluationPage-Fetch-rfqId-${rfqId}`);
+  const [rfq, quotes, recommendations] = await Promise.all([
+    prisma.requestForQuote.findUnique({
+      where: { id: rfqId },
+      include: {
+        items: {
+          include: {
+            product: true
+          }
         }
       }
-    }
-  });
+    }),
+    prisma.supplierQuote.findMany({
+      where: { rfqId },
+      include: {
+        supplier: {
+          include: {
+            evaluations: true,
+            purchaseOrders: true
+          }
+        }
+      }
+    }),
+    prisma.recommendation.findMany({
+      where: {
+        canvas: { rfqId }
+      },
+      include: {
+        supplier: true,
+        supplierQuote: true
+      },
+      orderBy: {
+        rankPosition: 'asc'
+      }
+    })
+  ]);
+  timer1.end();
 
   if (!rfq) {
     return notFound();
   }
 
-  // 3. Fetch quotes submitted for this RFQ
-  const quotes = await prisma.supplierQuote.findMany({
-    where: { rfqId },
-    include: {
-      supplier: {
-        include: {
-          evaluations: true,
-          purchaseOrders: true
-        }
-      }
-    }
-  });
-
-  // 4. Pre-fetch historical and forecast parameters for the main items
+  // 3. Pre-fetch historical and forecast parameters for the main items in parallel
+  const timer2 = startTimer(`RfqEvaluationPage-Analysis-rfqId-${rfqId}`);
   const productIds = rfq.items.map(item => item.productId).filter((id): id is number => id !== null);
+  const supplierIds = quotes.map(q => q.supplierId);
+  const firstProductId = productIds.length > 0 ? productIds[0] : null;
+
+  const [
+    forecast,
+    avgPriceRes,
+    latestPriceRes,
+    allSpecificHistPrices,
+    allGeneralHistPrices
+  ] = await Promise.all([
+    firstProductId ? forecastProductPrice(firstProductId) : Promise.resolve(null),
+    firstProductId ? prisma.historicalPrice.aggregate({
+      _avg: { unitPrice: true },
+      _min: { unitPrice: true },
+      where: { productId: firstProductId }
+    }) : Promise.resolve(null),
+    firstProductId ? prisma.historicalPrice.findFirst({
+      where: { productId: firstProductId },
+      orderBy: { procurementDate: 'desc' },
+      select: { unitPrice: true }
+    }) : Promise.resolve(null),
+    prisma.historicalPrice.findMany({
+      where: {
+        productId: { in: productIds },
+        supplierId: { in: supplierIds }
+      },
+      orderBy: { procurementDate: 'asc' }
+    }),
+    prisma.historicalPrice.findMany({
+      where: {
+        supplierId: { in: supplierIds }
+      },
+      orderBy: { procurementDate: 'asc' }
+    })
+  ]);
+  timer2.end();
+
   let forecastPrice: number | null = null;
   let forecastTrend: "increasing" | "decreasing" | "stable" | "unknown" = "unknown";
   let expectedChange: string | null = null;
@@ -57,9 +110,7 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
   let historicalMinPrice: number | undefined = undefined;
   let historicalLatestPrice: number | undefined = undefined;
 
-  if (productIds.length > 0) {
-    const firstProductId = productIds[0];
-    const forecast = await forecastProductPrice(firstProductId);
+  if (firstProductId) {
     if (forecast && forecast.points.length > 0) {
       forecastPrice = forecast.points[0].value;
       forecastTrend = forecast.trend;
@@ -72,38 +123,30 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
       }
     }
 
-    const avgPriceRes = await prisma.historicalPrice.aggregate({
-      _avg: { unitPrice: true },
-      _min: { unitPrice: true },
-      where: { productId: firstProductId }
-    });
-    historicalAvgPrice = avgPriceRes._avg.unitPrice ? avgPriceRes._avg.unitPrice.toNumber() : undefined;
-    historicalMinPrice = avgPriceRes._min.unitPrice ? avgPriceRes._min.unitPrice.toNumber() : undefined;
+    if (avgPriceRes) {
+      historicalAvgPrice = avgPriceRes._avg.unitPrice ? avgPriceRes._avg.unitPrice.toNumber() : undefined;
+      historicalMinPrice = avgPriceRes._min.unitPrice ? avgPriceRes._min.unitPrice.toNumber() : undefined;
+    }
 
-    const latestPriceRes = await prisma.historicalPrice.findFirst({
-      where: { productId: firstProductId },
-      orderBy: { procurementDate: 'desc' },
-      select: { unitPrice: true }
-    });
     historicalLatestPrice = latestPriceRes ? latestPriceRes.unitPrice.toNumber() : undefined;
   }
 
-  // 5. Gather historical price lists for each supplier
+  // 4. Gather historical price lists for each supplier using pre-fetched data (no N+1 queries)
   const quoteMetrics = [];
   for (const quote of quotes) {
     const supplier = quote.supplier;
     
-    let supplierHistPrices = await prisma.historicalPrice.findMany({
-      where: { productId: { in: productIds }, supplierId: supplier.id },
-      orderBy: { procurementDate: 'asc' }
-    });
+    // Filter specific prices from pre-fetched array in memory
+    const supplierHistPrices = allSpecificHistPrices.filter(
+      hp => hp.supplierId === supplier.id
+    );
     let pricesList = supplierHistPrices.map(hp => hp.unitPrice.toNumber());
 
     if (pricesList.length === 0) {
-      const generalHistPrices = await prisma.historicalPrice.findMany({
-        where: { supplierId: supplier.id },
-        orderBy: { procurementDate: 'asc' }
-      });
+      // Fallback: Filter general prices from pre-fetched array in memory
+      const generalHistPrices = allGeneralHistPrices.filter(
+        hp => hp.supplierId === supplier.id
+      );
       pricesList = generalHistPrices.map(hp => hp.unitPrice.toNumber());
     }
 
@@ -129,19 +172,7 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
     });
   }
 
-  // 6. Fetch existing recommendations if any
-  const recommendations = await prisma.recommendation.findMany({
-    where: {
-      canvas: { rfqId }
-    },
-    include: {
-      supplier: true,
-      supplierQuote: true
-    },
-    orderBy: {
-      rankPosition: 'asc'
-    }
-  });
+
 
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem', fontFamily: '"Inter", sans-serif' }}>

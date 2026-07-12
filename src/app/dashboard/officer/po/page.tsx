@@ -7,13 +7,25 @@ export const metadata = { title: "Purchase Order Drafting — ProcureWise" };
 export default async function PoDraftingPage() {
   await requireRole("Procurement Officer");
 
-  // 1. Fetch all existing Purchase Orders
+  // 1. Fetch only lightweight summary Purchase Orders
   const pos = await prisma.purchaseOrder.findMany({
-    include: {
-      supplier: true,
-      items: true,
-      rfq: true,
-      pr: true,
+    select: {
+      id: true,
+      poNumber: true,
+      supplierId: true,
+      supplier: {
+        select: {
+          companyName: true
+        }
+      },
+      rfq: {
+        select: {
+          rfqNumber: true
+        }
+      },
+      totalCost: true,
+      status: true,
+      createdAt: true
     },
     orderBy: {
       createdAt: "desc"
@@ -39,7 +51,7 @@ export default async function PoDraftingPage() {
   // Filter recommendations that don't have a PO drafted yet
   const pendingAwards = approvedRecommendations.filter((rec) => {
     return !pos.some(
-      (po) => po.rfqId === rec.canvas.rfqId && po.supplierId === rec.supplierId
+      (po) => po.supplierId === rec.supplierId && po.rfq?.rfqNumber === rec.canvas.rfq.rfqNumber
     );
   });
 

@@ -21,6 +21,14 @@ export default async function PrTrackerPage() {
       ppmp: true,
       assignedOfficer: true,
       requestedBy: true,
+      statusHistory: {
+        include: {
+          changedBy: true
+        },
+        orderBy: {
+          createdAt: "desc"
+        }
+      }
     },
     orderBy: {
       createdAt: "desc"

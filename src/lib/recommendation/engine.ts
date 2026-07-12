@@ -162,6 +162,70 @@ export async function recommendBestSupplierInternal(productId: number): Promise<
   // 4. Sort and Rank Suppliers (Highest overallScore first)
   recommendations.sort((a, b) => b.overallScore - a.overallScore);
 
+  recommendations.forEach((item, index) => {
+    const rank = index + 1;
+    const characteristics: string[] = [];
+    const explanations: string[] = [];
+
+    if (item.individualScores.priceScore >= 95) {
+      explanations.push("Lowest evaluated price among suppliers");
+      characteristics.push("competitive pricing");
+    } else if (item.individualScores.priceScore >= 80) {
+      explanations.push("Competitive price quote");
+      characteristics.push("competitive pricing");
+    } else {
+      characteristics.push("standard pricing");
+    }
+
+    if (item.individualScores.deliveryScore >= 85) {
+      explanations.push("Excellent delivery performance");
+      characteristics.push("excellent delivery lead time");
+    } else if (item.individualScores.deliveryScore >= 70) {
+      explanations.push("Satisfactory delivery speed and history");
+      characteristics.push("acceptable delivery lead time");
+    } else {
+      characteristics.push("longer delivery lead time");
+    }
+
+    if (item.individualScores.reliabilityScore >= 80) {
+      explanations.push("High supplier reliability");
+      characteristics.push("high supplier evaluation ratings");
+    } else if (item.individualScores.reliabilityScore >= 60) {
+      explanations.push("Moderate supplier reliability");
+      characteristics.push("moderate supplier evaluation ratings");
+    } else {
+      characteristics.push("lower reliability history");
+    }
+
+    if (item.individualScores.complianceScore >= 90) {
+      explanations.push("Complete compliance documents");
+      characteristics.push("complete compliance verification");
+    } else if (item.individualScores.complianceScore >= 70) {
+      explanations.push("Adequate regulatory compliance");
+      characteristics.push("adequate regulatory compliance");
+    }
+
+    if (item.individualScores.historicalPerformanceScore >= 80) {
+      explanations.push("Stable historical pricing trend");
+      characteristics.push("stable historical pricing trends");
+    } else if (item.individualScores.historicalPerformanceScore >= 60) {
+      explanations.push("Moderate price stability");
+      characteristics.push("moderate price stability");
+    }
+
+    let narrative = "";
+    if (rank === 1) {
+      const listStr = characteristics.join(", ");
+      narrative = `${item.supplier.companyName} received the highest overall score because of ${listStr}.`;
+    } else {
+      const gap = (recommendations[0].overallScore - item.overallScore).toFixed(2);
+      const listStr = characteristics.join(", ");
+      narrative = `${item.supplier.companyName} is ranked #${rank} (falling behind the top option by ${gap} points) with ${listStr}.`;
+    }
+
+    item.reason = [narrative, ...explanations.map(e => `• ${e}`)].join("\n");
+  });
+
   const topSupplier = recommendations.length > 0 ? recommendations[0] : null;
 
   // 5. Academic explanation explaining the MCDM structure
@@ -373,7 +437,8 @@ async function computeMCDMScores({
     explanations.push("Moderate price stability");
   }
 
-  const reasonString = explanations.map((e) => `• ${e}`).join("\n");
+  const narrative = `${supplier.companyName} evaluated with an overall score of ${overallScore}/100.`;
+  const reasonString = [narrative, ...explanations.map((e) => `• ${e}`)].join("\n");
 
   return {
     supplier: {
@@ -384,7 +449,7 @@ async function computeMCDMScores({
     },
     overallScore,
     individualScores,
-    reason: reasonString || "• Recommended based on balanced MCDM score metrics",
+    reason: reasonString,
     confidence,
     confidenceLabel,
     price: currentPrice,
@@ -689,6 +754,70 @@ export async function scoreRfqQuotesInternal(
 
   // 6. Sort by overall score descending
   scoredQuotes.sort((a, b) => b.overallScore - a.overallScore);
+
+  scoredQuotes.forEach((item, index) => {
+    const rank = index + 1;
+    const characteristics: string[] = [];
+    const explanations: string[] = [];
+
+    if (item.individualScores.priceScore >= 95) {
+      explanations.push("Lowest evaluated price among suppliers");
+      characteristics.push("competitive pricing");
+    } else if (item.individualScores.priceScore >= 80) {
+      explanations.push("Competitive price quote");
+      characteristics.push("competitive pricing");
+    } else {
+      characteristics.push("standard pricing");
+    }
+
+    if (item.individualScores.deliveryScore >= 85) {
+      explanations.push("Excellent delivery performance");
+      characteristics.push("excellent delivery lead time");
+    } else if (item.individualScores.deliveryScore >= 70) {
+      explanations.push("Satisfactory delivery speed and history");
+      characteristics.push("acceptable delivery lead time");
+    } else {
+      characteristics.push("longer delivery lead time");
+    }
+
+    if (item.individualScores.reliabilityScore >= 80) {
+      explanations.push("High supplier reliability");
+      characteristics.push("high supplier evaluation ratings");
+    } else if (item.individualScores.reliabilityScore >= 60) {
+      explanations.push("Moderate supplier reliability");
+      characteristics.push("moderate supplier evaluation ratings");
+    } else {
+      characteristics.push("lower reliability history");
+    }
+
+    if (item.individualScores.complianceScore >= 90) {
+      explanations.push("Complete compliance documents");
+      characteristics.push("complete compliance verification");
+    } else if (item.individualScores.complianceScore >= 70) {
+      explanations.push("Adequate regulatory compliance");
+      characteristics.push("adequate regulatory compliance");
+    }
+
+    if (item.individualScores.historicalPerformanceScore >= 80) {
+      explanations.push("Stable historical pricing trend");
+      characteristics.push("stable historical pricing trends");
+    } else if (item.individualScores.historicalPerformanceScore >= 60) {
+      explanations.push("Moderate price stability");
+      characteristics.push("moderate price stability");
+    }
+
+    let narrative = "";
+    if (rank === 1) {
+      const listStr = characteristics.join(", ");
+      narrative = `${item.supplierName} received the highest overall score because of ${listStr}.`;
+    } else {
+      const gap = (scoredQuotes[0].overallScore - item.overallScore).toFixed(2);
+      const listStr = characteristics.join(", ");
+      narrative = `${item.supplierName} is ranked #${rank} (falling behind the top option by ${gap} points) with ${listStr}.`;
+    }
+
+    item.reason = [narrative, ...explanations.map(e => `• ${e}`)].join("\n");
+  });
 
   const topRecommendation = scoredQuotes.length > 0 ? scoredQuotes[0] : null;
 

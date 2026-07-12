@@ -1,51 +1,98 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import type { UserProfile } from '@/types/auth';
+import { headers } from 'next/headers';
+import { prisma } from '@/lib/prisma';
+import { cache } from 'react';
+import { startTimer } from '@/lib/performance-logger';
 
 /**
  * Returns the authenticated Supabase user + their user_profile row.
  * Redirects to login if unauthenticated.
- * Never trust getSession() alone — always use getUser() for server-side auth.
+ * Uses request headers to bypass Supabase getUser() network call,
+ * caches the profile query per request, and uses Prisma Client.
  */
-export async function getAuthenticatedUser(): Promise<{
+export const getAuthenticatedUser = cache(async (): Promise<{
   user: { id: string; email?: string };
   profile: UserProfile;
-}> {
-  const supabase = await createClient();
+}> => {
+  const timer = startTimer('getAuthenticatedUser');
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser();
+  let userId: string | null = null;
+  let userEmail: string | null = null;
 
-  if (authError || !user) {
-    redirect('/login');
+  try {
+    const headerStore = await headers();
+    userId = headerStore.get('x-user-id');
+  } catch (e) {
+    // Headers read may fail outside of live request context (e.g. during build-time prerendering)
   }
 
-  const { data: profile, error: profileError } = await supabase
-    .from('user_profiles')
-    .select('id, username, "fullName", email, role, "isActive", "createdAt"')
-    .eq('id', user.id)
-    .single();
+  if (!userId) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
-  if (profileError || !profile) {
-    // Profile not found — sign out and redirect
+    if (authError || !user) {
+      timer.end();
+      redirect('/login');
+    }
+    userId = user.id;
+    userEmail = user.email ?? null;
+  }
+
+  // Fetch profile via Prisma (connection pool, significantly faster than Supabase REST)
+  const profileRow = await prisma.userProfile.findUnique({
+    where: { id: userId },
+  });
+
+  if (!profileRow) {
+    const supabase = await createClient();
     await supabase.auth.signOut();
+    timer.end();
     redirect('/login?error=Account not configured. Contact your administrator.');
   }
 
-  if (profile.role === 'Supplier') {
+  // Convert Prisma UserRole to App UserRole (with space)
+  let appRole = profileRow.role as string;
+  if (appRole === 'ProcurementOfficer') {
+    appRole = 'Procurement Officer';
+  } else if (appRole === 'AdministrativeApprover') {
+    appRole = 'Administrative Approver';
+  }
+
+  if (appRole === 'Supplier') {
+    const supabase = await createClient();
     await supabase.auth.signOut();
+    timer.end();
     redirect('/login?error=Supplier login is disabled. Supplier accounts are for reference only.');
   }
 
-  if (!profile.isActive) {
+  if (!profileRow.isActive) {
+    const supabase = await createClient();
     await supabase.auth.signOut();
+    timer.end();
     redirect('/login?error=Your account has been deactivated.');
   }
 
-  return { user, profile: profile as UserProfile };
-}
+  const profile: UserProfile = {
+    id: profileRow.id,
+    username: profileRow.username,
+    fullName: profileRow.fullName,
+    email: profileRow.email,
+    role: appRole as any,
+    isActive: profileRow.isActive,
+    createdAt: profileRow.createdAt.toISOString(),
+  };
+
+  timer.end();
+  return {
+    user: { id: userId, email: userEmail ?? profileRow.email },
+    profile,
+  };
+});
 
 /**
  * Verifies auth AND enforces a specific role.
@@ -62,3 +109,4 @@ export async function requireRole(
 
   return { user, profile };
 }
+

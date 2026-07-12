@@ -150,6 +150,8 @@ A performance evaluation form at `/dashboard/end-user/evaluation` enabling requi
 ### 14. Officer Requisition Auditing Hub
 
 An audit interface at `/dashboard/officer/pr` where Procurement Officers review submitted requisitions:
+- **Lightweight Cards Grid & Search**: Displays incoming requisitions as a clean, searchable list of cards linking to individual details.
+- **Dynamic Route Details (`/dashboard/officer/pr/[id]`)**: Renders full auditing workflows, department budget balance monitors, and tracking trails on a dedicated details page, complete with skeleton loading states, error boundaries, and breadcrumb context.
 - **Quantity & Specs Checklist**: Requires auditing item descriptions and quantities against specifications before final approval.
 - **Inline Corrections (UOM Conversion)**: Enforces validation rules enabling officers to edit items inline (e.g. converting "1 piece alcohol" to "500 mL alcohol", adjusting quantities, or correcting brands), which automatically recalculates PR totals and modifies department budget spent.
 - **Status Gates**: Officers can mark PRs "Under Review", return them to the requisitioner for corrections (providing feedback remarks), or approve them to issue a unique `PROC-YYYY-XXXX` tracking reference.
@@ -157,9 +159,10 @@ An audit interface at `/dashboard/officer/pr` where Procurement Officers review 
 ### 15. Officer Purchase Order drafting Workspace
 
 A contract drafting workspace at `/dashboard/officer/po` where officers draft and approve Purchase Orders:
-- **Award Queue**: Retrieves approved RFQ Canvas recommendations and drafts POs with pre-filled details (supplier, items, and pricing).
-- **Interactive Clause Editor**: Enables drafting delivery and payment terms directly on the contract.
-- **High-Fidelity Appendix 61 Layout**: Renders standard government Purchase Order layouts (Appendix 61 / standard Philippine Government PO format) complete with conformes, penalty clauses, and signature slots for print-preview or physical printing.
+- **Drafting Queue**: Retrieves approved RFQ Canvas recommendations and drafts POs with pre-filled details (supplier, items, and pricing) and automatically redirects the user to the details page upon creation.
+- **Lightweight Registry Cards**: Lists drafted POs as clickable cards that lift on hover and redirect to their dynamic details page.
+- **Dynamic PO Details (`/dashboard/officer/po/[id]`)**: Displays a dedicated government Purchase Order layout (Appendix 61 / standard Philippine Government PO format) complete with conformes, penalty clauses, and signature slots for print-preview or physical printing.
+- **Interactive Clause Editor**: Enables configuring delivery and payment terms directly on the details page.
 
 ### 16. Supplier Contract & Delivery Acknowledgment Portal
 
@@ -575,6 +578,66 @@ A comprehensive stabilization phase addressing application routing, input valida
 ### 4. Recalculation & Data Integrity
 - Recalculated PPMP budgets server-side dynamically from line items to guard against spoofed client payloads.
 - Added automatic budget refund transactions: If an administrative reviewer rejects or cancels a Purchase Request, the department's `spentBudget` allocation is automatically refunded.
+
+---
+
+## 🔄 Advanced Procurement Approval & Resubmission Workflow (Sprint 8)
+
+A high-fidelity enhancement to the procurement approval process, establishing full accountability and process alignment for Administrative Approvers and Procurement Officers:
+
+### 1. Unified Requisitions Workflow Center
+- **Approver History Log (`/dashboard/approver/history`)**: Implemented a comprehensive history board categorized into five tabs: **`Pending`**, **`Under Review`**, **`Approved`**, **`Returned`**, and **`Rejected`** for full process visibility.
+- **Workflow Detail & Action Panel (`/dashboard/approver/history/[id]`)**: Developed a deep-linked detail page where Administrative Approvers can inspect PR items, check department budget balance, view the chronological timeline, and perform action reviews.
+- **Dynamic Decision Controls**: Added transitions supporting:
+  - **Start Review**: Moves `Submitted` PRs to `Under Review` to indicate the evaluation has started.
+  - **Approve**: Updates status to `Approved` with optional remarks.
+  - **Return for Revision**: Open modal gathering mandatory revision remarks, transitioning PR to `ReturnedForRevision` and releasing the reserved budget.
+  - **Reject**: Open modal gathering mandatory rejection remarks, transitioning PR to `Rejected` and releasing the reserved budget.
+
+### 2. End-User Resubmission Workflow
+- **Revision and Resubmit Panel**: In the requisitioner tracker (`PrTrackerClient.tsx`), when a request is returned for revision, an editing mode is unlocked inline.
+- **Budget Adjustments**: When resubmitting, the department's `spentBudget` is automatically re-reserved and adjusted based on the new computed total cost difference.
+- **Chronological Feedback Logs**: Decision history and comments are permanently recorded in `PurchaseRequestStatusHistory` and rendered chronologically for requisitioners and auditing officers.
+
+### 3. Procurement Officer Integration & Bidding Restrictions
+- **Active Queue Restrictions**: Modified the officer's Requisitions Auditing Hub (`/dashboard/officer/pr`) and dropdowns to filter out `Returned` or `Rejected` requests, ensuring only `Approved` and `Received` PRs proceed to RFQ drafting and bidding.
+- **Approved PR Receiving**: Officers can now only mark PRs as `Received` once approved by the Administrative Approver, ensuring correct hierarchical alignment.
+
+### 4. Unified Public Tracking
+- **Search and Tracking Integration**: Hardened the public `/track` portal search engine and token pages to support searching and tracking both `Requisitions` and official `PurchaseRequests` using a single lookup interface.
+
+---
+
+## 🔄 System Flowcharts & Process Architecture
+
+ProcureWise's system workflows and operational logic are documented in a centralized, thesis-ready format. This resource includes comprehensive Mermaid flowcharts adhering to strict modeling standards (Start/End terminators, process rectangles, decision diamonds, input/output parallelograms, and database cylinders with Yes/No branches).
+
+The flowcharts include:
+1. **Overall ProcureWise System Workflow**: Master procurement lifecycle from public user entry to time-series forecasting.
+2. **Procurement Workflow**: Continuous process detailing planning (PPMP), requisitions (PR), solicitations (RFQ), scoring (MCDM), purchasing (PO), delivery, evaluation, and price updates.
+3. **Intelligent Procurement Analytics Workflow**: Focused workflow of time-series feeds, ARIMA pipeline execution, MAPE validation, confidence tiers, and strategic recommendation output.
+4. **Public User Workflow**: Browse Catalog, Create PPMP Planning Draft, Submit Purchase Requisition, Track Requisition Status.
+5. **User Access Workflow**: Authenticated system entry mapping roles (Administrator, Procurement Officer, Administrative Approver, Supplier, and End User) to dashboard options.
+
+Access the full interactive flowcharts here:
+* [ProcureWise System Flowcharts](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/system_flowcharts.md)
+* [Archived Legacy Flowcharts](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/archived-flowcharts/)
+
+---
+
+## 📚 System Documentation
+
+The system workflows, database relationships, logical data flows, and use case diagrams are documented in the following reference guides:
+* [System Flowcharts](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/system_flowcharts.md)
+* [Entity Relationship Diagram](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/erd.md)
+* [Data Flow Diagrams](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/data_flow_diagrams.md)
+* [UML Use Case Diagram](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/use_case_diagram.md)
+* [Development Roadmap](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/development_roadmap.md)
+* [Final Development Roadmap](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/final_development_roadmap.md)
+
+
+
+
 
 
 
