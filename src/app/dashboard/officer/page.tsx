@@ -22,6 +22,41 @@ async function getOfficerStats() {
   };
 }
 
+async function getOfficerTasks() {
+  const timer = startTimer('getOfficerTasks');
+  
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const endOfToday = new Date();
+  endOfToday.setHours(23, 59, 59, 999);
+
+  const [prsAwaitingAudit, rfqsExpiringToday, posAwaitingSignature] = await Promise.all([
+    prisma.purchaseRequest.count({
+      where: { status: { in: ['Submitted', 'UnderReview'] } }
+    }),
+    prisma.requestForQuote.count({
+      where: {
+        status: 'Published',
+        deadlineDate: {
+          gte: startOfToday,
+          lte: endOfToday
+        }
+      }
+    }),
+    prisma.purchaseOrder.count({
+      where: { status: 'Draft' }
+    })
+  ]);
+
+  timer.end();
+  return {
+    prsAwaitingAudit,
+    rfqsExpiringToday,
+    posAwaitingSignature
+  };
+}
+
 async function getRecentRfqs() {
   const timer = startTimer('getRecentRfqs');
   const data = await prisma.requestForQuote.findMany({
@@ -54,9 +89,10 @@ const STATUS_STYLE: Record<string, { bg: string; color: string; border: string }
 export default async function OfficerDashboard() {
   const pageTimer = startTimer('OfficerDashboardPage');
   await requireRole('Procurement Officer');
-  const [stats, rfqs] = await Promise.all([
+  const [stats, rfqs, tasks] = await Promise.all([
     getOfficerStats(),
     getRecentRfqs(),
+    getOfficerTasks(),
   ]);
   pageTimer.end();
 
@@ -107,28 +143,96 @@ export default async function OfficerDashboard() {
         </div>
       </div>
 
-      {/* ── Stat Cards Grid ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
-        {statCards.map(card => (
-          <a href={card.href} key={card.label} style={{
+      {/* ── Dashboard Action Grid ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr lg:grid-cols-3', gap: '2rem' }} className="grid grid-cols-1 lg:grid-cols-3">
+        {/* Left Column: Today's Action Items */}
+        <div style={{ gridColumn: 'span 2' }} className="lg:col-span-2">
+          <div style={{
             background: v.surface,
             border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
-            boxShadow: v.shadow, position: 'relative', overflow: 'hidden',
-            display: 'block', textDecoration: 'none', cursor: 'pointer',
-            transition: 'all 0.2s ease-in-out'
-          }} className="hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/40 group">
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: card.color }} />
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{card.icon}</div>
-            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>{card.value}</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: v.textPrimary, marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              {card.label}
-              <span style={{ fontSize: '0.75rem', opacity: 0, transition: 'opacity 0.25s ease' }} className="group-hover:opacity-100 text-[var(--accent)]">
-                →
-              </span>
+            boxShadow: v.shadow, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'
+          }}>
+            <div>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: '0 0 1.25rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                🎯 Today's Action Items
+              </h2>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                {/* PR Audit Task */}
+                <a href="/dashboard/officer/pr" style={{
+                  display: 'flex', alignItems: 'center', padding: '1rem', borderRadius: '1rem',
+                  background: 'var(--bg-dark)', border: `1px solid ${v.border}`, textDecoration: 'none', transition: 'all 0.15s ease'
+                }} className="hover:border-[var(--accent)] hover:-translate-y-0.5 block transition-all">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{ fontSize: '1.5rem' }}>🔍</div>
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: v.textPrimary }}>Purchase Requests Pending Audit</div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>Verify item specifications and validate department budget lines</div>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '0.25rem 0.75rem', borderRadius: '999px', background: 'rgba(220,179,83,0.15)', color: '#b88a1b', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                    {tasks.prsAwaitingAudit} awaiting
+                  </span>
+                </a>
+
+                {/* RFQs Expiring Task */}
+                <a href="#recent-solicitations" style={{
+                  display: 'flex', alignItems: 'center', padding: '1rem', borderRadius: '1rem',
+                  background: 'var(--bg-dark)', border: `1px solid ${v.border}`, textDecoration: 'none', transition: 'all 0.15s ease'
+                }} className="hover:border-[var(--accent)] hover:-translate-y-0.5 block transition-all">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{ fontSize: '1.5rem' }}>⏳</div>
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: v.textPrimary }}>Active RFQs Expiring Today</div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>Compile supplier bid quotations and prepare recommendation abstracts</div>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '0.25rem 0.75rem', borderRadius: '999px', background: 'rgba(239,68,68,0.1)', color: '#dc2626', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                    {tasks.rfqsExpiringToday} expiring
+                  </span>
+                </a>
+
+                {/* PO Awaiting Signature Task */}
+                <a href="/dashboard/officer/po" style={{
+                  display: 'flex', alignItems: 'center', padding: '1rem', borderRadius: '1rem',
+                  background: 'var(--bg-dark)', border: `1px solid ${v.border}`, textDecoration: 'none', transition: 'all 0.15s ease'
+                }} className="hover:border-[var(--accent)] hover:-translate-y-0.5 block transition-all">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{ fontSize: '1.5rem' }}>✍️</div>
+                    <div style={{ textAlign: 'left' }}>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 700, color: v.textPrimary }}>POs Awaiting Signature</div>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>Review drafted purchase orders and execute digital conforme signatures</div>
+                    </div>
+                  </div>
+                  <span style={{ fontSize: '0.75rem', fontWeight: 800, padding: '0.25rem 0.75rem', borderRadius: '999px', background: 'rgba(16,185,129,0.1)', color: '#059669', marginLeft: 'auto', whiteSpace: 'nowrap' }}>
+                    {tasks.posAwaitingSignature} pending
+                  </span>
+                </a>
+              </div>
             </div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 500, color: v.textSecondary, marginTop: '0.25rem' }}>{card.desc}</div>
-          </a>
-        ))}
+          </div>
+        </div>
+
+        {/* Right Column: Statistics */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
+          {statCards.map(card => (
+            <a href={card.href} key={card.label} style={{
+              background: v.surface,
+              border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.25rem 1.5rem',
+              boxShadow: v.shadow, position: 'relative', overflow: 'hidden',
+              display: 'block', textDecoration: 'none', cursor: 'pointer',
+              transition: 'all 0.2s ease-in-out', flexGrow: 1
+            }} className="hover:-translate-y-0.5 hover:shadow-lg hover:border-amber-500/40 group">
+              <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '4px', background: card.color }} />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: v.textSecondary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{card.label}</div>
+                  <div style={{ fontSize: '1.875rem', fontWeight: 900, color: v.textPrimary, marginTop: '0.25rem', lineHeight: 1 }}>{card.value}</div>
+                </div>
+                <div style={{ fontSize: '1.875rem' }}>{card.icon}</div>
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* ── Decision Intelligence & Forecasting Widgets (Point 6) ── */}
