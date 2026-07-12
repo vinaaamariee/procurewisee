@@ -484,13 +484,13 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
               {/* Status workflow timeline visualization */}
               <div>
                 <h3 style={{ fontSize: "0.85rem", fontWeight: 700, color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "1rem" }}>Procurement Flow Progress</h3>
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "0.5rem", position: "relative" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "0.5rem", position: "relative", marginBottom: "1rem" }}>
                   {[
-                    { label: "Draft", active: true, error: false },
-                    { label: "Submitted", active: ["Submitted", "Received", "UnderReview", "Under Review", "ReturnedForRevision", "Returned for Revision", "Approved", "Rejected"].includes(selectedPr.status), error: false },
-                    { label: "Received", active: ["Received", "UnderReview", "Under Review", "Approved"].includes(selectedPr.status) || selectedPr.trackingNumber !== null, error: false },
-                    { label: "Under Review", active: ["UnderReview", "Under Review", "Approved", "ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status), error: false },
-                    { label: selectedPr.status === "ReturnedForRevision" || selectedPr.status === "Returned for Revision" ? "Returned for Revision" : selectedPr.status === "Rejected" ? "Rejected" : "Approved", active: ["Approved", "ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status), error: ["ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status) }
+                    { label: "Draft", active: true, error: false, est: "Creation" },
+                    { label: "Submitted", active: ["Submitted", "Received", "UnderReview", "Under Review", "ReturnedForRevision", "Returned for Revision", "Approved", "Rejected"].includes(selectedPr.status), error: false, est: "Within 24h" },
+                    { label: "Received", active: ["Received", "UnderReview", "Under Review", "Approved"].includes(selectedPr.status) || selectedPr.trackingNumber !== null, error: false, est: "1-2 Days" },
+                    { label: "Under Review", active: ["UnderReview", "Under Review", "Approved", "ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status), error: false, est: "2-3 Days" },
+                    { label: selectedPr.status === "ReturnedForRevision" || selectedPr.status === "Returned for Revision" ? "Returned for Revision" : selectedPr.status === "Rejected" ? "Rejected" : "Approved", active: ["Approved", "ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status), error: ["ReturnedForRevision", "Returned for Revision", "Rejected"].includes(selectedPr.status), est: "3-5 Days" }
                   ].map((step, idx) => (
                     <div key={idx} style={{ textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.4rem" }}>
                       <div style={{
@@ -504,8 +504,30 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                       <span style={{ fontSize: "0.7rem", fontWeight: 700, color: step.error ? "#ef4444" : step.active ? theme.textMain : theme.textMuted }}>
                         {step.label}
                       </span>
+                      <span style={{ fontSize: "0.55rem", fontWeight: 600, color: theme.textMuted, marginTop: "-0.2rem" }}>
+                        {step.est}
+                      </span>
                     </div>
                   ))}
+                </div>
+
+                {/* Estimated Turnaround Time (SLA) Guidance Banner */}
+                <div style={{
+                  padding: "0.875rem 1.25rem", borderRadius: "0.75rem",
+                  backgroundColor: "var(--accent-glass)",
+                  border: "1px solid var(--border-accent)",
+                  marginTop: "1rem", display: "flex", flexDirection: "column", gap: "0.25rem"
+                }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: "0.35rem", fontSize: "0.72rem", fontWeight: 800, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.5px" }}>
+                    ⏳ Estimated SLA Turnaround Timeline
+                  </span>
+                  <p style={{ fontSize: "0.68rem", color: theme.textMuted, margin: 0, lineHeight: 1.4, fontWeight: 500 }}>
+                    Standard processing durations: 
+                    <strong> Submitted</strong> (Within 24 Hours) &bull;
+                    <strong> Received</strong> (1-2 Working Days) &bull;
+                    <strong> Under Review</strong> (2-3 Working Days) &bull;
+                    <strong> Approved</strong> (3-5 Working Days). Total Target Cycle: 7-10 Working Days.
+                  </p>
                 </div>
               </div>
 

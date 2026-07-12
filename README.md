@@ -137,7 +137,7 @@ Simplifies the purchase request process for departments by removing authenticati
 ### 12. End-User Requisitions Tracker
 
 A dashboard page at `/dashboard/end-user/pr` that lists all Purchase Requests submitted by the requisitioner:
-- **Interactive Multi-Step Validation**: Requisitioners can submit draft PRs for officer audits and monitor validation steps (Draft -> Submitted -> Audited & Approved -> Received/PROC Number Issued).
+- **Interactive Multi-Step Validation**: Requisitioners can submit draft PRs for officer audits, monitor validation steps (Draft &rarr; Submitted &rarr; Received &rarr; Under Review &rarr; Approved), view standard SLA turnaround durations under each status node (e.g. Within 24h, 1-2 Days, 2-3 Days, 3-5 Days), and consult an **Estimated SLA Turnaround Timeline** guidance banner.
 - **Assigned Officer Status**: Shows the name, email, and status of the Procurement Officer assigned to audit the request.
 - **Revision Logs**: Displays a history of comments and return reasons logged by the officer during reviews.
 
