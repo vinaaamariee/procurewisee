@@ -184,7 +184,7 @@ Each role dashboard has been cleaned up to show only relevant, functional links:
   - **Overview Dashboard**: Integrates system counter statistics (Total RFQs, Open/Active, Registered Suppliers) with a prominent **Today's Action Items** dashboard panel displaying real-time metrics of Purchase Requests awaiting audit, RFQs expiring today, and POs awaiting signature, complete with navigation shortcuts.
 - **Administrative Approver**: Overview only (MCDM approval queue, audit trail, and staff management are all on the overview page)
 - **End User**: Overview → My PPMPs → Purchase Requests
-  - **Overview Dashboard**: Features a Department Fiscal Budget Tracker with real-time progress indicators, quick statistics summaries, recent PR history, and an interactive **My Pending Actions** panel showing draft/returned PPMPs, returned PRs, and pending supplier evaluations.
+  - **Overview Dashboard**: Features a Department Fiscal Budget Tracker with real-time progress indicators, quick statistics summaries, recent PR history, and an interactive **My Pending Actions** panel displaying status badges, short descriptions, and action buttons for draft/returned PPMPs, returned PRs, and pending supplier evaluations.
 - **Supplier**: Overview → Purchase Orders → My Scorecard
 
 ### 19. Professional Government Procurement Landing Page (Sprint 2.1)

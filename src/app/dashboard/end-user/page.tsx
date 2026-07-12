@@ -261,37 +261,61 @@ export default async function EndUserDashboard() {
                       ? { bg: "rgba(239,68,68,0.1)", text: "#dc2626" }
                       : { bg: "rgba(16,185,129,0.1)", text: "#059669" };
 
+                  const btnLabel = 
+                    action.statusLabel === "Returned" 
+                      ? "Revise"
+                      : action.type === "evaluation"
+                      ? "Rate Supplier"
+                      : "Complete";
+
                   return (
-                    <Link 
+                    <div 
                       key={i} 
-                      href={action.link} 
                       style={{
-                        display: "block", textDecoration: "none", padding: "0.875rem", borderRadius: "0.85rem",
+                        padding: "1.1rem", borderRadius: "1rem",
                         background: "var(--bg-dark)", border: `1px solid ${v.border}`,
-                        transition: "all 0.15s ease",
+                        display: "flex", flexDirection: "column", gap: "0.75rem",
                       }}
-                      className="hover:border-[var(--accent)] hover:-translate-y-0.5 block transition-all"
                     >
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.35rem" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <span style={{ 
                           fontSize: "0.65rem", fontWeight: 800, padding: "0.15rem 0.5rem", borderRadius: "4px",
                           backgroundColor: badgeColor.bg, color: badgeColor.text, textTransform: "uppercase", letterSpacing: "0.5px"
                         }}>
-                          {action.type}
+                          {action.type === "planning" ? "Planning" : action.type === "requisition" ? "Requisition" : "Evaluation"}
                         </span>
-                        {action.statusLabel && (
-                          <span style={{ fontSize: "0.65rem", color: "var(--text-muted)", fontWeight: 700 }}>
-                            {action.statusLabel}
-                          </span>
-                        )}
+                        <span style={{ 
+                          fontSize: "0.65rem", fontWeight: 700, 
+                          color: action.statusLabel === "Returned" || action.statusLabel === "ReturnedForRevision" ? "#ef4444" : "var(--text-muted)"
+                        }}>
+                          {action.statusLabel || "Pending"}
+                        </span>
                       </div>
-                      <div style={{ fontSize: "0.8rem", fontWeight: 700, color: v.textPrimary, marginBottom: "0.15rem" }}>
-                        {action.title}
+                      
+                      <div>
+                        <h4 style={{ fontSize: "0.8rem", fontWeight: 800, color: v.textPrimary, margin: 0 }}>
+                          {action.title}
+                        </h4>
+                        <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", margin: "0.20rem 0 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {action.description}
+                        </p>
                       </div>
-                      <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                        {action.description}
-                      </div>
-                    </Link>
+
+                      <Link 
+                        href={action.link} 
+                        style={{
+                          display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "0.35rem",
+                          textDecoration: "none", padding: "0.5rem 1rem", borderRadius: "0.5rem",
+                          background: `linear-gradient(135deg, ${v.accent}, ${v.accentLight})`, color: "#fff",
+                          fontWeight: 700, fontSize: "0.75rem", width: "100%", textAlign: "center",
+                          boxShadow: "0 2px 8px rgba(30,58,138,0.1)",
+                          transition: "all 0.15s ease"
+                        }}
+                        className="hover:opacity-90 hover:shadow-md"
+                      >
+                        {btnLabel} &rarr;
+                      </Link>
+                    </div>
                   );
                 })
               ) : (
