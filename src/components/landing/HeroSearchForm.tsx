@@ -20,7 +20,7 @@ export default function HeroSearchForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto flex max-w-xl items-center gap-2 rounded-xl border p-1.5 shadow-sm transition-shadow focus-within:shadow-md"
+      className="mx-auto lg:mx-0 flex max-w-xl items-center gap-2 rounded-xl border p-1.5 shadow-sm transition-shadow focus-within:shadow-md"
       style={{
         borderColor: "var(--border)",
         background: "var(--surface)",

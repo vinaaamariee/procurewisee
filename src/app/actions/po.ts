@@ -5,6 +5,7 @@ import { PoStatus, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
 import { requireRole } from "@/lib/auth/get-user-profile";
+import { createNotificationHelper } from "./notifications";
 
 export async function createPoFromAwardAction(recommendationId: number) {
   try {
@@ -45,7 +46,7 @@ export async function createPoFromAwardAction(recommendationId: number) {
       });
 
       if (existing) {
-        return existing;
+        return { po: existing, supplierName: rec.supplier.companyName };
       }
 
       // 2. Generate PO Number
@@ -87,18 +88,32 @@ export async function createPoFromAwardAction(recommendationId: number) {
         });
       }
 
-      return po;
+      return { po, supplierName: rec.supplier.companyName };
     });
 
     logAuditTrail({
       actionType: "CREATE_PO",
       tableAffected: "purchase_orders",
-      recordId: result.id,
-      newState: result,
+      recordId: result.po.id,
+      newState: result.po,
+    });
+
+    // Notify Procurement Officer and Administrative Approver of new draft PO
+    await createNotificationHelper({
+      title: 'Purchase Order Generated',
+      description: `Purchase Order ${result.po.poNumber} has been drafted for supplier "${result.supplierName}" following bidding awards.`,
+      icon: '📝',
+      role: 'Procurement Officer'
+    });
+    await createNotificationHelper({
+      title: 'Purchase Order Generated',
+      description: `Purchase Order ${result.po.poNumber} has been drafted and is ready for signing.`,
+      icon: '📝',
+      role: 'Administrative Approver'
     });
 
     revalidatePath("/", "layout");
-    return { success: true, po: result };
+    return { success: true, po: result.po };
   } catch (error: any) {
     console.error("Error creating PO from award:", error);
     return { success: false, error: error.message || "Failed to create PO." };
@@ -170,5 +185,35 @@ export async function getPurchaseOrders(filters?: { supplierId?: number; status?
   } catch (error) {
     console.error("Error fetching POs:", error);
     return [];
+  }
+}
+
+export async function logPoPrintedAction(poId: number) {
+  try {
+    const { profile } = await requireRole("Procurement Officer");
+    const po = await prisma.purchaseOrder.findUnique({
+      where: { id: poId },
+      include: { supplier: true }
+    });
+    if (!po) return { success: false, error: "PO not found" };
+
+    logAuditTrail({
+      actionType: "PRINT_PO",
+      tableAffected: "purchase_orders",
+      recordId: poId,
+      newState: po,
+    });
+
+    await createNotificationHelper({
+      title: 'Purchase Order Printed',
+      description: `Purchase Order ${po.poNumber} for supplier "${po.supplier.companyName}" was printed by ${profile.fullName}.`,
+      icon: '🖨️',
+      role: 'Procurement Officer'
+    });
+
+    return { success: true };
+  } catch (err: any) {
+    console.error("Error logging PO print:", err);
+    return { success: false, error: err.message };
   }
 }

@@ -14,6 +14,7 @@ import {
   Scale,
 } from "lucide-react";
 import { generateRecommendations } from "@/app/actions/recommendations";
+import DocumentLayout from "@/components/documents/DocumentLayout";
 import {
   calculatePriceScore,
   calculateDeliveryScore,
@@ -309,103 +310,82 @@ export default function RfqEvaluationClient({
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-      {/* Dynamic Printing Container - hidden in normal browser screen */}
-      <style jsx global>{`
-        @media print {
-          body * {
-            visibility: hidden;
-          }
-          #printArea, #printArea * {
-            visibility: visible;
-          }
-          #printArea {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            padding: 2rem;
-            color: #000 !important;
-            background: #fff !important;
-          }
-          .no-print {
-            display: none !important;
-          }
-        }
-      `}</style>
-
       {/* Printable Report Layout */}
-      <div id="printArea" className="hidden">
-        <div style={{ textAlign: "center", marginBottom: "2rem", borderBottom: "2px solid #7e191b", paddingBottom: "1.5rem" }}>
-          <h1 style={{ fontSize: "1.75rem", fontWeight: 900, color: "#7e191b", textTransform: "uppercase" }}>Batanes State College</h1>
-          <p style={{ fontSize: "0.85rem", color: "#6b7280", margin: "0.2rem 0" }}>Bids and Awards Committee (BAC)</p>
-          <h2 style={{ fontSize: "1.2rem", fontWeight: 800, marginTop: "1rem" }}>BAC PROCUREMENT RECOMMENDATION REPORT</h2>
-        </div>
+      <DocumentLayout title="BAC PROCUREMENT RECOMMENDATION REPORT" documentRef={rfq.rfqNumber} printAreaId="printArea">
+        <div id="printArea" className="hidden">
+          {/* Header block - hidden during print to prioritize official graphic header */}
+          <div className="print:hidden" style={{ textAlign: "center", marginBottom: "2rem", borderBottom: "2px solid #7e191b", paddingBottom: "1.5rem" }}>
+            <h1 style={{ fontSize: "1.75rem", fontWeight: 900, color: "#7e191b", textTransform: "uppercase" }}>Batanes State College</h1>
+            <p style={{ fontSize: "0.85rem", color: "#6b7280", margin: "0.2rem 0" }}>Bids and Awards Committee (BAC)</p>
+            <h2 style={{ fontSize: "1.2rem", fontWeight: 800, marginTop: "1rem" }}>BAC PROCUREMENT RECOMMENDATION REPORT</h2>
+          </div>
 
-        <div style={{ marginBottom: "1.5rem", fontSize: "0.9rem" }}>
-          <div><strong>RFQ Ref Number:</strong> {rfq.rfqNumber}</div>
-          <div><strong>Project Title:</strong> {rfq.title}</div>
-          <div><strong>Approved Budget for the Contract (ABC):</strong> {formatCurrency(Number(rfq.approvedBudgetContract))}</div>
-          <div><strong>Evaluation Model:</strong> Multi-Criteria Decision-Making (MCDM) Weighted Scoring Model</div>
-          <div><strong>Evaluation Date:</strong> {new Date().toLocaleDateString("en-PH")}</div>
-        </div>
+          <div style={{ marginBottom: "1.5rem", fontSize: "0.9rem" }}>
+            <div><strong>RFQ Ref Number:</strong> {rfq.rfqNumber}</div>
+            <div><strong>Project Title:</strong> {rfq.title}</div>
+            <div><strong>Approved Budget for the Contract (ABC):</strong> {formatCurrency(Number(rfq.approvedBudgetContract))}</div>
+            <div><strong>Evaluation Model:</strong> Multi-Criteria Decision-Making (MCDM) Weighted Scoring Model</div>
+            <div><strong>Evaluation Date:</strong> {new Date().toLocaleDateString("en-PH")}</div>
+          </div>
 
-        <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "2rem", fontSize: "0.85rem" }}>
-          <thead>
-            <tr style={{ backgroundColor: "#f3f4f6", borderBottom: "1px solid #d1d5db" }}>
-              <th style={{ padding: "0.75rem", textAlign: "left", border: "1px solid #d1d5db" }}>Rank</th>
-              <th style={{ padding: "0.75rem", textAlign: "left", border: "1px solid #d1d5db" }}>Supplier</th>
-              <th style={{ padding: "0.75rem", textAlign: "right", border: "1px solid #d1d5db" }}>Quoted Price</th>
-              <th style={{ padding: "0.75rem", textAlign: "center", border: "1px solid #d1d5db" }}>Lead Time</th>
-              <th style={{ padding: "0.75rem", textAlign: "right", border: "1px solid #d1d5db" }}>MCDM Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {scoredSuppliers.map((s, idx) => (
-              <tr key={s.supplierId} style={{ borderBottom: "1px solid #e5e7eb" }}>
-                <td style={{ padding: "0.75rem", border: "1px solid #d1d5db" }}>{idx === 0 ? "🥇 Rank 1" : idx === 1 ? "🥈 Rank 2" : `🥉 Rank ${idx + 1}`}</td>
-                <td style={{ padding: "0.75rem", border: "1px solid #d1d5db", fontWeight: "bold" }}>{s.supplierName}</td>
-                <td style={{ padding: "0.75rem", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(s.price)}</td>
-                <td style={{ padding: "0.75rem", textAlign: "center", border: "1px solid #d1d5db" }}>{s.deliveryDays} days</td>
-                <td style={{ padding: "0.75rem", textAlign: "right", border: "1px solid #d1d5db", fontWeight: "bold" }}>{s.overallScore} / 100</td>
+          <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "2rem", fontSize: "0.85rem" }}>
+            <thead>
+              <tr style={{ backgroundColor: "#f3f4f6", borderBottom: "1px solid #d1d5db" }}>
+                <th style={{ padding: "0.75rem", textAlign: "left", border: "1px solid #d1d5db" }}>Rank</th>
+                <th style={{ padding: "0.75rem", textAlign: "left", border: "1px solid #d1d5db" }}>Supplier</th>
+                <th style={{ padding: "0.75rem", textAlign: "right", border: "1px solid #d1d5db" }}>Quoted Price</th>
+                <th style={{ padding: "0.75rem", textAlign: "center", border: "1px solid #d1d5db" }}>Lead Time</th>
+                <th style={{ padding: "0.75rem", textAlign: "right", border: "1px solid #d1d5db" }}>MCDM Score</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-
-        {topScored && (
-          <div style={{ padding: "1.5rem", border: "1px solid #7e191b", borderRadius: "10px", backgroundColor: "#fbf6f6", marginBottom: "3rem" }}>
-            <h3 style={{ margin: "0 0 1rem 0", color: "#7e191b", fontWeight: 800 }}>AWARD RECOMMENDATION SUMMARY</h3>
-            <div>Recommended Awardee: <strong>{topScored.supplierName}</strong></div>
-            <div>Score Contribution Breakdown:</div>
-            <ul style={{ margin: "0.5rem 0", paddingLeft: "1.5rem" }}>
-              <li>Price Score: {topScored.individualScores.priceScore} / 100 (Weighted: {(topScored.individualScores.priceScore * normalizedWeights.price).toFixed(1)} / {(normalizedWeights.price * 100).toFixed(0)})</li>
-              <li>Delivery Score: {topScored.individualScores.deliveryScore} / 100 (Weighted: {(topScored.individualScores.deliveryScore * normalizedWeights.delivery).toFixed(1)} / {(normalizedWeights.delivery * 100).toFixed(0)})</li>
-              <li>Reliability Score: {topScored.individualScores.reliabilityScore} / 100 (Weighted: {(topScored.individualScores.reliabilityScore * normalizedWeights.reliability).toFixed(1)} / {(normalizedWeights.reliability * 100).toFixed(0)})</li>
-              <li>Compliance Score: {topScored.individualScores.complianceScore} / 100 (Weighted: {(topScored.individualScores.complianceScore * normalizedWeights.compliance).toFixed(1)} / {(normalizedWeights.compliance * 100).toFixed(0)})</li>
-              <li>Historical Score: {topScored.individualScores.historicalPerformanceScore} / 100 (Weighted: {(topScored.individualScores.historicalPerformanceScore * normalizedWeights.historicalPerformance).toFixed(1)} / {(normalizedWeights.historicalPerformance * 100).toFixed(0)})</li>
-            </ul>
-            <div style={{ marginTop: "1rem" }}>
-              <strong>Justification Log:</strong>
-              {topScored.reasons.map((r, i) => (
-                <div key={i}>✔ {r}</div>
+            </thead>
+            <tbody>
+              {scoredSuppliers.map((s, idx) => (
+                <tr key={s.supplierId} style={{ borderBottom: "1px solid #e5e7eb" }}>
+                  <td style={{ padding: "0.75rem", border: "1px solid #d1d5db" }}>{idx === 0 ? "🥇 Rank 1" : idx === 1 ? "🥈 Rank 2" : `🥉 Rank ${idx + 1}`}</td>
+                  <td style={{ padding: "0.75rem", border: "1px solid #d1d5db", fontWeight: "bold" }}>{s.supplierName}</td>
+                  <td style={{ padding: "0.75rem", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(s.price)}</td>
+                  <td style={{ padding: "0.75rem", textAlign: "center", border: "1px solid #d1d5db" }}>{s.deliveryDays} days</td>
+                  <td style={{ padding: "0.75rem", textAlign: "right", border: "1px solid #d1d5db", fontWeight: "bold" }}>{s.overallScore} / 100</td>
+                </tr>
               ))}
-            </div>
-          </div>
-        )}
+            </tbody>
+          </table>
 
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "5rem" }}>
-          <div>
-            <div style={{ borderTop: "1px solid #000", width: "200px", textAlign: "center", paddingTop: "0.5rem" }}>
-              Prepared By: BAC Secretariat
+          {topScored && (
+            <div style={{ padding: "1.5rem", border: "1px solid #7e191b", borderRadius: "10px", backgroundColor: "#fbf6f6", marginBottom: "3rem" }}>
+              <h3 style={{ margin: "0 0 1rem 0", color: "#7e191b", fontWeight: 800 }}>AWARD RECOMMENDATION SUMMARY</h3>
+              <div>Recommended Awardee: <strong>{topScored.supplierName}</strong></div>
+              <div>Score Contribution Breakdown:</div>
+              <ul style={{ margin: "0.5rem 0", paddingLeft: "1.5rem" }}>
+                <li>Price Score: {topScored.individualScores.priceScore} / 100 (Weighted: {(topScored.individualScores.priceScore * normalizedWeights.price).toFixed(1)} / {(normalizedWeights.price * 100).toFixed(0)})</li>
+                <li>Delivery Score: {topScored.individualScores.deliveryScore} / 100 (Weighted: {(topScored.individualScores.deliveryScore * normalizedWeights.delivery).toFixed(1)} / {(normalizedWeights.delivery * 100).toFixed(0)})</li>
+                <li>Reliability Score: {topScored.individualScores.reliabilityScore} / 100 (Weighted: {(topScored.individualScores.reliabilityScore * normalizedWeights.reliability).toFixed(1)} / {(normalizedWeights.reliability * 100).toFixed(0)})</li>
+                <li>Compliance Score: {topScored.individualScores.complianceScore} / 100 (Weighted: {(topScored.individualScores.complianceScore * normalizedWeights.compliance).toFixed(1)} / {(normalizedWeights.compliance * 100).toFixed(0)})</li>
+                <li>Historical Score: {topScored.individualScores.historicalPerformanceScore} / 100 (Weighted: {(topScored.individualScores.historicalPerformanceScore * normalizedWeights.historicalPerformance).toFixed(1)} / {(normalizedWeights.historicalPerformance * 100).toFixed(0)})</li>
+              </ul>
+              <div style={{ marginTop: "1rem" }}>
+                <strong>Justification Log:</strong>
+                {topScored.reasons.map((r, i) => (
+                  <div key={i}>✔ {r}</div>
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <div style={{ borderTop: "1px solid #000", width: "200px", textAlign: "center", paddingTop: "0.5rem" }}>
-              Approved By: Administrative Approver
+          )}
+
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "5rem" }}>
+            <div>
+              <div style={{ borderTop: "1px solid #000", width: "200px", textAlign: "center", paddingTop: "0.5rem" }}>
+                Prepared By: BAC Secretariat
+              </div>
+            </div>
+            <div>
+              <div style={{ borderTop: "1px solid #000", width: "200px", textAlign: "center", paddingTop: "0.5rem" }}>
+                Approved By: Administrative Approver
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </DocumentLayout>
 
       {/* ─── Column 1 & 2: Main Evaluation view (Left, 2 cols width) ─── */}
       <div className="space-y-6 lg:col-span-2 no-print">

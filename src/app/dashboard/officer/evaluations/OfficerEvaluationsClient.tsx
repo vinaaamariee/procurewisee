@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { submitSupplierEvaluationAction, getSupplierScorecard } from "@/app/actions/evaluation";
+import EmptyState from "@/components/ui/EmptyState";
 
 enum EvaluationType {
   EndUser = "EndUser",
@@ -271,9 +272,12 @@ export default function OfficerEvaluationsClient({ suppliers, officerName }: Off
                   </div>
                 ))}
                 {scorecard.evaluations.length === 0 && (
-                  <div style={{ textAlign: "center", color: theme.textMuted, padding: "2rem" }}>
-                    No evaluations filed yet.
-                  </div>
+                  <EmptyState
+                    preset="evaluations"
+                    title="No Evaluations Filed Yet"
+                    description="No performance evaluations have been submitted for this supplier yet. Be the first to evaluate their delivery, quality, and responsiveness."
+                    compact
+                  />
                 )}
               </div>
             </div>

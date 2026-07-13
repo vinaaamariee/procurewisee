@@ -11,6 +11,7 @@ import {
   getLandingStats,
   getRecentProducts,
   getCategoriesWithCounts,
+  getActiveRfqs,
 } from "@/features/landing/server/queries";
 
 export const metadata: Metadata = {
@@ -38,10 +39,11 @@ export const dynamic = "force-dynamic";
  */
 export default async function LandingPage() {
   // Parallel data fetching — all queries run simultaneously
-  const [stats, recentProducts, categories] = await Promise.all([
+  const [stats, recentProducts, categories, activeRfqs] = await Promise.all([
     getLandingStats(),
     getRecentProducts(),
     getCategoriesWithCounts(),
+    getActiveRfqs(),
   ]);
 
   return (
@@ -52,7 +54,7 @@ export default async function LandingPage() {
       <Header />
 
       <main className="flex-1">
-        <HeroSection />
+        <HeroSection activeRfqs={activeRfqs} />
         <QuickActions />
         <StatisticsCards stats={stats} />
         <CategoryGrid categories={categories} />
@@ -64,3 +66,4 @@ export default async function LandingPage() {
     </div>
   );
 }
+

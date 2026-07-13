@@ -109,17 +109,15 @@ export async function createPrFromCartAction(input: CreatePrInput) {
         });
       }
 
-      // Deduct/Spent department budget allocation
-      if (deptBudget) {
-        await tx.departmentBudget.update({
-          where: { department: input.department },
-          data: {
-            spentBudget: {
-              increment: new Prisma.Decimal(totalCost)
-            }
-          }
-        });
-      }
+      // Add status history entry
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: pr.id,
+          status: PrStatus.Submitted,
+          remarks: "Purchase Request created and submitted.",
+          changedById: input.requestedById || null
+        }
+      });
 
       return pr;
     });
@@ -141,13 +139,26 @@ export async function createPrFromCartAction(input: CreatePrInput) {
 
 export async function submitPrAction(id: number) {
   try {
-    await requireRole("End User");
+    const { profile } = await requireRole("End User");
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
 
-    const updated = await prisma.purchaseRequest.update({
-      where: { id },
-      data: { status: PrStatus.Submitted },
+    const updated = await prisma.$transaction(async (tx) => {
+      const pr = await tx.purchaseRequest.update({
+        where: { id },
+        data: { status: PrStatus.Submitted },
+      });
+
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: id,
+          status: PrStatus.Submitted,
+          remarks: "Submitted for review.",
+          changedById: profile.id,
+        },
+      });
+
+      return pr;
     });
 
     logAuditTrail({
@@ -186,31 +197,11 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
         },
       });
 
-      // Recalculate spent budget if PR is rejected, cancelled, or returned for revision
-      if (
-        (status === PrStatus.Rejected || status === PrStatus.Cancelled || status === PrStatus.ReturnedForRevision) &&
-        old.status !== PrStatus.Rejected && old.status !== PrStatus.Cancelled && old.status !== PrStatus.ReturnedForRevision
-      ) {
-        const deptBudget = await tx.departmentBudget.findUnique({
-          where: { department: old.department }
-        });
-        if (deptBudget) {
-          await tx.departmentBudget.update({
-            where: { department: old.department },
-            data: {
-              spentBudget: {
-                decrement: old.totalCost
-              }
-            }
-          });
-        }
-      }
+      // Recalculate spent budget: budget is committed when status transitions to Approved or Received
+      const isNewApproved = status === PrStatus.Approved || status === PrStatus.Received;
+      const isOldApproved = old.status === PrStatus.Approved || old.status === PrStatus.Received;
 
-      // Re-increment spent budget if PR transitions back from rejected/cancelled/returned
-      if (
-        (old.status === PrStatus.Rejected || old.status === PrStatus.Cancelled || old.status === PrStatus.ReturnedForRevision) &&
-        status !== PrStatus.Rejected && status !== PrStatus.Cancelled && status !== PrStatus.ReturnedForRevision
-      ) {
+      if (isNewApproved && !isOldApproved) {
         const deptBudget = await tx.departmentBudget.findUnique({
           where: { department: old.department }
         });
@@ -220,6 +211,20 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
             data: {
               spentBudget: {
                 increment: old.totalCost
+              }
+            }
+          });
+        }
+      } else if (!isNewApproved && isOldApproved) {
+        const deptBudget = await tx.departmentBudget.findUnique({
+          where: { department: old.department }
+        });
+        if (deptBudget) {
+          await tx.departmentBudget.update({
+            where: { department: old.department },
+            data: {
+              spentBudget: {
+                decrement: old.totalCost
               }
             }
           });
@@ -257,9 +262,12 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
 
 export async function receivePrAction(id: number) {
   try {
-    await requireRole("Procurement Officer");
+    const { profile } = await requireRole("Procurement Officer");
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
+    if (old.status !== "Submitted") {
+      return { success: false, error: "Only submitted requests can be marked as received." };
+    }
 
     // Generate unique PROC-YYYY-XXXX number
     const year = new Date().getFullYear();
@@ -273,12 +281,25 @@ export async function receivePrAction(id: number) {
     const seq = String(count + 1).padStart(4, "0");
     const trackingNumber = `PROC-${year}-${seq}`;
 
-    const updated = await prisma.purchaseRequest.update({
-      where: { id },
-      data: { 
-        status: PrStatus.Received,
-        trackingNumber
-      },
+    const updated = await prisma.$transaction(async (tx) => {
+      const pr = await tx.purchaseRequest.update({
+        where: { id },
+        data: { 
+          status: PrStatus.Received,
+          trackingNumber
+        },
+      });
+
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: id,
+          status: PrStatus.Received,
+          remarks: `Purchase Request received. Official PROC number issued: ${trackingNumber}`,
+          changedById: profile.id,
+        },
+      });
+
+      return pr;
     });
 
     logAuditTrail({
@@ -377,19 +398,6 @@ export async function updatePrItemAction(
           estimatedBudget: { increment: new Prisma.Decimal(costDiff) }
         }
       });
-
-      // 4. Update the department budgetSpent if applicable
-      const deptBudget = await tx.departmentBudget.findUnique({
-        where: { department: item.pr.department }
-      });
-      if (deptBudget) {
-        await tx.departmentBudget.update({
-          where: { department: item.pr.department },
-          data: {
-            spentBudget: { increment: new Prisma.Decimal(costDiff) }
-          }
-        });
-      }
 
       return { pr: updatedPr, item: updatedItem };
     });
@@ -565,16 +573,6 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
         if (newTotalCost > remaining) {
           throw new Error(`Resubmission total (₱${newTotalCost.toLocaleString()}) exceeds remaining department budget (₱${remaining.toLocaleString()}).`);
         }
-        
-        // Re-reserve budget: Increment by new total cost
-        await tx.departmentBudget.update({
-          where: { department: old.department },
-          data: {
-            spentBudget: {
-              increment: new Prisma.Decimal(newTotalCost)
-            }
-          }
-        });
       }
 
       // 2. Delete existing items

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import EmptyState from '@/components/ui/EmptyState';
 
 interface SerializedPr {
   id: number;
@@ -64,8 +65,8 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
     },
     {
       key: 'returned',
-      label: 'Returned',
-      count: prs.filter(pr => pr.status === 'ReturnedForRevision').length,
+      label: 'Returned for Revision',
+      count: prs.filter(pr => ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status)).length,
       color: '#dc2626',
       bg: 'rgba(220, 38, 38, 0.08)',
     },
@@ -88,7 +89,7 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
     } else if (activeTab === 'approved') {
       tabPrs = prs.filter(pr => pr.status === 'Approved' || pr.status === 'Received');
     } else if (activeTab === 'returned') {
-      tabPrs = prs.filter(pr => pr.status === 'ReturnedForRevision');
+      tabPrs = prs.filter(pr => ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status));
     } else if (activeTab === 'rejected') {
       tabPrs = prs.filter(pr => pr.status === 'Rejected');
     }
@@ -225,9 +226,11 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
       }}>
         <div style={{ overflowX: 'auto', padding: '1.5rem' }}>
           {filteredPrs.length === 0 ? (
-            <div style={{ padding: '4rem 2rem', textAlign: 'center', color: theme.textSecondary, fontSize: '0.9rem' }}>
-              No purchase requests found matching the current filters.
-            </div>
+            <EmptyState
+              preset="purchase-requests"
+              title="No Records Found"
+              description="No purchase requests match your active filters. Try changing the status tab or clearing your search terms."
+            />
           ) : (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
               <thead>
@@ -265,16 +268,16 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
                         fontWeight: 700,
                         backgroundColor: 
                           pr.status === 'Approved' || pr.status === 'Received' ? 'rgba(16, 185, 129, 0.1)' :
-                          pr.status === 'ReturnedForRevision' ? 'rgba(239, 68, 68, 0.1)' :
+                          ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'rgba(239, 68, 68, 0.1)' :
                           pr.status === 'Rejected' ? 'rgba(127, 29, 29, 0.1)' :
                           pr.status === 'UnderReview' ? 'rgba(217, 119, 6, 0.1)' : 'rgba(30, 58, 138, 0.08)',
                         color: 
                           pr.status === 'Approved' || pr.status === 'Received' ? '#10b981' :
-                          pr.status === 'ReturnedForRevision' ? '#ef4444' :
+                          ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? '#ef4444' :
                           pr.status === 'Rejected' ? '#7f1d1d' :
                           pr.status === 'UnderReview' ? '#d97706' : 'var(--accent)',
                       }}>
-                        {pr.status === 'ReturnedForRevision' ? 'Returned for Revision' :
+                        {['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'Returned for Revision' :
                          pr.status === 'UnderReview' ? 'Under Review' : pr.status}
                       </span>
                     </td>

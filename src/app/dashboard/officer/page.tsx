@@ -4,6 +4,8 @@ import { Suspense } from 'react';
 import ForecastIntelligenceSection from './ForecastIntelligenceSection';
 import ForecastSkeleton from './ForecastSkeleton';
 import { startTimer } from '@/lib/performance-logger';
+import EmptyState from '@/components/ui/EmptyState';
+import ActivityFeed from '@/components/dashboard/ActivityFeed';
 
 export const metadata = { title: 'Officer Dashboard — ProcureWise' };
 
@@ -20,6 +22,106 @@ async function getOfficerStats() {
     openRfqs,
     totalSuppliers,
   };
+}
+
+interface DashboardTask {
+  id: string;
+  type: 'pr' | 'rfq' | 'po' | 'quote';
+  title: string;
+  badge: string;
+  dueDate: string;
+  link: string;
+  btnLabel: string;
+}
+
+async function getOfficerTasks(): Promise<DashboardTask[]> {
+  const timer = startTimer('getOfficerTasks');
+  
+  const [prs, rfqs, pos, quotes] = await Promise.all([
+    prisma.purchaseRequest.findMany({
+      where: { status: { in: ['Submitted', 'UnderReview'] } },
+      select: { id: true, prNumber: true, purpose: true, requestDate: true },
+      orderBy: { requestDate: 'asc' },
+      take: 2
+    }),
+    prisma.requestForQuote.findMany({
+      where: { status: 'Published' },
+      select: { id: true, rfqNumber: true, title: true, deadlineDate: true },
+      orderBy: { deadlineDate: 'asc' },
+      take: 2
+    }),
+    prisma.purchaseOrder.findMany({
+      where: { status: { in: ['Draft', 'Approved'] } },
+      select: { id: true, poNumber: true, createdAt: true },
+      orderBy: { createdAt: 'asc' },
+      take: 2
+    }),
+    prisma.supplierQuote.findMany({
+      where: { status: { in: ['Submitted', 'UnderReview'] } },
+      select: { 
+        id: true, 
+        rfq: { select: { id: true, rfqNumber: true, title: true } }, 
+        supplier: { select: { companyName: true } },
+        submissionDate: true 
+      },
+      orderBy: { submissionDate: 'asc' },
+      take: 2
+    })
+  ]);
+
+  timer.end();
+
+  const taskList: DashboardTask[] = [];
+
+  prs.forEach(pr => {
+    taskList.push({
+      id: `pr-${pr.id}`,
+      type: 'pr',
+      title: `${pr.prNumber}: ${pr.purpose}`,
+      badge: 'PR Audit',
+      dueDate: new Date(pr.requestDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
+      link: `/dashboard/officer/pr/${pr.id}`,
+      btnLabel: 'Audit PR'
+    });
+  });
+
+  rfqs.forEach(rfq => {
+    taskList.push({
+      id: `rfq-${rfq.id}`,
+      type: 'rfq',
+      title: `${rfq.rfqNumber}: ${rfq.title}`,
+      badge: 'RFQ Deadline',
+      dueDate: new Date(rfq.deadlineDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
+      link: `/dashboard/officer/rfq/${rfq.id}`,
+      btnLabel: 'View RFQ'
+    });
+  });
+
+  pos.forEach(po => {
+    taskList.push({
+      id: `po-${po.id}`,
+      type: 'po',
+      title: `${po.poNumber}: Purchase Order Draft`,
+      badge: 'PO Print',
+      dueDate: new Date(po.createdAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
+      link: `/dashboard/officer/po/${po.id}`,
+      btnLabel: 'Print PO'
+    });
+  });
+
+  quotes.forEach(q => {
+    taskList.push({
+      id: `quote-${q.id}`,
+      type: 'quote',
+      title: `Quote from ${q.supplier.companyName} for ${q.rfq.rfqNumber}`,
+      badge: 'Quote Review',
+      dueDate: new Date(q.submissionDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
+      link: `/dashboard/officer/rfq/${q.rfq.id}`,
+      btnLabel: 'Review Quote'
+    });
+  });
+
+  return taskList;
 }
 
 async function getRecentRfqs() {
@@ -54,9 +156,10 @@ const STATUS_STYLE: Record<string, { bg: string; color: string; border: string }
 export default async function OfficerDashboard() {
   const pageTimer = startTimer('OfficerDashboardPage');
   await requireRole('Procurement Officer');
-  const [stats, rfqs] = await Promise.all([
+  const [stats, rfqs, tasks] = await Promise.all([
     getOfficerStats(),
     getRecentRfqs(),
+    getOfficerTasks(),
   ]);
   pageTimer.end();
 
@@ -107,28 +210,113 @@ export default async function OfficerDashboard() {
         </div>
       </div>
 
-      {/* ── Stat Cards Grid ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
-        {statCards.map(card => (
-          <a href={card.href} key={card.label} style={{
+      {/* ── Dashboard Action Grid ── */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr lg:grid-cols-3', gap: '2rem' }} className="grid grid-cols-1 lg:grid-cols-3">
+        {/* Left Column: Today's Tasks */}
+        <div style={{ gridColumn: 'span 2' }} className="lg:col-span-2">
+          <div style={{
             background: v.surface,
             border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
-            boxShadow: v.shadow, position: 'relative', overflow: 'hidden',
-            display: 'block', textDecoration: 'none', cursor: 'pointer',
-            transition: 'all 0.2s ease-in-out'
-          }} className="hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/40 group">
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: card.color }} />
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{card.icon}</div>
-            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>{card.value}</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: v.textPrimary, marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              {card.label}
-              <span style={{ fontSize: '0.75rem', opacity: 0, transition: 'opacity 0.25s ease' }} className="group-hover:opacity-100 text-[var(--accent)]">
-                →
-              </span>
+            boxShadow: v.shadow, display: 'flex', flexDirection: 'column', gap: '1.25rem'
+          }}>
+            <div>
+              <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                🎯 Today&apos;s Tasks
+              </h2>
+              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
+                A list of urgent workflows requiring immediate review, validation, or contract execution.
+              </p>
             </div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 500, color: v.textSecondary, marginTop: '0.25rem' }}>{card.desc}</div>
-          </a>
-        ))}
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {tasks.length > 0 ? (
+                tasks.map((task) => {
+                  const badgeColor = 
+                    task.type === 'pr' 
+                      ? { bg: 'rgba(220,179,83,0.15)', text: '#b88a1b' }
+                      : task.type === 'rfq'
+                      ? { bg: 'rgba(239,68,68,0.1)', text: '#dc2626' }
+                      : task.type === 'po'
+                      ? { bg: 'rgba(79,70,229,0.1)', text: '#4f46e5' }
+                      : { bg: 'rgba(16,185,129,0.1)', text: '#059669' };
+
+                  return (
+                    <div 
+                      key={task.id} 
+                      style={{
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderRadius: '1rem',
+                        background: 'var(--bg-dark)', border: `1px solid ${v.border}`, gap: '1rem'
+                      }}
+                      className="flex-col sm:flex-row gap-4"
+                    >
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: 'flex-start', flexGrow: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                          <span style={{ 
+                            fontSize: '0.65rem', fontWeight: 800, padding: '0.15rem 0.5rem', borderRadius: '4px',
+                            backgroundColor: badgeColor.bg, color: badgeColor.text, textTransform: 'uppercase', letterSpacing: '0.5px'
+                          }}>
+                            {task.badge}
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                            Due: {task.dueDate}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: v.textPrimary, textAlign: 'left' }}>
+                          {task.title}
+                        </div>
+                      </div>
+                      
+                      <a 
+                        href={task.link} 
+                        style={{
+                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                          textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.5rem',
+                          background: `linear-gradient(135deg, ${v.accent}, ${v.accentLight})`, color: '#fff',
+                          fontWeight: 700, fontSize: '0.75rem', whiteSpace: 'nowrap',
+                          boxShadow: '0 2px 8px rgba(30,58,138,0.1)',
+                          transition: 'all 0.15s ease'
+                        }}
+                        className="hover:opacity-90 hover:shadow-md w-full sm:w-auto"
+                      >
+                        {task.btnLabel} &rarr;
+                      </a>
+                    </div>
+                  );
+                })
+              ) : (
+                <div style={{
+                  padding: '2.5rem 1.5rem', border: `1px dashed ${v.border}`, borderRadius: '1rem',
+                  textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 500
+                }}>
+                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎉</div>
+                  All caught up! No tasks awaiting attention today.
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Statistics */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
+          {statCards.map(card => (
+            <a href={card.href} key={card.label} style={{
+              background: v.surface,
+              border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.25rem 1.5rem',
+              boxShadow: v.shadow, position: 'relative', overflow: 'hidden',
+              display: 'block', textDecoration: 'none', cursor: 'pointer',
+              transition: 'all 0.2s ease-in-out', flexGrow: 1
+            }} className="hover:-translate-y-0.5 hover:shadow-lg hover:border-amber-500/40 group">
+              <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '4px', background: card.color }} />
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ textAlign: 'left' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: v.textSecondary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{card.label}</div>
+                  <div style={{ fontSize: '1.875rem', fontWeight: 900, color: v.textPrimary, marginTop: '0.25rem', lineHeight: 1 }}>{card.value}</div>
+                </div>
+                <div style={{ fontSize: '1.875rem' }}>{card.icon}</div>
+              </div>
+            </a>
+          ))}
+        </div>
       </div>
 
       {/* ── Decision Intelligence & Forecasting Widgets (Point 6) ── */}
@@ -136,7 +324,16 @@ export default async function OfficerDashboard() {
         <ForecastIntelligenceSection />
       </Suspense>
 
-      {/* ── Recent RFQs Table ── */}
+      {/* ── Activity Feed + Recent Solicitations ── */}
+      <div style={{ display: 'grid', gap: '2rem' }} className="grid grid-cols-1 xl:grid-cols-5">
+        {/* Activity feed — spans 2 of 5 cols */}
+        <div className="xl:col-span-2">
+          <ActivityFeed limit={10} />
+        </div>
+
+        {/* Recent RFQs Table — spans 3 of 5 cols */}
+        <div className="xl:col-span-3">
+
       <div id="recent-solicitations" style={{
         background: v.surface,
         border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow,
@@ -175,8 +372,47 @@ export default async function OfficerDashboard() {
                     <td style={{ padding: '1rem 1.5rem', color: v.textSecondary, whiteSpace: 'nowrap', fontWeight: 600 }}>
                       ₱{Number(rfq.approvedBudgetContract).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                     </td>
-                    <td style={{ padding: '1rem 1.5rem', color: v.textSecondary, whiteSpace: 'nowrap', fontWeight: 500 }}>
-                      {rfq.deadlineDate ? new Date(rfq.deadlineDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) : '—'}
+                    <td style={{ padding: '1rem 1.5rem', whiteSpace: 'nowrap' }}>
+                      {rfq.deadlineDate ? (
+                        (() => {
+                          const deadline = new Date(rfq.deadlineDate);
+                          const formattedDeadline = deadline.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+                          
+                          const now = new Date();
+                          const dDate = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
+                          const nDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                          const diffTime = dDate.getTime() - nDate.getTime();
+                          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                          
+                          let remainingLabel = "";
+                          let textColor = "#059669"; // Green
+                          
+                          if (diffDays < 0) {
+                            remainingLabel = "Expired";
+                            textColor = "#dc2626"; // Red
+                          } else if (diffDays === 0) {
+                            remainingLabel = "Expiring Today";
+                            textColor = "#dc2626"; // Red
+                          } else if (diffDays === 1) {
+                            remainingLabel = "1 Day Remaining";
+                            textColor = "#dc2626"; // Red
+                          } else {
+                            remainingLabel = `${diffDays} Days Remaining`;
+                            if (diffDays <= 5) {
+                              textColor = "#d97706"; // Yellow
+                            } else {
+                              textColor = "#059669"; // Green
+                            }
+                          }
+                          
+                          return (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
+                              <span style={{ color: v.textSecondary, fontWeight: 600 }}>{formattedDeadline}</span>
+                              <span style={{ fontSize: '0.72rem', fontWeight: 800, color: textColor }}>{remainingLabel}</span>
+                            </div>
+                          );
+                        })()
+                      ) : '—'}
                     </td>
                     <td style={{ padding: '1rem 1.5rem' }}>
                       <span style={{ 
@@ -192,8 +428,13 @@ export default async function OfficerDashboard() {
               })}
               {rfqs.length === 0 && (
                 <tr>
-                  <td colSpan={5} style={{ padding: '3rem', textAlign: 'center', color: v.textSecondary, fontWeight: 500 }}>
-                    No solicitations found.
+                  <td colSpan={5} style={{ padding: '1rem' }}>
+                    <EmptyState
+                      preset="rfq"
+                      title="No Active Solicitations"
+                      description="No requests for quotation have been created yet. Draft a new RFQ from the solicitation workspace."
+                      action={{ label: '+ New RFQ', href: '/dashboard/officer/rfq/new' }}
+                    />
                   </td>
                 </tr>
               )}
@@ -201,6 +442,8 @@ export default async function OfficerDashboard() {
           </table>
         </div>
       </div>
+        </div>{/* end xl:col-span-3 */}
+      </div>{/* end activity+solicitations grid */}
 
     </div>
   );

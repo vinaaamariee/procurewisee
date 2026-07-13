@@ -2,6 +2,8 @@ import { signout } from '@/app/actions/auth';
 import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
 import { ROLE_COLORS, ROLE_HOME } from '@/types/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
+import NotificationBell from '@/components/notifications/NotificationBell';
+import GlobalSearch from '@/components/search/GlobalSearch';
 
 export default async function DashboardLayout({
   children,
@@ -70,6 +72,12 @@ export default async function DashboardLayout({
               </div>
             </div>
 
+            {/* Global Search */}
+            <GlobalSearch />
+
+            {/* Notification Bell */}
+            <NotificationBell currentUser={profile} />
+
             {/* Theme Toggle */}
             <ThemeToggle />
 
@@ -97,7 +105,7 @@ export default async function DashboardLayout({
           ],
           'Administrative Approver': [
             { label: 'Overview', href: '/dashboard/approver' },
-            { label: 'Analytics', href: '/dashboard/officer/analytics' },
+            { label: 'Analytics', href: '/dashboard/approver/analytics' },
           ],
           'End User': [
             { label: 'Overview', href: '/dashboard/end-user' },

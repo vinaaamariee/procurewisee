@@ -4,6 +4,8 @@ import AddStaffForm from './add-staff-form';
 import ApproveButton from './approve-button';
 import { ShieldCheck, Truck, FileText, CheckCircle2, TrendingUpDown, AlertCircle, HelpCircle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import { startTimer } from '@/lib/performance-logger';
+import EmptyState from '@/components/ui/EmptyState';
+import ActivityFeed from '@/components/dashboard/ActivityFeed';
 
 export const metadata = { title: 'Approver Dashboard — ProcureWise' };
 
@@ -86,40 +88,67 @@ async function getPendingRecommendations() {
   }));
 }
 
-async function getPendingPurchaseRequests() {
-  const timer = startTimer('getPendingPurchaseRequests');
-  const prs = await prisma.purchaseRequest.findMany({
-    where: {
-      status: {
-        in: ['Submitted', 'UnderReview']
-      }
-    },
-    include: {
-      requestedBy: true
-    },
-    orderBy: {
-      updatedAt: 'desc'
-    }
-  });
+async function getApproverDashboardPRs() {
+  const timer = startTimer('getApproverDashboardPRs');
+  
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const [pending, approved, returned, rejected] = await Promise.all([
+    prisma.purchaseRequest.findMany({
+      where: { status: { in: ['Submitted', 'UnderReview'] } },
+      include: { requestedBy: true, assignedOfficer: true },
+      orderBy: { updatedAt: 'desc' }
+    }),
+    prisma.purchaseRequest.findMany({
+      where: {
+        status: { in: ['Approved', 'Received'] },
+        updatedAt: { gte: startOfToday }
+      },
+      include: { requestedBy: true, assignedOfficer: true },
+      orderBy: { updatedAt: 'desc' }
+    }),
+    prisma.purchaseRequest.findMany({
+      where: { status: 'ReturnedForRevision' },
+      include: { requestedBy: true, assignedOfficer: true },
+      orderBy: { updatedAt: 'desc' }
+    }),
+    prisma.purchaseRequest.findMany({
+      where: { status: 'Rejected' },
+      include: { requestedBy: true, assignedOfficer: true },
+      orderBy: { updatedAt: 'desc' }
+    })
+  ]);
+
   timer.end();
-  return prs.map(pr => ({
+
+  const mapPr = (pr: any) => ({
     id: pr.id,
     prNumber: pr.prNumber,
     department: pr.department,
     office: pr.office,
     requesterName: pr.requestedBy?.fullName || pr.requesterName || 'N/A',
+    assignedOfficerName: pr.assignedOfficer?.fullName || 'Not Assigned',
     totalCost: Number(pr.totalCost),
     status: pr.status,
-    createdAt: pr.createdAt
-  }));
+    createdAt: pr.createdAt,
+    updatedAt: pr.updatedAt
+  });
+
+  return {
+    pendingApprovals: pending.map(mapPr),
+    approvedToday: approved.map(mapPr),
+    returnedPrs: returned.map(mapPr),
+    rejectedPrs: rejected.map(mapPr)
+  };
 }
 
 export default async function ApproverDashboard() {
   await requireRole('Administrative Approver');
-  const [stats, recs, pendingPrs] = await Promise.all([
+  const [stats, recs, prData] = await Promise.all([
     getApproverStats(),
     getPendingRecommendations(),
-    getPendingPurchaseRequests()
+    getApproverDashboardPRs()
   ]);
 
   const v = {
@@ -141,6 +170,88 @@ export default async function ApproverDashboard() {
     { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: '🔒', color: v.accentLight, desc: 'Recent trail entries', href: '#audit-trail' },
   ];
 
+  const renderPrTable = (prs: any[], emptyMessage: string) => {
+    return (
+      <div style={{ overflowX: 'auto', padding: '1rem' }}>
+        {prs.length === 0 ? (
+          <EmptyState
+            preset="purchase-requests"
+            title="No Requests Here"
+            description={emptyMessage}
+            compact
+          />
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: `1px solid ${v.border}`, color: v.textSecondary }}>
+                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>PR Number</th>
+                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Department / Office</th>
+                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Date Submitted</th>
+                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Assigned Officer</th>
+                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', textAlign: 'center' }}>Status</th>
+                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', textAlign: 'center' }}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {prs.map((pr) => {
+                let statusBg = 'rgba(217, 119, 6, 0.1)';
+                let statusColor = '#d97706';
+                if (pr.status === 'Approved' || pr.status === 'Received') {
+                  statusBg = 'rgba(16, 185, 129, 0.1)';
+                  statusColor = '#059669';
+                } else if (pr.status === 'ReturnedForRevision' || pr.status === 'Returned for Revision' || pr.status === 'Rejected') {
+                  statusBg = 'rgba(239, 68, 68, 0.1)';
+                  statusColor = '#ef4444';
+                }
+                
+                return (
+                  <tr key={pr.id} style={{ borderBottom: `1px solid ${v.border}` }}>
+                    <td style={{ padding: '1rem', fontWeight: 700, color: v.textPrimary }}>
+                      {pr.prNumber}
+                    </td>
+                    <td style={{ padding: '1rem', color: v.textPrimary }}>
+                      {pr.department} ({pr.office})
+                    </td>
+                    <td style={{ padding: '1rem', color: v.textPrimary }}>
+                      {new Date(pr.createdAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </td>
+                    <td style={{ padding: '1rem', color: v.textPrimary, fontWeight: 500 }}>
+                      👤 {pr.assignedOfficerName}
+                    </td>
+                    <td style={{ padding: '1rem', textAlign: 'center' }}>
+                      <span style={{
+                        padding: '0.25rem 0.6rem', borderRadius: '999px', fontSize: '0.72rem', fontWeight: 700,
+                        backgroundColor: statusBg, color: statusColor, textTransform: 'uppercase'
+                      }}>
+                        {pr.status === 'ReturnedForRevision' || pr.status === 'Returned for Revision' ? 'Returned' : pr.status}
+                      </span>
+                    </td>
+                    <td style={{ padding: '1rem', textAlign: 'center' }}>
+                      <a href={`/dashboard/approver/history/${pr.id}`} style={{
+                        display: 'inline-block',
+                        padding: '0.4rem 1rem',
+                        background: `linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%)`,
+                        color: 'white',
+                        fontWeight: 700,
+                        fontSize: '0.72rem',
+                        textDecoration: 'none',
+                        borderRadius: '0.5rem',
+                        boxShadow: '0 2px 6px rgba(30,58,138,0.15)',
+                        transition: 'opacity 0.2s'
+                      }} className="hover:opacity-90">
+                        Review PR
+                      </a>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+    );
+  };
+
   return (
     <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', fontFamily: '"Inter", sans-serif' }}>
 
@@ -159,109 +270,69 @@ export default async function ApproverDashboard() {
         </div>
       </div>
 
-      {/* Stat Cards Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }}>
-        {statCards.map(card => (
-          <a href={card.href} key={card.label} style={{
-            background: v.surface,
-            border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
-            boxShadow: v.shadow, position: 'relative', overflow: 'hidden',
-            display: 'block', textDecoration: 'none', cursor: 'pointer',
-            transition: 'all 0.2s ease-in-out'
-          }} className="hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/40 group">
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: card.color }} />
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{card.icon}</div>
-            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>{card.value}</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: v.textPrimary, marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              {card.label}
-              <span style={{ fontSize: '0.75rem', opacity: 0, transition: 'opacity 0.25s ease' }} className="group-hover:opacity-100 text-[var(--accent)]">
-                →
-              </span>
-            </div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 500, color: v.textSecondary, marginTop: '0.25rem' }}>{card.desc}</div>
-          </a>
-        ))}
-      </div>
-
-      {/* Purchase Requests Pending Review & Approval */}
-      <div id="pending-prs" style={{
-        background: v.surface,
-        border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
-      }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: v.textPrimary, margin: 0 }}>
-            Purchase Requests Pending Review & Approval
-          </h2>
-          {pendingPrs.length > 0 && (
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, background: 'rgba(30,58,138,0.08)', color: v.accent, padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
-              {pendingPrs.length} awaiting decision
-            </span>
-          )}
-        </div>
+      {/* ── Decision-Making Focus: Purchase Requests Sections at the Top ── */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
         
-        <div style={{ overflowX: 'auto', padding: '1.5rem' }}>
-          {pendingPrs.length === 0 ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: v.textSecondary, fontSize: '0.9rem' }}>
-              All purchase requests cleared. No pending PR approvals at this time.
-            </div>
-          ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
-              <thead>
-                <tr style={{ borderBottom: `1px solid ${v.border}`, color: v.textSecondary }}>
-                  <th style={{ padding: '0.75rem 1rem' }}>PR Number</th>
-                  <th style={{ padding: '0.75rem 1rem' }}>Department / Office</th>
-                  <th style={{ padding: '0.75rem 1rem' }}>Prepared By</th>
-                  <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Total Cost</th>
-                  <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Status</th>
-                  <th style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {pendingPrs.map((pr) => (
-                  <tr key={pr.id} style={{ borderBottom: `1px solid ${v.border}` }}>
-                    <td style={{ padding: '1rem', fontWeight: 700, color: v.textPrimary }}>
-                      {pr.prNumber}
-                    </td>
-                    <td style={{ padding: '1rem', color: v.textPrimary }}>
-                      {pr.department} ({pr.office})
-                    </td>
-                    <td style={{ padding: '1rem', color: v.textPrimary }}>
-                      {pr.requesterName}
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, color: v.accent }}>
-                      ₱{pr.totalCost.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <span style={{
-                        padding: '0.25rem 0.6rem', borderRadius: '999px', fontSize: '0.75rem', fontWeight: 700,
-                        backgroundColor: pr.status === 'UnderReview' ? 'rgba(217, 119, 6, 0.1)' : 'rgba(30, 58, 138, 0.08)',
-                        color: pr.status === 'UnderReview' ? '#d97706' : v.accent
-                      }}>
-                        {pr.status === 'UnderReview' ? 'Under Review' : pr.status}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <a href={`/dashboard/approver/history/${pr.id}`} style={{
-                        display: 'inline-block',
-                        padding: '0.4rem 1rem',
-                        background: `linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%)`,
-                        color: 'white',
-                        fontWeight: 600,
-                        fontSize: '0.75rem',
-                        textDecoration: 'none',
-                        borderRadius: '0.5rem',
-                        boxShadow: '0 2px 6px rgba(30,58,138,0.15)',
-                        transition: 'opacity 0.2s'
-                      }} className="hover:opacity-90">
-                        Review PR
-                      </a>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
+        {/* Pending Approvals */}
+        <div style={{ background: v.surface, border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow }}>
+          <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              ⏳ Pending Approvals
+            </h2>
+            {prData.pendingApprovals.length > 0 && (
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, background: 'rgba(217,119,6,0.12)', color: '#d97706', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+                {prData.pendingApprovals.length} awaiting approval
+              </span>
+            )}
+          </div>
+          {renderPrTable(prData.pendingApprovals, "No pending purchase requests awaiting approval.")}
         </div>
+
+        {/* Approved Today */}
+        <div style={{ background: v.surface, border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow }}>
+          <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              ✅ Approved Today
+            </h2>
+            {prData.approvedToday.length > 0 && (
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, background: 'rgba(16,185,129,0.12)', color: '#059669', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+                {prData.approvedToday.length} approved today
+              </span>
+            )}
+          </div>
+          {renderPrTable(prData.approvedToday, "No purchase requests approved today.")}
+        </div>
+
+        {/* Returned for Revision */}
+        <div style={{ background: v.surface, border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow }}>
+          <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              ↩️ Returned for Revision
+            </h2>
+            {prData.returnedPrs.length > 0 && (
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, background: 'rgba(239,68,68,0.12)', color: '#dc2626', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+                {prData.returnedPrs.length} returned for revision
+              </span>
+            )}
+          </div>
+          {renderPrTable(prData.returnedPrs, "No purchase requests currently in revision status.")}
+        </div>
+
+        {/* Rejected Requests */}
+        <div style={{ background: v.surface, border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow }}>
+          <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              ❌ Rejected Requests
+            </h2>
+            {prData.rejectedPrs.length > 0 && (
+              <span style={{ fontSize: '0.72rem', fontWeight: 800, background: 'rgba(239,68,68,0.12)', color: '#dc2626', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+                {prData.rejectedPrs.length} rejected requests
+              </span>
+            )}
+          </div>
+          {renderPrTable(prData.rejectedPrs, "No rejected purchase requests recorded.")}
+        </div>
+
       </div>
 
       {/* Pending MCDM Recommendations */}
@@ -282,9 +353,11 @@ export default async function ApproverDashboard() {
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1.5rem' }}>
           {recs.length === 0 ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: v.textSecondary, fontSize: '0.9rem' }}>
-              All submissions cleared. No pending reviews at this time.
-            </div>
+            <EmptyState
+              preset="rfq"
+              title="No Pending Recommendations"
+              description="All MCDM canvas recommendations have been reviewed. No submissions require approval at this time."
+            />
           ) : (
             recs.map((rec: any) => {
               // Parse audit snapshot JSON safely
@@ -533,33 +606,32 @@ export default async function ApproverDashboard() {
         </div>
       </div>
 
-      {/* Audit Trail */}
-      <div id="audit-trail" style={{
-        background: v.surface,
-        border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
-      }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}` }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: v.textPrimary, margin: 0 }}>Recent Audit Trail</h2>
-        </div>
-        <div>
-          {stats.recentAuditLogs.map((log: any) => (
-            <div key={log.id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.5rem', borderBottom: `1px solid ${v.border}` }}>
-              <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: v.accent, flexShrink: 0, boxShadow: `0 0 8px ${v.accent}` }} />
-              <div style={{ flex: 1, fontSize: '0.85rem', fontWeight: 600, color: v.textPrimary }}>
-                {log.action}
-              </div>
-              <div style={{ fontSize: '0.75rem', fontWeight: 600, color: v.textSecondary, backgroundColor: 'var(--section-bg)', padding: '0.2rem 0.6rem', borderRadius: '6px' }}>
-                {new Date(log.createdAt).toLocaleString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
-              </div>
+      {/* Stat Cards Grid (Moved Below Decision Sections) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }} className="no-print">
+        {statCards.map(card => (
+          <a href={card.href} key={card.label} style={{
+            background: v.surface,
+            border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
+            boxShadow: v.shadow, position: 'relative', overflow: 'hidden',
+            display: 'block', textDecoration: 'none', cursor: 'pointer',
+            transition: 'all 0.2s ease-in-out'
+          }} className="hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/40 group">
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: card.color }} />
+            <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{card.icon}</div>
+            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>{card.value}</div>
+            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: v.textPrimary, marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              {card.label}
+              <span style={{ fontSize: '0.75rem', opacity: 0, transition: 'opacity 0.25s ease' }} className="group-hover:opacity-100 text-[var(--accent)]">
+                →
+              </span>
             </div>
-          ))}
-          {stats.recentAuditLogs.length === 0 && (
-            <div style={{ padding: '2rem', textAlign: 'center', color: v.textSecondary, fontSize: '0.9rem' }}>
-              No audit entries recorded yet.
-            </div>
-          )}
-        </div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 500, color: v.textSecondary, marginTop: '0.25rem' }}>{card.desc}</div>
+          </a>
+        ))}
       </div>
+
+      {/* Activity Feed */}
+      <ActivityFeed limit={12} />
 
       {/* Add Staff Form Section */}
       <div style={{ marginTop: '1rem' }}>

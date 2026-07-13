@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from "react";
 import { ProductListItem } from "@/features/catalog/server/queries";
+import EmptyState from "@/components/ui/EmptyState";
 import PPMPMarketplace from "@/components/ppmp/PPMPMarketplace";
 import PPMPDraftCart, { DraftItem } from "@/components/ppmp/PPMPDraftCart";
 import {
@@ -736,8 +737,13 @@ export default function PPMPDashboardClient({
                 })}
                 {ppmps.length === 0 && (
                   <tr>
-                    <td colSpan={7} style={{ padding: "4rem", textAlign: "center", color: "var(--text-muted)", fontWeight: 500 }}>
-                      No Project Procurement Management Plans registered. Switch to "Marketplace Planner" to create one.
+                    <td colSpan={7} style={{ padding: '1rem' }}>
+                      <EmptyState
+                        preset="ppmp"
+                        title="No Procurement Plans Yet"
+                        description="No Project Procurement Management Plans have been created. Switch to the Marketplace Planner tab to build your first annual procurement plan."
+                        action={{ label: '+ Open Planner', onClick: () => setActiveTab('create') }}
+                      />
                     </td>
                   </tr>
                 )}

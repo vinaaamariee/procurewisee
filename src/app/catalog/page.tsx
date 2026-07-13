@@ -46,7 +46,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
   const minPrice = params.minPrice ? parseFloat(params.minPrice) : undefined;
   const maxPrice = params.maxPrice ? parseFloat(params.maxPrice) : undefined;
   const page = params.page ? parseInt(params.page, 10) : 1;
-  const sortBy = (params.sort as "lowestPrice" | "highestPrice" | "recentlyUpdated" | "mostRequested") || "recentlyUpdated";
+  const sortBy = (params.sort as "lowestPrice" | "highestPrice" | "recentlyUpdated" | "mostRequested" | "recentlyAdded") || "recentlyAdded";
 
   const [{ products, totalCount, totalPages }, filters] = await Promise.all([
     getCatalogPage({
@@ -111,6 +111,71 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       {/* Search Bar */}
       <div className="mb-6">
         <ProductSearch initialQuery={params.q ?? ""} />
+      </div>
+
+      {/* Horizontal Category Scroller on Top */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+            Browse Category
+          </span>
+          {categoryId && (
+            <Link
+              href="/catalog"
+              className="text-xs font-bold text-[#7e191b] dark:text-[#facc15] hover:underline"
+            >
+              Clear Filter
+            </Link>
+          )}
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-none -mx-4 px-4 sm:mx-0 sm:px-0" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          <style dangerouslySetInnerHTML={{ __html: `
+            .scrollbar-none::-webkit-scrollbar {
+              display: none;
+            }
+          ` }} />
+          <Link
+            href="/catalog"
+            className="flex-shrink-0 rounded-full px-4.5 py-2 text-xs font-bold transition-all duration-200 border"
+            style={{
+              background: categoryId === undefined ? "var(--accent)" : "var(--surface)",
+              color: categoryId === undefined ? "#fff" : "var(--text-secondary)",
+              borderColor: categoryId === undefined ? "transparent" : "var(--border)",
+            }}
+          >
+            All Products
+          </Link>
+          {filters.categories.map((cat) => {
+            const isSelected = categoryId === cat.id;
+            return (
+              <Link
+                key={cat.id}
+                href={
+                  isSelected 
+                    ? "/catalog" // Clear category if tapped again
+                    : `/catalog?category=${cat.id}`
+                }
+                className="flex-shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-all duration-200 flex items-center gap-1.5 border"
+                style={{
+                  background: isSelected ? "var(--accent)" : "var(--surface)",
+                  color: isSelected ? "#fff" : "var(--text-secondary)",
+                  borderColor: isSelected ? "transparent" : "var(--border)",
+                }}
+              >
+                <span>{cat.name}</span>
+                <span
+                  className="rounded-full px-1.5 py-0.5 text-[9px] font-extrabold"
+                  style={{
+                    background: isSelected ? "rgba(255,255,255,0.2)" : "var(--bg-dark)",
+                    color: isSelected ? "#fff" : "var(--text-muted)",
+                  }}
+                >
+                  {cat.productCount}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </div>
 
       <div className="flex gap-6">

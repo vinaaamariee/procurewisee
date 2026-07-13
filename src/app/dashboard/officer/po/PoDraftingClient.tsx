@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import EmptyState from "@/components/ui/EmptyState";
 import { createPoFromAwardAction } from "@/app/actions/po";
 
 interface Supplier {
@@ -52,6 +53,18 @@ interface PurchaseOrder {
   totalCost: any;
   status: string;
   createdAt: Date | string;
+  deliveryTerms?: string | null;
+}
+
+function getSupplierInitials(name: string) {
+  if (!name) return "SP";
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .map(word => word[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 }
 
 interface PoDraftingClientProps {
@@ -161,9 +174,12 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
         }}>
           <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, marginBottom: "1.5rem" }}>Awarded RFQ Bids (Pending PO drafting)</h2>
           {awards.length === 0 ? (
-            <div style={{ textAlign: "center", padding: "3rem", color: theme.textMuted }}>
-              No pending awarded RFQs. Ensure that the Administrative Approver has reviewed and approved the canvas recommendations first.
-            </div>
+            <EmptyState
+              preset="rfq"
+              title="No Pending RFQ Awards"
+              description="All awarded RFQ bids have already been converted to Purchase Orders, or the Administrative Approver hasn't approved any canvas recommendations yet."
+              compact
+            />
           ) : (
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))", gap: "1.5rem" }}>
               {awards.map((award) => (
@@ -239,17 +255,12 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
           </div>
 
           {filteredPos.length === 0 ? (
-            <div style={{
-              textAlign: "center",
-              padding: "4rem 2rem",
-              background: theme.glassBg,
-              border: `1px solid ${theme.glassBorder}`,
-              borderRadius: "1.25rem",
-              color: theme.textMuted,
-              boxShadow: theme.shadow
-            }}>
-              No Purchase Orders match your search.
-            </div>
+            <EmptyState
+              preset="purchase-orders"
+              title="No Purchase Orders Found"
+              description={search ? `No purchase orders match "${search}". Try a different search term.` : "No purchase orders have been drafted yet. Start by converting an awarded RFQ bid into a PO."}
+              action={search ? { label: '✕ Clear Search', onClick: () => setSearch('') } : undefined}
+            />
           ) : (
             <div style={{
               display: "grid",
@@ -277,27 +288,48 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
                     }}
                     className="hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/40 focus-visible:ring-2 focus-visible:ring-amber-500"
                   >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontWeight: 800, fontSize: "1.1rem", color: theme.crimson }}>{po.poNumber}</span>
+                    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", borderBottom: `1px solid ${theme.glassBorder}`, paddingBottom: "0.75rem" }}>
+                      {/* Supplier Avatar Initials (Fallback) */}
+                      <div style={{
+                        width: "36px", height: "36px", borderRadius: "50%",
+                        background: "rgba(126, 25, 27, 0.08)", color: theme.crimson,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: "0.85rem", fontWeight: 800, flexShrink: 0,
+                        border: "1.5px solid rgba(126, 25, 27, 0.15)"
+                      }}>
+                        {getSupplierInitials(po.supplier.companyName)}
+                      </div>
+                      
+                      <div style={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                        <span style={{ fontWeight: 800, fontSize: "1.05rem", color: theme.crimson }}>{po.poNumber}</span>
+                        <span style={{ fontSize: "0.72rem", color: theme.textMuted }}>
+                          Issued: {new Date(po.createdAt).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}
+                        </span>
+                      </div>
+
                       <span style={{
-                        padding: "0.25rem 0.75rem",
+                        padding: "0.2rem 0.6rem",
                         borderRadius: "999px",
-                        fontSize: "0.68rem",
+                        fontSize: "0.65rem",
                         fontWeight: 800,
                         backgroundColor: po.status === "Approved" ? "rgba(16, 185, 129, 0.1)" : "rgba(107, 114, 128, 0.1)",
                         color: po.status === "Approved" ? "#10b981" : "#6b7280",
-                        textTransform: "uppercase"
+                        textTransform: "uppercase",
+                        whiteSpace: "nowrap"
                       }}>
                         {po.status}
                       </span>
                     </div>
 
-                    <div style={{ fontSize: "0.9rem", fontWeight: 700, color: theme.textMain }}>
-                      {po.supplier.companyName}
+                    <div style={{ fontSize: "0.9rem", fontWeight: 800, color: theme.textMain, marginTop: "0.25rem" }}>
+                      🏢 {po.supplier.companyName}
                     </div>
 
-                    <div style={{ fontSize: "0.8rem", color: theme.textMuted }}>
-                      Linked RFQ: <strong>{po.rfq?.rfqNumber || "—"}</strong>
+                    <div style={{ fontSize: "0.8rem", color: theme.textMuted, display: "flex", flexDirection: "column", gap: "0.15rem", marginTop: "0.25rem" }}>
+                      <span>📅 <strong>Delivery Schedule:</strong></span>
+                      <span style={{ fontStyle: "italic", color: theme.textMain, fontSize: "0.78rem" }}>
+                        {po.deliveryTerms || "Not specified / Standard schedule"}
+                      </span>
                     </div>
 
                     <div style={{
@@ -306,12 +338,12 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
                       alignItems: "center",
                       borderTop: `1px solid ${theme.glassBorder}`,
                       paddingTop: "0.75rem",
-                      marginTop: "0.25rem",
+                      marginTop: "0.5rem",
                       fontSize: "0.75rem",
                       color: theme.textMuted
                     }}>
-                      <span>{new Date(po.createdAt).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}</span>
-                      <span style={{ fontWeight: 800, color: theme.textMain, fontSize: "0.9rem" }}>
+                      <span>Linked RFQ: <strong>{po.rfq?.rfqNumber || "—"}</strong></span>
+                      <span style={{ fontWeight: 900, color: theme.textMain, fontSize: "0.95rem" }}>
                         ₱{Number(po.totalCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
                       </span>
                     </div>

@@ -5,6 +5,7 @@ import { PrStatus } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { logAuditTrail } from '@/lib/audit';
 import { requireRole } from '@/lib/auth/get-user-profile';
+import { createNotificationHelper } from './notifications';
 
 /**
  * Administrative Approver starts review on a submitted PR.
@@ -17,8 +18,8 @@ export async function startPrReview(prId: number) {
     const old = await prisma.purchaseRequest.findUnique({ where: { id: prId } });
     if (!old) return { success: false, error: 'Purchase Request not found.' };
 
-    if (old.status !== 'Submitted') {
-      return { success: false, error: `Purchase Request is in ${old.status} state. Review can only be started for Submitted requests.` };
+    if (old.status !== 'Submitted' && old.status !== 'Received') {
+      return { success: false, error: `Purchase Request is in ${old.status} state. Review can only be started for Submitted or Received requests.` };
     }
 
     const updated = await prisma.$transaction(async (tx) => {
@@ -90,6 +91,22 @@ export async function approvePr(prId: number, remarks?: string) {
         },
       });
 
+      // Increment spent budget upon approval
+      const deptBudget = await tx.departmentBudget.findUnique({
+        where: { department: old.department },
+      });
+
+      if (deptBudget) {
+        await tx.departmentBudget.update({
+          where: { department: old.department },
+          data: {
+            spentBudget: {
+              increment: old.totalCost,
+            },
+          },
+        });
+      }
+
       return pr;
     });
 
@@ -99,6 +116,23 @@ export async function approvePr(prId: number, remarks?: string) {
       recordId: prId,
       oldState: old,
       newState: updated,
+    });
+
+    // Notify Requisitioner (End User)
+    if (old.requestedById) {
+      await createNotificationHelper({
+        title: 'Purchase Request Approved',
+        description: `Your Purchase Request ${old.prNumber} has been approved by the Administrative Approver.`,
+        icon: '✅',
+        userId: old.requestedById
+      });
+    }
+    // Notify Procurement Officers
+    await createNotificationHelper({
+      title: 'PR Approved (Awaiting RFQ)',
+      description: `Purchase Request ${old.prNumber} has been approved and is ready for RFQ drafting.`,
+      icon: '📋',
+      role: 'Procurement Officer'
     });
 
     revalidatePath('/', 'layout');
@@ -145,22 +179,6 @@ export async function returnPr(prId: number, remarks: string) {
         },
       });
 
-      // Release reserved budget from department spent budget
-      const deptBudget = await tx.departmentBudget.findUnique({
-        where: { department: old.department },
-      });
-
-      if (deptBudget) {
-        await tx.departmentBudget.update({
-          where: { department: old.department },
-          data: {
-            spentBudget: {
-              decrement: old.totalCost,
-            },
-          },
-        });
-      }
-
       return pr;
     });
 
@@ -171,6 +189,16 @@ export async function returnPr(prId: number, remarks: string) {
       oldState: old,
       newState: updated,
     });
+
+    // Notify Requisitioner (End User)
+    if (old.requestedById) {
+      await createNotificationHelper({
+        title: 'Purchase Request Returned',
+        description: `Your Purchase Request ${old.prNumber} has been returned for revision. Remarks: "${remarks}"`,
+        icon: '↩️',
+        userId: old.requestedById
+      });
+    }
 
     revalidatePath('/', 'layout');
     revalidatePath('/dashboard/approver');
@@ -216,22 +244,6 @@ export async function rejectPr(prId: number, remarks: string) {
         },
       });
 
-      // Release reserved budget from department spent budget
-      const deptBudget = await tx.departmentBudget.findUnique({
-        where: { department: old.department },
-      });
-
-      if (deptBudget) {
-        await tx.departmentBudget.update({
-          where: { department: old.department },
-          data: {
-            spentBudget: {
-              decrement: old.totalCost,
-            },
-          },
-        });
-      }
-
       return pr;
     });
 
@@ -242,6 +254,16 @@ export async function rejectPr(prId: number, remarks: string) {
       oldState: old,
       newState: updated,
     });
+
+    // Notify Requisitioner (End User)
+    if (old.requestedById) {
+      await createNotificationHelper({
+        title: 'Purchase Request Rejected',
+        description: `Your Purchase Request ${old.prNumber} has been rejected. Reason: "${remarks}"`,
+        icon: '❌',
+        userId: old.requestedById
+      });
+    }
 
     revalidatePath('/', 'layout');
     revalidatePath('/dashboard/approver');

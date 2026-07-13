@@ -137,7 +137,7 @@ Simplifies the purchase request process for departments by removing authenticati
 ### 12. End-User Requisitions Tracker
 
 A dashboard page at `/dashboard/end-user/pr` that lists all Purchase Requests submitted by the requisitioner:
-- **Interactive Multi-Step Validation**: Requisitioners can submit draft PRs for officer audits and monitor validation steps (Draft -> Submitted -> Audited & Approved -> Received/PROC Number Issued).
+- **Interactive Multi-Step Validation**: Requisitioners can submit draft PRs for officer audits, monitor validation steps (Draft &rarr; Submitted &rarr; Received &rarr; Under Review &rarr; Approved), view standard SLA turnaround durations under each status node (e.g. Within 24h, 1-2 Days, 2-3 Days, 3-5 Days), and consult an **Estimated SLA Turnaround Timeline** guidance banner.
 - **Assigned Officer Status**: Shows the name, email, and status of the Procurement Officer assigned to audit the request.
 - **Revision Logs**: Displays a history of comments and return reasons logged by the officer during reviews.
 
@@ -151,7 +151,7 @@ A performance evaluation form at `/dashboard/end-user/evaluation` enabling requi
 
 An audit interface at `/dashboard/officer/pr` where Procurement Officers review submitted requisitions:
 - **Lightweight Cards Grid & Search**: Displays incoming requisitions as a clean, searchable list of cards linking to individual details.
-- **Dynamic Route Details (`/dashboard/officer/pr/[id]`)**: Renders full auditing workflows, department budget balance monitors, and tracking trails on a dedicated details page, complete with skeleton loading states, error boundaries, and breadcrumb context.
+- **Dynamic Route Details (`/dashboard/officer/pr/[id]`)**: Renders full auditing workflows, department budget balance monitors, and tracking trails on a dedicated details page, featuring an interactive horizontal workflow progress timeline (Draft &rarr; Submitted &rarr; Received &rarr; Under Review &rarr; Approved/Returned/Rejected) with status highlights and review remarks card placement, complete with skeleton loading states, error boundaries, and breadcrumb context.
 - **Quantity & Specs Checklist**: Requires auditing item descriptions and quantities against specifications before final approval.
 - **Inline Corrections (UOM Conversion)**: Enforces validation rules enabling officers to edit items inline (e.g. converting "1 piece alcohol" to "500 mL alcohol", adjusting quantities, or correcting brands), which automatically recalculates PR totals and modifies department budget spent.
 - **Status Gates**: Officers can mark PRs "Under Review", return them to the requisitioner for corrections (providing feedback remarks), or approve them to issue a unique `PROC-YYYY-XXXX` tracking reference.
@@ -160,7 +160,7 @@ An audit interface at `/dashboard/officer/pr` where Procurement Officers review 
 
 A contract drafting workspace at `/dashboard/officer/po` where officers draft and approve Purchase Orders:
 - **Drafting Queue**: Retrieves approved RFQ Canvas recommendations and drafts POs with pre-filled details (supplier, items, and pricing) and automatically redirects the user to the details page upon creation.
-- **Lightweight Registry Cards**: Lists drafted POs as clickable cards that lift on hover and redirect to their dynamic details page.
+- **Lightweight Registry Cards**: Lists drafted POs as clickable cards that lift on hover, showing the supplier's name, logo initials avatar fallback, PO status, delivery schedule terms, linked RFQ context, and pricing summaries, redirecting to their dynamic details page.
 - **Dynamic PO Details (`/dashboard/officer/po/[id]`)**: Displays a dedicated government Purchase Order layout (Appendix 61 / standard Philippine Government PO format) complete with conformes, penalty clauses, and signature slots for print-preview or physical printing.
 - **Interactive Clause Editor**: Enables configuring delivery and payment terms directly on the details page.
 
@@ -180,15 +180,18 @@ A private visual workspace at `/dashboard/supplier/scorecard` displaying supplie
 
 Each role dashboard has been cleaned up to show only relevant, functional links:
 
-- **Procurement Officer**: Overview → Purchase Requests → Purchase Orders (Quick Actions on overview page still link to RFQ creation, Supplier Directory, Product Catalog, and Price Comparison)
-- **Administrative Approver**: Overview only (MCDM approval queue, audit trail, and staff management are all on the overview page)
+- **Procurement Officer**: Overview &rarr; Purchase Requests &rarr; Purchase Orders
+  - **Overview Dashboard**: Integrates system counter statistics (Total RFQs, Open/Active, Registered Suppliers) with a dynamic **Today's Tasks** widget displaying detailed line items of Purchase Requests awaiting audit, RFQs nearing deadline, Purchase Orders awaiting printing, and pending supplier quotations. Includes a **Recent Solicitations** registry showing remaining days with red/yellow/green color-coding based on deadline proximity.
+- **Administrative Approver**: Overview only
+  - **Redesigned Overview Dashboard**: A decision-first layout prioritizing workflow approvals. Features four purchase request sections at the top (Pending Approvals, Approved Today, Returned for Revision, and Rejected Requests) with structured metadata (PR number, department, date submitted, assigned officer, status, and action review triggers) alongside MCDM recommendation queues, audit trails, aggregate statistics cards (repositioned below the decision tables), and staff management controls.
 - **End User**: Overview → My PPMPs → Purchase Requests
+  - **Overview Dashboard**: Features a Department Fiscal Budget Tracker with real-time progress indicators, quick statistics summaries, recent PR history, and an interactive **My Pending Actions** panel displaying status badges, short descriptions, and action buttons for draft/returned PPMPs, returned PRs, and pending supplier evaluations.
 - **Supplier**: Overview → Purchase Orders → My Scorecard
 
 ### 19. Professional Government Procurement Landing Page (Sprint 2.1)
 
 A professional portal homepage at `/` showcasing Batanes State College procurement:
-- **Hero & Search**: High-impact brand section featuring BSC color schemes (Maroon and Gold), college seal style branding, and a functional product search bar redirecting to `/catalog`.
+- **Hero & Search**: High-impact split-column brand section mapping dynamically to the **blue-and-white ProcureWise design system** in light mode (and Maroon/Gold on dark theme), college seal style branding, a functional product search bar redirecting to `/catalog`, and a dynamic **BSC Info Center** panel displaying active RFQs (from the database), system announcements, and news feeds.
 - **Database Statistics**: Dynamic counter cards showing live database counts for active products, registered vendors, unique categories, and pricing updates.
 - **Category Navigation Grid**: Responsive grid displaying product categories with counts, linking directly to filtered views in the catalog.
 - **Recently Updated Products**: Showcases the 8 most recently updated active products in the database with their current canvassed/estimated pricing and last-update timestamp indicators.
@@ -198,9 +201,9 @@ A professional portal homepage at `/` showcasing Batanes State College procureme
 
 A guest-accessible, no-login marketplace at `/catalog` and `/catalog/[id]` allowing end-users and the public to browse and audit procurement materials, compare prices, and explore historical trends:
 
-- **Universal Search & Multi-Filters**: Real-time debounced keyword search on product titles, categories, and brands, paired with category, brand, availability, and min/max price range filters.
+- **Universal Search & Multi-Filters**: Real-time debounced keyword search on product titles, categories, and brands, paired with a scrollable **top horizontal category filter** pill-bar, category sidebar, brand filter, price range slider, and multiple sorting options (Lowest Price, Highest Price, Recently Added, Recently Updated, and Most Requested), with expanded card grid gaps for enhanced readability.
 - **URL-Based Pagination**: Clean URL-state persistence of search query, filters, and page numbers ensuring direct link-sharing and navigation persistence.
-- **Procurement Information & Badges**: Displays detailed cards for each product including the Estimated Unit Cost, Latest Canvassed Price, Preferred Supplier, Available Supplier Count, Last Updated time, and a dynamic Market Availability badge (Available, Limited, Unavailable).
+- **Procurement Information & Badges**: Displays detailed cards for each product including product image preview (or generic package fallback), the Estimated Unit Cost, Latest Canvassed Price, Preferred Supplier, Available Supplier Count, Last Updated time, and a dynamic Market Availability badge (Available, Limited, Unavailable).
 - **SVG Historical Price Trend Chart**: A pure-SVG rendering of historical price adjustments derived from the procurement database without external library overhead, supporting responsive sizing.
 - **Direct Creation Flow Hooks**: Provides direct links to create requisitions for a specific product, linking to `/ppmp/create?product={id}` and `/purchase-request/create?product={id}`.
 - **Relational Schema Migrations & Backward Compatibility**: Converted flat schema fields to relational tables (`Category`, `Brand`, `UnitOfMeasure`, `SupplierProductPrice`) while resolving legacy string fields on the server action layer to keep existing dashboard components unbroken.
@@ -214,6 +217,54 @@ An interactive, marketplace-first procurement planning workspace at `/dashboard/
 - **Budget Utilization Widget**: Computes Allocated, Already Planned, Current Draft, Remaining Budget, and Utilization % (e.g. `54.3%`) dynamically to prevent over-allocation.
 - **Workflow Approval Timeline**: Each planning log displays an active status tracker: `○ Draft` $\rightarrow$ `● Submitted` $\rightarrow$ `● Under Review` $\rightarrow$ `● Approved` $\rightarrow$ `● Converted to PR`.
 - **Automatic Purchase Request (PR) Conversion**: Approved PPMPs show a button to automatically duplicate items into a newly generated `PurchaseRequest` (with unique reference PR-2026-X) and display a direct tracking link on the timeline.
+
+### 22. Role-Based Notification Center
+
+A real-time notification dispatch hub designed to provide visibility across procurement events:
+- **Notification Bell UI**: Renders a state-of-the-art interactive dropdown beside the user profile card with unread count badges, read/unread status dots, type-specific icons/emojis, and relative timestamps (e.g. "5m ago", "1h ago").
+- **Automatic Event Triggers**: Generates database notifications for critical lifecycle events:
+  - **Purchase Request Approved/Returned/Rejected**: Dispatched to the requisitioner user.
+  - **RFQ Published**: Dispatched to Suppliers (for bidding) and Procurement Officers.
+  - **Supplier Quote Received**: Dispatched to Procurement Officers upon bid submission.
+  - **Purchase Order Generated/Printed**: Dispatched to Procurement Officers and Approvers.
+  - **Supplier Evaluation Submitted**: Dispatched to Procurement Officers upon scorecard submissions.
+- **Background Polling**: Uses client-side React polling intervals to query server actions every 10 seconds for frictionless updates.
+
+### 23. Spotlight Global Search
+
+A command palette-style universal search bar integrated into the dashboard header:
+- **Shortcut Trigger**: Opens instantly by pressing `Ctrl + K` (or `Cmd + K`) on any page, or by clicking the header search input button.
+- **Simultaneous Registry Search**: Searches across seven core entities simultaneously using high-efficiency query grouping:
+  - **Products**: Search title/description fields.
+  - **Purchase Requests**: Search PR codes and department names.
+  - **PPMPs**: Search procurement plan titles and department names.
+  - **Purchase Orders**: Search PO tracking codes.
+  - **RFQs**: Search solicitation reference codes and titles.
+  - **Suppliers**: Search vendor company names and contact persons.
+  - **Departments**: Search department budget registries.
+- **Grouped Search Results**: Displays outcomes organized into neat categories with metadata subtitles and focus transitions, facilitating fast navigation directly to the corresponding detail layouts.
+
+### 24. Professional Empty State System
+
+Replaced all bare "no results" text across dashboard pages with a fully illustrated, branded empty state system:
+- **Shared `EmptyState` component** (`src/components/ui/EmptyState.tsx`): Reusable React component with 11 SVG illustration presets, a title, short explanation, and optional primary action button.
+- **Illustration Presets**: Covers `purchase-requests`, `purchase-orders`, `rfq`, `evaluations`, `reports`, `ppmp`, `suppliers`, `search`, `departments`, `audit`, and `generic`.
+- **Pages Upgraded**: Purchase Requests (officer audit view, end-user tracker, approver dashboard), Purchase Orders (awards + registry), RFQs (officer solicitations table, officer dashboard), PPMP (end-user planner), Supplier Evaluations (officer evaluation scorecard), Approver History, MCDM Recommendations.
+- **Context-Aware Actions**: Each empty state includes a relevant primary CTA (e.g. "Browse Catalog", "+ New RFQ", "← Clear Filters") so users know exactly what to do next.
+- **Context-Aware Actions**: Each empty state includes a relevant primary CTA (e.g. "Browse Catalog", "+ New RFQ", "← Clear Filters") so users know exactly what to do next.
+- **Compact Mode**: Inline `compact` prop for smaller cards and sidebar panels.
+
+### 25. Dashboard Activity Feed
+
+Added a live **Recent Activity** widget to the Officer, Approver, and End User dashboards:
+- **[`ActivityFeed`](src/components/dashboard/ActivityFeed.tsx)**: Server-rendered component that fetches the latest `AuditTrail` entries from the database and renders them as a chronological, visual timeline.
+- **User Avatars**: Each entry shows colour-coded initials avatar (deterministic hash of the user's name) with an event icon badge overlaid.
+- **Category Chips**: Colour-coded category labels (`Purchase Request`, `RFQ`, `Purchase Order`, `Supplier Quote`, `Evaluation`) for instant visual scanning.
+- **Relative Timestamps**: Human-readable relative times (e.g. "3m ago", "2h ago") with the full timestamp on hover.
+- **Timeline Connector Lines**: Vertical line linking adjacent events for a polished, feed-style feel.
+- **Live Pulse Indicator**: Animated green dot in the header signals the feed is fresh on page load.
+- **Event Mapping**: 15+ audit action types are mapped to descriptive titles and icons via the `getRecentActivity` server action (`src/app/actions/activity.ts`).
+- **Placements**: Officer dashboard — inline alongside Recent Solicitations table; Approver dashboard — replaces the old basic audit trail; End User dashboard — full-width below the main grid.
 
 > [!NOTE]
 > Features such as Workflow Builder (`/dashboard/approver/workflows`), Form Template Customizer (`/dashboard/approver/forms`), and Reports Export (`/dashboard/approver/reports`) exist in the codebase but have been **unlinked from navigation** to reduce confusion. They can be re-enabled by adding their links back to the `navLinks` object in `src/app/dashboard/layout.tsx`.
@@ -303,6 +354,13 @@ pnpm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to access the login portal.
+
+### 🏛️ Login Portal Visual Enhancements
+The authentication portal layout features:
+- **Split-Screen Layout**: Modern UI split-screen styling, featuring a dynamic network constellation visualizer on the left representing bid and price correlations, and a glassmorphic login card on the right.
+- **Identity & Subtitle Branding**: Displays the "ProcureWise" brand with sub-titles "Procurement Management System" and "Batanes State College".
+- **Product Scope Summary**: Includes a clear system summary outlining the streamlining of planning, bidding, supplier evaluation, and purchase order management.
+- **Premium Spacing & Typography**: Integrated Google Font 'Outfit' for titles and headers, refined form group spacing, and added an interactive gold-ring focus glow state to form fields.
 
 ---
 
@@ -577,7 +635,7 @@ A comprehensive stabilization phase addressing application routing, input valida
 
 ### 4. Recalculation & Data Integrity
 - Recalculated PPMP budgets server-side dynamically from line items to guard against spoofed client payloads.
-- Added automatic budget refund transactions: If an administrative reviewer rejects or cancels a Purchase Request, the department's `spentBudget` allocation is automatically refunded.
+- **Realigned Budget Commitment System**: Adjusted department budget allocation rules so that budget spent is only committed (incremented) upon official PR approval or receipt. Budgets are no longer reserved on submission, meaning no decrement occurs when requests are rejected or returned.
 
 ---
 
@@ -608,6 +666,35 @@ A high-fidelity enhancement to the procurement approval process, establishing fu
 
 ---
 
+## 🖨️ Unified Document Branding, Print Engine & Realigned Budgets (Sprint 9)
+
+A comprehensive upgrade to the document output and budget tracking pipeline to mirror official Batanes State College administrative guidelines:
+
+### 1. Realigned Budget Spent Logic
+- **Commit on Approval**: Realigned budget tracking so that department spent budgets are only committed (incremented) when a Purchase Request is officially approved by the Administrative Approver or marked as received.
+- **No Pre-Reservation**: Submission of PR drafts and revisions does not alter the spent budget. If a PR is rejected or returned while in review/draft, the budget remains untouched.
+
+### 2. Full-Lifecycle Status Audit Trails
+- **Chronological Logs**: Every state change (Draft, Submitted, UnderReview, ReturnedForRevision (mapped to `"Returned for Revision"`), Approved, Received, and Rejected) now records a corresponding status log inside `PurchaseRequestStatusHistory`, detailing the review comments, dates, and active actor names.
+
+### 3. Unified Print Layout Engine
+- **Fixed Branding Headers/Footers**: Introduced a graphic layout wrapper (`DocumentLayout.tsx`) utilizing College branding assets (`bsc-header.png` and `bsc-footer.png`) which automatically repeat at the top and bottom of every printed page.
+- **Overflow Prevention**: Defined strict CSS printing layout rules ensuring that content margins and print boundaries align beautifully without text page overlapping.
+- **Target Views Integration**: Integrated the branding layout into the following printable items, keeping them clean and dashboard-only on the screen view:
+  - Purchase Orders (Appendix 61) (`PoDetailsClient.tsx`)
+  - BAC Procurement Recommendation Report (`RfqEvaluationClient.tsx`)
+  - Executive Procurement Analytics Reports (`AnalyticsDashboardClient.tsx`)
+  - Purchase Requests (Appendix 60) for End-Users, Officers, and Approvers (`PrTrackerClient.tsx`, `PrDetailsClient.tsx`, `PrReviewClient.tsx`)
+
+### 4. Direct Action Controls & Approval cards
+- **Action buttons**: Added print action buttons to the Requisition tracker, Officer detail, and Approver history views.
+- **Approval Cards**: Added high-visibility "Approval / Review Details" alerts displaying status comments, reviewer names, and decision timestamps on processed Purchase Requests.
+
+### 5. Re-Branded status "Returned for Revision"
+- **Clearer Nomenclature**: Renamed the database status map, badges, timelines, tracker view, history tab, and reports from `"Returned"` to `"Returned for Revision"` to reassure requisitioners that their requests only need corrections.
+
+---
+
 ## 🔄 System Flowcharts & Process Architecture
 
 ProcureWise's system workflows and operational logic are documented in a centralized, thesis-ready format. This resource includes comprehensive Mermaid flowcharts adhering to strict modeling standards (Start/End terminators, process rectangles, decision diamonds, input/output parallelograms, and database cylinders with Yes/No branches).
@@ -634,6 +721,8 @@ The system workflows, database relationships, logical data flows, and use case d
 * [UML Use Case Diagram](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/use_case_diagram.md)
 * [Development Roadmap](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/development_roadmap.md)
 * [Final Development Roadmap](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/final_development_roadmap.md)
+* [System Audit & Production Readiness Report](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/system_audit_report.md)
+* [Sprint 9 Walkthrough & Validation](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/walkthrough.md)
 
 
 

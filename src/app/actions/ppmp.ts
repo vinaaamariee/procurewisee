@@ -277,6 +277,15 @@ export async function convertPpmpToPrAction(ppmpId: number) {
           }
         });
       }
+      // Add status history entry
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: pr.id,
+          status: "Draft",
+          remarks: `Generated from PPMP ${ppmp.ppmpNumber}.`,
+          changedById: ppmp.preparedById,
+        }
+      });
 
       return pr;
     });

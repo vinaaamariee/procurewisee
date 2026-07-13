@@ -122,6 +122,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
       case "UnderReview":
         return { label: "Under Administrative Review", bg: "bg-amber-100 text-amber-800 border-amber-200" };
       case "ReturnedForRevision":
+      case "Returned for Revision":
         return { label: "Returned for Revision", bg: "bg-red-50 text-red-700 border-red-200" };
       case "Received":
         return { label: "Received (Procurement Hub)", bg: "bg-indigo-100 text-indigo-800 border-indigo-25" };
@@ -193,7 +194,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
           <div className="relative border-l-2 border-gray-200 pl-6 ml-3 space-y-6">
             {requisition.statusHistory.map((historyItem, idx) => {
               const itemConfig = getStatusConfig(historyItem.status);
-              const isNegative = ['Rejected', 'ReturnedForRevision'].includes(historyItem.status);
+              const isNegative = ['Rejected', 'ReturnedForRevision', 'Returned for Revision'].includes(historyItem.status);
               return (
                 <div key={historyItem.id} className="relative">
                   {/* Timeline Dot */}

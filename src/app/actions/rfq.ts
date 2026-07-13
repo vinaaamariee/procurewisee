@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { RfqStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
+import { createNotificationHelper } from "./notifications";
 
 /**
  * Creates a Request for Quote (RFQ) along with its requisition line items.
@@ -101,6 +102,20 @@ export async function publishRfq(rfqId: number) {
     recordId: rfqId,
     oldState: oldRfq,
     newState: updated,
+  });
+
+  // Notify Suppliers and Procurement Officers
+  await createNotificationHelper({
+    title: 'RFQ Published',
+    description: `A new Request for Quotation ${updated.rfqNumber} ("${updated.title}") has been published and is open for bidding.`,
+    icon: '📢',
+    role: 'Supplier'
+  });
+  await createNotificationHelper({
+    title: 'RFQ Published Successfully',
+    description: `RFQ ${updated.rfqNumber} has been successfully published to the bidding portal.`,
+    icon: '📢',
+    role: 'Procurement Officer'
   });
 
   revalidatePath("/", "layout");

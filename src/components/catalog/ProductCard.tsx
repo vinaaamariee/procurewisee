@@ -39,16 +39,25 @@ export default function ProductCard({ product }: ProductCardProps) {
     >
       {/* Image */}
       <div
-        className="relative flex h-44 items-center justify-center"
+        className="relative flex h-44 items-center justify-center overflow-hidden"
         style={{
           background:
             "linear-gradient(135deg, rgba(126,25,27,0.06) 0%, rgba(202,138,4,0.06) 100%)",
         }}
       >
-        <Package
-          className="h-16 w-16 transition-transform duration-200 group-hover:scale-105"
-          style={{ color: "var(--accent)", opacity: 0.18 }}
-        />
+        {product.imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <Package
+            className="h-16 w-16 transition-transform duration-200 group-hover:scale-105"
+            style={{ color: "var(--accent)", opacity: 0.18 }}
+          />
+        )}
 
         {/* Category Badge */}
         <span
