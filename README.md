@@ -724,6 +724,18 @@ The system workflows, database relationships, logical data flows, and use case d
 * [System Audit & Production Readiness Report](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/system_audit_report.md)
 * [Sprint 9 Walkthrough & Validation](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/docs/walkthrough.md)
 
+---
+
+## 🎨 Standardized UI Design Components
+
+To ensure a unified visual identity and layout consistency across the ERP system, the following modular UI components are defined under `src/components/ui/`:
+
+1. **[Card](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/components/ui/Card.tsx)**: A sleek container component utilizing the CSS variable theme palette, styled with rounded corners (`rounded-2xl`), custom border borders, and drop-shadows. Fully supports custom class extensions and standard HTML elements (e.g., `id`, `onClick`).
+2. **[StatusBadge](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/components/ui/StatusBadge.tsx)**: A standardized badge mapping status types (e.g., `Draft`, `Published`, `Closed`, `Evaluated`, `Awarded`) to color-coded, theme-compliant badges.
+3. **[SectionHeader](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/components/ui/SectionHeader.tsx)**: A consistent header layout rendering section headings, description text/subtitles, and header actions (e.g., download buttons or status badges).
+4. **[TableContainer](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/components/ui/TableContainer.tsx)**: A wrapper ensuring consistent overflow behavior, borders, and shadows for table displays across registry dashboards.
+
+
 
 
 
