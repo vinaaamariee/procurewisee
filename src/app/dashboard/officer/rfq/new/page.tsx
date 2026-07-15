@@ -1,6 +1,9 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { prisma } from '@/lib/prisma';
 import RfqCreationForm from '@/components/officer/RfqCreationForm';
+import SectionHeader from "@/components/ui/SectionHeader";
+import Card from "@/components/ui/Card";
+import Link from "next/link";
 
 export const metadata = { title: 'Create RFQ — ProcureWise' };
 
@@ -78,98 +81,79 @@ export default async function NewRfqPage() {
   };
 
   if (fetchError) {
-    return (
-      <div style={{ maxWidth: '800px', margin: '4rem auto', padding: '2.5rem', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(20px)', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '1.25rem', boxShadow: theme.shadow, fontFamily: '"Inter", sans-serif' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#7e191b' }}>
-            <span style={{ fontSize: '2rem' }}>⚠️</span>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>Database Connection Error</h2>
-          </div>
-          
-          <p style={{ color: theme.textMain, fontSize: '0.95rem', margin: 0, lineHeight: '1.6' }}>
-            The application was unable to fetch necessary procurement data (APP Items or Product Catalog) from the database. 
-            This usually indicates a database connection issue or that required database tables are missing/out of sync in the production environment.
-          </p>
-
-          <div style={{ backgroundColor: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: '0.75rem', padding: '1.25rem' }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
-               System Error Message
-            </div>
-            <pre style={{ margin: 0, fontSize: '0.85rem', color: '#7e191b', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: 'monospace', lineHeight: '1.5' }}>
-              {fetchError}
-            </pre>
-          </div>
-
-          <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
-            <a
-              href="/dashboard/officer"
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.4rem',
-                backgroundColor: theme.crimson, border: 'none',
-                borderRadius: '999px', color: '#fff', textDecoration: 'none',
-                fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 4px 12px rgba(126, 25, 27, 0.2)',
-                cursor: 'pointer'
-              }}
-            >
-              Back to Dashboard
-            </a>
-            <button
-              onClick={() => { if (typeof window !== 'undefined') window.location.reload(); }}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.4rem',
-                backgroundColor: 'rgba(255,255,255,0.8)', border: `1px solid ${theme.glassBorder}`,
-                borderRadius: '999px', color: theme.textMain, textDecoration: 'none',
-                fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
-                cursor: 'pointer'
-              }}
-            >
-              🔄 Retry Connection
-            </button>
-          </div>
+  return (
+    <div className="max-w-3xl mx-auto space-y-6">
+      <Card className="p-8 border-red-500/20 bg-red-50 dark:bg-red-900/20">
+        
+        <div className="flex items-center gap-3 text-red-600 dark:text-red-400">
+          <span className="text-2xl">⚠️</span>
+          <h2 className="text-xl font-bold">Database Connection Error</h2>
         </div>
-      </div>
-    );
+
+        <p className="text-sm text-[var(--text-primary)] mt-4">
+          The system was unable to fetch required procurement data.
+          This may indicate a database connectivity issue.
+        </p>
+
+        <div className="mt-4 rounded-xl border border-red-200 dark:border-red-800 bg-white dark:bg-slate-900 p-4">
+          <div className="text-xs font-bold uppercase tracking-wide text-[var(--text-muted)] mb-2">
+            System Error Message
+          </div>
+          <pre className="text-xs text-red-600 dark:text-red-400 whitespace-pre-wrap break-all">
+            {fetchError}
+          </pre>
+        </div>
+
+        <div className="flex gap-3 mt-6">
+          <Link
+            href="/dashboard/officer"
+            className="rounded-xl bg-[var(--accent)] px-5 py-2 text-sm font-bold text-white hover:opacity-90"
+          >
+            Back to Dashboard
+          </Link>
+
+          <button
+            onClick={() => window.location.reload()}
+            className="rounded-xl border border-[var(--border)] px-5 py-2 text-sm font-semibold hover:bg-[var(--surface-hover)]"
+          >
+            Retry
+          </button>
+        </div>
+
+      </Card>
+    </div>
+  );
+
   }
 
   return (
-    <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem', fontFamily: '"Inter", sans-serif' }}>
-      
-      {/* ── Page Header ── */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <div>
-          <a
-            href="/dashboard/officer"
-            style={{
-              display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 1.2rem',
-              backgroundColor: 'rgba(255,255,255,0.8)', border: `1px solid ${theme.glassBorder}`,
-              borderRadius: '999px', color: theme.textMain, textDecoration: 'none',
-              fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 2px 10px rgba(0,0,0,0.02)',
-              cursor: 'pointer'
-            }}
-          >
-            <span>←</span> Back to Dashboard
-          </a>
-        </div>
-        <div>
-          <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: theme.textMain, margin: 0, letterSpacing: '-0.5px' }}>
-            Create New Request for Quotation (RFQ)
-          </h1>
-          <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: theme.textMuted, margin: '0.5rem 0 0 0' }}>
-            Fill in the details to digitally generate and publish a solicitation for suppliers.
-          </p>
-        </div>
-      </div>
-
-      {/* ── Creation Form Container ── */}
-      {/* Wrapped in the ProcureWise Glassmorphic Card Style */}
-      <div style={{
-        background: theme.glassBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        border: `1px solid ${theme.glassBorder}`, borderRadius: '1.25rem', overflow: 'hidden', 
-        boxShadow: theme.shadow, padding: '2.5rem'
-      }}>
-        <RfqCreationForm appItems={appItems} catalogProducts={catalogProducts} nextRfqNumber={nextRfqNumber} />
-      </div>
-      
+  <div className="space-y-8 max-w-5xl mx-auto">
+    
+    {/* Back Link */}
+    <div>
+      <Link
+        href="/dashboard/officer"
+        className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-semibold text-[var(--text-primary)] transition hover:bg-[var(--surface-hover)]"
+      >
+        ← Back to Dashboard
+      </Link>
     </div>
-  );
+
+    {/* Header */}
+    <SectionHeader
+      title="Create New Request for Quotation (RFQ)"
+      subtitle="Fill in the details to digitally generate and publish a solicitation for suppliers."
+    />
+
+    {/* Form Container */}
+    <Card className="p-8">
+      <RfqCreationForm
+        appItems={appItems}
+        catalogProducts={catalogProducts}
+        nextRfqNumber={nextRfqNumber}
+      />
+    </Card>
+
+  </div>
+);
 }
