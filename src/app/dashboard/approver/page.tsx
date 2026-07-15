@@ -2,10 +2,31 @@ import { requireRole } from '@/lib/auth/get-user-profile';
 import { prisma } from '@/lib/prisma';
 import AddStaffForm from './add-staff-form';
 import ApproveButton from './approve-button';
-import { ShieldCheck, Truck, FileText, CheckCircle2, TrendingUpDown, AlertCircle, HelpCircle, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { 
+  ShieldCheck, 
+  Truck, 
+  FileText, 
+  CheckCircle2, 
+  TrendingUpDown, 
+  AlertCircle, 
+  Clock, 
+  CheckSquare, 
+  Undo2, 
+  XOctagon, 
+  History, 
+  TrendingUp, 
+  Sparkles,
+  User,
+  ArrowRight
+} from 'lucide-react';
 import { startTimer } from '@/lib/performance-logger';
 import EmptyState from '@/components/ui/EmptyState';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
+import Card from '@/components/ui/Card';
+import SectionHeader from '@/components/ui/SectionHeader';
+import TableContainer from '@/components/ui/TableContainer';
+import StatusBadge from '@/components/ui/StatusBadge';
+import Link from 'next/link';
 
 export const metadata = { title: 'Approver Dashboard — ProcureWise' };
 
@@ -151,100 +172,61 @@ export default async function ApproverDashboard() {
     getApproverDashboardPRs()
   ]);
 
-  const v = {
-    surface: 'var(--surface)',
-    border: 'var(--border)',
-    accent: 'var(--accent)',
-    accentLight: 'var(--accent-light)',
-    textPrimary: 'var(--text-primary)',
-    textSecondary: 'var(--text-secondary)',
-    green: '#10b981',
-    yellow: '#d97706',
-    shadow: '0 4px 24px rgba(30,58,138,0.07)',
-  };
-
-  const statCards = [
-    { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: '📄', color: v.accent,      desc: 'Bid opening records', href: '#pending-reviews' },
-    { label: 'Pending Review',   value: stats.pendingReview, icon: '⏳', color: '#d97706',     desc: 'Awaiting approval', href: '/dashboard/approver/history?tab=pending' },
-    { label: 'Approved',         value: stats.approvedCount, icon: '✅', color: '#059669',     desc: 'Recommendations accepted', href: '/dashboard/approver/history?tab=approved' },
-    { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: '🔒', color: v.accentLight, desc: 'Recent trail entries', href: '#audit-trail' },
-  ];
-
   const renderPrTable = (prs: any[], emptyMessage: string) => {
     return (
-      <div style={{ overflowX: 'auto', padding: '1rem' }}>
+      <div className="overflow-x-auto">
         {prs.length === 0 ? (
-          <EmptyState
-            preset="purchase-requests"
-            title="No Requests Here"
-            description={emptyMessage}
-            compact
-          />
+          <div className="p-6">
+            <EmptyState
+              preset="purchase-requests"
+              title="No Requests Here"
+              description={emptyMessage}
+              compact
+            />
+          </div>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', textAlign: 'left' }}>
+          <table className="w-full min-w-[800px] border-collapse text-sm">
             <thead>
-              <tr style={{ borderBottom: `1px solid ${v.border}`, color: v.textSecondary }}>
-                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>PR Number</th>
-                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Department / Office</th>
-                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Date Submitted</th>
-                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Assigned Officer</th>
-                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', textAlign: 'center' }}>Status</th>
-                <th style={{ padding: '0.75rem 1rem', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', textAlign: 'center' }}>Action</th>
+              <tr className="border-b border-[var(--border)] bg-[var(--bg-dark)]">
+                {['PR Number', 'Department / Office', 'Date Submitted', 'Assigned Officer', 'Status', 'Action'].map(h => (
+                  <th key={h} className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
+                    {h}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {prs.map((pr) => {
-                let statusBg = 'rgba(217, 119, 6, 0.1)';
-                let statusColor = '#d97706';
-                if (pr.status === 'Approved' || pr.status === 'Received') {
-                  statusBg = 'rgba(16, 185, 129, 0.1)';
-                  statusColor = '#059669';
-                } else if (pr.status === 'ReturnedForRevision' || pr.status === 'Returned for Revision' || pr.status === 'Rejected') {
-                  statusBg = 'rgba(239, 68, 68, 0.1)';
-                  statusColor = '#ef4444';
-                }
-                
-                return (
-                  <tr key={pr.id} style={{ borderBottom: `1px solid ${v.border}` }}>
-                    <td style={{ padding: '1rem', fontWeight: 700, color: v.textPrimary }}>
-                      {pr.prNumber}
-                    </td>
-                    <td style={{ padding: '1rem', color: v.textPrimary }}>
-                      {pr.department} ({pr.office})
-                    </td>
-                    <td style={{ padding: '1rem', color: v.textPrimary }}>
-                      {new Date(pr.createdAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })}
-                    </td>
-                    <td style={{ padding: '1rem', color: v.textPrimary, fontWeight: 500 }}>
-                      👤 {pr.assignedOfficerName}
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <span style={{
-                        padding: '0.25rem 0.6rem', borderRadius: '999px', fontSize: '0.72rem', fontWeight: 700,
-                        backgroundColor: statusBg, color: statusColor, textTransform: 'uppercase'
-                      }}>
-                        {pr.status === 'ReturnedForRevision' || pr.status === 'Returned for Revision' ? 'Returned' : pr.status}
-                      </span>
-                    </td>
-                    <td style={{ padding: '1rem', textAlign: 'center' }}>
-                      <a href={`/dashboard/approver/history/${pr.id}`} style={{
-                        display: 'inline-block',
-                        padding: '0.4rem 1rem',
-                        background: `linear-gradient(90deg, var(--accent) 0%, var(--accent-light) 100%)`,
-                        color: 'white',
-                        fontWeight: 700,
-                        fontSize: '0.72rem',
-                        textDecoration: 'none',
-                        borderRadius: '0.5rem',
-                        boxShadow: '0 2px 6px rgba(30,58,138,0.15)',
-                        transition: 'opacity 0.2s'
-                      }} className="hover:opacity-90">
-                        Review PR
-                      </a>
-                    </td>
-                  </tr>
-                );
-              })}
+              {prs.map((pr) => (
+                <tr key={pr.id} className="border-b border-[var(--border)] transition hover:bg-[var(--surface-hover)]">
+                  <td className="px-5 py-4 font-bold text-[var(--text-primary)]">
+                    {pr.prNumber}
+                  </td>
+                  <td className="px-5 py-4 font-medium text-[var(--text-primary)]">
+                    {pr.department} <span className="text-xs text-[var(--text-muted)]">({pr.office})</span>
+                  </td>
+                  <td className="px-5 py-4 text-[var(--text-secondary)] whitespace-nowrap">
+                    {new Date(pr.createdAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </td>
+                  <td className="px-5 py-4 text-[var(--text-primary)] font-semibold whitespace-nowrap">
+                    <span className="inline-flex items-center gap-1.5">
+                      <User className="h-4 w-4 text-[var(--text-muted)]" />
+                      {pr.assignedOfficerName}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4 text-center whitespace-nowrap">
+                    <StatusBadge status={pr.status === 'ReturnedForRevision' ? 'Returned' : pr.status} />
+                  </td>
+                  <td className="px-5 py-4 text-center whitespace-nowrap">
+                    <Link
+                      href={`/dashboard/approver/history/${pr.id}`}
+                      className="inline-flex items-center justify-center gap-1 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--accent-light)] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:opacity-90"
+                    >
+                      Review PR
+                      <ArrowRight className="h-3 w-3" />
+                    </Link>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         )}
@@ -252,106 +234,105 @@ export default async function ApproverDashboard() {
     );
   };
 
+  const statCards = [
+    { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: FileText, color: 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-100 dark:border-blue-900/30', desc: 'Bid opening records', href: '#pending-reviews' },
+    { label: 'Pending Review',   value: stats.pendingReview, icon: Clock, color: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-100 dark:border-amber-900/30', desc: 'Awaiting approval', href: '/dashboard/approver/history?tab=pending' },
+    { label: 'Approved',         value: stats.approvedCount, icon: CheckSquare, color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-100 dark:border-emerald-900/30', desc: 'Accepted recommendations', href: '/dashboard/approver/history?tab=approved' },
+    { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: ShieldCheck, color: 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border-indigo-100 dark:border-indigo-900/30', desc: 'Recent trail entries', href: '#audit-trail' },
+  ];
+
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', fontFamily: '"Inter", sans-serif' }}>
+    <div className="space-y-10">
 
-      {/* Header Section */}
-      <div style={{ borderBottom: `1px solid ${v.border}`, paddingBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ width: 5, height: 48, borderRadius: 4, background: `linear-gradient(180deg, ${v.accent}, ${v.accentLight})`, flexShrink: 0 }} />
-          <div>
-            <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: v.textPrimary, margin: 0, letterSpacing: '-0.5px' }}>
-              Administrative Approver Portal
-            </h1>
-            <p style={{ marginTop: '0.25rem', fontSize: '0.9rem', color: v.textSecondary, margin: '0.25rem 0 0 0' }}>
-              Review MCDM recommendations, approve canvas abstracts, and monitor audit trails.
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* ── Page Header ── */}
+      <SectionHeader 
+        title="Administrative Approver Portal"
+        subtitle="Review MCDM recommendations, approve canvas abstracts, and monitor audit trails."
+      />
 
-      {/* ── Decision-Making Focus: Purchase Requests Sections at the Top ── */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+      {/* ── Decision-Making Focus Area ── */}
+      <div className="space-y-8">
         
         {/* Pending Approvals */}
-        <div style={{ background: v.surface, border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow }}>
-          <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              ⏳ Pending Approvals
+        <Card>
+          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
+            <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
+              <Clock className="h-5 w-5 text-amber-500" />
+              Pending Approvals
             </h2>
             {prData.pendingApprovals.length > 0 && (
-              <span style={{ fontSize: '0.72rem', fontWeight: 800, background: 'rgba(217,119,6,0.12)', color: '#d97706', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+              <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-3 py-1 text-xs font-bold text-amber-700 dark:text-amber-300">
                 {prData.pendingApprovals.length} awaiting approval
               </span>
             )}
           </div>
           {renderPrTable(prData.pendingApprovals, "No pending purchase requests awaiting approval.")}
-        </div>
+        </Card>
 
         {/* Approved Today */}
-        <div style={{ background: v.surface, border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow }}>
-          <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              ✅ Approved Today
+        <Card>
+          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
+            <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
+              <CheckSquare className="h-5 w-5 text-emerald-500" />
+              Approved Today
             </h2>
             {prData.approvedToday.length > 0 && (
-              <span style={{ fontSize: '0.72rem', fontWeight: 800, background: 'rgba(16,185,129,0.12)', color: '#059669', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+              <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300">
                 {prData.approvedToday.length} approved today
               </span>
             )}
           </div>
           {renderPrTable(prData.approvedToday, "No purchase requests approved today.")}
-        </div>
+        </Card>
 
         {/* Returned for Revision */}
-        <div style={{ background: v.surface, border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow }}>
-          <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              ↩️ Returned for Revision
+        <Card>
+          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
+            <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
+              <Undo2 className="h-5 w-5 text-rose-500" />
+              Returned for Revision
             </h2>
             {prData.returnedPrs.length > 0 && (
-              <span style={{ fontSize: '0.72rem', fontWeight: 800, background: 'rgba(239,68,68,0.12)', color: '#dc2626', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+              <span className="rounded-full bg-rose-500/10 border border-rose-500/20 px-3 py-1 text-xs font-bold text-rose-700 dark:text-rose-300">
                 {prData.returnedPrs.length} returned for revision
               </span>
             )}
           </div>
           {renderPrTable(prData.returnedPrs, "No purchase requests currently in revision status.")}
-        </div>
+        </Card>
 
         {/* Rejected Requests */}
-        <div style={{ background: v.surface, border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow }}>
-          <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              ❌ Rejected Requests
+        <Card>
+          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
+            <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
+              <XOctagon className="h-5 w-5 text-red-500" />
+              Rejected Requests
             </h2>
             {prData.rejectedPrs.length > 0 && (
-              <span style={{ fontSize: '0.72rem', fontWeight: 800, background: 'rgba(239,68,68,0.12)', color: '#dc2626', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+              <span className="rounded-full bg-red-500/10 border border-red-500/20 px-3 py-1 text-xs font-bold text-red-700 dark:text-red-300">
                 {prData.rejectedPrs.length} rejected requests
               </span>
             )}
           </div>
           {renderPrTable(prData.rejectedPrs, "No rejected purchase requests recorded.")}
-        </div>
+        </Card>
 
       </div>
 
-      {/* Pending MCDM Recommendations */}
-      <div id="pending-reviews" style={{
-        background: v.surface,
-        border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow
-      }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: v.textPrimary, margin: 0 }}>
+      {/* ── Pending MCDM Recommendations ── */}
+      <Card id="pending-reviews">
+        <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
+          <h2 className="text-base font-bold text-[var(--text-primary)]">
             Pending MCDM Recommendations
           </h2>
           {stats.pendingReview > 0 && (
-            <span style={{ fontSize: '0.75rem', fontWeight: 700, background: 'rgba(30,58,138,0.08)', color: v.accent, padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+            <span className="rounded-full bg-[var(--bg-dark)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)] border border-[var(--border)]">
               {stats.pendingReview} awaiting review
             </span>
           )}
         </div>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', padding: '1.5rem' }}>
+        <div className="divide-y divide-[var(--border)] p-6 space-y-8">
           {recs.length === 0 ? (
             <EmptyState
               preset="rfq"
@@ -360,25 +341,10 @@ export default async function ApproverDashboard() {
             />
           ) : (
             recs.map((rec: any) => {
-              // Parse audit snapshot JSON safely
-              let snapshot: {
-                reason: string;
-                complianceScore: number;
-                historicalPerformanceScore: number;
-                confidence: number;
-                confidenceLabel: "High" | "Medium" | "Low";
-                expectedChange: string | null;
-                forecastTrend: "increasing" | "decreasing" | "stable" | "unknown";
-                historicalAvgPrice?: number;
-                historicalMinPrice?: number;
-                historicalLatestPrice?: number;
-                weights: any;
-              };
-
+              let snapshot: any;
               try {
                 snapshot = JSON.parse(rec.reasoning);
               } catch (e) {
-                // Fallback for legacy rows
                 snapshot = {
                   reason: rec.reasoning,
                   complianceScore: 100,
@@ -391,7 +357,6 @@ export default async function ApproverDashboard() {
                 };
               }
 
-              // Compute contributions based on weights in the snapshot
               const w = snapshot.weights || { price: 0.40, delivery: 0.20, reliability: 0.20, compliance: 0.10, historicalPerformance: 0.10 };
               const priceCont = (Number(rec.priceScore) * w.price).toFixed(1);
               const deliveryCont = (Number(rec.deliveryScore) * w.delivery).toFixed(1);
@@ -405,77 +370,44 @@ export default async function ApproverDashboard() {
               const complianceLimit = (w.compliance * 100).toFixed(0);
               const historicalLimit = (w.historicalPerformance * 100).toFixed(0);
 
-              const confidenceColor =
+              const confidenceColorClass =
                 snapshot.confidenceLabel === "High"
-                  ? v.green
+                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
                   : snapshot.confidenceLabel === "Medium"
-                  ? v.yellow
-                  : v.accent;
+                  ? "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
+                  : "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20";
 
               return (
                 <div
                   key={rec.id}
-                  style={{
-                    border: `1px solid ${v.border}`,
-                    borderRadius: '1.25rem',
-                    background: v.surface,
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    boxShadow: v.shadow
-                  }}
+                  className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden flex flex-col shadow-sm hover:border-[var(--border-accent)] transition-colors duration-200"
                 >
                   {/* Card Header Banner */}
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '1rem 1.5rem',
-                      background: 'rgba(30,58,138,0.03)',
-                      borderBottom: `1px solid ${v.border}`,
-                      flexWrap: 'wrap',
-                      gap: '1rem'
-                    }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                      <span
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: '28px',
-                          height: '28px',
-                          borderRadius: '50%',
-                          background: `linear-gradient(135deg, ${v.accent}, ${v.accentLight})`,
-                          color: 'white',
-                          fontWeight: 800,
-                          fontSize: '0.75rem',
-                          boxShadow: '0 2px 5px rgba(30,58,138,0.3)'
-                        }}
-                      >
+                  <div className="flex items-center justify-between px-6 py-4 bg-[var(--bg-dark)] border-b border-[var(--border)] flex-wrap gap-4">
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--accent-light)] text-xs font-black text-white shadow-sm">
                         #{rec.rank}
                       </span>
                       <div>
-                        <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: v.textPrimary, margin: 0 }}>
+                        <h3 className="text-sm font-bold text-[var(--text-primary)]">
                           {(rec.supplier as any)?.companyName ?? 'Unknown Supplier'}
                         </h3>
-                        <span style={{ fontSize: '0.75rem', color: v.textSecondary }}>
+                        <span className="text-xs text-[var(--text-muted)]">
                           Submitted for RFQ Ref: {rec.quote?.rfqId ? `RFQ-${rec.quote.rfqId}` : 'N/A'}
                         </span>
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                        <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', fontWeight: 700, color: v.textSecondary }}>Overall MCDM Score</span>
-                          <div style={{ fontSize: '1.25rem', fontWeight: 900, color: v.accent, lineHeight: 1 }}>
-                            {Number(rec.compositeScore).toFixed(2)}
-                          </div>
+                    <div className="flex items-center gap-6">
+                      <div className="text-right">
+                        <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider block">Overall MCDM Score</span>
+                        <div className="text-lg font-black text-[var(--accent)]">
+                          {Number(rec.compositeScore).toFixed(2)}
                         </div>
-                        <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: '0.65rem', textTransform: 'uppercase', fontWeight: 700, color: v.textSecondary }}>Quoted Price</span>
-                          <div style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider block">Quoted Price</span>
+                        <div className="text-lg font-bold text-[var(--text-primary)]">
                           ₱{Number((rec.quote as any)?.totalQuotedAmount ?? 0).toLocaleString('en-PH')}
                         </div>
                       </div>
@@ -483,114 +415,117 @@ export default async function ApproverDashboard() {
                   </div>
 
                   {/* Details Grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-[var(--border)]">
                     
                     {/* Left: Criteria score progress bars */}
-                    <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', borderRight: '1px solid rgba(0,0,0,0.04)' }}>
-                      <h4 style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: v.textSecondary, letterSpacing: '0.5px', margin: '0 0 0.5rem 0' }}>
+                    <div className="p-6 space-y-4">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">
                         Explainable Criteria Breakdown (Normalized)
                       </h4>
                       
                       {/* Price */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 600 }}>
-                          <span>Price Score ({(w.price * 100).toFixed(0)}%)</span>
-                          <span>{priceCont} / {priceLimit}</span>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
+                          <span>Price Score ({priceLimit}%)</span>
+                          <span className="font-bold">{priceCont} / {priceLimit}</span>
                         </div>
-                          <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                            <div style={{ width: `${rec.priceScore}%`, height: '100%', background: v.accent, borderRadius: '3px' }} />
-                          </div>
+                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                          <div className="h-full bg-[var(--accent)] rounded-full transition-all duration-300" style={{ width: `${rec.priceScore}%` }} />
+                        </div>
                       </div>
 
                       {/* Delivery */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 600 }}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><Truck style={{ width: 12, height: 12 }} /> Delivery</span>
-                          <span>{deliveryCont} / {deliveryLimit}</span>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
+                          <span className="inline-flex items-center gap-1.5"><Truck className="h-3.5 w-3.5" /> Delivery</span>
+                          <span className="font-bold">{deliveryCont} / {deliveryLimit}</span>
                         </div>
-                          <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                            <div style={{ width: `${rec.deliveryScore}%`, height: '100%', background: v.accentLight, borderRadius: '3px' }} />
-                          </div>
+                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                          <div className="h-full bg-[var(--accent-light)] rounded-full transition-all duration-300" style={{ width: `${rec.deliveryScore}%` }} />
+                        </div>
                       </div>
 
                       {/* Reliability */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 600 }}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><ShieldCheck style={{ width: 12, height: 12 }} /> Reliability</span>
-                          <span>{reliabilityCont} / {reliabilityLimit}</span>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
+                          <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> Reliability</span>
+                          <span className="font-bold">{reliabilityCont} / {reliabilityLimit}</span>
                         </div>
-                          <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                            <div style={{ width: `${rec.reliabilityScore}%`, height: '100%', background: v.green, borderRadius: '3px' }} />
-                          </div>
+                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                          <div className="h-full bg-emerald-500 rounded-full transition-all duration-300" style={{ width: `${rec.reliabilityScore}%` }} />
+                        </div>
                       </div>
 
                       {/* Compliance */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 600 }}>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}><FileText style={{ width: 12, height: 12 }} /> Compliance</span>
-                          <span>{complianceCont} / {complianceLimit}</span>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
+                          <span className="inline-flex items-center gap-1.5"><FileText className="h-3.5 w-3.5" /> Compliance</span>
+                          <span className="font-bold">{complianceCont} / {complianceLimit}</span>
                         </div>
-                        <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                          <div style={{ width: `${snapshot.complianceScore}%`, height: '100%', background: '#3b82f6', borderRadius: '3px' }} />
+                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                          <div className="h-full bg-blue-500 rounded-full transition-all duration-300" style={{ width: `${snapshot.complianceScore}%` }} />
                         </div>
                       </div>
 
                       {/* Historical */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: 600 }}>
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
                           <span>Historical performance</span>
-                          <span>{historicalCont} / {historicalLimit}</span>
+                          <span className="font-bold">{historicalCont} / {historicalLimit}</span>
                         </div>
-                        <div style={{ height: '6px', background: 'rgba(0,0,0,0.05)', borderRadius: '3px', overflow: 'hidden' }}>
-                          <div style={{ width: `${snapshot.historicalPerformanceScore}%`, height: '100%', background: '#a855f7', borderRadius: '3px' }} />
+                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
+                          <div className="h-full bg-purple-500 rounded-full transition-all duration-300" style={{ width: `${snapshot.historicalPerformanceScore}%` }} />
                         </div>
                       </div>
                     </div>
 
                     {/* Right: Justifications & Forecast Analytics */}
-                    <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+                    <div className="p-6 flex flex-col gap-6 justify-between">
                       
                       {/* Explanations */}
-                      <div>
-                        <h4 style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', color: v.textSecondary, letterSpacing: '0.5px', margin: '0 0 0.5rem 0' }}>
+                      <div className="space-y-3">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">
                           Recommendation Justification
                         </h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
-                          {snapshot.reason.split("\n").map((line, idx) => (
-                            <div key={idx} style={{ display: 'flex', alignItems: 'start', gap: '0.5rem', fontSize: '0.75rem', color: v.textPrimary }}>
-                              <CheckCircle2 style={{ width: 14, height: 14, color: v.green, marginTop: '1px', flexShrink: 0 }} />
+                        <div className="space-y-2">
+                          {snapshot.reason.split("\n").map((line: string, idx: number) => (
+                            <div key={idx} className="flex items-start gap-2 text-xs text-[var(--text-primary)]">
+                              <CheckCircle2 className="h-4.5 w-4.5 text-emerald-500 mt-0.5 shrink-0" />
                               <span>{line.replace(/^•\s*/, "")}</span>
                             </div>
                           ))}
                         </div>
                       </div>
 
-                      {/* Historical Prices & ARIMA Forecasting Link */}
-                        <div style={{ background: 'var(--section-bg)', border: `1px solid ${v.border}`, borderRadius: '0.75rem', padding: '0.75rem 1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                          <h5 style={{ fontSize: '0.65rem', fontWeight: 800, textTransform: 'uppercase', color: v.textSecondary, margin: 0, display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                          <TrendingUpDown style={{ width: 12, height: 12 }} /> Historical Price Intelligence
+                      {/* Historical Prices & ARIMA Forecasting */}
+                      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-dark)] p-4 space-y-3">
+                        <h5 className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-1.5">
+                          <TrendingUpDown className="h-4 w-4 text-[var(--accent)]" /> 
+                          Historical Price Intelligence
                         </h5>
-                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.7rem' }}>
-                            <div>Average: <strong>{snapshot.historicalAvgPrice ? formatCurrency(snapshot.historicalAvgPrice) : 'N/A'}</strong></div>
-                            <div>Lowest: <strong>{snapshot.historicalMinPrice ? formatCurrency(snapshot.historicalMinPrice) : 'N/A'}</strong></div>
-                            <div>Latest: <strong>{snapshot.historicalLatestPrice ? formatCurrency(snapshot.historicalLatestPrice) : 'N/A'}</strong></div>
-                            <div>Forecast: <strong style={{ color: snapshot.forecastTrend === 'increasing' ? v.accent : v.green }}>
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <div>Average: <strong className="text-[var(--text-primary)]">{snapshot.historicalAvgPrice ? formatCurrency(snapshot.historicalAvgPrice) : 'N/A'}</strong></div>
+                          <div>Lowest: <strong className="text-[var(--text-primary)]">{snapshot.historicalMinPrice ? formatCurrency(snapshot.historicalMinPrice) : 'N/A'}</strong></div>
+                          <div>Latest: <strong className="text-[var(--text-primary)]">{snapshot.historicalLatestPrice ? formatCurrency(snapshot.historicalLatestPrice) : 'N/A'}</strong></div>
+                          <div>Forecast: <strong className={snapshot.forecastTrend === 'increasing' ? 'text-[var(--accent)]' : 'text-emerald-600'}>
                             {snapshot.forecastTrend ? snapshot.forecastTrend.toUpperCase() : 'UNKNOWN'}
                           </strong></div>
                         </div>
-                          {snapshot.expectedChange && (
-                            <div style={{ fontSize: '0.7rem', color: v.textSecondary, borderTop: `1px solid ${v.border}`, paddingTop: '0.25rem', marginTop: '0.25rem', display: 'flex', justifyContent: 'space-between' }}>
-                              <span>Expected Change:</span>
-                              <span style={{ fontWeight: 800, color: snapshot.expectedChange.startsWith('+') ? v.accent : v.green }}>{snapshot.expectedChange}</span>
-                            </div>
-                          )}
+                        {snapshot.expectedChange && (
+                          <div className="flex items-center justify-between text-xs border-t border-[var(--border)] pt-2 mt-2">
+                            <span className="text-[var(--text-muted)]">Expected Change:</span>
+                            <span className={`font-bold ${snapshot.expectedChange.startsWith('+') ? 'text-[var(--accent)]' : 'text-emerald-600'}`}>
+                              {snapshot.expectedChange}
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       {/* Confidence & Action Bar */}
-                        <div style={{ borderTop: `1px solid ${v.border}`, paddingTop: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto', flexWrap: 'wrap', gap: '0.75rem' }}>
-                          <div>
-                            <span style={{ fontSize: '0.65rem', color: v.textSecondary }}>Confidence: </span>
-                          <span style={{ fontSize: '0.8rem', fontWeight: 800, color: confidenceColor }}>
+                      <div className="flex items-center justify-between border-t border-[var(--border)] pt-4 flex-wrap gap-3 mt-auto">
+                        <div className="text-xs">
+                          <span className="text-[var(--text-muted)]">Confidence: </span>
+                          <span className={`inline-flex items-center rounded-lg border px-2.5 py-1 text-xs font-bold uppercase ${confidenceColorClass}`}>
                             {snapshot.confidenceLabel} ({snapshot.confidence}%)
                           </span>
                         </div>
@@ -604,39 +539,49 @@ export default async function ApproverDashboard() {
             })
           )}
         </div>
+      </Card>
+
+      {/* ── Stat Cards Grid (Below Critical Actions) ── */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 no-print">
+        {statCards.map(card => {
+          const Icon = card.icon;
+          return (
+            <Link key={card.label} href={card.href} className="group">
+              <Card className="p-6 h-full transition hover:-translate-y-0.5 hover:shadow-md border-[var(--border)] bg-[var(--surface)]">
+                <div className="flex items-start justify-between">
+                  <div className="space-y-1">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] block">
+                      {card.label}
+                    </span>
+                    <span className="text-3xl font-black tracking-tight text-[var(--text-primary)] block">
+                      {card.value}
+                    </span>
+                  </div>
+                  <div className={`rounded-xl border p-2.5 shrink-0 ${card.color}`}>
+                    <Icon className="h-5 w-5" />
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center justify-between text-xs">
+                  <span className="text-[var(--text-muted)]">{card.desc}</span>
+                  <span className="font-extrabold text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-250">
+                    Manage &rarr;
+                  </span>
+                </div>
+              </Card>
+            </Link>
+          );
+        })}
       </div>
 
-      {/* Stat Cards Grid (Moved Below Decision Sections) */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.5rem' }} className="no-print">
-        {statCards.map(card => (
-          <a href={card.href} key={card.label} style={{
-            background: v.surface,
-            border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
-            boxShadow: v.shadow, position: 'relative', overflow: 'hidden',
-            display: 'block', textDecoration: 'none', cursor: 'pointer',
-            transition: 'all 0.2s ease-in-out'
-          }} className="hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/40 group">
-            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '4px', background: card.color }} />
-            <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>{card.icon}</div>
-            <div style={{ fontSize: '2.25rem', fontWeight: 800, color: v.textPrimary, lineHeight: 1 }}>{card.value}</div>
-            <div style={{ fontSize: '0.9rem', fontWeight: 600, color: v.textPrimary, marginTop: '0.5rem', display: 'flex', alignItems: 'center', gap: '4px' }}>
-              {card.label}
-              <span style={{ fontSize: '0.75rem', opacity: 0, transition: 'opacity 0.25s ease' }} className="group-hover:opacity-100 text-[var(--accent)]">
-                →
-              </span>
-            </div>
-            <div style={{ fontSize: '0.75rem', fontWeight: 500, color: v.textSecondary, marginTop: '0.25rem' }}>{card.desc}</div>
-          </a>
-        ))}
+      {/* ── Secondary Activities ── */}
+      <div className="grid grid-cols-1 gap-6">
+        <ActivityFeed limit={12} />
       </div>
 
-      {/* Activity Feed */}
-      <ActivityFeed limit={12} />
-
-      {/* Add Staff Form Section */}
-      <div style={{ marginTop: '1rem' }}>
+      {/* ── Administrative Add Staff ── */}
+      <Card className="p-6">
         <AddStaffForm />
-      </div>
+      </Card>
 
     </div>
   );
