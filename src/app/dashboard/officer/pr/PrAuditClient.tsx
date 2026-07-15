@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import EmptyState from "@/components/ui/EmptyState";
+import Card from "@/components/ui/Card";
+import StatusBadge from "@/components/ui/StatusBadge";
+import { Search } from "lucide-react";
 
 interface PurchaseRequest {
   id: number;
@@ -66,56 +69,33 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
   };
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-      {/* Search & Filter Bar */}
-      <div style={{
-        background: theme.glassBg,
-        border: `1px solid ${theme.glassBorder}`,
-        borderRadius: "1rem",
-        padding: "1rem 1.5rem",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "1rem",
-        alignItems: "center",
-        justifyContent: "space-between",
-        boxShadow: theme.shadow
-      }}>
-        <div style={{ display: "flex", gap: "0.75rem", flex: 1, minWidth: "280px" }}>
+  <div className="space-y-6">
+    
+    {/* Search & Filter */}
+    <Card className="p-5">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        
+        <div className="relative w-full md:max-w-md">
+          <Search className="absolute left-3 top-3.5 h-4 w-4 text-[var(--text-muted)]" />
           <input
             type="text"
             placeholder="Search by PR number, department, or purpose..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{
-              flex: 1,
-              padding: "0.6rem 1rem",
-              borderRadius: "0.75rem",
-              border: `1px solid ${theme.glassBorder}`,
-              background: "rgba(255,255,255,0.05)",
-              color: theme.textMain,
-              fontSize: "0.875rem",
-              outline: "none"
-            }}
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] pl-9 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           />
         </div>
 
-        <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
-          <span style={{ fontSize: "0.8rem", fontWeight: 700, color: theme.textMuted, textTransform: "uppercase" }}>Status:</span>
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-bold uppercase tracking-wide text-[var(--text-muted)]">
+            Status
+          </span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            style={{
-              padding: "0.6rem 1rem",
-              borderRadius: "0.75rem",
-              border: `1px solid ${theme.glassBorder}`,
-              background: theme.glassBg,
-              color: theme.textMain,
-              fontSize: "0.875rem",
-              outline: "none",
-              cursor: "pointer"
-            }}
+            className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
           >
-            <option value="all">All Statuses</option>
+            <option value="all">All</option>
             <option value="Submitted">Submitted</option>
             <option value="UnderReview">Under Review</option>
             <option value="Approved">Approved</option>
@@ -123,99 +103,72 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
           </select>
         </div>
       </div>
+    </Card>
 
-      {/* PR Cards Grid */}
-      {filteredPrs.length === 0 ? (
-        <EmptyState
-          preset="purchase-requests"
-          title="No Purchase Requests Found"
-          description="There are no purchase requests matching your current search or filter criteria. Try adjusting your filters or wait for new submissions."
-          action={{ label: '← Clear Filters', onClick: () => { setSearch(''); setStatusFilter('All'); } }}
-        />
-      ) : (
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
-          gap: "1.5rem"
-        }}>
-          {filteredPrs.map((pr) => {
-            const statusColors = getStatusColor(pr.status);
-            return (
-              <Link
-                href={`/dashboard/officer/pr/${pr.id}`}
-                key={pr.id}
-                style={{
-                  textDecoration: "none",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.75rem",
-                  padding: "1.5rem",
-                  borderRadius: "1.25rem",
-                  background: theme.glassBg,
-                  border: `1px solid ${theme.glassBorder}`,
-                  boxShadow: theme.shadow,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease-in-out",
-                  outline: "none",
-                  position: "relative"
-                }}
-                className="hover:-translate-y-1 hover:shadow-lg hover:border-amber-500/40 focus-visible:ring-2 focus-visible:ring-amber-500"
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontWeight: 800, fontSize: "1.1rem", color: theme.crimson }}>{pr.prNumber}</span>
-                  <span style={{
-                    padding: "0.25rem 0.75rem",
-                    borderRadius: "999px",
-                    fontSize: "0.68rem",
-                    fontWeight: 800,
-                    textTransform: "uppercase",
-                    backgroundColor: statusColors.bg,
-                    color: statusColors.text,
-                    letterSpacing: "0.5px"
-                  }}>
-                    {pr.status}
-                  </span>
-                </div>
+    {/* Grid */}
+    {filteredPrs.length === 0 ? (
+      <EmptyState
+        preset="purchase-requests"
+        title="No Purchase Requests Found"
+        description="No requisitions match your search or filter criteria."
+        action={{
+          label: "Clear Filters",
+          onClick: () => {
+            setSearch("");
+            setStatusFilter("all");
+          },
+        }}
+      />
+    ) : (
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {filteredPrs.map((pr) => (
+          <Link
+            key={pr.id}
+            href={`/dashboard/officer/pr/${pr.id}`}
+            className="group"
+          >
+            <Card className="p-6 transition hover:-translate-y-1 hover:shadow-lg hover:border-[var(--border-accent)]">
+              
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <span className="text-lg font-bold text-[var(--accent)]">
+                  {pr.prNumber}
+                </span>
+                <StatusBadge status={pr.status} />
+              </div>
 
-                <div style={{ fontSize: "0.9rem", fontWeight: 700, color: theme.textMain }}>
-                  {pr.department}
-                </div>
+              {/* Department */}
+              <div className="mt-3 text-sm font-semibold text-[var(--text-primary)]">
+                {pr.department}
+              </div>
 
-                <p style={{
-                  fontSize: "0.8rem",
-                  color: theme.textMuted,
-                  margin: 0,
-                  display: "-webkit-box",
-                  WebkitLineClamp: 2,
-                  WebkitBoxOrient: "vertical",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  lineHeight: "1.4",
-                  minHeight: "2.8rem"
-                }}>
-                  {pr.purpose}
-                </p>
+              {/* Purpose */}
+              <p className="mt-2 text-sm text-[var(--text-secondary)] line-clamp-2 min-h-[2.5rem]">
+                {pr.purpose}
+              </p>
 
-                <div style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  borderTop: `1px solid ${theme.glassBorder}`,
-                  paddingTop: "0.75rem",
-                  marginTop: "0.25rem",
-                  fontSize: "0.75rem",
-                  color: theme.textMuted
-                }}>
-                  <span>{new Date(pr.requestDate).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}</span>
-                  <span style={{ fontWeight: 800, color: theme.textMain, fontSize: "0.9rem" }}>
-                    ₱{Number(pr.totalCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
-                  </span>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
+              {/* Footer */}
+              <div className="mt-4 flex items-center justify-between border-t border-[var(--border)] pt-3 text-xs text-[var(--text-muted)]">
+                <span>
+                  {new Date(pr.requestDate).toLocaleDateString("en-PH", {
+                    month: "short",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
+                </span>
+
+                <span className="font-bold text-[var(--text-primary)] text-sm">
+                  ₱
+                  {Number(pr.totalCost).toLocaleString("en-PH", {
+                    minimumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+
+            </Card>
+          </Link>
+        ))}
+      </div>
+    )}
+  </div>
+)}

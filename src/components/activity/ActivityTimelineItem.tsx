@@ -93,7 +93,7 @@ export default function ActivityTimelineItem({
       {!isLast && (
         <span
           aria-hidden="true"
-          className="absolute left-[1.85rem] top-14 bottom-0 w-0.5 bg-[var(--border)]"
+          className="absolute left-5 top-14 bottom-0 w-px bg-[var(--border)]"
         />
       )}
 
@@ -118,11 +118,11 @@ export default function ActivityTimelineItem({
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 flex-wrap">
             <span
-              className={`inline-flex items-center rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${config.bg} ${config.color} ${config.border}`}
+              className={`inline-flex items-center rounded-lg border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${config.bg} ${config.color} ${config.border}`}
             >
               {config.label}
             </span>
-            <span className="text-sm font-semibold text-[var(--text-primary)] truncate max-w-[260px]">
+            <span className="text-[0.9rem] font-semibold text-[var(--text-primary)] truncate max-w-[260px]">
               {item.title}
             </span>
           </div>
