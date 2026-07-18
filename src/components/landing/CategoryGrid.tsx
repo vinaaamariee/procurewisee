@@ -8,10 +8,13 @@ import {
   Armchair,
   Lightbulb,
   Package,
+  ArrowRight,
 } from "lucide-react";
 import type { CategoryCount } from "@/features/landing/server/queries";
 
 interface CategoryGridProps {
+  title?: string;
+  subtitle?: string;
   categories: CategoryCount[];
 }
 
@@ -37,74 +40,83 @@ const accentColors = [
   { color: "#0891b2", bg: "rgba(8, 145, 178, 0.06)" },
 ];
 
-export default function CategoryGrid({ categories }: CategoryGridProps) {
+export default function CategoryGrid({
+  title = "Browse by Category",
+  subtitle = "Find products organized by procurement category",
+  categories,
+}: CategoryGridProps) {
   if (categories.length === 0) return null;
 
   return (
-    <section className="py-16" style={{ background: "var(--bg-dark)" }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
-          <h2
-            className="text-2xl font-bold tracking-tight sm:text-3xl"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Browse by Category
-          </h2>
-          <p
-            className="mt-2 text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Find products organized by procurement category
-          </p>
-        </div>
+    <section aria-labelledby="categories-heading">
+      {/* Section header */}
+      <div className="mb-8 text-center">
+        <p
+          className="mb-2 text-xs font-bold uppercase tracking-widest"
+          style={{ color: "var(--gold)" }}
+        >
+          Explore Catalog
+        </p>
+        <h2
+          id="categories-heading"
+          className="text-2xl font-bold tracking-tight sm:text-3xl"
+          style={{ color: "var(--text-primary)" }}
+        >
+          {title}
+        </h2>
+        <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
+          {subtitle}
+        </p>
+      </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {categories.map((cat, index) => {
-            const accent = accentColors[index % accentColors.length];
-            const Icon = categoryIconMap[cat.category] || Package;
-            return (
-              <Link
-                key={cat.category}
-                href={`/catalog?category=${cat.id}`}
-                className="group flex items-center gap-4 rounded-2xl border p-5 no-underline transition-all hover:shadow-md"
-                style={{
-                  background: "var(--surface)",
-                  borderColor: "var(--border)",
-                }}
+      {/* Category cards */}
+      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+        {categories.map((cat, index) => {
+          const accent = accentColors[index % accentColors.length];
+          const Icon = categoryIconMap[cat.category] || Package;
+
+          return (
+            <Link
+              key={cat.category}
+              href={`/catalog?category=${cat.id}`}
+              className="group flex items-center gap-4 rounded-2xl border p-5 no-underline shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+              style={{
+                background: "var(--surface)",
+                borderColor: "var(--border)",
+              }}
+            >
+              {/* Icon */}
+              <div
+                className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105"
+                style={{ background: accent.bg }}
               >
+                <Icon className="h-6 w-6" style={{ color: accent.color }} />
+              </div>
+
+              {/* Content */}
+              <div className="min-w-0 flex-1">
                 <div
-                  className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl transition-transform group-hover:scale-105"
-                  style={{ background: accent.bg }}
+                  className="truncate text-sm font-bold"
+                  style={{ color: "var(--text-primary)" }}
                 >
-                  <Icon
-                    className="h-5 w-5"
-                    style={{ color: accent.color }}
-                  />
+                  {cat.category}
                 </div>
-                <div className="min-w-0 flex-1">
-                  <div
-                    className="truncate text-sm font-bold"
-                    style={{ color: "var(--text-primary)" }}
-                  >
-                    {cat.category}
-                  </div>
-                  <div
-                    className="text-xs"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    {cat._count} {cat._count === 1 ? "product" : "products"}
-                  </div>
-                </div>
-                <span
-                  className="text-xs opacity-0 transition-opacity group-hover:opacity-100"
-                  style={{ color: accent.color }}
+                <div
+                  className="mt-0.5 text-xs font-medium"
+                  style={{ color: "var(--text-muted)" }}
                 >
-                  →
-                </span>
-              </Link>
-            );
-          })}
-        </div>
+                  {cat._count} {cat._count === 1 ? "product" : "products"}
+                </div>
+              </div>
+
+              {/* Arrow */}
+              <ArrowRight
+                className="h-4 w-4 flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+                style={{ color: accent.color }}
+              />
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

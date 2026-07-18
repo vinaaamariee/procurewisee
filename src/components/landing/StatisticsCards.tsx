@@ -1,97 +1,107 @@
-import { Package, Users, LayoutGrid, TrendingUp } from "lucide-react";
-import type { LandingStats } from "@/features/landing/server/queries";
+import { LucideIcon } from "lucide-react";
 
-interface StatisticsCardsProps {
-  stats: LandingStats;
+interface StatItem {
+  title: string;
+  value: string | number;
+  icon?: LucideIcon;
+  color?: string;
+  bgColor?: string;
+  sublabel?: string;
 }
 
-const statConfig = [
-  {
-    key: "totalProducts" as const,
-    label: "Total Products",
-    icon: Package,
-    color: "var(--maroon)",
-    bgColor: "var(--maroon-glass)",
-  },
-  {
-    key: "totalSuppliers" as const,
-    label: "Registered Suppliers",
-    icon: Users,
-    color: "var(--gold)",
-    bgColor: "var(--gold-dim)",
-  },
-  {
-    key: "totalCategories" as const,
-    label: "Categories",
-    icon: LayoutGrid,
-    color: "var(--green)",
-    bgColor: "var(--green-dim)",
-  },
-  {
-    key: "monthlyPriceUpdates" as const,
-    label: "Monthly Price Updates",
-    icon: TrendingUp,
-    color: "#6366f1",
-    bgColor: "rgba(99, 102, 241, 0.06)",
-  },
-];
+interface StatisticsCardsProps {
+  title?: string;
+  subtitle?: string;
+  stats: StatItem[];
+}
 
-export default function StatisticsCards({ stats }: StatisticsCardsProps) {
+export default function StatisticsCards({
+  title = "Procurement at a Glance",
+  subtitle = "Live statistics from the ProcureWise database",
+  stats,
+}: StatisticsCardsProps) {
   return (
-    <section className="py-16" style={{ background: "var(--bg-deep)" }}>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
-          <h2
-            className="text-2xl font-bold tracking-tight sm:text-3xl"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Procurement at a Glance
-          </h2>
-          <p
-            className="mt-2 text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Live statistics from the ProcureWise database
-          </p>
-        </div>
+    <section aria-labelledby="statistics-heading">
+      {/* Section header */}
+      <div className="mb-8 text-center">
+        <p
+          className="mb-2 text-xs font-bold uppercase tracking-widest"
+          style={{ color: "var(--gold)" }}
+        >
+          System Overview
+        </p>
+        <h2
+          id="statistics-heading"
+          className="text-2xl font-bold tracking-tight sm:text-3xl"
+          style={{ color: "var(--text-primary)" }}
+        >
+          {title}
+        </h2>
+        <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
+          {subtitle}
+        </p>
+      </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {statConfig.map((stat) => {
-            const Icon = stat.icon;
-            const value = stats[stat.key];
-            return (
-              <div
-                key={stat.key}
-                className="flex items-center gap-4 rounded-2xl border p-5 transition-all hover:shadow-md"
-                style={{
-                  background: "var(--surface)",
-                  borderColor: "var(--border)",
-                }}
-              >
+      {/* Stat cards */}
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
+
+          return (
+            <div
+              key={stat.title}
+              className="group rounded-2xl border p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+              style={{
+                background: "var(--surface)",
+                borderColor: "var(--border)",
+              }}
+            >
+              <div className="flex items-center gap-4">
                 <div
-                  className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl"
-                  style={{ background: stat.bgColor }}
+                  className="flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105"
+                  style={{ background: stat.bgColor ?? "rgba(126, 25, 27, 0.06)" }}
                 >
-                  <Icon className="h-7 w-7" style={{ color: stat.color }} />
+                  {Icon ? (
+                    <Icon
+                      className="h-6 w-6"
+                      style={{ color: stat.color ?? "var(--gold)" }}
+                    />
+                  ) : (
+                    <div
+                      className="h-3 w-3 rounded-full"
+                      style={{ background: stat.color ?? "var(--gold)" }}
+                    />
+                  )}
                 </div>
-                <div>
+
+                <div className="min-w-0 flex-1">
                   <div
-                    className="text-3xl font-black tabular-nums tracking-tight"
-                    style={{ color: stat.color }}
+                    className="text-2xl font-black tracking-tight sm:text-3xl"
+                    style={{ color: "var(--text-primary)" }}
                   >
-                    {value.toLocaleString()}
+                    {stat.value}
                   </div>
+
                   <div
-                    className="text-xs font-semibold uppercase tracking-wider"
-                    style={{ color: "var(--text-muted)" }}
+                    className="mt-1 text-xs font-bold uppercase tracking-wider sm:text-sm"
+                    style={{ color: "var(--text-secondary)" }}
                   >
-                    {stat.label}
+                    {stat.title}
                   </div>
+
+                  {stat.sublabel && (
+                    <div
+                      className="mt-1 text-xs"
+                      style={{ color: "var(--text-muted)" }}
+                    >
+                      {stat.sublabel}
+                    </div>
+                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
