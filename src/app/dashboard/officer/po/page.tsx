@@ -1,6 +1,7 @@
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import PoDraftingClient from "./PoDraftingClient";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = { title: "Purchase Order Drafting — ProcureWise" };
 
@@ -56,18 +57,17 @@ export default async function PoDraftingPage() {
     );
   });
 
-  return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
-      <div className="no-print">
-        <h1 style={{ fontSize: "1.875rem", fontWeight: 800, color: "#1f2937", margin: 0, letterSpacing: "-0.5px" }}>
-          Purchase Order Workspace
-        </h1>
-        <p style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#6b7280", margin: "0.5rem 0 0 0" }}>
-          Convert awarded RFQ recommendations into formal POs, finalize payment/delivery clauses, and sign digitally.
-        </p>
-      </div>
+ return (
+  <div className="space-y-8">
+    <SectionHeader
+      title="Purchase Order Workspace"
+      subtitle="Convert awarded RFQ recommendations into formal Purchase Orders, finalize payment and delivery clauses, and complete digital authorization."
+    />
 
-      <PoDraftingClient pendingAwards={pendingAwards as any} initialPos={pos as any} />
-    </div>
-  );
+    <PoDraftingClient
+      pendingAwards={pendingAwards as any}
+      initialPos={pos as any}
+    />
+  </div>
+);
 }

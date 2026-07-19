@@ -6,6 +6,22 @@ import ForecastSkeleton from './ForecastSkeleton';
 import { startTimer } from '@/lib/performance-logger';
 import EmptyState from '@/components/ui/EmptyState';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
+import Link from "next/link";
+import {
+  ClipboardList,
+  CircleDot,
+  Building2,
+  Target,
+  ArrowRight,
+  FileText,
+  ShoppingCart,
+  Quote,
+  PartyPopper,
+} from "lucide-react";
+import Card from "@/components/ui/Card";
+import StatusBadge from "@/components/ui/StatusBadge";
+import SectionHeader from "@/components/ui/SectionHeader";
+import TableContainer from "@/components/ui/TableContainer";
 
 export const metadata = { title: 'Officer Dashboard — ProcureWise' };
 
@@ -144,15 +160,6 @@ async function getRecentRfqs() {
   return data;
 }
 
-// Rewritten style maps to prevent layout collapse
-const STATUS_STYLE: Record<string, { bg: string; color: string; border: string }> = {
-  Draft:      { bg: 'rgba(107, 114, 128, 0.1)', color: '#4b5563', border: '1px solid rgba(107, 114, 128, 0.2)' },
-  Published:  { bg: 'rgba(16, 185, 129, 0.1)', color: '#059669', border: '1px solid rgba(16, 185, 129, 0.2)' },
-  Closed:     { bg: 'rgba(107, 114, 128, 0.1)', color: '#4b5563', border: '1px solid rgba(107, 114, 128, 0.2)' },
-  Evaluated:  { bg: 'rgba(220, 179, 83, 0.1)', color: '#b88a1b', border: '1px solid rgba(220, 179, 83, 0.3)' },
-  Awarded:    { bg: 'rgba(126, 25, 27, 0.1)', color: '#7e191b', border: '1px solid rgba(126, 25, 27, 0.2)' },
-};
-
 export default async function OfficerDashboard() {
   const pageTimer = startTimer('OfficerDashboardPage');
   await requireRole('Procurement Officer');
@@ -163,288 +170,289 @@ export default async function OfficerDashboard() {
   ]);
   pageTimer.end();
 
-  const theme = {
-    crimson: '#7e191b',
-    gold: '#dcb353',
-    goldDark: '#b88a1b',
-    dark: '#111827',
-    textMain: '#1f2937',
-    textMuted: '#6b7280',
-    glassBg: 'rgba(255, 255, 255, 0.7)',
-    glassBorder: 'rgba(255, 255, 255, 0.9)',
-    shadow: '0 10px 30px rgba(0, 0, 0, 0.04)',
-  };
-
-  const v = {
-    surface: 'var(--surface)',
-    border: 'var(--border)',
-    accent: 'var(--accent)',
-    accentLight: 'var(--accent-light)',
-    textPrimary: 'var(--text-primary)',
-    textSecondary: 'var(--text-secondary)',
-    green: '#10b981',
-    shadow: '0 4px 24px rgba(30,58,138,0.07)',
-  };
-
   const statCards = [
-    { label: 'Total RFQs',    value: stats.totalRfqs,      icon: '📋', color: v.accent,      desc: 'All solicitations', href: '#recent-solicitations' },
-    { label: 'Open / Active', value: stats.openRfqs,       icon: '🟢', color: '#059669',     desc: 'Awaiting quotes', href: '#recent-solicitations' },
-    { label: 'Suppliers',     value: stats.totalSuppliers, icon: '🏢', color: v.accentLight, desc: 'Registered vendors', href: '/dashboard/supplier-profiles' },
+    {
+      label: "Total RFQs",
+      value: stats.totalRfqs,
+      desc: "All solicitations",
+      href: "#recent-solicitations",
+      icon: ClipboardList,
+      accent: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
+    },
+    {
+      label: "Open / Active",
+      value: stats.openRfqs,
+      desc: "Awaiting quotes",
+      href: "#recent-solicitations",
+      icon: CircleDot,
+      accent: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
+    },
+    {
+      label: "Suppliers",
+      value: stats.totalSuppliers,
+      desc: "Registered vendors",
+      href: "/dashboard/supplier-profiles",
+      icon: Building2,
+      accent: "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-300",
+    },
   ];
 
-  return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2.5rem', fontFamily: '"Inter", sans-serif' }}>
+  const taskAccent = {
+    pr: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800",
+    rfq: "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800",
+    po: "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/20 dark:text-indigo-300 dark:border-indigo-800",
+    quote: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-300 dark:border-emerald-800",
+  } as const;
 
-      {/* ── Page Header ── */}
-      <div style={{ borderBottom: `1px solid ${v.border}`, paddingBottom: '1.5rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <div style={{ width: 5, height: 48, borderRadius: 4, background: `linear-gradient(180deg, ${v.accent}, ${v.accentLight})`, flexShrink: 0 }} />
-          <div>
-            <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: v.textPrimary, margin: 0, letterSpacing: '-0.5px' }}>
-              Procurement Officer Portal
-            </h1>
-            <p style={{ marginTop: '0.25rem', fontSize: '0.9rem', color: v.textSecondary, margin: '0.25rem 0 0 0' }}>
-              Manage RFQs, review supplier quotes, and track procurement activities.
-            </p>
-          </div>
+  const taskIcon = {
+    pr: FileText,
+    rfq: ClipboardList,
+    po: ShoppingCart,
+    quote: Quote,
+  } as const;
+
+  return (
+    <div className="space-y-8">
+      {/* Page Header */}
+      <div className="flex items-start gap-4 border-b border-[var(--border)] pb-6">
+        <div className="h-12 w-1.5 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent-light)]" />
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--text-primary)]">
+            Procurement Officer Portal
+          </h1>
+          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            Manage RFQs, review supplier quotes, and track procurement activities.
+          </p>
         </div>
       </div>
 
-      {/* ── Dashboard Action Grid ── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr lg:grid-cols-3', gap: '2rem' }} className="grid grid-cols-1 lg:grid-cols-3">
-        {/* Left Column: Today's Tasks */}
-        <div style={{ gridColumn: 'span 2' }} className="lg:col-span-2">
-          <div style={{
-            background: v.surface,
-            border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.5rem',
-            boxShadow: v.shadow, display: 'flex', flexDirection: 'column', gap: '1.25rem'
-          }}>
-            <div>
-              <h2 style={{ fontSize: '1.1rem', fontWeight: 800, color: v.textPrimary, margin: '0 0 0.25rem 0', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                🎯 Today&apos;s Tasks
-              </h2>
-              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: 0 }}>
-                A list of urgent workflows requiring immediate review, validation, or contract execution.
-              </p>
-            </div>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              {tasks.length > 0 ? (
-                tasks.map((task) => {
-                  const badgeColor = 
-                    task.type === 'pr' 
-                      ? { bg: 'rgba(220,179,83,0.15)', text: '#b88a1b' }
-                      : task.type === 'rfq'
-                      ? { bg: 'rgba(239,68,68,0.1)', text: '#dc2626' }
-                      : task.type === 'po'
-                      ? { bg: 'rgba(79,70,229,0.1)', text: '#4f46e5' }
-                      : { bg: 'rgba(16,185,129,0.1)', text: '#059669' };
+      {/* Tasks + Stats */}
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+        {/* Today's Tasks */}
+        <Card className="xl:col-span-2 p-6 space-y-5">
+          <div className="flex items-center gap-2 text-[var(--accent)] mb-[-12px]">
+            <Target className="h-4 w-4" />
+            <span className="text-xs font-bold uppercase tracking-wider">Current Focus</span>
+          </div>
+          <SectionHeader
+            title="Today's Tasks"
+            subtitle="Urgent workflows requiring review, validation, or execution."
+          />
 
-                  return (
-                    <div 
-                      key={task.id} 
-                      style={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem', borderRadius: '1rem',
-                        background: 'var(--bg-dark)', border: `1px solid ${v.border}`, gap: '1rem'
-                      }}
-                      className="flex-col sm:flex-row gap-4"
-                    >
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', alignItems: 'flex-start', flexGrow: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
-                          <span style={{ 
-                            fontSize: '0.65rem', fontWeight: 800, padding: '0.15rem 0.5rem', borderRadius: '4px',
-                            backgroundColor: badgeColor.bg, color: badgeColor.text, textTransform: 'uppercase', letterSpacing: '0.5px'
-                          }}>
+          <div className="space-y-3">
+            {tasks.length > 0 ? (
+              tasks.map((task) => {
+                const Icon = taskIcon[task.type];
+                return (
+                  <div
+                    key={task.id}
+                    className="flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-dark)] p-4 transition hover:border-[var(--border-accent)] sm:flex-row sm:items-center sm:justify-between"
+                  >
+                    <div className="flex min-w-0 items-start gap-3">
+                      <div className="mt-0.5 rounded-xl bg-[var(--surface)] p-2.5 text-[var(--accent)] shadow-sm">
+                        <Icon className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="mb-1 flex flex-wrap items-center gap-2">
+                          <span
+                            className={`rounded-md border px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${taskAccent[task.type]}`}
+                          >
                             {task.badge}
                           </span>
-                          <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                          <span className="text-xs font-medium text-[var(--text-muted)]">
                             Due: {task.dueDate}
                           </span>
                         </div>
-                        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: v.textPrimary, textAlign: 'left' }}>
+                        <p className="truncate text-sm font-semibold text-[var(--text-primary)]">
                           {task.title}
-                        </div>
+                        </p>
                       </div>
-                      
-                      <a 
-                        href={task.link} 
-                        style={{
-                          display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-                          textDecoration: 'none', padding: '0.5rem 1rem', borderRadius: '0.5rem',
-                          background: `linear-gradient(135deg, ${v.accent}, ${v.accentLight})`, color: '#fff',
-                          fontWeight: 700, fontSize: '0.75rem', whiteSpace: 'nowrap',
-                          boxShadow: '0 2px 8px rgba(30,58,138,0.1)',
-                          transition: 'all 0.15s ease'
-                        }}
-                        className="hover:opacity-90 hover:shadow-md w-full sm:w-auto"
-                      >
-                        {task.btnLabel} &rarr;
-                      </a>
                     </div>
-                  );
-                })
-              ) : (
-                <div style={{
-                  padding: '2.5rem 1.5rem', border: `1px dashed ${v.border}`, borderRadius: '1rem',
-                  textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', fontWeight: 500
-                }}>
-                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎉</div>
-                  All caught up! No tasks awaiting attention today.
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
 
-        {/* Right Column: Statistics */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', justifyContent: 'space-between' }}>
-          {statCards.map(card => (
-            <a href={card.href} key={card.label} style={{
-              background: v.surface,
-              border: `1px solid ${v.border}`, borderRadius: '1.25rem', padding: '1.25rem 1.5rem',
-              boxShadow: v.shadow, position: 'relative', overflow: 'hidden',
-              display: 'block', textDecoration: 'none', cursor: 'pointer',
-              transition: 'all 0.2s ease-in-out', flexGrow: 1
-            }} className="hover:-translate-y-0.5 hover:shadow-lg hover:border-amber-500/40 group">
-              <div style={{ position: 'absolute', top: 0, left: 0, bottom: 0, width: '4px', background: card.color }} />
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ textAlign: 'left' }}>
-                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: v.textSecondary, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{card.label}</div>
-                  <div style={{ fontSize: '1.875rem', fontWeight: 900, color: v.textPrimary, marginTop: '0.25rem', lineHeight: 1 }}>{card.value}</div>
-                </div>
-                <div style={{ fontSize: '1.875rem' }}>{card.icon}</div>
+                    <Link
+                      href={task.link}
+                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-xs font-bold text-white transition hover:opacity-90 sm:w-auto"
+                    >
+                      {task.btnLabel}
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="rounded-2xl border border-dashed border-[var(--border)] px-6 py-10 text-center">
+                <PartyPopper className="mx-auto mb-3 h-8 w-8 text-amber-500" />
+                <p className="text-sm font-medium text-[var(--text-muted)]">
+                  All caught up! No tasks awaiting attention today.
+                </p>
               </div>
-            </a>
-          ))}
+            )}
+          </div>
+        </Card>
+
+        {/* KPI Cards */}
+        <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
+          {statCards.map((card) => {
+            const Icon = card.icon;
+            return (
+              <Link key={card.label} href={card.href} className="block">
+                <Card className="group h-full p-5 transition hover:-translate-y-0.5 hover:shadow-md">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
+                        {card.label}
+                      </p>
+                      <p className="mt-2 text-3xl font-black tracking-tight text-[var(--text-primary)]">
+                        {card.value}
+                      </p>
+                      <p className="mt-1 text-xs text-[var(--text-muted)]">
+                        {card.desc}
+                      </p>
+                    </div>
+                    <div className={`rounded-xl p-3 ${card.accent}`}>
+                      <Icon className="h-5 w-5" />
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
       </div>
 
-      {/* ── Decision Intelligence & Forecasting Widgets (Point 6) ── */}
+      {/* Forecast */}
       <Suspense fallback={<ForecastSkeleton />}>
         <ForecastIntelligenceSection />
       </Suspense>
 
-      {/* ── Activity Feed + Recent Solicitations ── */}
-      <div style={{ display: 'grid', gap: '2rem' }} className="grid grid-cols-1 xl:grid-cols-5">
-        {/* Activity feed — spans 2 of 5 cols */}
+      {/* Activity + Recent RFQs */}
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-5">
         <div className="xl:col-span-2">
           <ActivityFeed limit={10} />
         </div>
 
-        {/* Recent RFQs Table — spans 3 of 5 cols */}
         <div className="xl:col-span-3">
+          <TableContainer id="recent-solicitations" className="scroll-mt-24">
+            <div className="border-b border-[var(--border)] px-6 py-4">
+              <SectionHeader
+                title="Recent Solicitations"
+                action={
+                  <span className="rounded-full bg-[var(--bg-dark)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
+                    Last {rfqs.length} records
+                  </span>
+                }
+              />
+            </div>
 
-      <div id="recent-solicitations" style={{
-        background: v.surface,
-        border: `1px solid ${v.border}`, borderRadius: '1.25rem', overflow: 'hidden', boxShadow: v.shadow,
-        scrollMarginTop: '5rem'
-      }}>
-        <div style={{ padding: '1.25rem 1.5rem', borderBottom: `1px solid ${v.border}`, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: v.textPrimary, margin: 0 }}>Recent Solicitations</h2>
-          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: theme.textMuted, background: 'rgba(0,0,0,0.04)', padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
-            Last {rfqs.length} records
-          </span>
-        </div>
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
-            <thead>
-              <tr style={{ backgroundColor: 'var(--section-bg)', borderBottom: `1px solid ${v.border}` }}>
-                {['RFQ No.', 'Title', 'Budget (₱)', 'Deadline', 'Status'].map(h => (
-                  <th key={h} style={{ padding: '0.875rem 1.5rem', textAlign: 'left', fontSize: '0.75rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', color: v.textSecondary, whiteSpace: 'nowrap' }}>
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rfqs.map((rfq) => {
-                const s = STATUS_STYLE[rfq.status] ?? { bg: 'rgba(30,58,138,0.05)', color: v.textSecondary, border: `1px solid ${v.border}` };
-                return (
-                  <tr key={rfq.id} style={{ borderBottom: `1px solid ${v.border}` }}>
-                    <td style={{ padding: '1rem 1.5rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
-                      <a href={`/dashboard/officer/rfq/${rfq.id}`} style={{ color: v.accent, textDecoration: 'none' }}>
-                        {rfq.rfqNumber}
-                      </a>
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem', color: v.textPrimary, maxWidth: '280px', fontWeight: 500 }}>
-                      {rfq.title}
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem', color: v.textSecondary, whiteSpace: 'nowrap', fontWeight: 600 }}>
-                      ₱{Number(rfq.approvedBudgetContract).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem', whiteSpace: 'nowrap' }}>
-                      {rfq.deadlineDate ? (
-                        (() => {
-                          const deadline = new Date(rfq.deadlineDate);
-                          const formattedDeadline = deadline.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
-                          
-                          const now = new Date();
-                          const dDate = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
-                          const nDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                          const diffTime = dDate.getTime() - nDate.getTime();
-                          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                          
-                          let remainingLabel = "";
-                          let textColor = "#059669"; // Green
-                          
-                          if (diffDays < 0) {
-                            remainingLabel = "Expired";
-                            textColor = "#dc2626"; // Red
-                          } else if (diffDays === 0) {
-                            remainingLabel = "Expiring Today";
-                            textColor = "#dc2626"; // Red
-                          } else if (diffDays === 1) {
-                            remainingLabel = "1 Day Remaining";
-                            textColor = "#dc2626"; // Red
-                          } else {
-                            remainingLabel = `${diffDays} Days Remaining`;
-                            if (diffDays <= 5) {
-                              textColor = "#d97706"; // Yellow
-                            } else {
-                              textColor = "#059669"; // Green
-                            }
-                          }
-                          
-                          return (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.15rem' }}>
-                              <span style={{ color: v.textSecondary, fontWeight: 600 }}>{formattedDeadline}</span>
-                              <span style={{ fontSize: '0.72rem', fontWeight: 800, color: textColor }}>{remainingLabel}</span>
-                            </div>
-                          );
-                        })()
-                      ) : '—'}
-                    </td>
-                    <td style={{ padding: '1rem 1.5rem' }}>
-                      <span style={{ 
-                        display: 'inline-block', padding: '0.25rem 0.75rem', borderRadius: '999px', 
-                        fontSize: '0.75rem', fontWeight: 700, 
-                        backgroundColor: s.bg, color: s.color, border: s.border 
-                       }}>
-                        {rfq.status}
-                      </span>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[720px] border-collapse text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--border)] bg-[var(--bg-dark)]">
+                    {["RFQ No.", "Title", "Budget (₱)", "Deadline", "Status"].map((h) => (
+                      <th
+                        key={h}
+                        className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]"
+                      >
+                        {h}
+                      </th>
+                    ))}
                   </tr>
-                );
-              })}
-              {rfqs.length === 0 && (
-                <tr>
-                  <td colSpan={5} style={{ padding: '1rem' }}>
-                    <EmptyState
-                      preset="rfq"
-                      title="No Active Solicitations"
-                      description="No requests for quotation have been created yet. Draft a new RFQ from the solicitation workspace."
-                      action={{ label: '+ New RFQ', href: '/dashboard/officer/rfq/new' }}
-                    />
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {rfqs.map((rfq) => {
+                    const deadline = rfq.deadlineDate ? new Date(rfq.deadlineDate) : null;
+                    let remainingLabel = "—";
+                    let remainingClass = "text-emerald-600";
+
+                    if (deadline) {
+                      const now = new Date();
+                      const dDate = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
+                      const nDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                      const diffDays = Math.ceil((dDate.getTime() - nDate.getTime()) / (1000 * 60 * 60 * 24));
+
+                      if (diffDays < 0) {
+                        remainingLabel = "Expired";
+                        remainingClass = "text-red-600";
+                      } else if (diffDays === 0) {
+                        remainingLabel = "Expiring Today";
+                        remainingClass = "text-red-600";
+                      } else if (diffDays === 1) {
+                        remainingLabel = "1 Day Remaining";
+                        remainingClass = "text-red-600";
+                      } else if (diffDays <= 5) {
+                        remainingLabel = `${diffDays} Days Remaining`;
+                        remainingClass = "text-amber-600";
+                      } else {
+                        remainingLabel = `${diffDays} Days Remaining`;
+                        remainingClass = "text-emerald-600";
+                      }
+                    }
+
+                    return (
+                      <tr
+                        key={rfq.id}
+                        className="border-b border-[var(--border)] transition hover:bg-[var(--surface-hover)]"
+                      >
+                        <td className="px-5 py-4 font-bold whitespace-nowrap">
+                          <Link
+                            href={`/dashboard/officer/rfq/${rfq.id}`}
+                            className="text-[var(--accent)] hover:underline"
+                          >
+                            {rfq.rfqNumber}
+                          </Link>
+                        </td>
+                        <td className="max-w-[280px] px-5 py-4 font-medium text-[var(--text-primary)]">
+                          {rfq.title}
+                        </td>
+                        <td className="px-5 py-4 font-semibold whitespace-nowrap text-[var(--text-secondary)]">
+                          ₱
+                          {Number(rfq.approvedBudgetContract).toLocaleString("en-PH", {
+                            minimumFractionDigits: 2,
+                          })}
+                        </td>
+                        <td className="px-5 py-4 whitespace-nowrap">
+                          {deadline ? (
+                            <div className="flex flex-col gap-0.5">
+                              <span className="font-semibold text-[var(--text-secondary)]">
+                                {deadline.toLocaleDateString("en-PH", {
+                                  month: "short",
+                                  day: "numeric",
+                                  year: "numeric",
+                                })}
+                              </span>
+                              <span className={`text-xs font-extrabold ${remainingClass}`}>
+                                {remainingLabel}
+                              </span>
+                            </div>
+                          ) : (
+                            "—"
+                          )}
+                        </td>
+                        <td className="px-5 py-4">
+                          <StatusBadge status={rfq.status} />
+                        </td>
+                      </tr>
+                    );
+                  })}
+
+                  {rfqs.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="p-4">
+                        <EmptyState
+                          preset="rfq"
+                          title="No Active Solicitations"
+                          description="No requests for quotation have been created yet. Draft a new RFQ from the solicitation workspace."
+                          action={{ label: "+ New RFQ", href: "/dashboard/officer/rfq/new" }}
+                        />
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </TableContainer>
         </div>
       </div>
-        </div>{/* end xl:col-span-3 */}
-      </div>{/* end activity+solicitations grid */}
-
     </div>
   );
 }
