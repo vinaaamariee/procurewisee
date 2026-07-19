@@ -1,10 +1,12 @@
 "use client";
 
 import React, { useState, useTransition, Suspense } from 'react';
+import Image from "next/image";
 import { useSearchParams, useRouter } from 'next/navigation';
 import { login } from '../actions/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Eye, EyeOff, ArrowRight } from 'lucide-react';
+
 
 function LoginPage() {
   const searchParams = useSearchParams();
@@ -53,7 +55,11 @@ function LoginPage() {
         /* --- Left Panel (institutional identity) --- */
         .left-panel {
             width: 50%;
-            background: #0B2D5C;
+            background:linear-gradient(
+        180deg,
+        #0B3B6E 0%,
+        #08284F 100%
+    );
             position: relative;
             padding: 40px;
             display: flex;
@@ -80,8 +86,8 @@ function LoginPage() {
 
         .tagline {
             color: rgba(255, 255, 255, 0.6);
-            font-size: 13.5px;
-            line-height: 1.6;
+           ont-size:17px;
+    line-height:1.9;
             max-width: 440px;
             margin-top: 20px;
             position: relative;
@@ -242,29 +248,113 @@ function LoginPage() {
       `}} />
 
       {/* Left Panel */}
-      <div className="left-panel">
-        <div className="left-panel-watermark" aria-hidden="true">PW</div>
+<div className="left-panel">
 
-        <div>
-          <div className="logo-container">
-            <div style={{ backgroundColor: '#ffffff', border: '1px solid rgba(255,255,255,0.4)', borderRadius: '6px', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '22px', flexShrink: 0 }}>
-              <span style={{ color: '#0B2D5C' }}>P</span><span style={{ color: '#A6761D' }}>W</span>
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ fontFamily: 'var(--font-display)', color: '#ffffff', fontSize: '28px', fontWeight: 700, lineHeight: 1.15, letterSpacing: 0 }}>ProcureWise</div>
-              <div style={{ color: '#C99A2E', fontSize: '11px', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', marginTop: '5px' }}>Procurement Management System</div>
-              <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.5px', marginTop: '3px' }}>Batanes State College</div>
-            </div>
-          </div>
+    {/* Watermark */}
+    <Image
+        src="/images/bsc-logo.png"
+        alt=""
+        width={500}
+        height={500}
+        className="absolute -bottom-16 -right-16 opacity-[0.05] pointer-events-none select-none"
+    />
 
-          <p className="tagline">
-            ProcureWise supports procurement planning, bidding, supplier evaluation, and purchase order management for the College&rsquo;s Bids and Awards Committee and end-user offices.
-          </p>
+    <div>
+
+        <div className="logo-container">
+
+            <Image
+                src="/images/bsc-logo.png"
+                alt="Batanes State College"
+                width={92}
+                height={92}
+                priority
+            />
+
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center"
+                }}
+            >
+
+                <h1
+                    style={{
+                        fontFamily: "var(--font-display)",
+                        color: "#fff",
+                        fontSize: "42px",
+                        fontWeight: 700,
+                        margin: 0,
+                        lineHeight: 1
+                    }}
+                >
+                    ProcureWise
+                </h1>
+
+                <div
+                    style={{
+                        color: "#D4A017",
+                        marginTop: "10px",
+                        fontWeight: 700,
+                        letterSpacing: "2px",
+                        textTransform: "uppercase",
+                        fontSize: "12px"
+                    }}
+                >
+                    Procurement Management Information System
+                </div>
+
+                <div
+                    style={{
+                        color: "rgba(255,255,255,.75)",
+                        marginTop: "8px",
+                        fontSize: "15px"
+                    }}
+                >
+                    Batanes State College
+                </div>
+
+            </div>
+
         </div>
 
-        <div className="left-panel-footer">© 2026 Batanes State College</div>
-      </div>
+        <div
+            style={{
+                width: "120px",
+                height: "2px",
+                background: "#D4A017",
+                marginTop: "30px",
+                marginBottom: "30px"
+            }}
+        />
 
+        <p
+            className="tagline"
+            style={{
+                fontSize: "17px",
+                lineHeight: 1.9,
+                maxWidth: "470px",
+                color: "rgba(255,255,255,.75)"
+            }}
+        >
+            ProcureWise streamlines procurement planning,
+            purchase requests,
+            bidding,
+            supplier management,
+            purchase orders,
+            contract monitoring,
+            and procurement reporting
+            for Batanes State College.
+        </p>
+
+    </div>
+
+    <div className="left-panel-footer">
+        © 2026 Batanes State College
+    </div>
+
+</div>
       {/* Right Panel */}
       <div className="right-panel">
         <div className="absolute top-10 right-10 z-10">
@@ -273,12 +363,34 @@ function LoginPage() {
 
         <div className="right-panel-inner">
           <div className="login-card">
-            <div className="card-header">
-              <h2>Sign In</h2>
-              <h1>Sign in to your account</h1>
-              <p>Use your ProcureWise credentials to continue.</p>
-            </div>
+    <div className="card-header">
 
+        <div
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "20px",
+            }}
+        >
+            <Image
+                src="/images/bsc-logo.png"
+                alt="Batanes State College"
+                width={72}
+                height={72}
+                priority
+            />
+        </div>
+
+        <h2>Batanes State College</h2>
+
+        <h1>ProcureWise Portal</h1>
+
+        <p>
+            Sign in using your official College account to access the
+            Procurement Management Information System.
+        </p>
+
+    </div>
             {/* Error and Success Alerts */}
             {error && (
               <div className="relative flex items-start gap-3 rounded-md border border-red-200 dark:border-red-950/40 bg-red-50/50 dark:bg-red-950/20 p-4 mb-5 text-xs text-red-600 dark:text-red-400">
