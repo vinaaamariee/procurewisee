@@ -16,12 +16,12 @@ export default async function DashboardLayout({
   const dashboardHome = ROLE_HOME[profile.role];
 
   return (
-    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
+    <div className="flex min-h-screen" style={{ background: "var(--bg-deep)" }}>
       <DashboardSidebar role={profile.role} />
 
       <div className="flex flex-1 flex-col">
         <header
-          className="sticky top-0 z-50 border-b backdrop-blur-xl shadow-sm"
+          className="sticky top-0 z-50 border-b shadow-sm"
           style={{
             background: "var(--bg-header)",
             borderColor: "var(--border)",
@@ -33,7 +33,7 @@ export default async function DashboardLayout({
               className="flex items-center gap-3 no-underline"
             >
               <div
-                className="flex h-11 w-11 items-center justify-center rounded-xl border shadow-sm"
+                className="flex h-11 w-11 items-center justify-center rounded-md border"
                 style={{
                   background: "white",
                   borderColor: "var(--border-accent)",
@@ -41,13 +41,13 @@ export default async function DashboardLayout({
               >
                 <span
                   className="text-lg font-black"
-                  style={{ color: "var(--accent)" }}
+                  style={{ color: "var(--accent)", fontFamily: "var(--font-display)" }}
                 >
                   P
                 </span>
                 <span
                   className="text-lg font-black"
-                  style={{ color: "var(--secondary)" }}
+                  style={{ color: "var(--secondary)", fontFamily: "var(--font-display)" }}
                 >
                   W
                 </span>
@@ -56,7 +56,7 @@ export default async function DashboardLayout({
               <div>
                 <h1
                   className="text-lg font-bold"
-                  style={{ color: "var(--text-primary)" }}
+                  style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)" }}
                 >
                   ProcureWise
                 </h1>
@@ -71,7 +71,7 @@ export default async function DashboardLayout({
 
             <div className="flex items-center gap-4">
               <span
-                className="rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide"
+                className="rounded px-3 py-1 text-xs font-bold uppercase tracking-wide"
                 style={{
                   background: "var(--accent-glass)",
                   border: "1px solid var(--border-accent)",
@@ -82,7 +82,7 @@ export default async function DashboardLayout({
               </span>
 
               <div
-                className="flex items-center gap-3 rounded-full border px-3 py-2"
+                className="flex items-center gap-3 rounded-md border px-3 py-2"
                 style={{
                   background: "var(--surface)",
                   borderColor: "var(--border)",
@@ -90,10 +90,7 @@ export default async function DashboardLayout({
               >
                 <div
                   className="flex h-9 w-9 items-center justify-center rounded-full font-bold text-white"
-                  style={{
-                    background:
-                      "linear-gradient(135deg,var(--accent),var(--accent-light))",
-                  }}
+                  style={{ background: "var(--accent)" }}
                 >
                   {profile.fullName?.[0]?.toUpperCase() ?? "U"}
                 </div>
@@ -121,7 +118,7 @@ export default async function DashboardLayout({
               <form action={signout}>
                 <button
                   type="submit"
-                  className="rounded-xl border border-red-500/30 px-4 py-2 text-xs font-semibold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="rounded-md border border-red-500/30 px-4 py-2 text-xs font-semibold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-900/20"
                 >
                   Sign Out
                 </button>
@@ -130,7 +127,7 @@ export default async function DashboardLayout({
           </div>
         </header>
 
-        <main className="flex-1 bg-slate-50 p-8 dark:bg-slate-900">
+        <main className="flex-1 p-8" style={{ background: "var(--bg-deep)" }}>
           <div className="mx-auto max-w-7xl space-y-8">{children}</div>
         </main>
 

@@ -83,15 +83,26 @@ export default function DashboardSidebar({ role }: { role: string }) {
   const sections = navConfig[role] || [];
 
   return (
-    <aside className="flex w-64 flex-col border-r border-slate-200 bg-slate-900 text-slate-200 shadow-sm">
-      
+    <aside
+      className="flex w-64 flex-col text-slate-200 shadow-sm"
+      style={{ background: "#0B2D5C", borderRight: "1px solid rgba(255,255,255,0.08)" }}
+    >
+      {/* Masthead rule, consistent with the rest of the app */}
+      <div
+        className="h-[3px] w-full flex-shrink-0"
+        style={{ background: "linear-gradient(90deg, #0B2D5C 0 34%, #A6761D 34% 67%, #B7202E 67% 100%)" }}
+      />
+
       {/* Brand */}
-      <div className="flex h-20 items-center border-b border-slate-800 px-6">
+      <div className="flex h-[77px] items-center border-b px-6" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
         <div>
-          <div className="text-lg font-semibold tracking-tight text-white">
-            Procure<span className="text-amber-400">Wise</span>
+          <div
+            className="text-lg font-bold tracking-tight text-white"
+            style={{ fontFamily: "var(--font-display)" }}
+          >
+            Procure<span style={{ color: "#C99A2E" }}>Wise</span>
           </div>
-          <div className="text-[10px] uppercase tracking-widest text-slate-400">
+          <div className="text-[10px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.5)" }}>
             Batanes State College
           </div>
         </div>
@@ -99,10 +110,12 @@ export default function DashboardSidebar({ role }: { role: string }) {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-8">
-
         {sections.map((section) => (
           <div key={section.title}>
-            <div className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            <div
+              className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-wider"
+              style={{ color: "rgba(255,255,255,0.4)" }}
+            >
               {section.title}
             </div>
 
@@ -118,22 +131,23 @@ export default function DashboardSidebar({ role }: { role: string }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`group relative flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm transition ${
+                    className="group relative flex items-center gap-3 rounded px-4 py-2.5 text-sm transition"
+                    style={
                       isActive
-                        ? "bg-slate-800 text-white"
-                        : "text-slate-300 hover:bg-slate-800/60 hover:text-white"
-                    }`}
+                        ? { background: "rgba(255,255,255,0.08)", color: "#ffffff" }
+                        : { color: "rgba(255,255,255,0.65)" }
+                    }
                   >
                     {isActive && (
-                      <span className="absolute left-0 top-2 bottom-2 w-1 rounded-r bg-amber-400" />
+                      <span
+                        className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r"
+                        style={{ background: "#C99A2E" }}
+                      />
                     )}
 
                     <Icon
-                      className={`h-4 w-4 ${
-                        isActive
-                          ? "text-amber-400"
-                          : "text-slate-400 group-hover:text-white"
-                      }`}
+                      className="h-4 w-4 flex-shrink-0"
+                      style={{ color: isActive ? "#C99A2E" : "rgba(255,255,255,0.45)" }}
                     />
 
                     {item.label}
@@ -146,7 +160,10 @@ export default function DashboardSidebar({ role }: { role: string }) {
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-slate-800 p-4 text-xs text-slate-500">
+      <div
+        className="border-t p-4 text-xs"
+        style={{ borderColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}
+      >
         Procurement Management System
       </div>
     </aside>
