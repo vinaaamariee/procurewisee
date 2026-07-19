@@ -88,6 +88,9 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
       className="relative overflow-hidden border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300"
       style={{ background: "var(--bg-deep)" }}
     >
+       <div className="bg-red-500 p-10 text-white text-2xl font-bold mx-auto max-w-4xl mt-20">
+        TAILWIND TEST — Is this red? Is it centered?
+      </div>
       
       {/* Decorative background grid pattern */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.04] dark:opacity-[0.02]">
