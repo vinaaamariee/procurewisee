@@ -1,17 +1,25 @@
 import React from "react";
+import clsx from "clsx";
 
-export default function Card({
-  children,
-  className = "",
-  ...props
-}: React.HTMLAttributes<HTMLDivElement> & {
+interface CardHeaderProps
+  extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
-  className?: string;
-}) {
+}
+
+export default function CardHeader({
+  children,
+  className,
+  ...props
+}: CardHeaderProps) {
   return (
     <div
-      className={`rounded-2xl border bg-[var(--surface)] border-[var(--border)] shadow-[var(--shadow-card)] ${className}`}
       {...props}
+      className={clsx(
+        "flex items-center justify-between",
+        "border-b border-[var(--border)]",
+        "pb-4 mb-6",
+        className
+      )}
     >
       {children}
     </div>
