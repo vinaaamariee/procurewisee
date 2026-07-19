@@ -1089,3 +1089,23 @@ input:-webkit-autofill:active {
 }
 
 
+
+/* ---------- Landing page polish ---------- */
+::selection {
+  background: color-mix(in srgb, var(--gold) 25%, transparent);
+  color: var(--text-primary);
+}
+
+:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent-light) 55%, transparent);
+  outline-offset: 3px;
+}
+
+/* A quiet canvas gives the content more hierarchy without competing with it. */
+body {
+  background-image: radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--accent-light) 7%, transparent), transparent 34rem);
+}
+
+.dark body {
+  background-image: radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 36rem);
+}

@@ -69,7 +69,10 @@ export default function QuickActions({
   actions = defaultActions,
 }: QuickActionsProps) {
   return (
-    <section className="py-16" style={{ background: "var(--bg-dark)" }}>
+    <section
+      className="rounded-3xl border px-4 py-10 sm:px-8 sm:py-12"
+      style={{ background: "linear-gradient(145deg, var(--bg-dark), var(--surface))", borderColor: "var(--border)" }}
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
           <h2
@@ -92,7 +95,7 @@ export default function QuickActions({
             return (
               <div
                 key={action.title}
-                className="group flex flex-col rounded-2xl border p-6 transition-all hover:shadow-lg"
+                className="group relative flex flex-col overflow-hidden rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
                 style={{
                   background: "var(--surface)",
                   borderColor: "var(--border)",
