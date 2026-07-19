@@ -13,7 +13,7 @@ const ANNOUNCEMENTS = [
     content: "All active suppliers are required to upload their updated 2026 Platinum membership certificate before participating in upcoming bids.",
     date: "July 10, 2026",
     tag: "Urgent",
-    tagColor: "var(--maroon)"
+    tagColor: "bg-red-500 text-white dark:bg-red-950/80 dark:text-red-300"
   },
   {
     id: 2,
@@ -21,7 +21,7 @@ const ANNOUNCEMENTS = [
     content: "Please ensure to download the latest Excel RFQ bidding template format for all bids starting July 15. Previous template formats will fail verification.",
     date: "July 07, 2026",
     tag: "Guide",
-    tagColor: "var(--accent-light)"
+    tagColor: "bg-amber-500 text-white dark:bg-amber-950/80 dark:text-amber-300"
   },
   {
     id: 3,
@@ -29,7 +29,7 @@ const ANNOUNCEMENTS = [
     content: "A virtual workshop for Batanes State College department heads on budget execution and Best-Value vendor rating factors will be held on July 18.",
     date: "July 05, 2026",
     tag: "Training",
-    tagColor: "var(--gold)"
+    tagColor: "bg-blue-500 text-white dark:bg-blue-950/80 dark:text-blue-300"
   }
 ];
 
@@ -81,82 +81,80 @@ interface HeroSectionProps {
 export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
   const [activeTab, setActiveTab] = useState<'rfqs' | 'announcements' | 'news'>('rfqs');
 
-  // Use real database RFQs if present; otherwise, fall back to realistic mock items
   const rfqsToDisplay = activeRfqs.length > 0 ? activeRfqs : FALLBACK_RFQS;
 
   return (
     <section
-      className="relative overflow-hidden border-b border-slate-100 dark:border-slate-900"
+      className="relative overflow-hidden border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300"
       style={{ background: "var(--bg-deep)" }}
     >
-      {/* Decorative background pattern */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.03]">
+      
+      {/* Decorative background grid pattern */}
+      <div className="pointer-events-none absolute inset-0 opacity-[0.04] dark:opacity-[0.02]">
         <div
           className="absolute inset-0"
           style={{
             backgroundImage: `radial-gradient(circle at 1px 1px, var(--text-primary) 1px, transparent 0)`,
-            backgroundSize: "40px 40px",
+            backgroundSize: "32px 32px",
           }}
         />
       </div>
 
-      {/* Gradient orbs */}
-      <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: "var(--accent-glass)" }} />
-      <div className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: "var(--secondary-dim)" }} />
+      {/* Modern Soft Ambient Orbs */}
+      <div className="pointer-events-none absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full blur-[120px] bg-[#800000]/10 dark:bg-red-500/5" />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full blur-[120px] bg-[#C59B27]/10 dark:bg-yellow-500/5" />
 
-      <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-28">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div className="relative mx-auto max-w-7xl px-6 py-12 sm:py-20 lg:px-8 lg:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           
           {/* Left Column: Headings, Search Form, CTA */}
           <div className="lg:col-span-7 text-center lg:text-left flex flex-col items-center lg:items-start justify-center">
-            {/* Institution badge */}
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-semibold uppercase tracking-widest"
+            
+            {/* Institution Badge */}
+            <div 
+              className="mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-wider shadow-sm"
               style={{
                 borderColor: "var(--border)",
-                color: "var(--text-muted)",
+                color: "var(--text-secondary)",
                 background: "var(--surface)",
               }}
             >
-              <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: "var(--gold)" }} />
+              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
               Batanes State College
             </div>
 
-            {/* Title */}
-            <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl"
-              style={{ color: "var(--text-primary)" }}
-            >
+            {/* Main Brand Header */}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none mb-4">
               <span style={{ color: "var(--maroon)" }}>PROCURE</span>
               <span style={{ color: "var(--gold)" }}>WISE</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-4 text-base font-semibold leading-relaxed sm:text-lg max-w-xl"
-              style={{ color: "var(--text-secondary)" }}
+            <p className="text-base sm:text-lg font-bold leading-snug max-w-xl mb-3"
+              style={{ color: "var(--text-primary)" }}
             >
-              An Intelligent Procurement Analytics and Automated Canvassing System
-              with Best-Value Recommendation Engine
+              An Intelligent Procurement Analytics and Automated Canvassing System with Best-Value Recommendation Engine
             </p>
 
-            {/* Description */}
-            <p className="mt-3 text-sm leading-relaxed sm:text-base max-w-xl"
+            {/* Secondary Description */}
+            <p className="text-sm sm:text-base leading-relaxed max-w-xl mb-8"
               style={{ color: "var(--text-muted)" }}
             >
-              Digitizing procurement planning, market scoping, canvassing, and
-              decision support for Batanes State College.
+              Digitizing procurement planning, market scoping, canvassing, and decision support for Batanes State College.
             </p>
 
-            {/* Search bar */}
-            <div className="mt-8 w-full max-w-xl">
+            {/* Search Form Wrapper */}
+            <div className="w-full max-w-xl mb-6">
               <HeroSearchForm />
             </div>
 
-            {/* CTA Button */}
-            <div className="mt-6">
+            {/* Browse CTA Button */}
+            <div className="flex justify-center lg:justify-start">
               <Link
                 href="/catalog"
-                className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-lg transition-all hover:shadow-xl hover:translate-y-[-1px]"
+                className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[#800000]/10 hover:shadow-xl hover:shadow-[#800000]/20 hover:-translate-y-0.5 active:translate-y-0 transition-all"
                 style={{
-                  background: "linear-gradient(135deg, var(--accent), var(--accent-light))",
+                  background: "linear-gradient(135deg, var(--maroon), #a31d1d)",
                 }}
               >
                 Browse Procurement Catalog
@@ -168,16 +166,15 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
           {/* Right Column: Info Center Dashboard Widget */}
           <div className="lg:col-span-5 w-full">
             <div 
-              className="w-full rounded-3xl border p-6 shadow-xl relative overflow-hidden transition-all duration-300 hover:shadow-2xl"
+              className="w-full rounded-3xl border p-6 shadow-xl relative overflow-hidden transition-all duration-300 hover:shadow-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-md"
               style={{
                 borderColor: "var(--border)",
-                background: "var(--surface)",
               }}
             >
               {/* Widget Header */}
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-slate-800/60">
+              <div className="flex items-center justify-between mb-5 pb-4 border-b border-slate-100 dark:border-slate-800/60">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" style={{ color: "var(--gold)" }} />
+                  <Sparkles className="h-4 w-4 text-amber-500" />
                   <h3 
                     className="font-extrabold text-xs uppercase tracking-widest"
                     style={{ color: "var(--text-primary)" }}
@@ -191,7 +188,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                 </div>
               </div>
 
-              {/* Tabs buttons */}
+              {/* Tabs Buttons Container */}
               <div className="flex gap-1 p-1 rounded-xl bg-slate-100/80 dark:bg-slate-800/40 mb-5">
                 {[
                   { id: 'rfqs', label: 'Active RFQs', icon: FileText },
@@ -206,27 +203,31 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                       onClick={() => setActiveTab(tab.id as any)}
                       className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-1 rounded-lg text-[11px] font-bold transition-all duration-200 cursor-pointer ${
                         isActive
-                          ? 'bg-white dark:bg-slate-700 shadow-sm font-extrabold scale-[1.02]'
+                          ? 'bg-white dark:bg-slate-800 shadow-md font-extrabold scale-[1.02]'
                           : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
                       }`}
                       style={{ color: isActive ? "var(--maroon)" : undefined }}
                     >
                       <Icon className="h-3.5 w-3.5" />
-                      <span>{tab.label.split(' ')[isActive ? 0 : 0]}</span>
+                      {/* Responsive handling: Show full tab label on larger tabs, but clean split on small screens */}
+                      <span className="hidden sm:inline">{tab.label}</span>
+                      <span className="inline sm:hidden">{tab.label.split(' ')[0]}</span>
                     </button>
                   );
                 })}
               </div>
 
               {/* Tab Content Panels */}
-              <div className="min-h-[290px] flex flex-col justify-between">
+              <div className="min-h-[300px] flex flex-col justify-between">
                 <div>
+                  
+                  {/* RFQs Panel */}
                   {activeTab === 'rfqs' && (
-                    <div className="space-y-3.5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
                       {rfqsToDisplay.map((rfq) => (
                         <div
                           key={rfq.id}
-                          className="group flex flex-col p-3.5 rounded-2xl border bg-white/40 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800/40 transition-all duration-200"
+                          className="group flex flex-col p-3.5 rounded-2xl border bg-white/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-800/50 transition-all duration-200"
                           style={{ borderColor: "var(--border)" }}
                         >
                           <div className="flex items-center justify-between mb-1.5">
@@ -251,19 +252,17 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                     </div>
                   )}
 
+                  {/* Announcements Panel */}
                   {activeTab === 'announcements' && (
-                    <div className="space-y-3.5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
                       {ANNOUNCEMENTS.map((ann) => (
                         <div
                           key={ann.id}
-                          className="flex flex-col p-3.5 rounded-2xl border bg-white/40 dark:bg-slate-900/40"
+                          className="flex flex-col p-3.5 rounded-2xl border bg-white/50 dark:bg-slate-900/50 transition-all duration-200"
                           style={{ borderColor: "var(--border)" }}
                         >
                           <div className="flex items-center justify-between mb-1.5">
-                            <span 
-                              className="px-2 py-0.5 rounded text-[9px] font-bold text-white uppercase tracking-wider"
-                              style={{ backgroundColor: ann.tagColor }}
-                            >
+                            <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${ann.tagColor}`}>
                               {ann.tag}
                             </span>
                             <span className="text-[10px] text-slate-500 dark:text-slate-400 font-bold">
@@ -276,7 +275,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                           >
                             {ann.title}
                           </h4>
-                          <p className="text-[10.5px] leading-relaxed font-semibold" style={{ color: "var(--text-muted)" }}>
+                          <p className="text-[10.5px] leading-relaxed" style={{ color: "var(--text-muted)" }}>
                             {ann.content}
                           </p>
                         </div>
@@ -284,12 +283,13 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                     </div>
                   )}
 
+                  {/* News Panel */}
                   {activeTab === 'news' && (
-                    <div className="space-y-3.5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                    <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
                       {NEWS_UPDATES.map((news) => (
                         <div
                           key={news.id}
-                          className="flex flex-col p-3.5 rounded-2xl border bg-white/40 dark:bg-slate-900/40 hover:bg-white dark:hover:bg-slate-800/40 transition-all duration-200"
+                          className="flex flex-col p-3.5 rounded-2xl border bg-white/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-800/50 transition-all duration-200"
                           style={{ borderColor: "var(--border)" }}
                         >
                           <div className="flex justify-between text-[10px] text-slate-500 dark:text-slate-400 font-bold mb-1.5">
@@ -302,7 +302,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                           >
                             {news.title}
                           </h4>
-                          <p className="text-[10.5px] leading-relaxed font-semibold" style={{ color: "var(--text-muted)" }}>
+                          <p className="text-[10.5px] leading-relaxed" style={{ color: "var(--text-muted)" }}>
                             {news.summary}
                           </p>
                         </div>
@@ -319,4 +319,3 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
     </section>
   );
 }
-

@@ -78,66 +78,13 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
     ],
-    "Administrative Approver": [
-      {
-        title: "Overview",
-        items: [
-          {
-            label: "Dashboard",
-            href: "/dashboard/approver",
-            icon: LayoutDashboard,
-          },
-        ],
-      },
-      {
-        title: "Analytics",
-        items: [
-          {
-            label: "Reports & Insights",
-            href: "/dashboard/approver/analytics",
-            icon: BarChart3,
-          },
-        ],
-      },
-    ],
-    "End User": [
-      {
-        title: "Overview",
-        items: [
-          {
-            label: "Dashboard",
-            href: "/dashboard/end-user",
-            icon: LayoutDashboard,
-          },
-        ],
-      },
-      {
-        title: "Planning",
-        items: [
-          {
-            label: "My PPMPs",
-            href: "/dashboard/end-user/ppmp",
-            icon: ClipboardList,
-          },
-        ],
-      },
-      {
-        title: "Procurement",
-        items: [
-          {
-            label: "Purchase Requests",
-            href: "/dashboard/end-user/pr",
-            icon: FileText,
-          },
-        ],
-      },
-    ],
   };
 
   const sections = navConfig[role] || [];
 
   return (
     <aside className="flex w-64 flex-col border-r border-slate-200 bg-slate-900 text-slate-200 shadow-sm">
+      
       {/* Brand */}
       <div className="flex h-20 items-center border-b border-slate-800 px-6">
         <div>
@@ -152,6 +99,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
 
       {/* Navigation */}
       <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-8">
+
         {sections.map((section) => (
           <div key={section.title}>
             <div className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400">

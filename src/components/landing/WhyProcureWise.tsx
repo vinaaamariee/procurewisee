@@ -60,64 +60,65 @@ const features = [
 
 export default function WhyProcureWise() {
   return (
-    <section
-      id="about"
-      className="py-16"
-      style={{ background: "var(--bg-dark)" }}
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
-          <h2
-            className="text-2xl font-bold tracking-tight sm:text-3xl"
-            style={{ color: "var(--text-primary)" }}
-          >
-            Why ProcureWise?
-          </h2>
-          <p
-            className="mt-2 text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Built to modernize government procurement at Batanes State College
-          </p>
-        </div>
+    <section id="about" aria-labelledby="why-procurewise-heading">
+      {/* Section header */}
+      <div className="mb-6">
+        <p
+          className="mb-2 text-xs font-bold uppercase tracking-widest"
+          style={{ color: "var(--gold)" }}
+        >
+          Platform Highlights
+        </p>
+        <h2
+          id="why-procurewise-heading"
+          className="text-2xl font-bold tracking-tight sm:text-3xl"
+          style={{ color: "var(--text-primary)" }}
+        >
+          Why ProcureWise?
+        </h2>
+        <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
+          Built to modernize procurement at Batanes State College
+        </p>
+      </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => {
-            const Icon = feature.icon;
-            return (
+      {/* Feature list */}
+      <div className="grid gap-3 sm:grid-cols-2">
+        {features.map((feature) => {
+          const Icon = feature.icon;
+
+          return (
+            <div
+              key={feature.title}
+              className="group flex gap-3 rounded-2xl border p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+              style={{
+                background: "var(--surface)",
+                borderColor: "var(--border)",
+              }}
+            >
               <div
-                key={feature.title}
-                className="group rounded-2xl border p-6 transition-all hover:shadow-md"
-                style={{
-                  background: "var(--surface)",
-                  borderColor: "var(--border)",
-                }}
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105"
+                style={{ background: feature.bg }}
               >
-                <div
-                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl transition-transform group-hover:scale-105"
-                  style={{ background: feature.bg }}
-                >
-                  <Icon
-                    className="h-6 w-6"
-                    style={{ color: feature.color }}
-                  />
-                </div>
+                <Icon className="h-5 w-5" style={{ color: feature.color }} />
+              </div>
+
+              <div className="min-w-0 flex-1">
                 <h3
-                  className="text-base font-bold"
+                  className="text-sm font-bold leading-snug"
                   style={{ color: "var(--text-primary)" }}
                 >
                   {feature.title}
                 </h3>
                 <p
-                  className="mt-2 text-sm leading-relaxed"
+                  className="mt-1 text-xs leading-relaxed"
                   style={{ color: "var(--text-muted)" }}
                 >
                   {feature.description}
                 </p>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

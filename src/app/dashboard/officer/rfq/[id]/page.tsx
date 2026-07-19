@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { forecastProductPrice } from '@/lib/forecast/engine';
 import RfqEvaluationClient from './RfqEvaluationClient';
 import { startTimer } from '@/lib/performance-logger';
+import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = { title: 'Evaluate Solicitations — ProcureWise' };
 
@@ -175,29 +176,26 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
 
 
   return (
-    <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem', fontFamily: '"Inter", sans-serif' }}>
-      <div>
-        <h1 style={{ fontSize: '1.875rem', fontWeight: 800, color: '#1f2937', margin: 0, letterSpacing: '-0.5px' }}>
-          Solicitation Canvass & Evaluation
-        </h1>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.9rem', color: '#6b7280', margin: '0.5rem 0 0 0' }}>
-          Evaluate submitted bids using the MCDM engine, run sensitivity analyses, and export recommendations.
-        </p>
-      </div>
+  <div className="space-y-8 max-w-6xl mx-auto">
+    
+    <SectionHeader
+      title="Solicitation Canvass & Evaluation"
+      subtitle="Evaluate submitted bids using the MCDM engine, run sensitivity analyses, and export structured recommendations."
+    />
 
-      <RfqEvaluationClient
-        rfq={rfq}
-        quoteMetrics={quoteMetrics}
-        initialRecommendations={recommendations}
-        forecastInfo={{
-          forecastPrice,
-          forecastTrend,
-          expectedChange,
-          historicalAvgPrice,
-          historicalMinPrice,
-          historicalLatestPrice
-        }}
-      />
-    </div>
-  );
+    <RfqEvaluationClient
+      rfq={rfq}
+      quoteMetrics={quoteMetrics}
+      initialRecommendations={recommendations}
+      forecastInfo={{
+        forecastPrice,
+        forecastTrend,
+        expectedChange,
+        historicalAvgPrice,
+        historicalMinPrice,
+        historicalLatestPrice
+      }}
+    />
+  </div>
+);
 }
