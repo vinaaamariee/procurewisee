@@ -88,7 +88,11 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
       className="relative overflow-hidden border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300"
       style={{ background: "var(--bg-deep)" }}
     >
-      
+      {/* TAILWIND TEST BANNER — remove once verified, or delete this block entirely */}
+      <div className="bg-red-500 p-10 text-white text-2xl font-bold mx-auto max-w-4xl mt-20 text-center">
+        TAILWIND TEST — Is this red? Is it centered?
+      </div>
+
       {/* Decorative background grid pattern */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.04] dark:opacity-[0.02]">
         <div
@@ -106,12 +110,12 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
 
       <div className="relative mx-auto max-w-7xl px-6 py-12 sm:py-20 lg:px-8 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          
+
           {/* Left Column: Headings, Search Form, CTA */}
           <div className="lg:col-span-7 text-center lg:text-left flex flex-col items-center lg:items-start justify-center">
-            
+
             {/* Institution Badge */}
-            <div 
+            <div
               className="mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-wider shadow-sm"
               style={{
                 borderColor: "var(--border)",
@@ -165,7 +169,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
 
           {/* Right Column: Info Center Dashboard Widget */}
           <div className="lg:col-span-5 w-full">
-            <div 
+            <div
               className="w-full rounded-3xl border p-6 shadow-xl relative overflow-hidden transition-all duration-300 hover:shadow-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-md"
               style={{
                 borderColor: "var(--border)",
@@ -175,7 +179,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
               <div className="flex items-center justify-between mb-5 pb-4 border-b border-slate-100 dark:border-slate-800/60">
                 <div className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4 text-amber-500" />
-                  <h3 
+                  <h3
                     className="font-extrabold text-xs uppercase tracking-widest"
                     style={{ color: "var(--text-primary)" }}
                   >
@@ -220,7 +224,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
               {/* Tab Content Panels */}
               <div className="min-h-[300px] flex flex-col justify-between">
                 <div>
-                  
+
                   {/* RFQs Panel */}
                   {activeTab === 'rfqs' && (
                     <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
@@ -241,7 +245,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                               {rfq.closingDate ? `Closing: ${new Date(rfq.closingDate).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}` : 'No deadline'}
                             </span>
                           </div>
-                          <h4 
+                          <h4
                             className="text-xs font-bold leading-relaxed line-clamp-2 group-hover:text-[var(--maroon)] transition-colors"
                             style={{ color: "var(--text-primary)" }}
                           >
@@ -269,7 +273,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                               {ann.date}
                             </span>
                           </div>
-                          <h4 
+                          <h4
                             className="text-xs font-extrabold mb-1 leading-normal"
                             style={{ color: "var(--text-primary)" }}
                           >
@@ -296,7 +300,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                             <span>{news.date}</span>
                             <span>{news.readTime}</span>
                           </div>
-                          <h4 
+                          <h4
                             className="text-xs font-extrabold mb-1 leading-normal"
                             style={{ color: "var(--text-primary)" }}
                           >
