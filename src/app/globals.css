@@ -992,29 +992,10 @@ input:-webkit-autofill:active {
   transition: var(--transition);
   cursor: pointer;
 }
-
 .uiverse-submit:hover {
-  background: linear-gradient(135deg, var(--accent-light) 0%, var(--accent) 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 16px var(--accent-glass);
+  background: var(--accent-light);
+  border-color: var(--accent-light);
 }
-
-.uiverse-submit:active {
-  transform: translateY(0);
-}
-
-@keyframes uiverse-pulse {
-  from {
-    transform: scale(0.95);
-    opacity: 1;
-  }
-  to {
-    transform: scale(1.8);
-    opacity: 0;
-  }
-}
-
-
 
 /* ---------- Landing page polish ---------- */
 ::selection {
@@ -1029,9 +1010,17 @@ input:-webkit-autofill:active {
 
 /* A quiet canvas gives the content more hierarchy without competing with it. */
 body {
-  background-image: radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--accent-light) 7%, transparent), transparent 34rem);
+  background-image: radial-gradient(
+    circle at 50% -10%,
+    color-mix(in srgb, var(--accent-light) 7%, transparent),
+    transparent 34rem
+  );
 }
 
 .dark body {
-  background-image: radial-gradient(circle at 50% -10%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 36rem);
+  background-image: radial-gradient(
+    circle at 50% -10%,
+    color-mix(in srgb, var(--accent) 14%, transparent),
+    transparent 36rem
+  );
 }

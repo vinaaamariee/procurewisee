@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useTransition, Suspense } from 'react';
+import Image from "next/image";
 import { useSearchParams, useRouter } from 'next/navigation';
 import { login } from '../actions/auth';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -279,6 +280,12 @@ function LoginPage() {
               <p>Use your ProcureWise credentials to continue.</p>
             </div>
 
+        <p>
+            Sign in using your official College account to access the
+            Procurement Management Information System.
+        </p>
+
+    </div>
             {/* Error and Success Alerts */}
             {error && (
               <div className="relative flex items-start gap-3 rounded-md border border-red-200 dark:border-red-950/40 bg-red-50/50 dark:bg-red-950/20 p-4 mb-5 text-xs text-red-600 dark:text-red-400">
