@@ -6,6 +6,7 @@ import ForecastSkeleton from './ForecastSkeleton';
 import { startTimer } from '@/lib/performance-logger';
 import EmptyState from '@/components/ui/EmptyState';
 import ActivityTimeline from '@/components/dashboard/ActivityTimeline';
+import BSCInfoCenter from '@/components/dashboard/BSCInfoCenter';
 import HeroSection from '@/components/dashboard/HeroSection';
 import StatCard from '@/components/dashboard/StatCard';
 import Link from "next/link";
@@ -358,11 +359,14 @@ export default async function OfficerDashboard() {
           </div>
         </div>
 
-        {/* Activity Timeline */}
+        {/* BSC Info Center */}
         <div className="xl:col-span-2">
-          <ActivityTimeline limit={10} />
+          <BSCInfoCenter />
         </div>
       </div>
+
+      {/* ── Activity Timeline ───────────────────────────────── */}
+      <ActivityTimeline limit={10} />
 
       {/* ── Forecast Intelligence ────────────────────────────── */}
       <div
