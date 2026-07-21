@@ -31,7 +31,8 @@ function LoginPage() {
 
   return (
     <div className="login-container-wrapper min-h-screen relative overflow-x-hidden">
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         /* --- ProcureWise login — official portal theme --- */
         .login-container-wrapper {
             display: flex;
@@ -280,12 +281,12 @@ function LoginPage() {
               <p>Use your ProcureWise credentials to continue.</p>
             </div>
 
-        <p>
-            Sign in using your official College account to access the
-            Procurement Management Information System.
-        </p>
+            <p>
+              Sign in using your official College account to access the
+              Procurement Management Information System.
+            </p>
 
-    </div>
+
             {/* Error and Success Alerts */}
             {error && (
               <div className="relative flex items-start gap-3 rounded-md border border-red-200 dark:border-red-950/40 bg-red-50/50 dark:bg-red-950/20 p-4 mb-5 text-xs text-red-600 dark:text-red-400">
