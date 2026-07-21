@@ -107,9 +107,6 @@ export default function RecentlyUpdatedProducts({
                     {formatPrice(displayPrice)}
                   </p>
                 </div>
-                <span className="text-xs font-bold text-[#D4A017] uppercase tracking-wide">
-                  {product.unitOfMeasure || "Unit"}
-                </span>
               </div>
             </Link>
           );
