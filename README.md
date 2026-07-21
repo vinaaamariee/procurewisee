@@ -746,3 +746,47 @@ To ensure a unified visual identity and layout consistency across the ERP system
 
 
 
+
+---
+
+## 🎨 UI Redesign Sprints
+
+### Sprint 2.1 — Public Landing Page Redesign
+
+**Branch**: `feat/marketplace-ui-redesign`
+
+Completely redesigned the public landing page (`/`) with a premium enterprise aesthetic:
+- **Hero section**: Full-viewport gradient hero with animated gradient text and search CTA
+- **Stats bar**: Live procurement metrics (products, suppliers, categories, price updates)
+- **BSC Info Center**: Institutional grid with mission statement and quick links
+- **Color palette**: Maroon (`#7B1E1E`) + Gold (`#D4A017`) brand identity applied throughout
+
+### Sprint 2.2 — Procurement Officer Dashboard Redesign
+
+**Branch**: `feat/marketplace-ui-redesign`
+
+Completely restructured the Procurement Officer Dashboard (`/dashboard/officer`) into a modern enterprise layout. All business logic, database queries, and authentication were preserved 100%.
+
+#### New Components Created
+
+| Component | Path | Description |
+|---|---|---|
+| `HeroSection` | `src/components/dashboard/HeroSection.tsx` | Gradient banner with dynamic greeting, date, and quick action launcher |
+| `QuickActions` | `src/components/dashboard/QuickActions.tsx` | Client-side shortcut bar with 6 key workflow actions |
+| `StatCard` | `src/components/dashboard/StatCard.tsx` | Reusable KPI card with hover lift animation and optional trend badge |
+
+#### New Dashboard Layout Structure
+
+```
+OfficerDashboard (/dashboard/officer)
+├── HeroSection           ← Gradient banner (personalized greeting + quick actions)
+├── KPI Grid              ← 3-column StatCard row (Total RFQs / Open / Suppliers)
+├── Tasks + Activity      ← 3:2 grid split (Today's Tasks | Activity Feed)
+├── Forecast Intelligence ← Premium card container wrapping ForecastIntelligenceSection
+└── Recent Solicitations  ← Enhanced table with hover states and View All shortcut
+```
+
+#### Design Tokens Used
+- Cards: `rounded-3xl` + CSS variable `--border` + `--shadow-card`
+- Hover animations: `-translate-y-1` + `shadow-lg` transitions
+- Color system: `--accent` (Navy), `--secondary` (Gold), `--bg-deep`, `--surface`, fully dark-mode aware
