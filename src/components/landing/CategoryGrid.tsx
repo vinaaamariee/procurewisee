@@ -79,7 +79,7 @@ export default function CategoryGrid({
             <Link
               key={cat.category}
               href={`/catalog?category=${cat.id}`}
-              className="group flex items-center gap-4 rounded-2xl border p-5 no-underline shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+              className="group flex items-center gap-4 rounded-md border p-5 no-underline shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
               style={{
                 background: "var(--surface)",
                 borderColor: "var(--border)",
@@ -87,7 +87,7 @@ export default function CategoryGrid({
             >
               {/* Icon */}
               <div
-                className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105"
+                className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md transition-transform duration-200 group-hover:scale-105"
                 style={{ background: accent.bg }}
               >
                 <Icon className="h-6 w-6" style={{ color: accent.color }} />

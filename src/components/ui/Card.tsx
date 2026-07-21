@@ -1,27 +1,24 @@
 import React from "react";
 import clsx from "clsx";
 
-interface CardHeaderProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-export default function CardHeader({
-  children,
-  className,
-  ...props
-}: CardHeaderProps) {
+/**
+ * Shared dashboard surface. Keep layout concerns with the calling page while
+ * ensuring every workspace panel shares the same document-like elevation.
+ */
+export default function Card({ children, className, ...props }: CardProps) {
   return (
-    <div
+    <section
       {...props}
       className={clsx(
-        "flex items-center justify-between",
-        "border-b border-[var(--border)]",
-        "pb-4 mb-6",
-        className
+        "overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)]",
+        className,
       )}
     >
       {children}
-    </div>
+    </section>
   );
 }

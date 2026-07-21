@@ -70,10 +70,10 @@ export default function QuickActions({
 }: QuickActionsProps) {
   return (
     <section
-      className="rounded-3xl border px-4 py-10 sm:px-8 sm:py-12"
-      style={{ background: "linear-gradient(145deg, var(--bg-dark), var(--surface))", borderColor: "var(--border)" }}
+      className="rounded-lg border px-5 py-10 sm:px-8 sm:py-12"
+      style={{ background: "var(--bg-dark)", borderColor: "var(--border)" }}
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-10 text-center">
           <h2
             className="text-2xl font-bold tracking-tight sm:text-3xl"
@@ -95,7 +95,7 @@ export default function QuickActions({
             return (
               <div
                 key={action.title}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border p-6 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl"
+                className="group relative flex flex-col overflow-hidden rounded-md border p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
                 style={{
                   background: "var(--surface)",
                   borderColor: "var(--border)",
@@ -103,7 +103,7 @@ export default function QuickActions({
               >
                 {/* Icon */}
                 <div
-                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl"
+                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-md"
                   style={{ background: action.bgColor }}
                 >
                   <Icon className="h-6 w-6" style={{ color: action.color }} />
@@ -126,7 +126,7 @@ export default function QuickActions({
                 {/* Button */}
                 <Link
                   href={action.href}
-                  className="mt-4 inline-flex items-center gap-1.5 rounded-lg border px-4 py-2 text-xs font-bold transition-all hover:shadow-sm"
+                  className="mt-5 inline-flex items-center gap-1.5 rounded-md border px-4 py-2 text-xs font-bold transition-colors hover:brightness-95"
                   style={{
                     borderColor: action.color + "30",
                     color: action.color,

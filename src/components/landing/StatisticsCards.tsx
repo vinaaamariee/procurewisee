@@ -50,7 +50,7 @@ export default function StatisticsCards({
           return (
             <div
               key={stat.title}
-              className="group rounded-2xl border p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+              className="group rounded-md border p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
               style={{
                 background: "var(--surface)",
                 borderColor: "var(--border)",
@@ -58,7 +58,7 @@ export default function StatisticsCards({
             >
               <div className="flex items-center gap-4">
                 <div
-                  className="flex h-12 w-12 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105"
+                  className="flex h-12 w-12 items-center justify-center rounded-md transition-transform duration-200 group-hover:scale-105"
                   style={{ background: stat.bgColor ?? "rgba(126, 25, 27, 0.06)" }}
                 >
                   {Icon ? (

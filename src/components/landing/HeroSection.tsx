@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Bell, FileText, Globe, Clock, Sparkles } from "lucide-react";
+import { ArrowRight, Bell, FileText, Globe, Clock, Sparkles, ShieldCheck } from "lucide-react";
 import HeroSearchForm from "./HeroSearchForm";
 import type { ActiveRfq } from "@/features/landing/server/queries";
 
@@ -88,11 +88,6 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
       className="relative overflow-hidden border-b border-slate-200/60 dark:border-slate-800/60 transition-colors duration-300"
       style={{ background: "var(--bg-deep)" }}
     >
-      {/* TAILWIND TEST BANNER — remove once verified, or delete this block entirely */}
-      <div className="bg-red-500 p-10 text-white text-2xl font-bold mx-auto max-w-4xl mt-20 text-center">
-        TAILWIND TEST — Is this red? Is it centered?
-      </div>
-
       {/* Decorative background grid pattern */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.04] dark:opacity-[0.02]">
         <div
@@ -105,8 +100,8 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
       </div>
 
       {/* Modern Soft Ambient Orbs */}
-      <div className="pointer-events-none absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full blur-[120px] bg-[#800000]/10 dark:bg-red-500/5" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full blur-[120px] bg-[#C59B27]/10 dark:bg-yellow-500/5" />
+      <div className="pointer-events-none absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full blur-[120px]" style={{ background: "var(--accent-glass)" }} />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full blur-[120px]" style={{ background: "var(--secondary-dim)" }} />
 
       <div className="relative mx-auto max-w-7xl px-6 py-12 sm:py-20 lg:px-8 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -116,53 +111,59 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
 
             {/* Institution Badge */}
             <div
-              className="mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-xs font-bold uppercase tracking-wider shadow-sm"
+              className="mb-6 inline-flex items-center gap-2 rounded-md border px-3 py-1.5 text-[0.68rem] font-bold uppercase tracking-[0.14em]"
               style={{
                 borderColor: "var(--border)",
                 color: "var(--text-secondary)",
                 background: "var(--surface)",
               }}
             >
-              <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
-              Batanes State College
+              <ShieldCheck className="h-3.5 w-3.5" style={{ color: "var(--secondary)" }} />
+              Batanes State College Procurement Portal
             </div>
 
             {/* Main Brand Header */}
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none mb-4">
-              <span style={{ color: "var(--maroon)" }}>PROCURE</span>
-              <span style={{ color: "var(--gold)" }}>WISE</span>
+            <h1 className="font-[family-name:var(--font-display)] text-5xl font-extrabold tracking-tight leading-[0.95] sm:text-6xl lg:text-7xl">
+              <span style={{ color: "var(--accent)" }}>Procure</span><span style={{ color: "var(--secondary)" }}>Wise</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-base sm:text-lg font-bold leading-snug max-w-xl mb-3"
+            <p className="mt-5 max-w-xl text-base font-bold leading-snug sm:text-lg"
               style={{ color: "var(--text-primary)" }}
             >
               An Intelligent Procurement Analytics and Automated Canvassing System with Best-Value Recommendation Engine
             </p>
 
             {/* Secondary Description */}
-            <p className="text-sm sm:text-base leading-relaxed max-w-xl mb-8"
+            <p className="mt-3 max-w-xl text-sm leading-relaxed sm:text-base"
               style={{ color: "var(--text-muted)" }}
             >
               Digitizing procurement planning, market scoping, canvassing, and decision support for Batanes State College.
             </p>
 
             {/* Search Form Wrapper */}
-            <div className="w-full max-w-xl mb-6">
+            <div className="mt-8 w-full max-w-xl">
               <HeroSearchForm />
             </div>
 
             {/* Browse CTA Button */}
-            <div className="flex justify-center lg:justify-start">
+            <div className="mt-5 flex flex-wrap justify-center gap-3 lg:justify-start">
               <Link
                 href="/catalog"
-                className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white shadow-lg shadow-[#800000]/10 hover:shadow-xl hover:shadow-[#800000]/20 hover:-translate-y-0.5 active:translate-y-0 transition-all"
+                className="inline-flex items-center gap-2 rounded-md px-5 py-3 text-sm font-bold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:translate-y-0"
                 style={{
-                  background: "linear-gradient(135deg, var(--maroon), #a31d1d)",
+                  background: "var(--accent)",
                 }}
               >
                 Browse Procurement Catalog
                 <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/track"
+                className="inline-flex items-center gap-2 rounded-md border px-5 py-3 text-sm font-bold transition-colors hover:bg-black/[0.03] dark:hover:bg-white/[0.04]"
+                style={{ borderColor: "var(--border-accent)", color: "var(--accent)", background: "var(--surface)" }}
+              >
+                Track a request
               </Link>
             </div>
           </div>
@@ -170,15 +171,16 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
           {/* Right Column: Info Center Dashboard Widget */}
           <div className="lg:col-span-5 w-full">
             <div
-              className="w-full rounded-3xl border p-6 shadow-xl relative overflow-hidden transition-all duration-300 hover:shadow-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-md"
+              className="relative w-full overflow-hidden rounded-lg border p-5 shadow-[var(--shadow-card)] transition-shadow duration-300 hover:shadow-md sm:p-6"
               style={{
                 borderColor: "var(--border)",
+                background: "var(--surface)",
               }}
             >
               {/* Widget Header */}
-              <div className="flex items-center justify-between mb-5 pb-4 border-b border-slate-100 dark:border-slate-800/60">
+              <div className="mb-5 flex items-center justify-between border-b pb-4" style={{ borderColor: "var(--border)" }}>
                 <div className="flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-amber-500" />
+                  <Sparkles className="h-4 w-4" style={{ color: "var(--secondary)" }} />
                   <h3
                     className="font-extrabold text-xs uppercase tracking-widest"
                     style={{ color: "var(--text-primary)" }}
@@ -186,14 +188,14 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                     BSC Info Center
                   </h3>
                 </div>
-                <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                  <span className="inline-block h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider" style={{ color: "var(--text-muted)" }}>
+                  <span className="inline-block h-2 w-2 rounded-full" style={{ background: "var(--green)" }} />
                   Live Feeds
                 </div>
               </div>
 
               {/* Tabs Buttons Container */}
-              <div className="flex gap-1 p-1 rounded-xl bg-slate-100/80 dark:bg-slate-800/40 mb-5">
+              <div className="mb-5 flex gap-1 rounded-md p-1" style={{ background: "var(--bg-dark)" }}>
                 {[
                   { id: 'rfqs', label: 'Active RFQs', icon: FileText },
                   { id: 'announcements', label: 'Announcements', icon: Bell },
@@ -207,10 +209,10 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                       onClick={() => setActiveTab(tab.id as any)}
                       className={`flex-1 flex items-center justify-center gap-1.5 py-2 px-1 rounded-lg text-[11px] font-bold transition-all duration-200 cursor-pointer ${
                         isActive
-                          ? 'bg-white dark:bg-slate-800 shadow-md font-extrabold scale-[1.02]'
-                          : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                          ? 'font-extrabold shadow-sm'
+                          : 'hover:opacity-80'
                       }`}
-                      style={{ color: isActive ? "var(--maroon)" : undefined }}
+                      style={{ color: isActive ? "var(--accent)" : "var(--text-secondary)", background: isActive ? "var(--surface)" : "transparent" }}
                     >
                       <Icon className="h-3.5 w-3.5" />
                       {/* Responsive handling: Show full tab label on larger tabs, but clean split on small screens */}
@@ -231,8 +233,8 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                       {rfqsToDisplay.map((rfq) => (
                         <div
                           key={rfq.id}
-                          className="group flex flex-col p-3.5 rounded-2xl border bg-white/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-800/50 transition-all duration-200"
-                          style={{ borderColor: "var(--border)" }}
+                          className="group flex flex-col rounded-md border p-3.5 transition-colors duration-200 hover:bg-[var(--surface-hover)]"
+                          style={{ borderColor: "var(--border)", background: "var(--surface)" }}
                         >
                           <div className="flex items-center justify-between mb-1.5">
                             <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider border"
@@ -246,7 +248,7 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                             </span>
                           </div>
                           <h4
-                            className="text-xs font-bold leading-relaxed line-clamp-2 group-hover:text-[var(--maroon)] transition-colors"
+                            className="line-clamp-2 text-xs font-bold leading-relaxed transition-colors group-hover:text-[var(--accent)]"
                             style={{ color: "var(--text-primary)" }}
                           >
                             {rfq.title}
@@ -262,8 +264,8 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                       {ANNOUNCEMENTS.map((ann) => (
                         <div
                           key={ann.id}
-                          className="flex flex-col p-3.5 rounded-2xl border bg-white/50 dark:bg-slate-900/50 transition-all duration-200"
-                          style={{ borderColor: "var(--border)" }}
+                          className="flex flex-col rounded-md border p-3.5"
+                          style={{ borderColor: "var(--border)", background: "var(--surface)" }}
                         >
                           <div className="flex items-center justify-between mb-1.5">
                             <span className={`px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider ${ann.tagColor}`}>
@@ -293,8 +295,8 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
                       {NEWS_UPDATES.map((news) => (
                         <div
                           key={news.id}
-                          className="flex flex-col p-3.5 rounded-2xl border bg-white/50 dark:bg-slate-900/50 hover:bg-white dark:hover:bg-slate-800/50 transition-all duration-200"
-                          style={{ borderColor: "var(--border)" }}
+                          className="flex flex-col rounded-md border p-3.5 transition-colors hover:bg-[var(--surface-hover)]"
+                          style={{ borderColor: "var(--border)", background: "var(--surface)" }}
                         >
                           <div className="flex justify-between text-[10px] text-slate-500 dark:text-slate-400 font-bold mb-1.5">
                             <span>{news.date}</span>

@@ -12,7 +12,7 @@ export default function SectionHeader({
   return (
     <div className="flex items-start justify-between gap-4">
       <div>
-        <h2 className="text-xl font-bold text-[var(--text-primary)]">
+        <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-[var(--text-primary)]">
           {title}
         </h2>
         {subtitle && (

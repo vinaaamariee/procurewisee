@@ -10,6 +10,13 @@ import {
   ShoppingCart,
   BarChart3,
   Users,
+  FileCheck2,
+  Workflow,
+  ClipboardCheck,
+  ScrollText,
+  ChartNoAxesCombined,
+  CalendarDays,
+  Star,
 } from "lucide-react";
 
 type NavItem = {
@@ -81,6 +88,45 @@ export default function DashboardSidebar({ role }: { role: string }) {
             href: "/dashboard/supplier-profiles",
             icon: Users,
           },
+        ],
+      },
+    ],
+    "Administrative Approver": [
+      {
+        title: "Overview",
+        items: [
+          { label: "Dashboard", href: "/dashboard/approver", icon: LayoutDashboard },
+          { label: "Review History", href: "/dashboard/approver/history", icon: FileCheck2 },
+        ],
+      },
+      {
+        title: "Governance",
+        items: [
+          { label: "Workflows", href: "/dashboard/approver/workflows", icon: Workflow },
+          { label: "Form Templates", href: "/dashboard/approver/forms", icon: ClipboardCheck },
+        ],
+      },
+      {
+        title: "Reporting",
+        items: [
+          { label: "Reports", href: "/dashboard/approver/reports", icon: ScrollText },
+          { label: "Analytics", href: "/dashboard/approver/analytics", icon: ChartNoAxesCombined },
+        ],
+      },
+    ],
+    "End User": [
+      {
+        title: "Overview",
+        items: [
+          { label: "Dashboard", href: "/dashboard/end-user", icon: LayoutDashboard },
+        ],
+      },
+      {
+        title: "My Planning",
+        items: [
+          { label: "PPMP Planning", href: "/dashboard/end-user/ppmp", icon: CalendarDays },
+          { label: "Purchase Requests", href: "/dashboard/end-user/pr", icon: FileText },
+          { label: "Supplier Evaluation", href: "/dashboard/end-user/evaluation", icon: Star },
         ],
       },
     ],
@@ -177,10 +223,10 @@ export default function DashboardSidebar({ role }: { role: string }) {
             <div className="space-y-1.5">
               {section.items.map((item) => {
                 const Icon = item.icon;
-
+                const isOverview = item.label === "Dashboard";
                 const isActive =
                   pathname === item.href ||
-                  pathname.startsWith(item.href + "/");
+                  (!isOverview && pathname.startsWith(item.href + "/"));
 
                 return (
                   <Link

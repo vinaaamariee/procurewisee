@@ -89,14 +89,14 @@ export default function WhyProcureWise() {
           return (
             <div
               key={feature.title}
-              className="group flex gap-3 rounded-2xl border p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+              className="group flex gap-3 rounded-md border p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
               style={{
                 background: "var(--surface)",
                 borderColor: "var(--border)",
               }}
             >
               <div
-                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl transition-transform duration-200 group-hover:scale-105"
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md transition-transform duration-200 group-hover:scale-105"
                 style={{ background: feature.bg }}
               >
                 <Icon className="h-5 w-5" style={{ color: feature.color }} />
