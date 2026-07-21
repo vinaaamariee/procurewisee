@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -28,7 +29,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
   const navConfig: Record<string, NavSection[]> = {
     "Procurement Officer": [
       {
-        title: "Overview",
+        title: "MAIN",
         items: [
           {
             label: "Dashboard",
@@ -38,12 +39,17 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
       {
-        title: "Procurement",
+        title: "PROCUREMENT",
         items: [
           {
             label: "Purchase Requests",
             href: "/dashboard/officer/pr",
             icon: FileText,
+          },
+          {
+            label: "Annual Procurement Plan",
+            href: "/dashboard/officer/app",
+            icon: ClipboardList,
           },
           {
             label: "RFQs",
@@ -58,7 +64,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
       {
-        title: "Analytics",
+        title: "REPORTING",
         items: [
           {
             label: "Reports & Insights",
@@ -68,7 +74,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
       {
-        title: "Management",
+        title: "ADMINISTRATION",
         items: [
           {
             label: "Supplier Profiles",
@@ -84,70 +90,129 @@ export default function DashboardSidebar({ role }: { role: string }) {
 
   return (
     <aside
-      className="flex w-64 flex-col text-slate-200 shadow-sm"
-      style={{ background: "#0B2D5C", borderRight: "1px solid rgba(255,255,255,0.08)" }}
+      className="relative flex w-72 flex-col overflow-hidden shadow-lg"
+      style={{
+        background:
+          "linear-gradient(180deg, #0B3B6E 0%, #08284F 100%)",
+        borderRight: "1px solid rgba(255,255,255,.08)",
+      }}
     >
-      {/* Masthead rule, consistent with the rest of the app */}
+      {/* Accent Bar */}
       <div
-        className="h-[3px] w-full flex-shrink-0"
-        style={{ background: "linear-gradient(90deg, #0B2D5C 0 34%, #A6761D 34% 67%, #B7202E 67% 100%)" }}
+        className="h-[4px] w-full flex-shrink-0"
+        style={{
+          background:
+            "linear-gradient(90deg,#0B3B6E 0 34%,#D4A017 34% 67%,#B7202E 67% 100%)",
+        }}
+      />
+
+      {/* Watermark */}
+      <Image
+        src="/images/bsc-logo.png"
+        alt=""
+        width={420}
+        height={420}
+        className="pointer-events-none absolute -bottom-14 -left-20 opacity-[0.04] select-none"
       />
 
       {/* Brand */}
-      <div className="flex h-[77px] items-center border-b px-6" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-        <div>
-          <div
-            className="text-lg font-bold tracking-tight text-white"
-            style={{ fontFamily: "var(--font-display)" }}
+      <div
+        className="border-b px-6 py-8"
+        style={{
+          borderColor: "rgba(255,255,255,.08)",
+        }}
+      >
+        <div className="flex flex-col items-center text-center">
+          <Image
+            src="/images/bsc-logo.png"
+            alt="Batanes State College"
+            width={72}
+            height={72}
+            priority
+          />
+
+          <h1
+            className="mt-4 text-2xl font-bold text-white"
+            style={{
+              fontFamily: "var(--font-display)",
+            }}
           >
-            Procure<span style={{ color: "#C99A2E" }}>Wise</span>
-          </div>
-          <div className="text-[10px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.5)" }}>
+            Procure
+            <span style={{ color: "#D4A017" }}>Wise</span>
+          </h1>
+
+          <p
+            className="mt-2 text-[11px] uppercase tracking-[0.18em]"
+            style={{
+              color: "#D4A017",
+            }}
+          >
+            Procurement Management
+          </p>
+
+          <p
+            className="text-[11px]"
+            style={{
+              color: "rgba(255,255,255,.65)",
+            }}
+          >
             Batanes State College
-          </div>
+          </p>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-8">
+      <nav className="relative flex-1 overflow-y-auto px-5 py-7 space-y-8">
         {sections.map((section) => (
           <div key={section.title}>
             <div
-              className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-wider"
-              style={{ color: "rgba(255,255,255,0.4)" }}
+              className="mb-3 px-3 text-[10px] font-semibold tracking-[0.18em]"
+              style={{
+                color: "rgba(255,255,255,.35)",
+              }}
             >
               {section.title}
             </div>
 
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {section.items.map((item) => {
+                const Icon = item.icon;
+
                 const isActive =
                   pathname === item.href ||
                   pathname.startsWith(item.href + "/");
-
-                const Icon = item.icon;
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group relative flex items-center gap-3 rounded px-4 py-2.5 text-sm transition"
-                    style={
-                      isActive
-                        ? { background: "rgba(255,255,255,0.08)", color: "#ffffff" }
-                        : { color: "rgba(255,255,255,0.65)" }
-                    }
+                    className="group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 hover:translate-x-1 hover:bg-white/5"
+                    style={{
+                      background: isActive
+                        ? "rgba(255,255,255,.10)"
+                        : "transparent",
+                      color: isActive
+                        ? "#FFFFFF"
+                        : "rgba(255,255,255,.72)",
+                      fontWeight: isActive ? 600 : 400,
+                    }}
                   >
                     {isActive && (
                       <span
-                        className="absolute left-0 top-2 bottom-2 w-[3px] rounded-r"
-                        style={{ background: "#C99A2E" }}
+                        className="absolute left-0 top-2 bottom-2 w-[4px] rounded-r-full"
+                        style={{
+                          background: "#D4A017",
+                        }}
                       />
                     )}
 
                     <Icon
-                      className="h-4 w-4 flex-shrink-0"
-                      style={{ color: isActive ? "#C99A2E" : "rgba(255,255,255,0.45)" }}
+                      className="h-5 w-5 flex-shrink-0"
+                      style={{
+                        color: isActive
+                          ? "#D4A017"
+                          : "rgba(255,255,255,.45)",
+                      }}
                     />
 
                     {item.label}
@@ -161,10 +226,37 @@ export default function DashboardSidebar({ role }: { role: string }) {
 
       {/* Footer */}
       <div
-        className="border-t p-4 text-xs"
-        style={{ borderColor: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.4)" }}
+        className="border-t px-6 py-5"
+        style={{
+          borderColor: "rgba(255,255,255,.08)",
+        }}
       >
-        Procurement Management System
+        <div
+          className="text-sm font-semibold"
+          style={{
+            color: "#D4A017",
+          }}
+        >
+          ProcureWise
+        </div>
+
+        <div
+          className="mt-1 text-[11px]"
+          style={{
+            color: "rgba(255,255,255,.45)",
+          }}
+        >
+          Procurement Management Information System
+        </div>
+
+        <div
+          className="mt-3 text-[11px]"
+          style={{
+            color: "rgba(255,255,255,.35)",
+          }}
+        >
+          © 2026 Batanes State College
+        </div>
       </div>
     </aside>
   );
