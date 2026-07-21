@@ -26,7 +26,7 @@ export default async function HeroSection() {
 
   return (
     <div
-      className="relative overflow-hidden rounded-3xl border"
+      className="relative overflow-hidden rounded-3xl border font-sans"
       style={{
         background: `linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 60%, color-mix(in srgb, var(--accent) 80%, var(--secondary)) 100%)`,
         borderColor: "var(--border-accent)",
@@ -57,14 +57,14 @@ export default async function HeroSection() {
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <span
-              className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-widest"
+              className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest"
               style={{
-                background: "rgba(255,255,255,0.12)",
-                borderColor: "rgba(255,255,255,0.2)",
-                color: "rgba(255,255,255,0.85)",
+                background: "rgba(255,255,255,0.14)",
+                borderColor: "rgba(255,255,255,0.25)",
+                color: "rgba(255,255,255,0.9)",
               }}
             >
-              <Zap className="h-3 w-3" />
+              <Zap className="h-3 w-3 text-amber-300" />
               Procurement Officer Portal
             </span>
           </div>
@@ -72,21 +72,18 @@ export default async function HeroSection() {
           <div>
             <p
               className="text-sm font-medium"
-              style={{ color: "rgba(255,255,255,0.65)" }}
+              style={{ color: "rgba(255,255,255,0.75)" }}
             >
               {greeting},
             </p>
-            <h1
-              className="text-4xl font-black tracking-tight text-white"
-              style={{ fontFamily: "var(--font-display)" }}
-            >
+            <h1 className="text-4xl font-extrabold tracking-tight text-white font-sans">
               {firstName}
             </h1>
           </div>
 
           <div
             className="flex items-center gap-1.5 text-sm"
-            style={{ color: "rgba(255,255,255,0.6)" }}
+            style={{ color: "rgba(255,255,255,0.7)" }}
           >
             <CalendarDays className="h-3.5 w-3.5" />
             <span className="font-medium">{date}</span>
@@ -97,7 +94,7 @@ export default async function HeroSection() {
         <div className="flex flex-col gap-3">
           <p
             className="text-xs font-bold uppercase tracking-widest"
-            style={{ color: "rgba(255,255,255,0.5)" }}
+            style={{ color: "rgba(255,255,255,0.7)" }}
           >
             Quick Actions
           </p>

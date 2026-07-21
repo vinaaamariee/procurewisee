@@ -8,7 +8,7 @@ interface QuickAction {
   sublabel: string;
   href: string;
   Icon: LucideIcon;
-  variant: "primary" | "secondary" | "ghost";
+  variant: "primary" | "secondary" | "white";
 }
 
 const ACTIONS: QuickAction[] = [
@@ -24,62 +24,62 @@ const ACTIONS: QuickAction[] = [
     sublabel: "All solicitations",
     href: "/dashboard/officer/rfq",
     Icon: FileSearch,
-    variant: "secondary",
+    variant: "white",
   },
   {
     label: "Purchase Orders",
     sublabel: "Manage POs",
     href: "/dashboard/officer/po",
     Icon: ShoppingCart,
-    variant: "ghost",
+    variant: "white",
   },
   {
     label: "Suppliers",
     sublabel: "Vendor registry",
     href: "/dashboard/supplier-profiles",
     Icon: Building2,
-    variant: "ghost",
+    variant: "white",
   },
   {
     label: "Analytics",
     sublabel: "Reports & charts",
     href: "/dashboard/officer/analytics",
     Icon: BarChart3,
-    variant: "ghost",
+    variant: "white",
   },
   {
     label: "Marketplace",
     sublabel: "Browse catalog",
     href: "/",
     Icon: Search,
-    variant: "ghost",
+    variant: "white",
   },
 ];
 
 export default function QuickActions() {
   return (
-    <div className="flex flex-wrap gap-2.5">
+    <div className="flex flex-wrap gap-2.5 font-sans">
       {ACTIONS.map((action) => {
         const { label, sublabel, href, Icon, variant } = action;
 
         const base =
-          "group inline-flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-200 border";
+          "group inline-flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-200 border shadow-sm";
 
         const styles: Record<string, string> = {
           primary:
-            "bg-[var(--accent)] text-white border-transparent hover:opacity-90 shadow-md hover:shadow-lg hover:-translate-y-0.5",
+            "bg-amber-400 text-slate-950 border-amber-300 hover:bg-amber-300 hover:shadow-md hover:-translate-y-0.5 font-extrabold",
+          white:
+            "bg-white text-slate-900 border-white hover:bg-slate-100 hover:text-blue-950 hover:shadow-md hover:-translate-y-0.5",
           secondary:
-            "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)] hover:bg-[var(--accent)] hover:text-white hover:-translate-y-0.5",
-          ghost:
-            "bg-transparent text-[var(--text-secondary)] border-[var(--border)] hover:border-[var(--border-accent)] hover:text-[var(--accent)] hover:-translate-y-0.5 hover:bg-[var(--surface-hover)]",
+            "bg-slate-100 text-slate-900 border-slate-200 hover:bg-white hover:shadow-md hover:-translate-y-0.5",
         };
 
         return (
           <Link key={label} href={href} className={`${base} ${styles[variant]}`}>
-            <Icon className="h-4 w-4 transition-transform duration-200 group-hover:scale-110" />
+            <Icon className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:scale-110" />
             <span className="flex flex-col leading-tight">
               <span>{label}</span>
-              <span className="text-[10px] font-normal opacity-70">{sublabel}</span>
+              <span className="text-[10px] font-medium opacity-80">{sublabel}</span>
             </span>
           </Link>
         );

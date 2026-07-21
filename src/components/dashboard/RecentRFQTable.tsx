@@ -42,7 +42,7 @@ export default function RecentRFQTable({ rfqs }: RecentRFQTableProps) {
                         <ClipboardList className="h-4.5 w-4.5" />
                     </div>
                     <div>
-                        <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
+                        <h2 className="text-base font-extrabold font-sans" style={{ color: "var(--text-primary)" }}>
                             Recent Solicitations
                         </h2>
                         <p className="text-xs" style={{ color: "var(--text-muted)" }}>
