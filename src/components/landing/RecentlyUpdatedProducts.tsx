@@ -27,8 +27,8 @@ function timeAgo(date: Date): string {
 }
 
 export default function RecentlyUpdatedProducts({
-  title = "Recently Updated",
-  subtitle = "Latest products with updated pricing",
+  title = "Recently Updated Supplies",
+  subtitle = "Latest catalog products with verified market pricing",
   products,
 }: RecentlyUpdatedProductsProps) {
   if (products.length === 0) return null;
@@ -38,36 +38,31 @@ export default function RecentlyUpdatedProducts({
       {/* Section header */}
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <p
-            className="mb-2 text-xs font-bold uppercase tracking-widest"
-            style={{ color: "var(--gold)" }}
-          >
+          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#D4A017]">
             Fresh Listings
           </p>
           <h2
             id="recent-products-heading"
-            className="text-2xl font-bold tracking-tight sm:text-3xl"
-            style={{ color: "var(--text-primary)" }}
+            className="text-3xl font-bold tracking-tight text-[#111827] dark:text-white"
           >
             {title}
           </h2>
-          <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
+          <p className="mt-1 text-sm text-[#6B7280] dark:text-slate-400">
             {subtitle}
           </p>
         </div>
 
         <Link
           href="/catalog"
-          className="hidden shrink-0 items-center gap-1 text-sm font-bold transition-colors hover:underline sm:inline-flex"
-          style={{ color: "var(--accent)" }}
+          className="hidden shrink-0 items-center gap-1.5 text-xs font-bold text-[#7B1E1E] dark:text-red-400 hover:underline sm:inline-flex"
         >
-          View all
+          <span>View Catalog</span>
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
 
       {/* Product cards */}
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {products.map((product) => {
           const displayPrice =
             product.lowestSupplierPrice ?? product.estimatedUnitCost;
@@ -76,76 +71,41 @@ export default function RecentlyUpdatedProducts({
             <Link
               key={product.id}
               href={`/catalog/${product.id}`}
-              className="group flex flex-col overflow-hidden rounded-md border no-underline shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
-              style={{
-                background: "var(--surface)",
-                borderColor: "var(--border)",
-              }}
+              className="group bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 p-6 no-underline shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
             >
-              {/* Image */}
-              <div
-                className="relative flex h-32 items-center justify-center"
-                style={{
-                  background: "linear-gradient(135deg, var(--accent-glass), var(--secondary-dim))",
-                }}
-              >
-                <Package
-                  className="h-10 w-10 opacity-30"
-                  style={{ color: "var(--text-secondary)" }}
-                />
+              {/* Top Banner */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#7B1E1E]/10 dark:bg-[#7B1E1E]/20 px-3 py-1 text-[10px] font-bold text-[#7B1E1E] dark:text-red-400 uppercase tracking-wide">
+                    <Tag className="h-3 w-3" />
+                    {product.category}
+                  </span>
+                  <span className="text-[11px] font-medium text-gray-400 flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {timeAgo(product.updatedAt)}
+                  </span>
+                </div>
 
-                {/* Category badge */}
-                <span
-                  className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.65rem] font-semibold"
-                  style={{
-                    background: "var(--surface)",
-                    color: "var(--text-secondary)",
-                    border: "1px solid var(--border)",
-                  }}
-                >
-                  <Tag className="h-2.5 w-2.5" />
-                  {product.category}
-                </span>
-              </div>
-
-              {/* Content */}
-              <div className="flex flex-1 flex-col p-4">
-                <h3
-                  className="line-clamp-2 text-sm font-bold leading-snug transition-colors group-hover:text-[var(--accent)]"
-                  style={{ color: "var(--text-primary)" }}
-                >
+                <h3 className="line-clamp-2 text-base font-bold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-red-300 transition-colors leading-snug">
                   {product.name}
                 </h3>
 
                 {product.brand && (
-                  <div
-                    className="mt-1 text-xs"
-                    style={{ color: "var(--text-muted)" }}
-                  >
-                    {product.brand}
-                  </div>
+                  <p className="text-xs font-semibold text-gray-400">
+                    Brand: {product.brand}
+                  </p>
                 )}
+              </div>
 
-                <div className="mt-auto pt-3">
-                  <div
-                    className="text-lg font-black tabular-nums"
-                    style={{ color: "var(--green)" }}
-                  >
+              {/* Price & Unit */}
+              <div className="mt-6 pt-4 border-t border-gray-100 dark:border-slate-800 flex items-baseline justify-between">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    Est. Unit Cost
+                  </p>
+                  <p className="text-xl font-black text-[#111827] dark:text-white mt-0.5">
                     {formatPrice(displayPrice)}
-                  </div>
-
-                  <div className="mt-1 flex items-center gap-1">
-                    <Clock
-                      className="h-3 w-3"
-                      style={{ color: "var(--text-muted)" }}
-                    />
-                    <span
-                      className="text-[0.65rem]"
-                      style={{ color: "var(--text-muted)" }}
-                    >
-                      Updated {timeAgo(product.updatedAt)}
-                    </span>
-                  </div>
+                  </p>
                 </div>
               </div>
             </Link>
@@ -153,14 +113,13 @@ export default function RecentlyUpdatedProducts({
         })}
       </div>
 
-      {/* Mobile "View all" link */}
+      {/* Mobile "View all" button */}
       <div className="mt-6 text-center sm:hidden">
         <Link
           href="/catalog"
-          className="inline-flex items-center gap-1 text-sm font-bold"
-          style={{ color: "var(--accent)" }}
+          className="inline-flex items-center gap-1 text-sm font-bold text-[#7B1E1E] dark:text-red-400"
         >
-          View All Products
+          <span>View All Products</span>
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>

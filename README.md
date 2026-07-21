@@ -200,14 +200,15 @@ Each role dashboard has been cleaned up to show only relevant, functional links:
   - **Overview Dashboard**: Features a Department Fiscal Budget Tracker with real-time progress indicators, quick statistics summaries, recent PR history, and an interactive **My Pending Actions** panel displaying status badges, short descriptions, and action buttons for draft/returned PPMPs, returned PRs, and pending supplier evaluations.
 - **Supplier**: Overview → Purchase Orders → My Scorecard
 
-### 19. Professional Government Procurement Landing Page (Sprint 2.1)
+### 19. Enterprise Batanes State College Procurement Landing Page
 
-A professional portal homepage at `/` showcasing Batanes State College procurement:
-- **Hero & Search**: High-impact split-column brand section mapping dynamically to the **blue-and-white ProcureWise design system** in light mode (and Maroon/Gold on dark theme), college seal style branding, a functional product search bar redirecting to `/catalog`, and a dynamic **BSC Info Center** panel displaying active RFQs (from the database), system announcements, and news feeds.
-- **Database Statistics**: Dynamic counter cards showing live database counts for active products, registered vendors, unique categories, and pricing updates.
-- **Category Navigation Grid**: Responsive grid displaying product categories with counts, linking directly to filtered views in the catalog.
-- **Recently Updated Products**: Showcases the 8 most recently updated active products in the database with their current canvassed/estimated pricing and last-update timestamp indicators.
-- **Quick Actions & Footer**: Reusable actions panel linking to core workflows (Planning, Requesting, and Request Tracking) and a comprehensive government footer.
+A modern, enterprise public portal homepage at `/` built with ProcureWise branding for Batanes State College:
+- **Maroon & Gold Brand Identity**: Styled with official institution colors (`#7B1E1E` Primary Maroon, `#D4A017` Gold Accent, `#F7F8FA` Light Background, and `#FFFFFF` Cards).
+- **Sticky Glassmorphic Header**: Features college seal badge, desktop navigation, quick search link, theme switcher, and a responsive mobile drawer navigation (`MobileNav.tsx`).
+- **Hero & Information Center**: Two-column layout featuring personalized welcome greetings ("Good Morning 👋"), platform description, full-width responsive search bar, primary ("Browse Catalog") & secondary ("Track Request") buttons, and a tabbed **BSC Info Center** card for Active RFQs, Announcements, and News updates.
+- **Responsive Statistics & Quick Access**: 4-column responsive grid layout with 24px/32px rounded cards, hover-lift animations (`hover:-translate-y-1 hover:shadow-xl`), trend indicators, and workflow action links.
+- **Category Navigation & Fresh Listings**: Clean category cards grid with icon indicators and live product counts, alongside recent catalog updates with timestamp indicators and price cards.
+- **Clean Responsive Layout**: Built strictly with standard Tailwind CSS v4 responsive utilities supporting viewport widths from 320px to 1536px without overflow or fixed pixel constraints.
 
 ### 20. Public Procurement Marketplace (Sprint 2.2)
 

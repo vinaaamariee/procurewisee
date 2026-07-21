@@ -4,6 +4,7 @@ import {
   ClipboardList,
   FileText,
   Search,
+  ArrowRight,
 } from "lucide-react";
 
 const defaultActions = [
@@ -14,8 +15,8 @@ const defaultActions = [
       "Explore the procurement catalog with detailed specs and supplier pricing.",
     href: "/catalog",
     buttonLabel: "View Catalog",
-    color: "#7e191b",
-    bgColor: "rgba(126, 25, 27, 0.06)",
+    color: "#7B1E1E",
+    bgColor: "rgba(123, 30, 30, 0.08)",
   },
   {
     icon: ClipboardList,
@@ -24,8 +25,8 @@ const defaultActions = [
       "Prepare your Project Procurement Management Plan for budget allocation.",
     href: "/end-user/ppmp",
     buttonLabel: "Start Planning",
-    color: "#ca8a04",
-    bgColor: "rgba(202, 138, 4, 0.06)",
+    color: "#D4A017",
+    bgColor: "rgba(212, 160, 23, 0.08)",
   },
   {
     icon: FileText,
@@ -35,7 +36,7 @@ const defaultActions = [
     href: "/end-user",
     buttonLabel: "Submit PR",
     color: "#059669",
-    bgColor: "rgba(5, 150, 105, 0.06)",
+    bgColor: "rgba(5, 150, 105, 0.08)",
   },
   {
     icon: Search,
@@ -45,7 +46,7 @@ const defaultActions = [
     href: "/track",
     buttonLabel: "Track Now",
     color: "#6366f1",
-    bgColor: "rgba(99, 102, 241, 0.06)",
+    bgColor: "rgba(99, 102, 241, 0.08)",
   },
 ];
 
@@ -69,77 +70,62 @@ export default function QuickActions({
   actions = defaultActions,
 }: QuickActionsProps) {
   return (
-    <section
-      className="rounded-lg border px-5 py-10 sm:px-8 sm:py-12"
-      style={{ background: "var(--bg-dark)", borderColor: "var(--border)" }}
-    >
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-10 text-center">
-          <h2
-            className="text-2xl font-bold tracking-tight sm:text-3xl"
-            style={{ color: "var(--text-primary)" }}
-          >
-            {title}
-          </h2>
-          <p
-            className="mt-2 text-sm"
-            style={{ color: "var(--text-muted)" }}
-          >
-            {subtitle}
-          </p>
-        </div>
+    <section aria-labelledby="quick-access-heading">
+      <div className="mb-8 text-center">
+        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#D4A017]">
+          Workflow Shortcuts
+        </p>
+        <h2
+          id="quick-access-heading"
+          className="text-3xl font-bold tracking-tight text-[#111827] dark:text-white"
+        >
+          {title}
+        </h2>
+        <p className="mt-2 text-sm text-[#6B7280] dark:text-slate-400">
+          {subtitle}
+        </p>
+      </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {actions.map((action) => {
-            const Icon = action.icon;
-            return (
-              <div
-                key={action.title}
-                className="group relative flex flex-col overflow-hidden rounded-md border p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
-                style={{
-                  background: "var(--surface)",
-                  borderColor: "var(--border)",
-                }}
-              >
-                {/* Icon */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {actions.map((action) => {
+          const Icon = action.icon;
+          return (
+            <div
+              key={action.title}
+              className="group bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
+            >
+              <div>
+                {/* Icon Container */}
                 <div
-                  className="mb-4 flex h-12 w-12 items-center justify-center rounded-md"
+                  className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-105"
                   style={{ background: action.bgColor }}
                 >
-                  <Icon className="h-6 w-6" style={{ color: action.color }} />
+                  <Icon className="h-7 w-7" style={{ color: action.color }} />
                 </div>
 
                 {/* Content */}
-                <h3
-                  className="text-base font-bold"
-                  style={{ color: "var(--text-primary)" }}
-                >
+                <h3 className="text-lg font-semibold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-red-400 transition-colors">
                   {action.title}
                 </h3>
-                <p
-                  className="mt-1.5 flex-1 text-sm leading-relaxed"
-                  style={{ color: "var(--text-muted)" }}
-                >
+                <p className="mt-2 text-sm text-[#6B7280] dark:text-slate-400 leading-relaxed">
                   {action.description}
                 </p>
+              </div>
 
-                {/* Button */}
+              {/* Action Link */}
+              <div className="mt-6 pt-4 border-t border-gray-100 dark:border-slate-800">
                 <Link
                   href={action.href}
-                  className="mt-5 inline-flex items-center gap-1.5 rounded-md border px-4 py-2 text-xs font-bold transition-colors hover:brightness-95"
-                  style={{
-                    borderColor: action.color + "30",
-                    color: action.color,
-                    background: action.bgColor,
-                  }}
+                  className="inline-flex items-center gap-2 text-xs font-bold transition-all duration-200"
+                  style={{ color: action.color }}
                 >
-                  {action.buttonLabel}
-                  <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                  <span>{action.buttonLabel}</span>
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );

@@ -18,7 +18,6 @@ interface CategoryGridProps {
   categories: CategoryCount[];
 }
 
-// Map known category names to icons; fallback to Package
 const categoryIconMap: Record<string, typeof Monitor> = {
   "IT Equipment": Monitor,
   "Office Supplies": Pen,
@@ -30,14 +29,13 @@ const categoryIconMap: Record<string, typeof Monitor> = {
   "Paper & Filing": FileBox,
 };
 
-// Rotating accent colors for category cards
 const accentColors = [
-  { color: "#7e191b", bg: "rgba(126, 25, 27, 0.06)" },
-  { color: "#ca8a04", bg: "rgba(202, 138, 4, 0.06)" },
-  { color: "#059669", bg: "rgba(5, 150, 105, 0.06)" },
-  { color: "#6366f1", bg: "rgba(99, 102, 241, 0.06)" },
-  { color: "#d97706", bg: "rgba(217, 119, 6, 0.06)" },
-  { color: "#0891b2", bg: "rgba(8, 145, 178, 0.06)" },
+  { color: "#7B1E1E", bg: "rgba(123, 30, 30, 0.08)" },
+  { color: "#D4A017", bg: "rgba(212, 160, 23, 0.08)" },
+  { color: "#059669", bg: "rgba(5, 150, 105, 0.08)" },
+  { color: "#6366f1", bg: "rgba(99, 102, 241, 0.08)" },
+  { color: "#d97706", bg: "rgba(217, 119, 6, 0.08)" },
+  { color: "#0891b2", bg: "rgba(8, 145, 178, 0.08)" },
 ];
 
 export default function CategoryGrid({
@@ -51,26 +49,22 @@ export default function CategoryGrid({
     <section aria-labelledby="categories-heading">
       {/* Section header */}
       <div className="mb-8 text-center">
-        <p
-          className="mb-2 text-xs font-bold uppercase tracking-widest"
-          style={{ color: "var(--gold)" }}
-        >
+        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#D4A017]">
           Explore Catalog
         </p>
         <h2
           id="categories-heading"
-          className="text-2xl font-bold tracking-tight sm:text-3xl"
-          style={{ color: "var(--text-primary)" }}
+          className="text-3xl font-bold tracking-tight text-[#111827] dark:text-white"
         >
           {title}
         </h2>
-        <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
+        <p className="mt-2 text-sm text-[#6B7280] dark:text-slate-400">
           {subtitle}
         </p>
       </div>
 
       {/* Category cards */}
-      <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
         {categories.map((cat, index) => {
           const accent = accentColors[index % accentColors.length];
           const Icon = categoryIconMap[cat.category] || Package;
@@ -79,15 +73,11 @@ export default function CategoryGrid({
             <Link
               key={cat.category}
               href={`/catalog?category=${cat.id}`}
-              className="group flex items-center gap-4 rounded-md border p-5 no-underline shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
-              style={{
-                background: "var(--surface)",
-                borderColor: "var(--border)",
-              }}
+              className="group bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 p-6 no-underline shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex items-center gap-4"
             >
               {/* Icon */}
               <div
-                className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md transition-transform duration-200 group-hover:scale-105"
+                className="flex h-13 w-13 flex-shrink-0 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-105"
                 style={{ background: accent.bg }}
               >
                 <Icon className="h-6 w-6" style={{ color: accent.color }} />
@@ -95,23 +85,17 @@ export default function CategoryGrid({
 
               {/* Content */}
               <div className="min-w-0 flex-1">
-                <div
-                  className="truncate text-sm font-bold"
-                  style={{ color: "var(--text-primary)" }}
-                >
+                <h3 className="truncate text-base font-semibold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-red-400 transition-colors">
                   {cat.category}
-                </div>
-                <div
-                  className="mt-0.5 text-xs font-medium"
-                  style={{ color: "var(--text-muted)" }}
-                >
+                </h3>
+                <p className="mt-1 text-xs text-[#6B7280] dark:text-slate-400 font-medium">
                   {cat._count} {cat._count === 1 ? "product" : "products"}
-                </div>
+                </p>
               </div>
 
               {/* Arrow */}
               <ArrowRight
-                className="h-4 w-4 flex-shrink-0 transition-transform duration-200 group-hover:translate-x-1"
+                className="h-4 w-4 flex-shrink-0 transition-transform duration-300 group-hover:translate-x-1"
                 style={{ color: accent.color }}
               />
             </Link>
