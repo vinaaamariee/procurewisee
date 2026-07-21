@@ -76,7 +76,7 @@ export default function RecentlyUpdatedProducts({
             <Link
               key={product.id}
               href={`/catalog/${product.id}`}
-              className="group flex flex-col overflow-hidden rounded-2xl border no-underline shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+              className="group flex flex-col overflow-hidden rounded-md border no-underline shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
               style={{
                 background: "var(--surface)",
                 borderColor: "var(--border)",
@@ -86,8 +86,7 @@ export default function RecentlyUpdatedProducts({
               <div
                 className="relative flex h-32 items-center justify-center"
                 style={{
-                  background:
-                    "linear-gradient(135deg, rgba(126,25,27,0.08), rgba(202,138,4,0.08))",
+                  background: "linear-gradient(135deg, var(--accent-glass), var(--secondary-dim))",
                 }}
               >
                 <Package
