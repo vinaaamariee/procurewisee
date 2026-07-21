@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
   output   = "../node_modules/.prisma/client"
@@ -10,9 +7,692 @@ datasource db {
   provider = "postgresql"
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ENUMS
-// ─────────────────────────────────────────────────────────────────────────────
+model UserProfile {
+  id                      String                         @id
+  username                String                         @unique @db.VarChar(50)
+  fullName                String                         @db.VarChar(100)
+  email                   String                         @unique @db.VarChar(100)
+  role                    UserRole
+  isActive                Boolean                        @default(true)
+  createdAt               DateTime                       @default(now())
+  appItemsCreated         AppItem[]                      @relation("AppItemCreatedBy")
+  auditTrails             AuditTrail[]
+  canvasesCompiled        CanvasAbstract[]               @relation("CanvasCompiledBy")
+  notifications           Notification[]
+  ppmpsPrepared           Ppmp[]                         @relation("PpmpPreparedBy")
+  prStatusChanges         PurchaseRequestStatusHistory[] @relation("PrStatusChangedBy")
+  prsAssigned             PurchaseRequest[]              @relation("PrAssignedOfficer")
+  prsRequested            PurchaseRequest[]              @relation("PrRequestedBy")
+  recommendationsReviewed Recommendation[]               @relation("RecommendationReviewedBy")
+  rfqsCreated             RequestForQuote[]              @relation("RfqCreatedBy")
+  requisitionsReviewed    RequisitionStatusHistory[]     @relation("RequisitionReviewedBy")
+
+  @@map("user_profiles")
+}
+
+model Supplier {
+  id                      Int                      @id @default(autoincrement()) @map("supplier_id")
+  companyName             String                   @db.VarChar(150)
+  tin                     String?                  @unique @db.VarChar(15)
+  contactPerson           String?                  @db.VarChar(100)
+  contactNumber           String?                  @db.VarChar(20)
+  businessAddress         String
+  reliabilityRating       Decimal                  @default(5.00) @db.Decimal(3, 2)
+  qualityComplianceRate   Decimal                  @default(100.00) @db.Decimal(5, 2)
+  historicalDeliveryDays  Int                      @default(0)
+  isVerified              Boolean                  @default(false)
+  createdAt               DateTime                 @default(now())
+  lateDeliveriesCount     Int                      @default(0)
+  onTimeDeliveryRate      Decimal?                 @db.Decimal(5, 2)
+  totalDeliveriesCount    Int                      @default(0)
+  acknowledgementReceipts AcknowledgementReceipt[]
+  historicalPrices        HistoricalPrice[]
+  purchaseOrders          PurchaseOrder[]
+  recommendations         Recommendation[]
+  evaluations             SupplierEvaluation[]
+  productPrices           SupplierProductPrice[]
+  quotes                  SupplierQuote[]
+
+  @@map("suppliers")
+}
+
+model SupplierProductPrice {
+  id                 Int                   @id @default(autoincrement())
+  supplierId         Int
+  productId          Int
+  unitPrice          Decimal               @db.Decimal(12, 2)
+  available          Boolean               @default(true)
+  remarks            String?
+  updatedAt          DateTime              @updatedAt
+  priceEffectiveDate DateTime
+  priceExpiryDate    DateTime?
+  history            ProductPriceHistory[]
+  product            CatalogProduct        @relation(fields: [productId], references: [id])
+  supplier           Supplier              @relation(fields: [supplierId], references: [id])
+
+  @@unique([supplierId, productId])
+  @@map("supplier_product_prices")
+}
+
+model AppItem {
+  id                 Int          @id @default(autoincrement()) @map("app_item_id")
+  papCode            String       @db.VarChar(50)
+  objectCode         String?      @db.VarChar(50)
+  projectTitle       String       @db.VarChar(255)
+  endUserUnit        String       @db.VarChar(100)
+  generalDescription String
+  modeOfProcurement  String       @default("Small Value Procurement") @db.VarChar(100)
+  sourceOfFund       String       @db.VarChar(100)
+  estimatedBudget    Decimal      @db.Decimal(12, 2)
+  fyYear             Int          @default(2026)
+  createdById        String?
+  createdBy          UserProfile? @relation("AppItemCreatedBy", fields: [createdById], references: [id])
+  rfqItems           RfqItem[]
+
+  @@map("app_items")
+}
+
+model RequestForQuote {
+  id                     Int              @id @default(autoincrement()) @map("rfq_id")
+  rfqNumber              String           @unique @db.VarChar(50)
+  title                  String           @db.VarChar(255)
+  approvedBudgetContract Decimal          @db.Decimal(12, 2)
+  deadlineDate           DateTime         @db.Date
+  status                 RfqStatus        @default(Draft)
+  createdById            String?
+  createdAt              DateTime         @default(now())
+  canvasAbstracts        CanvasAbstract[]
+  purchaseOrders         PurchaseOrder[]
+  createdBy              UserProfile?     @relation("RfqCreatedBy", fields: [createdById], references: [id])
+  items                  RfqItem[]
+  quotes                 SupplierQuote[]
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("requests_for_quote")
+}
+
+model RfqItem {
+  id           Int             @id @default(autoincrement()) @map("rfq_item_id")
+  rfqId        Int
+  appItemId    Int?
+  itemNumber   String          @db.VarChar(10)
+  particulars  String
+  quantity     Int
+  productId    Int?
+  unitId       Int
+  quoteDetails QuoteDetail[]
+  appItem      AppItem?        @relation(fields: [appItemId], references: [id])
+  product      CatalogProduct? @relation(fields: [productId], references: [id])
+  rfq          RequestForQuote @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  unit         UnitOfMeasure   @relation(fields: [unitId], references: [id])
+
+  @@index([rfqId])
+  @@index([appItemId])
+  @@index([productId])
+  @@map("rfq_items")
+}
+
+model SupplierQuote {
+  id                  Int              @id @default(autoincrement()) @map("quote_id")
+  rfqId               Int
+  supplierId          Int
+  submissionDate      DateTime         @default(now()) @db.Date
+  totalQuotedAmount   Decimal          @db.Decimal(12, 2)
+  offeredDeliveryDays Int
+  status              QuoteStatus      @default(Submitted)
+  quoteDetails        QuoteDetail[]
+  recommendations     Recommendation[]
+  rfq                 RequestForQuote  @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  supplier            Supplier         @relation(fields: [supplierId], references: [id])
+
+  @@index([rfqId])
+  @@index([supplierId])
+  @@index([status])
+  @@index([submissionDate])
+  @@map("supplier_quotes")
+}
+
+model QuoteDetail {
+  id                 Int           @id @default(autoincrement()) @map("detail_id")
+  quoteId            Int
+  rfqItemId          Int
+  unitPrice          Decimal       @db.Decimal(12, 2)
+  quantityMultiplier Int           @default(1)
+  isAvailable        Boolean       @default(true)
+  quote              SupplierQuote @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  rfqItem            RfqItem       @relation(fields: [rfqItemId], references: [id])
+
+  @@index([quoteId])
+  @@index([rfqItemId])
+  @@map("quote_details")
+}
+
+model CanvasAbstract {
+  id              Int              @id @default(autoincrement()) @map("canvas_id")
+  rfqId           Int
+  openingDate     DateTime         @default(now()) @db.Date
+  locationOpened  String           @default("Basco, Batanes") @db.VarChar(100)
+  compiledById    String?
+  compiledBy      UserProfile?     @relation("CanvasCompiledBy", fields: [compiledById], references: [id])
+  rfq             RequestForQuote  @relation(fields: [rfqId], references: [id])
+  recommendations Recommendation[]
+
+  @@index([rfqId])
+  @@map("canvas_abstracts")
+}
+
+model Recommendation {
+  id                 Int            @id @default(autoincrement()) @map("recomm_id")
+  canvasId           Int
+  supplierId         Int
+  supplierQuoteId    Int
+  compositeMcdmScore Decimal        @db.Decimal(5, 2)
+  priceScore         Decimal        @db.Decimal(5, 2)
+  deliveryScore      Decimal        @db.Decimal(5, 2)
+  reliabilityScore   Decimal        @db.Decimal(5, 2)
+  rankPosition       Int
+  justificationLog   String
+  approverRemarks    String?
+  approvalStatus     String         @default("Pending Review") @db.VarChar(30)
+  reviewedById       String?
+  canvas             CanvasAbstract @relation(fields: [canvasId], references: [id], onDelete: Cascade)
+  reviewedBy         UserProfile?   @relation("RecommendationReviewedBy", fields: [reviewedById], references: [id])
+  supplier           Supplier       @relation(fields: [supplierId], references: [id])
+  supplierQuote      SupplierQuote  @relation(fields: [supplierQuoteId], references: [id])
+
+  @@index([canvasId])
+  @@index([supplierId])
+  @@index([supplierQuoteId])
+  @@index([reviewedById])
+  @@index([approvalStatus])
+  @@map("recommendations")
+}
+
+model Brand {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique @db.VarChar(100)
+  description String?
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  products    CatalogProduct[]
+
+  @@map("brands")
+}
+
+model ProductImage {
+  id        Int            @id @default(autoincrement())
+  productId Int
+  imageUrl  String
+  caption   String?
+  isPrimary Boolean        @default(false)
+  createdAt DateTime       @default(now())
+  product   CatalogProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model ProductSpecification {
+  id                 Int            @id @default(autoincrement())
+  productId          Int
+  specificationName  String
+  specificationValue String
+  product            CatalogProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+  @@map("product_specifications")
+}
+
+model ProductPriceHistory {
+  id              Int                  @id @default(autoincrement())
+  supplierPriceId Int
+  price           Decimal              @db.Decimal(12, 2)
+  effectiveDate   DateTime
+  remarks         String?
+  createdAt       DateTime             @default(now())
+  supplierPrice   SupplierProductPrice @relation(fields: [supplierPriceId], references: [id], onDelete: Cascade)
+
+  @@index([supplierPriceId])
+  @@map("product_price_history")
+}
+
+model Category {
+  id          Int              @id @default(autoincrement())
+  name        String           @unique @db.VarChar(100)
+  description String?
+  isActive    Boolean          @default(true)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  products    CatalogProduct[]
+
+  @@map("categories")
+}
+
+model UnitOfMeasure {
+  id                   Int                   @id @default(autoincrement())
+  name                 String                @unique @db.VarChar(50)
+  abbreviation         String                @db.VarChar(15)
+  description          String?
+  isActive             Boolean               @default(true)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  products             CatalogProduct[]
+  historicalPrices     HistoricalPrice[]
+  ppmpItems            PpmpItem[]
+  purchaseRequestItems PurchaseRequestItem[]
+  rfqItems             RfqItem[]
+
+  @@map("units_of_measure")
+}
+
+model CatalogProduct {
+  id                   Int                    @id @default(autoincrement()) @map("product_id")
+  name                 String                 @db.VarChar(150)
+  description          String
+  estimatedUnitCost    Decimal                @db.Decimal(12, 2)
+  isActive             Boolean                @default(true)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  popularity           Int                    @default(0)
+  brandId              Int?
+  categoryId           Int
+  imageUrl             String?
+  productCode          String?                @unique @db.VarChar(50)
+  unitId               Int
+  brand                Brand?                 @relation(fields: [brandId], references: [id])
+  category             Category               @relation(fields: [categoryId], references: [id])
+  unit                 UnitOfMeasure          @relation(fields: [unitId], references: [id])
+  historicalPrices     HistoricalPrice[]
+  ppmpItems            PpmpItem[]
+  images               ProductImage[]
+  specifications       ProductSpecification[]
+  purchaseRequestItems PurchaseRequestItem[]
+  rfqItems             RfqItem[]
+  supplierPrices       SupplierProductPrice[]
+
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([unitId])
+  @@map("catalog_products")
+}
+
+model AuditTrail {
+  id            Int          @id @default(autoincrement()) @map("audit_id")
+  userId        String?
+  actionType    String       @db.VarChar(50)
+  tableAffected String       @db.VarChar(50)
+  recordId      Int
+  oldState      Json?
+  newState      Json?
+  ipAddress     String?      @db.VarChar(45)
+  timestamp     DateTime     @default(now())
+  user          UserProfile? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("audit_trails")
+}
+
+model OfficeItem {
+  id          String       @id
+  name        String
+  unit        String
+  category    String
+  description String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  quotes      PriceQuote[]
+}
+
+model PriceQuote {
+  id           String     @id @default(uuid())
+  supplierId   String
+  itemId       String
+  unitPrice    Float
+  availability String
+  deliveryDays Int
+  notes        String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  item         OfficeItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([supplierId, itemId])
+}
+
+model Requisition {
+  id             Int                        @id @default(autoincrement()) @map("requisition_id")
+  trackingCode   String                     @unique @db.VarChar(50)
+  secureToken    String                     @unique @db.VarChar(100)
+  requesterName  String                     @db.VarChar(100)
+  requesterEmail String                     @db.VarChar(100)
+  department     String                     @db.VarChar(100)
+  status         RequisitionStatus          @default(Pending)
+  rejectionCount Int                        @default(0)
+  createdAt      DateTime                   @default(now())
+  updatedAt      DateTime                   @updatedAt
+  items          RequisitionItem[]
+  statusHistory  RequisitionStatusHistory[]
+
+  @@index([trackingCode])
+  @@index([secureToken])
+  @@map("requisitions")
+}
+
+model RequisitionItem {
+  id                 Int         @id @default(autoincrement()) @map("requisition_item_id")
+  requisitionId      Int
+  productName        String      @db.VarChar(255)
+  quantity           Int
+  estimatedUnitPrice Decimal     @db.Decimal(12, 2)
+  brandPreference    String?     @db.VarChar(100)
+  requisition        Requisition @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+
+  @@index([requisitionId])
+  @@map("requisition_items")
+}
+
+model RequisitionStatusHistory {
+  id            Int               @id @default(autoincrement()) @map("history_id")
+  requisitionId Int
+  status        RequisitionStatus
+  remarks       String?
+  changedById   String?
+  createdAt     DateTime          @default(now())
+  changedBy     UserProfile?      @relation("RequisitionReviewedBy", fields: [changedById], references: [id])
+  requisition   Requisition       @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
+
+  @@index([requisitionId])
+  @@index([changedById])
+  @@map("requisition_status_history")
+}
+
+model DepartmentBudget {
+  id              Int      @id @default(autoincrement()) @map("budget_id")
+  department      String   @unique @db.VarChar(100)
+  allocatedBudget Decimal  @db.Decimal(12, 2)
+  spentBudget     Decimal  @default(0) @db.Decimal(12, 2)
+  fiscalYear      Int      @default(2026)
+  updatedAt       DateTime @updatedAt
+
+  @@map("department_budgets")
+}
+
+model Ppmp {
+  id                  Int               @id @default(autoincrement()) @map("ppmp_id")
+  ppmpNumber          String            @unique @db.VarChar(50)
+  projectTitle        String            @db.VarChar(255)
+  department          String            @db.VarChar(100)
+  office              String            @db.VarChar(100)
+  preparedById        String?
+  fundingSource       String            @db.VarChar(100)
+  fiscalYear          Int               @default(2026)
+  estimatedBudget     Decimal           @db.Decimal(12, 2)
+  procurementSchedule String?
+  remarks             String?
+  attachments         String?
+  status              PpmpStatus        @default(Draft)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  items               PpmpItem[]
+  preparedBy          UserProfile?      @relation("PpmpPreparedBy", fields: [preparedById], references: [id])
+  purchaseRequests    PurchaseRequest[]
+
+  @@index([preparedById])
+  @@index([status])
+  @@index([createdAt])
+  @@map("ppmps")
+}
+
+model PpmpItem {
+  id                 Int             @id @default(autoincrement()) @map("ppmp_item_id")
+  ppmpId             Int
+  generalDescription String
+  quantity           Int
+  estimatedUnitCost  Decimal         @db.Decimal(12, 2)
+  estimatedCost      Decimal         @db.Decimal(12, 2)
+  schedule           String?
+  productId          Int?
+  unitId             Int
+  ppmp               Ppmp            @relation(fields: [ppmpId], references: [id], onDelete: Cascade)
+  product            CatalogProduct? @relation(fields: [productId], references: [id])
+  unit               UnitOfMeasure   @relation(fields: [unitId], references: [id])
+
+  @@index([ppmpId])
+  @@index([productId])
+  @@map("ppmp_items")
+}
+
+model PurchaseRequest {
+  id                 Int                            @id @default(autoincrement()) @map("pr_id")
+  prNumber           String                         @unique @db.VarChar(50)
+  trackingNumber     String?                        @unique @db.VarChar(50)
+  requestDate        DateTime                       @default(now())
+  department         String                         @db.VarChar(100)
+  office             String                         @db.VarChar(100)
+  requestedById      String?
+  purpose            String
+  fundingSource      String                         @db.VarChar(100)
+  ppmpId             Int?
+  estimatedBudget    Decimal                        @db.Decimal(12, 2)
+  totalCost          Decimal                        @db.Decimal(12, 2)
+  remarks            String?
+  attachments        String?
+  status             PrStatus                       @default(Draft)
+  assignedOfficerId  String?
+  createdAt          DateTime                       @default(now())
+  updatedAt          DateTime                       @updatedAt
+  requesterEmail     String?                        @db.VarChar(150)
+  requesterName      String?                        @db.VarChar(150)
+  approvedAt         DateTime?
+  procurementRemarks String?
+  receivedAt         DateTime?
+  reviewedAt         DateTime?
+  submittedAt        DateTime?
+  trackingCode       String?                        @unique
+  purchaseOrders     PurchaseOrder[]
+  items              PurchaseRequestItem[]
+  statusHistory      PurchaseRequestStatusHistory[]
+  assignedOfficer    UserProfile?                   @relation("PrAssignedOfficer", fields: [assignedOfficerId], references: [id])
+  ppmp               Ppmp?                          @relation(fields: [ppmpId], references: [id])
+  requestedBy        UserProfile?                   @relation("PrRequestedBy", fields: [requestedById], references: [id])
+
+  @@index([requestedById])
+  @@index([ppmpId])
+  @@index([assignedOfficerId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@map("purchase_requests")
+}
+
+model PurchaseRequestItem {
+  id                Int             @id @default(autoincrement()) @map("pr_item_id")
+  prId              Int
+  productId         Int?
+  description       String
+  brand             String?         @db.VarChar(100)
+  quantity          Int
+  estimatedUnitCost Decimal         @db.Decimal(12, 2)
+  estimatedCost     Decimal         @db.Decimal(12, 2)
+  specification     String?
+  unitId            Int
+  pr                PurchaseRequest @relation(fields: [prId], references: [id], onDelete: Cascade)
+  product           CatalogProduct? @relation(fields: [productId], references: [id])
+  unit              UnitOfMeasure   @relation(fields: [unitId], references: [id])
+
+  @@index([prId])
+  @@index([productId])
+  @@map("purchase_request_items")
+}
+
+model PurchaseOrder {
+  id                      Int                      @id @default(autoincrement()) @map("po_id")
+  poNumber                String                   @unique @db.VarChar(50)
+  supplierId              Int
+  rfqId                   Int?
+  prId                    Int?
+  totalCost               Decimal                  @db.Decimal(12, 2)
+  deliveryTerms           String?
+  paymentTerms            String?
+  status                  PoStatus                 @default(Draft)
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  acknowledgementReceipts AcknowledgementReceipt[]
+  items                   PurchaseOrderItem[]
+  pr                      PurchaseRequest?         @relation(fields: [prId], references: [id])
+  rfq                     RequestForQuote?         @relation(fields: [rfqId], references: [id])
+  supplier                Supplier                 @relation(fields: [supplierId], references: [id])
+
+  @@index([supplierId])
+  @@index([rfqId])
+  @@index([prId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("purchase_orders")
+}
+
+model PurchaseOrderItem {
+  id          Int           @id @default(autoincrement()) @map("po_item_id")
+  poId        Int
+  description String
+  quantity    Int
+  unitPrice   Decimal       @db.Decimal(12, 2)
+  totalCost   Decimal       @db.Decimal(12, 2)
+  po          PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+
+  @@index([poId])
+  @@map("purchase_order_items")
+}
+
+model PurchaseRequestStatusHistory {
+  id                Int             @id @default(autoincrement())
+  purchaseRequestId Int
+  status            PrStatus
+  remarks           String?
+  changedById       String?
+  createdAt         DateTime        @default(now())
+  changedBy         UserProfile?    @relation("PrStatusChangedBy", fields: [changedById], references: [id])
+  purchaseRequest   PurchaseRequest @relation(fields: [purchaseRequestId], references: [id], onDelete: Cascade)
+
+  @@index([purchaseRequestId])
+  @@map("purchase_request_status_history")
+}
+
+model AcknowledgementReceipt {
+  id             Int            @id @default(autoincrement()) @map("receipt_id")
+  receiptNumber  String         @unique @db.VarChar(50)
+  poId           Int
+  supplierId     Int
+  receivedBy     String         @db.VarChar(100)
+  dateReceived   DateTime       @db.Date
+  deliveryStatus DeliveryStatus @default(CompleteDelivery)
+  remarks        String?
+  signatures     String?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  po             PurchaseOrder  @relation(fields: [poId], references: [id])
+  supplier       Supplier       @relation(fields: [supplierId], references: [id])
+
+  @@index([poId])
+  @@index([supplierId])
+  @@map("acknowledgement_receipts")
+}
+
+model SupplierEvaluation {
+  id                      Int            @id @default(autoincrement()) @map("evaluation_id")
+  supplierId              Int
+  evaluationType          EvaluationType
+  evaluatorName           String         @db.VarChar(100)
+  evaluationDate          DateTime       @db.Date
+  productQuality          Int?
+  deliveryCompliance      Int?
+  accuracy                Int?
+  responsiveness          Int?
+  communication           Int?
+  costEffectiveness       Int?
+  overallSatisfaction     Int?
+  rfqResponsiveness       Int?
+  competitivePricing      Int?
+  specificationCompliance Int?
+  documentCompliance      Int?
+  deliveryPerformance     Int?
+  comments                String?
+  recommendation          String?
+  signature               String?
+  createdAt               DateTime       @default(now())
+  supplier                Supplier       @relation(fields: [supplierId], references: [id])
+
+  @@index([supplierId])
+  @@map("supplier_evaluations")
+}
+
+model FormTemplate {
+  id        Int      @id @default(autoincrement()) @map("template_id")
+  name      String   @db.VarChar(100)
+  fields    Json
+  version   Int      @default(1)
+  notes     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("form_templates")
+}
+
+model WorkflowConfig {
+  id         Int      @id @default(autoincrement()) @map("workflow_id")
+  moduleName String   @unique @db.VarChar(100)
+  steps      Json
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("workflow_configs")
+}
+
+model HistoricalPrice {
+  id                Int             @id @default(autoincrement()) @map("id")
+  productId         Int?            @map("product_id")
+  rawProductName    String          @map("raw_product_name") @db.VarChar(255)
+  supplierId        Int?            @map("supplier_id")
+  supplierName      String          @map("supplier_name") @db.VarChar(150)
+  procurementNumber String          @map("procurement_number") @db.VarChar(100)
+  procurementDate   DateTime        @map("procurement_date") @db.Date
+  quantity          Int             @map("quantity")
+  unitId            Int?            @map("unit_id")
+  unit              String          @map("unit") @db.VarChar(50)
+  unitPrice         Decimal         @map("unit_price") @db.Decimal(12, 2)
+  totalPrice        Decimal         @map("total_price") @db.Decimal(12, 2)
+  sourceMonth       String          @map("source_month") @db.VarChar(20)
+  sourceYear        Int             @map("source_year")
+  matchedAt         DateTime?       @map("matched_at")
+  createdAt         DateTime        @default(now()) @map("created_at")
+  product           CatalogProduct? @relation(fields: [productId], references: [id])
+  supplier          Supplier?       @relation(fields: [supplierId], references: [id])
+  unitRelation      UnitOfMeasure?  @relation(fields: [unitId], references: [id])
+
+  @@unique([procurementNumber, rawProductName])
+  @@index([productId])
+  @@index([supplierId])
+  @@index([unitId])
+  @@index([procurementDate])
+  @@map("historical_prices")
+}
+
+model Notification {
+  id          String       @id @default(uuid()) @map("notification_id")
+  title       String       @db.VarChar(150)
+  description String
+  icon        String       @db.VarChar(50)
+  role        String?      @db.VarChar(50)
+  userId      String?      @map("user_id")
+  isRead      Boolean      @default(false) @map("is_read")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  user        UserProfile? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
 
 enum UserRole {
   Administrator          @map("Administrator")
@@ -35,520 +715,6 @@ enum QuoteStatus {
   Rejected
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// 1. USER PROFILES (extends Supabase auth.users — no password_hash stored here)
-// ─────────────────────────────────────────────────────────────────────────────
-
-model UserProfile {
-  id        String   @id // UUID — must match auth.users.id from Supabase Auth
-  username  String   @unique @db.VarChar(50)
-  fullName  String   @db.VarChar(100)
-  email     String   @unique @db.VarChar(100)
-  role      UserRole
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-
-  // Relations
-  appItemsCreated         AppItem[]         @relation("AppItemCreatedBy")
-  rfqsCreated             RequestForQuote[] @relation("RfqCreatedBy")
-  canvasesCompiled        CanvasAbstract[]  @relation("CanvasCompiledBy")
-  recommendationsReviewed Recommendation[]  @relation("RecommendationReviewedBy")
-  auditTrails             AuditTrail[]
-  requisitionsReviewed    RequisitionStatusHistory[] @relation("RequisitionReviewedBy")
-  ppmpsPrepared           Ppmp[]            @relation("PpmpPreparedBy")
-  prsRequested            PurchaseRequest[] @relation("PrRequestedBy")
-  prsAssigned             PurchaseRequest[] @relation("PrAssignedOfficer")
-  prStatusChanges         PurchaseRequestStatusHistory[] @relation("PrStatusChangedBy")
-  notifications           Notification[]
-
-  @@map("user_profiles")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 2. REGISTERED SUPPLIERS
-// ─────────────────────────────────────────────────────────────────────────────
-
-model Supplier {
-  id                     Int      @id @default(autoincrement()) @map("supplier_id")
-  companyName            String   @db.VarChar(150)
-  tin                    String?  @unique @db.VarChar(15)
-  contactPerson          String?  @db.VarChar(100)
-  contactNumber          String?  @db.VarChar(20)
-  businessAddress        String   @db.Text
-  reliabilityRating      Decimal  @default(5.00) @db.Decimal(3, 2)
-  qualityComplianceRate  Decimal  @default(100.00) @db.Decimal(5, 2)
-  historicalDeliveryDays Int      @default(0)
-  isVerified             Boolean  @default(false)
-  createdAt              DateTime @default(now())
-  onTimeDeliveryRate     Decimal? @db.Decimal(5, 2)
-  totalDeliveriesCount   Int      @default(0)
-  lateDeliveriesCount    Int      @default(0)
-
-  // Relations
-  productPrices          SupplierProductPrice[]
-  quotes                 SupplierQuote[]
-  recommendations        Recommendation[]
-  purchaseOrders         PurchaseOrder[]
-  acknowledgementReceipts AcknowledgementReceipt[]
-  evaluations            SupplierEvaluation[]
-  historicalPrices       HistoricalPrice[]
-
-  @@map("suppliers")
-}
-
-model SupplierProductPrice {
-
-  id              Int    @id @default(autoincrement())
-
-  supplierId      Int
-
-  supplier        Supplier  @relation(fields:[supplierId], references:[id])
-
-  productId       Int
-
-  product         CatalogProduct  @relation(fields:[productId], references:[id])
-
-  unitPrice       Decimal         @db.Decimal(12,2)
-
-  available       Boolean         @default(true)
-
-  remarks         String?
-
-  updatedAt       DateTime        @updatedAt
-
-  history         ProductPriceHistory[]
-
-  priceEffectiveDate DateTime
-
-  priceExpiryDate DateTime?
-
-  @@unique([supplierId, productId])
-
-  @@map("supplier_product_prices")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 3. ANNUAL PROCUREMENT PLAN (APP) ITEMS
-// ─────────────────────────────────────────────────────────────────────────────
-
-model AppItem {
-  id                 Int          @id @default(autoincrement()) @map("app_item_id")
-  papCode            String       @db.VarChar(50)
-  objectCode         String?      @db.VarChar(50)
-  projectTitle       String       @db.VarChar(255)
-  endUserUnit        String       @db.VarChar(100)
-  generalDescription String
-  modeOfProcurement  String       @default("Small Value Procurement") @db.VarChar(100)
-  sourceOfFund       String       @db.VarChar(100)
-  estimatedBudget    Decimal      @db.Decimal(12, 2)
-  fyYear             Int          @default(2026)
-  createdById        String? // FK → UserProfile.id (UUID)
-  createdBy          UserProfile? @relation("AppItemCreatedBy", fields: [createdById], references: [id])
-
-  // Relations
-  rfqItems RfqItem[]
-
-  @@map("app_items")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 4. REQUESTS FOR QUOTATION (RFQ MASTER)
-// ─────────────────────────────────────────────────────────────────────────────
-
-model RequestForQuote {
-  id                     Int          @id @default(autoincrement()) @map("rfq_id")
-  rfqNumber              String       @unique @db.VarChar(50)
-  title                  String       @db.VarChar(255)
-  approvedBudgetContract Decimal      @db.Decimal(12, 2)
-  deadlineDate           DateTime     @db.Date
-  status                 RfqStatus    @default(Draft)
-  createdById            String? // FK → UserProfile.id (UUID)
-  createdBy              UserProfile? @relation("RfqCreatedBy", fields: [createdById], references: [id])
-  createdAt              DateTime     @default(now())
-
-  // Relations
-  items           RfqItem[]
-  quotes          SupplierQuote[]
-  canvasAbstracts CanvasAbstract[]
-  purchaseOrders  PurchaseOrder[]
-
-  @@index([status])
-  @@index([createdAt])
-  @@map("requests_for_quote")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 5. RFQ ITEM REQUISITION DETAILS
-// ─────────────────────────────────────────────────────────────────────────────
-
-model RfqItem {
-  id           Int     @id @default(autoincrement()) @map("rfq_item_id")
-  rfqId        Int
-  rfq          RequestForQuote @relation(fields: [rfqId], references: [id], onDelete: Cascade)
-  appItemId    Int?
-  appItem      AppItem? @relation(fields: [appItemId], references: [id])
-  productId    Int?
-  product      CatalogProduct? @relation(fields: [productId], references: [id])
-  itemNumber   String  @db.VarChar(10)
-  particulars  String
-  quantity     Int
-  unitId       Int
-  unit         UnitOfMeasure @relation(fields: [unitId], references: [id])
-
-  // Relations
-  quoteDetails QuoteDetail[]
-
-  @@index([rfqId])
-  @@index([appItemId])
-  @@index([productId])
-  @@map("rfq_items")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 6. SUPPLIER QUOTATION SUBMISSIONS
-// ─────────────────────────────────────────────────────────────────────────────
-
-model SupplierQuote {
-  id                  Int             @id @default(autoincrement()) @map("quote_id")
-  rfqId               Int
-  rfq                 RequestForQuote @relation(fields: [rfqId], references: [id], onDelete: Cascade)
-  supplierId          Int
-  supplier            Supplier        @relation(fields: [supplierId], references: [id])
-  submissionDate      DateTime        @default(now()) @db.Date
-  totalQuotedAmount   Decimal         @db.Decimal(12, 2)
-  offeredDeliveryDays Int
-  status              QuoteStatus     @default(Submitted)
-
-  // Relations
-  quoteDetails    QuoteDetail[]
-  recommendations Recommendation[]
-
-  @@index([rfqId])
-  @@index([supplierId])
-  @@index([status])
-  @@index([submissionDate])
-  @@map("supplier_quotes")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 7. QUOTATION LINE-ITEM BREAKDOWN
-// Note: totalPrice is computed in application logic (quantity_multiplier * unit_price)
-// Prisma does not support GENERATED ALWAYS AS — computed at query time instead.
-// ─────────────────────────────────────────────────────────────────────────────
-
-model QuoteDetail {
-  id                 Int           @id @default(autoincrement()) @map("detail_id")
-  quoteId            Int
-  quote              SupplierQuote @relation(fields: [quoteId], references: [id], onDelete: Cascade)
-  rfqItemId          Int
-  rfqItem            RfqItem       @relation(fields: [rfqItemId], references: [id])
-  unitPrice          Decimal       @db.Decimal(12, 2)
-  quantityMultiplier Int           @default(1)
-  isAvailable        Boolean       @default(true)
-
-  @@index([quoteId])
-  @@index([rfqItemId])
-  @@map("quote_details")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 8. CANVAS ABSTRACTS
-// ─────────────────────────────────────────────────────────────────────────────
-
-model CanvasAbstract {
-  id             Int             @id @default(autoincrement()) @map("canvas_id")
-  rfqId          Int
-  rfq            RequestForQuote @relation(fields: [rfqId], references: [id])
-  openingDate    DateTime        @default(now()) @db.Date
-  locationOpened String          @default("Basco, Batanes") @db.VarChar(100)
-  compiledById   String? // FK → UserProfile.id (UUID)
-  compiledBy     UserProfile?    @relation("CanvasCompiledBy", fields: [compiledById], references: [id])
-
-  // Relations
-  recommendations Recommendation[]
-
-  @@index([rfqId])
-  @@map("canvas_abstracts")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 9. BEST-VALUE MACHINE RECOMMENDATIONS (MCDM Output)
-// ─────────────────────────────────────────────────────────────────────────────
-
-model Recommendation {
-  id                 Int            @id @default(autoincrement()) @map("recomm_id")
-  canvasId           Int
-  canvas             CanvasAbstract @relation(fields: [canvasId], references: [id], onDelete: Cascade)
-  supplierId         Int
-  supplier           Supplier       @relation(fields: [supplierId], references: [id])
-  supplierQuoteId    Int
-  supplierQuote      SupplierQuote  @relation(fields: [supplierQuoteId], references: [id])
-  compositeMcdmScore Decimal        @db.Decimal(5, 2)
-  priceScore         Decimal        @db.Decimal(5, 2)
-  deliveryScore      Decimal        @db.Decimal(5, 2)
-  reliabilityScore   Decimal        @db.Decimal(5, 2)
-  rankPosition       Int
-  justificationLog   String
-  approverRemarks    String?
-  approvalStatus     String         @default("Pending Review") @db.VarChar(30)
-  reviewedById       String? // FK → UserProfile.id (UUID)
-  reviewedBy         UserProfile?   @relation("RecommendationReviewedBy", fields: [reviewedById], references: [id])
-
-  @@index([canvasId])
-  @@index([supplierId])
-  @@index([supplierQuoteId])
-  @@index([reviewedById])
-  @@index([approvalStatus])
-  @@map("recommendations")
-}
-
-model Brand {
-
-  id          Int      @id @default(autoincrement())
-
-  name        String   @unique @db.VarChar(100)
-
-  description String?  @db.Text
-
-  isActive    Boolean  @default(true)
-
-  createdAt   DateTime @default(now())
-
-  updatedAt   DateTime @updatedAt
-
-  products    CatalogProduct[]
-
-  @@map("brands")
-}
-
-
-model ProductImage {
-  id        Int            @id @default(autoincrement())
-  productId Int
-  product   CatalogProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
-  imageUrl  String
-  caption   String?
-  isPrimary Boolean        @default(false)
-  createdAt DateTime       @default(now())
-
-  @@index([productId])
-  @@map("product_images")
-}
-
-model ProductSpecification {
-  id                 Int            @id @default(autoincrement())
-  productId          Int
-  product            CatalogProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
-  specificationName  String
-  specificationValue String
-
-  @@index([productId])
-  @@map("product_specifications")
-}
-
-model ProductPriceHistory {
-  id              Int                  @id @default(autoincrement())
-  supplierPriceId Int
-  supplierPrice   SupplierProductPrice @relation(fields: [supplierPriceId], references: [id], onDelete: Cascade)
-  price           Decimal              @db.Decimal(12, 2)
-  effectiveDate   DateTime
-  remarks         String?
-  createdAt       DateTime             @default(now())
-
-  @@index([supplierPriceId])
-  @@map("product_price_history")
-}
-// =============================================================================
-// PROCUREMENT CATALOG
-// =============================================================================
-
-model Category {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique @db.VarChar(100)
-  description String?  @db.Text
-  isActive    Boolean  @default(true)
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  products    CatalogProduct[]
-
-  @@map("categories")
-}
-model UnitOfMeasure {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique @db.VarChar(50)
-  abbreviation String   @db.VarChar(15)
-  description  String?  @db.Text
-  isActive     Boolean  @default(true)
-
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  products             CatalogProduct[]
-  rfqItems             RfqItem[]
-  ppmpItems            PpmpItem[]
-  purchaseRequestItems PurchaseRequestItem[]
-  historicalPrices     HistoricalPrice[]
-
-  @@map("units_of_measure")
-}
-
-
-
-model CatalogProduct {
-
-  id              Int       @id @default(autoincrement()) @map("product_id")
-
-  productCode     String?   @unique @db.VarChar(50)
-
-  name            String    @db.VarChar(150)
-
-  description     String    @db.Text
-
-  categoryId      Int
-  category        Category  @relation(fields: [categoryId], references: [id])
-
-  brandId         Int?
-  brand           Brand?    @relation(fields: [brandId], references: [id])
-
-  unitId          Int
-  unit            UnitOfMeasure @relation(fields: [unitId], references: [id])
-  estimatedUnitCost Decimal     @db.Decimal(12,2)
-
-  imageUrl         String?
-
-  isActive        Boolean   @default(true)
-
-  createdAt       DateTime  @default(now())
-
-  updatedAt       DateTime  @updatedAt
-
-  popularity      Int       @default(0)
-
-  supplierPrices SupplierProductPrice[]
-
-  images ProductImage[]
-
-  specifications ProductSpecification[]
-
-  purchaseRequestItems PurchaseRequestItem[]
-
-  rfqItems RfqItem[]
-
-  ppmpItems PpmpItem[]
-
-  historicalPrices HistoricalPrice[]
-
-  @@index([categoryId])
-  @@index([brandId])
-  @@index([unitId])
-  @@map("catalog_products")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// 10. IMMUTABLE SECURITY AUDIT TRAIL
-// ─────────────────────────────────────────────────────────────────────────────
-
-model AuditTrail {
-  id            Int          @id @default(autoincrement()) @map("audit_id")
-  userId        String? // FK → UserProfile.id (UUID)
-  user          UserProfile? @relation(fields: [userId], references: [id])
-  actionType    String       @db.VarChar(50)
-  tableAffected String       @db.VarChar(50)
-  recordId      Int
-  oldState      Json?
-  newState      Json?
-  ipAddress     String?      @db.VarChar(45)
-  timestamp     DateTime     @default(now())
-
-  @@index([userId])
-  @@map("audit_trails")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// LEGACY — kept for Price Comparison Dashboard compatibility
-// ─────────────────────────────────────────────────────────────────────────────
-
-model OfficeItem {
-  id          String       @id
-  name        String
-  unit        String
-  category    String
-  description String
-  quotes      PriceQuote[]
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-}
-
-model PriceQuote {
-  id           String     @id @default(uuid())
-  supplierId   String
-  itemId       String
-  item         OfficeItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  unitPrice    Float
-  availability String
-  deliveryDays Int
-  notes        String?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-
-  @@unique([supplierId, itemId])
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// REQUISITION & TRACKING (No-Login End-User System)
-// ─────────────────────────────────────────────────────────────────────────────
-
-model Requisition {
-  id             Int                      @id @default(autoincrement()) @map("requisition_id")
-  trackingCode   String                   @unique @db.VarChar(50)
-  secureToken    String                   @unique @db.VarChar(100)
-  requesterName  String                   @db.VarChar(100)
-  requesterEmail String                   @db.VarChar(100)
-  department     String                   @db.VarChar(100)
-  status         RequisitionStatus       @default(Pending)
-  rejectionCount Int                      @default(0)
-  createdAt      DateTime                 @default(now())
-  updatedAt      DateTime                 @updatedAt
-
-  // Relations
-  items          RequisitionItem[]
-  statusHistory  RequisitionStatusHistory[]
-
-  @@index([trackingCode])
-  @@index([secureToken])
-  @@map("requisitions")
-}
-
-model RequisitionItem {
-  id                 Int         @id @default(autoincrement()) @map("requisition_item_id")
-  requisitionId      Int
-  requisition        Requisition @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
-  productName        String      @db.VarChar(255)
-  quantity           Int
-  estimatedUnitPrice Decimal     @db.Decimal(12, 2)
-  brandPreference    String?     @db.VarChar(100)
-
-  @@index([requisitionId])
-  @@map("requisition_items")
-}
-
-model RequisitionStatusHistory {
-  id            Int               @id @default(autoincrement()) @map("history_id")
-  requisitionId Int
-  requisition   Requisition       @relation(fields: [requisitionId], references: [id], onDelete: Cascade)
-  status        RequisitionStatus
-  remarks       String?           @db.Text
-  changedById   String?
-  changedBy     UserProfile?      @relation("RequisitionReviewedBy", fields: [changedById], references: [id])
-  createdAt     DateTime          @default(now())
-
-  @@index([requisitionId])
-  @@index([changedById])
-  @@map("requisition_status_history")
-}
-
 enum RequisitionStatus {
   Pending
   Approved
@@ -556,24 +722,6 @@ enum RequisitionStatus {
   Completed
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// BUDGET MONITORING
-// ─────────────────────────────────────────────────────────────────────────────
-
-model DepartmentBudget {
-  id              Int      @id @default(autoincrement()) @map("budget_id")
-  department      String   @unique @db.VarChar(100)
-  allocatedBudget Decimal  @db.Decimal(12, 2)
-  spentBudget     Decimal  @default(0) @db.Decimal(12, 2)
-  fiscalYear      Int      @default(2026)
-  updatedAt       DateTime @updatedAt
-
-  @@map("department_budgets")
-}
-
-// =============================================================================
-// PROCUREMENT PLANNING
-// =============================================================================
 enum PpmpStatus {
   Draft
   Submitted
@@ -582,65 +730,7 @@ enum PpmpStatus {
   Archived
 }
 
-model Ppmp {
-  id                  Int          @id @default(autoincrement()) @map("ppmp_id")
-  ppmpNumber          String       @unique @db.VarChar(50)
-  projectTitle        String       @db.VarChar(255)
-  department          String       @db.VarChar(100)
-  office              String       @db.VarChar(100)
-  preparedById        String?
-  preparedBy          UserProfile? @relation("PpmpPreparedBy", fields: [preparedById], references: [id])
-  fundingSource       String       @db.VarChar(100)
-  fiscalYear          Int          @default(2026)
-  estimatedBudget     Decimal      @db.Decimal(12, 2)
-  procurementSchedule String?      @db.Text
-  remarks             String?      @db.Text
-  attachments         String?      @db.Text // Store JSON array of file paths or links
-  status              PpmpStatus   @default(Draft)
-  createdAt           DateTime     @default(now())
-  updatedAt           DateTime     @updatedAt
-
-  items               PpmpItem[]
-  purchaseRequests    PurchaseRequest[]
-
-  @@index([preparedById])
-  @@index([status])
-  @@index([createdAt])
-  @@map("ppmps")
-}
-
-model PpmpItem {
-  id                 Int      @id @default(autoincrement()) @map("ppmp_item_id")
-
-  ppmpId             Int
-  ppmp               Ppmp @relation(fields: [ppmpId], references: [id], onDelete: Cascade)
-
-  productId          Int?
-  product            CatalogProduct? @relation(fields: [productId], references: [id])
-
-  generalDescription String   @db.Text
-
-  quantity           Int
-
-  unitId             Int
-  unit               UnitOfMeasure @relation(fields: [unitId], references: [id])
-
-  estimatedUnitCost  Decimal  @db.Decimal(12, 2)
-
-  estimatedCost      Decimal  @db.Decimal(12, 2)
-
-  schedule           String?  @db.Text
-
-  @@index([ppmpId])
-  @@index([productId])
-  @@map("ppmp_items")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PURCHASE REQUEST (PR)
-// ─────────────────────────────────────────────────────────────────────────────
-
-  enum PrStatus {
+enum PrStatus {
   Draft
   Submitted
   UnderReview
@@ -651,74 +741,6 @@ model PpmpItem {
   Cancelled
 }
 
-model PurchaseRequest {
-  id                Int              @id @default(autoincrement()) @map("pr_id")
-  prNumber          String           @unique @db.VarChar(50) // E.g., PR-2026-F982C9 or tracking code
-  trackingNumber    String?          @unique @db.VarChar(50) // Upon approval/receive: PROC-YYYY-XXXX
-  requestDate       DateTime         @default(now())
-  department        String           @db.VarChar(100)
-  office            String           @db.VarChar(100)
-  requestedById     String?
-  requestedBy       UserProfile?     @relation("PrRequestedBy", fields: [requestedById], references: [id])
-  requesterName     String?          @db.VarChar(150)
-  requesterEmail    String?          @db.VarChar(150)
-  purpose           String           @db.Text
-  fundingSource     String           @db.VarChar(100)
-  ppmpId            Int?
-  ppmp              Ppmp?            @relation(fields: [ppmpId], references: [id])
-  estimatedBudget   Decimal          @db.Decimal(12, 2)
-  totalCost         Decimal          @db.Decimal(12, 2)
-  remarks           String?          @db.Text
-  attachments       String?          @db.Text
-  status            PrStatus         @default(Draft)
-  assignedOfficerId String?
-  assignedOfficer   UserProfile?     @relation("PrAssignedOfficer", fields: [assignedOfficerId], references: [id])
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  procurementRemarks String?         @db.Text
-  trackingCode      String?          @unique
-  submittedAt       DateTime? 
-  reviewedAt        DateTime?
-  approvedAt        DateTime?
-  receivedAt        DateTime?
-  items             PurchaseRequestItem[]
-  purchaseOrders    PurchaseOrder[]
- statusHistory      PurchaseRequestStatusHistory[]
-  @@index([requestedById])
-  @@index([ppmpId])
-  @@index([assignedOfficerId])
-  @@index([status])
-  @@index([createdAt])
-  @@index([updatedAt])
-  @@map("purchase_requests")
-}
-
-model PurchaseRequestItem {
-  id                 Int             @id @default(autoincrement()) @map("pr_item_id")
-  prId               Int
-  pr                 PurchaseRequest @relation(fields: [prId], references: [id], onDelete: Cascade)
-  productId          Int?
-  product            CatalogProduct? @relation(fields: [productId], references: [id])
-  description        String          @db.Text
-  brand              String?         @db.VarChar(100)
-  quantity           Int
-  unitId             Int             
-  unit               UnitOfMeasure  @relation(fields: [unitId], references: [id])
-  estimatedUnitCost  Decimal         @db.Decimal(12, 2)
-  estimatedCost      Decimal         @db.Decimal(12, 2)
-  specification      String?         @db.Text
-
-  @@index([prId])
-  @@index([productId])
-  @@map("purchase_request_items")
-}
-
-
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PURCHASE ORDER (PO)
-// ─────────────────────────────────────────────────────────────────────────────
 enum PoStatus {
   Draft
   Approved
@@ -726,212 +748,15 @@ enum PoStatus {
   Closed
 }
 
-model PurchaseOrder {
-  id                 Int              @id @default(autoincrement()) @map("po_id")
-  poNumber           String           @unique @db.VarChar(50) // E.g., PO-2026-0001
-  supplierId         Int
-  supplier           Supplier         @relation(fields: [supplierId], references: [id])
-  rfqId              Int?
-  rfq                RequestForQuote? @relation(fields: [rfqId], references: [id])
-  prId               Int?
-  pr                 PurchaseRequest? @relation(fields: [prId], references: [id])
-  totalCost          Decimal          @db.Decimal(12, 2)
-  deliveryTerms      String?          @db.Text
-  paymentTerms       String?          @db.Text
-  status             PoStatus         @default(Draft)
-  createdAt          DateTime         @default(now())
-  updatedAt          DateTime         @updatedAt
-
-  items                  PurchaseOrderItem[]
-  acknowledgementReceipts AcknowledgementReceipt[]
-
-  @@index([supplierId])
-  @@index([rfqId])
-  @@index([prId])
-  @@index([status])
-  @@index([createdAt])
-  @@map("purchase_orders")
-}
-
-model PurchaseOrderItem {
-  id          Int           @id @default(autoincrement()) @map("po_item_id")
-  poId        Int
-  po          PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
-  description String        @db.Text
-  quantity    Int
-  unitPrice   Decimal       @db.Decimal(12, 2)
-  totalCost   Decimal       @db.Decimal(12, 2)
-
-  @@index([poId])
-  @@map("purchase_order_items")
-}
-
-model PurchaseRequestStatusHistory {
-  id                Int             @id @default(autoincrement())
-  purchaseRequestId Int
-  purchaseRequest   PurchaseRequest @relation(fields: [purchaseRequestId], references: [id], onDelete: Cascade)
-  status            PrStatus
-  remarks           String?
-  changedById       String?
-  changedBy         UserProfile?    @relation("PrStatusChangedBy", fields: [changedById], references: [id])
-  createdAt         DateTime        @default(now())
-
-  @@index([purchaseRequestId])
-  @@map("purchase_request_status_history")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// ACKNOWLEDGEMENT RECEIPT
-// ─────────────────────────────────────────────────────────────────────────────
 enum DeliveryStatus {
-  PartialDelivery   @map("Partial Delivery")
-  CompleteDelivery  @map("Complete Delivery")
-  RejectedDelivery  @map("Rejected Delivery")
-  ReturnedDelivery  @map("Returned Delivery")
+  PartialDelivery     @map("Partial Delivery")
+  CompleteDelivery    @map("Complete Delivery")
+  RejectedDelivery    @map("Rejected Delivery")
+  ReturnedDelivery    @map("Returned Delivery")
   ReplacementDelivery @map("Replacement Delivery")
 }
 
-model AcknowledgementReceipt {
-  id             Int            @id @default(autoincrement()) @map("receipt_id")
-  receiptNumber  String         @unique @db.VarChar(50) // E.g., REC-2026-0001
-  poId           Int
-  po             PurchaseOrder  @relation(fields: [poId], references: [id])
-  supplierId     Int
-  supplier       Supplier       @relation(fields: [supplierId], references: [id])
-  receivedBy     String         @db.VarChar(100)
-  dateReceived   DateTime       @db.Date
-  deliveryStatus DeliveryStatus @default(CompleteDelivery)
-  remarks        String?        @db.Text
-  signatures     String?        @db.Text // Store JSON of signatures
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-
-  @@index([poId])
-  @@index([supplierId])
-  @@map("acknowledgement_receipts")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// SUPPLIER EVALUATION
-// ─────────────────────────────────────────────────────────────────────────────
 enum EvaluationType {
-  EndUser          @map("End User")
+  EndUser           @map("End User")
   ProcurementOffice @map("Procurement Office")
 }
-
-model SupplierEvaluation {
-  id                 Int            @id @default(autoincrement()) @map("evaluation_id")
-  supplierId         Int
-  supplier           Supplier       @relation(fields: [supplierId], references: [id])
-  evaluationType     EvaluationType
-  evaluatorName      String         @db.VarChar(100)
-  evaluationDate     DateTime       @db.Date
-  
-  // End User Criteria (null if Procurement Office evaluation)
-  productQuality     Int? // 1-4
-  deliveryCompliance Int? // 1-4
-  accuracy           Int? // 1-4
-  responsiveness     Int? // 1-4
-  communication      Int? // 1-4
-  costEffectiveness  Int? // 1-4
-  overallSatisfaction Int? // 1-4
-
-  // Procurement Office Criteria (null if End User evaluation)
-  rfqResponsiveness  Int? // 1-4
-  competitivePricing Int? // 1-4
-  specificationCompliance Int? // 1-4
-  documentCompliance Int? // 1-4
-  deliveryPerformance Int? // 1-4
-
-  comments           String?        @db.Text
-  recommendation     String?        @db.Text
-  signature          String?        @db.Text // Store digital signature text/image-link
-  createdAt          DateTime       @default(now())
-
-  @@index([supplierId])
-  @@map("supplier_evaluations")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// FORM BUILDER & FORM VERSIONING
-// ─────────────────────────────────────────────────────────────────────────────
-model FormTemplate {
-  id          Int      @id @default(autoincrement()) @map("template_id")
-  name        String   @db.VarChar(100)
-  fields      Json     // JSON array of field configs: { name, label, type, required, options }
-  version     Int      @default(1)
-  notes       String?  @db.Text
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("form_templates")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// WORKFLOW CONFIG
-// ─────────────────────────────────────────────────────────────────────────────
-model WorkflowConfig {
-  id          Int      @id @default(autoincrement()) @map("workflow_id")
-  moduleName  String   @unique @db.VarChar(100) // e.g. "PPMP", "PR", "PO"
-  steps       Json     // JSON array of approval steps: { role, level, parallel, escalationDays }
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("workflow_configs")
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// HISTORICAL PRICE ENGINE
-// ─────────────────────────────────────────────────────────────────────────────
-model HistoricalPrice {
-  id                Int             @id @default(autoincrement()) @map("id")
-  productId         Int?            @map("product_id")
-  product           CatalogProduct? @relation(fields: [productId], references: [id])
-  rawProductName    String          @map("raw_product_name") @db.VarChar(255)
-  
-  supplierId        Int?            @map("supplier_id")
-  supplier          Supplier?       @relation(fields: [supplierId], references: [id])
-  supplierName      String          @map("supplier_name") @db.VarChar(150)
-  
-  procurementNumber String          @map("procurement_number") @db.VarChar(100)
-  procurementDate   DateTime        @map("procurement_date") @db.Date
-  quantity          Int             @map("quantity")
-  
-  unitId            Int?            @map("unit_id")
-  unitRelation      UnitOfMeasure?  @relation(fields: [unitId], references: [id])
-  unit              String          @map("unit") @db.VarChar(50)
-  
-  unitPrice         Decimal         @map("unit_price") @db.Decimal(12, 2)
-  totalPrice        Decimal         @map("total_price") @db.Decimal(12, 2)
-  sourceMonth       String          @map("source_month") @db.VarChar(20)
-  sourceYear        Int             @map("source_year")
-  
-  matchedAt         DateTime?       @map("matched_at")
-  createdAt         DateTime        @default(now()) @map("created_at")
-
-  @@unique([procurementNumber, rawProductName])
-  @@index([productId])
-  @@index([supplierId])
-  @@index([unitId])
-  @@index([procurementDate])
-  @@map("historical_prices")
-}
-
-model Notification {
-  id          String   @id @default(uuid()) @map("notification_id")
-  title       String   @db.VarChar(150)
-  description String   @db.Text
-  icon        String   @db.VarChar(50)
-  role        String?  @db.VarChar(50)
-  userId      String?  @map("user_id")
-  isRead      Boolean  @default(false) @map("is_read")
-  createdAt   DateTime @default(now()) @map("created_at")
-
-  user        UserProfile? @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("notifications")
-}
-
-
