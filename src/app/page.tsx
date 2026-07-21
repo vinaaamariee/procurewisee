@@ -43,53 +43,58 @@ export default async function LandingPage() {
   ]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[var(--bg-deep)] text-[var(--text-primary)]">
+    <div className="flex min-h-screen flex-col bg-[#F7F8FA] dark:bg-slate-950 text-[#111827] dark:text-slate-100 font-sans">
       <Header />
 
       <main className="flex-1">
         {/* Hero */}
         <HeroSection activeRfqs={activeRfqs} />
 
-        {/* Main content */}
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="space-y-16">
+        {/* Main Content Container */}
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+          <div className="space-y-16 lg:space-y-20">
+            {/* Quick Access */}
             <QuickActions />
+
+            {/* Statistics */}
             <StatisticsCards
-  stats={[
-    {
-      title: "Total Products",
-      value: stats.totalProducts.toLocaleString(),
-      icon: Boxes,
-      color: "#7e191b",
-      bgColor: "rgba(126, 25, 27, 0.06)",
-    },
-    {
-      title: "Registered Suppliers",
-      value: stats.totalSuppliers.toLocaleString(),
-      icon: Users,
-      color: "#ca8a04",
-      bgColor: "rgba(202, 138, 4, 0.06)",
-    },
-    {
-      title: "Categories",
-      value: stats.totalCategories.toLocaleString(),
-      icon: LayoutGrid,
-      color: "#059669",
-      bgColor: "rgba(5, 150, 105, 0.06)",
-    },
-    {
-      title: "Monthly Price Updates",
-      value: stats.monthlyPriceUpdates.toLocaleString(),
-      icon: TrendingUp,
-      color: "#6366f1",
-      bgColor: "rgba(99, 102, 241, 0.06)",
-    },
-  ]}
-/>
+              stats={[
+                {
+                  title: "Total Products",
+                  value: stats.totalProducts.toLocaleString(),
+                  icon: Boxes,
+                  color: "#7B1E1E",
+                  bgColor: "rgba(123, 30, 30, 0.08)",
+                },
+                {
+                  title: "Registered Suppliers",
+                  value: stats.totalSuppliers.toLocaleString(),
+                  icon: Users,
+                  color: "#D4A017",
+                  bgColor: "rgba(212, 160, 23, 0.08)",
+                },
+                {
+                  title: "Categories",
+                  value: stats.totalCategories.toLocaleString(),
+                  icon: LayoutGrid,
+                  color: "#059669",
+                  bgColor: "rgba(5, 150, 105, 0.08)",
+                },
+                {
+                  title: "Monthly Price Updates",
+                  value: stats.monthlyPriceUpdates.toLocaleString(),
+                  icon: TrendingUp,
+                  color: "#6366f1",
+                  bgColor: "rgba(99, 102, 241, 0.08)",
+                },
+              ]}
+            />
+
+            {/* Category Grid */}
             <CategoryGrid categories={categories} />
 
-            {/* Bottom section: two-column layout on large screens */}
-            <div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
+            {/* Bottom Two-Column Section */}
+            <div className="grid gap-10 lg:grid-cols-2 items-start">
               <RecentlyUpdatedProducts products={recentProducts} />
               <WhyProcureWise />
             </div>
