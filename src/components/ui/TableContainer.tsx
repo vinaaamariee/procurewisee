@@ -13,7 +13,7 @@ export default function TableContainer({
   return (
     <div
       {...rest}
-      className={`overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)] ${className}`}
+      className={`overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)] ${className}`}
     >
       {children}
     </div>
