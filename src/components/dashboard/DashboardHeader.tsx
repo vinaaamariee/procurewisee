@@ -5,10 +5,10 @@ import { ChevronRight, LayoutDashboard } from "lucide-react";
 
 export default function DashboardHeader() {
   return (
-    <header className="relative z-10 mb-6 flex flex-col gap-2 font-sans">
+    <header className="relative z-10 mb-6 font-sans">
       {/* Breadcrumb Navigation */}
       <div
-        className="flex items-center gap-2 text-xs font-semibold"
+        className="mb-1.5 flex items-center gap-2 text-xs font-semibold"
         style={{ color: "var(--text-muted)" }}
       >
         <LayoutDashboard className="h-3.5 w-3.5 shrink-0" />
@@ -25,8 +25,8 @@ export default function DashboardHeader() {
       {/* Main Title & Subtitle */}
       <div>
         <h1
-          className="text-3xl font-extrabold tracking-tight font-sans"
-          style={{ color: "var(--text-primary)" }}
+          className="text-3xl font-bold tracking-tight font-sans"
+          style={{ color: "var(--text-primary)", fontFamily: "var(--font-body)" }}
         >
           Procurement Dashboard
         </h1>

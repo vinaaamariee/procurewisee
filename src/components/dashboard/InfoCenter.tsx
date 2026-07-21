@@ -62,8 +62,8 @@ export default function InfoCenter({
 
           <div>
             <h2
-              className="text-base font-extrabold font-sans"
-              style={{ color: "var(--text-primary)" }}
+              className="text-base font-bold font-sans tracking-tight"
+              style={{ color: "var(--text-primary)", fontFamily: "var(--font-body)" }}
             >
               Information Center
             </h2>

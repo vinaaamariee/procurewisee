@@ -8,7 +8,7 @@ interface QuickAction {
   sublabel: string;
   href: string;
   Icon: LucideIcon;
-  variant: "primary" | "secondary" | "white";
+  variant: "primary" | "white";
 }
 
 const ACTIONS: QuickAction[] = [
@@ -58,20 +58,18 @@ const ACTIONS: QuickAction[] = [
 
 export default function QuickActions() {
   return (
-    <div className="flex flex-wrap gap-2.5 font-sans">
+    <div className="flex flex-wrap items-center gap-3 font-sans">
       {ACTIONS.map((action) => {
         const { label, sublabel, href, Icon, variant } = action;
 
         const base =
-          "group inline-flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-all duration-200 border shadow-sm";
+          "group inline-flex items-center gap-2.5 rounded-lg px-4 py-2.5 text-sm font-bold transition-all duration-200 border shadow-sm shrink-0";
 
         const styles: Record<string, string> = {
           primary:
-            "bg-amber-400 text-slate-950 border-amber-300 hover:bg-amber-300 hover:shadow-md hover:-translate-y-0.5 font-extrabold",
+            "bg-amber-400 text-slate-950 border-amber-300 hover:bg-amber-300 hover:shadow-md hover:-translate-y-0.5 font-extrabold rounded-lg",
           white:
-            "bg-white text-slate-900 border-white hover:bg-slate-100 hover:text-blue-950 hover:shadow-md hover:-translate-y-0.5",
-          secondary:
-            "bg-slate-100 text-slate-900 border-slate-200 hover:bg-white hover:shadow-md hover:-translate-y-0.5",
+            "bg-white text-slate-900 border-white hover:bg-slate-100 hover:text-blue-950 hover:shadow-md hover:-translate-y-0.5 rounded-lg",
         };
 
         return (

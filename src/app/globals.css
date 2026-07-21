@@ -15,7 +15,7 @@
 /* ---------- CSS Variables ---------- */
 :root {
   /* Default: Light Mode — Official Government Portal Theme */
-  --font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-display: 'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
   --font-body:    'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
 
   --accent:           #0B2D5C; /* Official Navy */
@@ -112,7 +112,7 @@ html, body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
+  font-family: var(--font-body);
   font-weight: 700;
 }
 

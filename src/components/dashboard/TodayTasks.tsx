@@ -73,7 +73,7 @@ export default function TodayTasks({ tasks }: TodayTasksProps) {
             <Target className="h-4.5 w-4.5" />
           </div>
           <div>
-            <h2 className="text-base font-extrabold font-sans" style={{ color: "var(--text-primary)" }}>
+            <h2 className="text-base font-bold font-sans tracking-tight" style={{ color: "var(--text-primary)", fontFamily: "var(--font-body)" }}>
               Today&apos;s Tasks
             </h2>
             <p className="text-xs" style={{ color: "var(--text-muted)" }}>
