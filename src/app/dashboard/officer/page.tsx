@@ -10,6 +10,7 @@ import BSCInfoCenter from '@/components/dashboard/BSCInfoCenter';
 import HeroSection from '@/components/dashboard/HeroSection';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import DashboardShell from '@/components/dashboard/DashboardShell';
+import Footer from '@/components/dashboard/Footer';
 import StatCard from '@/components/dashboard/StatCard';
 import Link from "next/link";
 import {
@@ -603,6 +604,9 @@ export default async function OfficerDashboard() {
           </table>
         </div>
       </div>
+
+      {/* ── Footer ──────────────────────────────────────────── */}
+      <Footer />
 
     </DashboardShell>
   );
