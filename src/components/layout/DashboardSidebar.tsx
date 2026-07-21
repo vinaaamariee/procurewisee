@@ -9,6 +9,13 @@ import {
   ShoppingCart,
   BarChart3,
   Users,
+  FileCheck2,
+  Workflow,
+  ClipboardCheck,
+  ScrollText,
+  ChartNoAxesCombined,
+  CalendarDays,
+  Star,
 } from "lucide-react";
 
 type NavItem = {
@@ -78,13 +85,52 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
     ],
+    "Administrative Approver": [
+      {
+        title: "Overview",
+        items: [
+          { label: "Dashboard", href: "/dashboard/approver", icon: LayoutDashboard },
+          { label: "Review History", href: "/dashboard/approver/history", icon: FileCheck2 },
+        ],
+      },
+      {
+        title: "Governance",
+        items: [
+          { label: "Workflows", href: "/dashboard/approver/workflows", icon: Workflow },
+          { label: "Form Templates", href: "/dashboard/approver/forms", icon: ClipboardCheck },
+        ],
+      },
+      {
+        title: "Reporting",
+        items: [
+          { label: "Reports", href: "/dashboard/approver/reports", icon: ScrollText },
+          { label: "Analytics", href: "/dashboard/approver/analytics", icon: ChartNoAxesCombined },
+        ],
+      },
+    ],
+    "End User": [
+      {
+        title: "Overview",
+        items: [
+          { label: "Dashboard", href: "/dashboard/end-user", icon: LayoutDashboard },
+        ],
+      },
+      {
+        title: "My Planning",
+        items: [
+          { label: "PPMP Planning", href: "/dashboard/end-user/ppmp", icon: CalendarDays },
+          { label: "Purchase Requests", href: "/dashboard/end-user/pr", icon: FileText },
+          { label: "Supplier Evaluation", href: "/dashboard/end-user/evaluation", icon: Star },
+        ],
+      },
+    ],
   };
 
   const sections = navConfig[role] || [];
 
   return (
     <aside
-      className="flex w-64 flex-col text-slate-200 shadow-sm"
+      className="sticky top-0 flex h-screen w-60 shrink-0 flex-col text-slate-200 shadow-sm"
       style={{ background: "#0B2D5C", borderRight: "1px solid rgba(255,255,255,0.08)" }}
     >
       {/* Masthead rule, consistent with the rest of the app */}
@@ -109,11 +155,11 @@ export default function DashboardSidebar({ role }: { role: string }) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-8">
+      <nav className="flex-1 space-y-8 overflow-y-auto px-3 py-6">
         {sections.map((section) => (
           <div key={section.title}>
             <div
-              className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-wider"
+              className="mb-3 px-3 text-[10px] font-semibold uppercase tracking-[0.14em]"
               style={{ color: "rgba(255,255,255,0.4)" }}
             >
               {section.title}
@@ -121,9 +167,10 @@ export default function DashboardSidebar({ role }: { role: string }) {
 
             <div className="space-y-1">
               {section.items.map((item) => {
+                const isOverview = item.label === "Dashboard";
                 const isActive =
                   pathname === item.href ||
-                  pathname.startsWith(item.href + "/");
+                  (!isOverview && pathname.startsWith(item.href + "/"));
 
                 const Icon = item.icon;
 
@@ -131,7 +178,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group relative flex items-center gap-3 rounded px-4 py-2.5 text-sm transition"
+                    className="group relative flex items-center gap-3 rounded-md px-4 py-2.5 text-sm font-medium transition-colors"
                     style={
                       isActive
                         ? { background: "rgba(255,255,255,0.08)", color: "#ffffff" }

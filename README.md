@@ -12,6 +12,12 @@ The public landing page now uses a consistent institutional portal treatment: a 
 
 ---
 
+## Dashboard Workspace Refresh
+
+The authenticated workspace now shares the same card, table, and typography treatment as the public portal. `Card` is the reusable panel surface for dashboard content, role-specific navigation is available for Procurement Officers, Administrative Approvers, and End Users, and the workspace header adapts more cleanly as the screen narrows. This keeps each role’s primary actions discoverable while preserving the existing workflow routes.
+
+---
+
 ## 🌟 Overview
 
 ProcureWise is a modern web application built to streamline and automate the public procurement process at Batanes State College. By replacing manual paperwork and convoluted spreadsheets with structured workflows, automated canvassing, and objective scoring, the system ensures transparency, speeds up purchasing decisions, and optimizes government budget utilization.
@@ -740,7 +746,6 @@ To ensure a unified visual identity and layout consistency across the ERP system
 2. **[StatusBadge](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/components/ui/StatusBadge.tsx)**: A standardized badge mapping status types (e.g., `Draft`, `Published`, `Closed`, `Evaluated`, `Awarded`) to color-coded, theme-compliant badges.
 3. **[SectionHeader](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/components/ui/SectionHeader.tsx)**: A consistent header layout rendering section headings, description text/subtitles, and header actions (e.g., download buttons or status badges).
 4. **[TableContainer](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/components/ui/TableContainer.tsx)**: A wrapper ensuring consistent overflow behavior, borders, and shadows for table displays across registry dashboards.
-
 
 
 
