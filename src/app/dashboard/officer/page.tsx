@@ -9,6 +9,7 @@ import ActivityTimeline from '@/components/dashboard/ActivityTimeline';
 import BSCInfoCenter from '@/components/dashboard/BSCInfoCenter';
 import HeroSection from '@/components/dashboard/HeroSection';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
+import DashboardShell from '@/components/dashboard/DashboardShell';
 import StatCard from '@/components/dashboard/StatCard';
 import Link from "next/link";
 import {
@@ -215,7 +216,7 @@ export default async function OfficerDashboard() {
   } as const;
 
   return (
-    <div className="space-y-8">
+    <DashboardShell>
 
       {/* ── Page Header ─────────────────────────────────────── */}
       <DashboardHeader />
@@ -603,6 +604,6 @@ export default async function OfficerDashboard() {
         </div>
       </div>
 
-    </div>
+    </DashboardShell>
   );
 }
