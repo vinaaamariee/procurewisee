@@ -6,6 +6,8 @@ import ForecastSkeleton from './ForecastSkeleton';
 import { startTimer } from '@/lib/performance-logger';
 import EmptyState from '@/components/ui/EmptyState';
 import ActivityFeed from '@/components/dashboard/ActivityFeed';
+import HeroSection from '@/components/dashboard/HeroSection';
+import StatCard from '@/components/dashboard/StatCard';
 import Link from "next/link";
 import {
   ClipboardList,
@@ -17,11 +19,10 @@ import {
   ShoppingCart,
   Quote,
   PartyPopper,
+  Sparkles,
+  TrendingUp,
 } from "lucide-react";
-import Card from "@/components/ui/Card";
 import StatusBadge from "@/components/ui/StatusBadge";
-import SectionHeader from "@/components/ui/SectionHeader";
-import TableContainer from "@/components/ui/TableContainer";
 
 export const metadata = { title: 'Officer Dashboard — ProcureWise' };
 
@@ -174,26 +175,26 @@ export default async function OfficerDashboard() {
     {
       label: "Total RFQs",
       value: stats.totalRfqs,
-      desc: "All solicitations",
+      desc: "All solicitations issued",
       href: "#recent-solicitations",
       icon: ClipboardList,
-      accent: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
+      accentClass: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
     },
     {
       label: "Open / Active",
       value: stats.openRfqs,
-      desc: "Awaiting quotes",
+      desc: "Awaiting supplier quotes",
       href: "#recent-solicitations",
       icon: CircleDot,
-      accent: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
+      accentClass: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
     },
     {
-      label: "Suppliers",
+      label: "Registered Suppliers",
       value: stats.totalSuppliers,
-      desc: "Registered vendors",
+      desc: "Verified vendor registry",
       href: "/dashboard/supplier-profiles",
       icon: Building2,
-      accent: "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-300",
+      accentClass: "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-300",
     },
   ];
 
@@ -213,246 +214,387 @@ export default async function OfficerDashboard() {
 
   return (
     <div className="space-y-8">
-      {/* Page Header */}
-      <div className="flex items-start gap-4 border-b border-[var(--border)] pb-6">
-        <div className="h-12 w-1.5 rounded-full bg-gradient-to-b from-[var(--accent)] to-[var(--accent-light)]" />
-        <div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-[var(--text-primary)]">
-            Procurement Officer Portal
-          </h1>
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            Manage RFQs, review supplier quotes, and track procurement activities.
-          </p>
-        </div>
-      </div>
 
-      {/* Tasks + Stats */}
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        {/* Today's Tasks */}
-        <Card className="xl:col-span-2 p-6 space-y-5">
-          <div className="flex items-center gap-2 text-[var(--accent)] mb-[-12px]">
-            <Target className="h-4 w-4" />
-            <span className="text-xs font-bold uppercase tracking-wider">Current Focus</span>
-          </div>
-          <SectionHeader
-            title="Today's Tasks"
-            subtitle="Urgent workflows requiring review, validation, or execution."
-          />
-
-          <div className="space-y-3">
-            {tasks.length > 0 ? (
-              tasks.map((task) => {
-                const Icon = taskIcon[task.type];
-                return (
-                  <div
-                    key={task.id}
-                    className="flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--bg-dark)] p-4 transition hover:border-[var(--border-accent)] sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div className="flex min-w-0 items-start gap-3">
-                      <div className="mt-0.5 rounded-xl bg-[var(--surface)] p-2.5 text-[var(--accent)] shadow-sm">
-                        <Icon className="h-4 w-4" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="mb-1 flex flex-wrap items-center gap-2">
-                          <span
-                            className={`rounded-md border px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${taskAccent[task.type]}`}
-                          >
-                            {task.badge}
-                          </span>
-                          <span className="text-xs font-medium text-[var(--text-muted)]">
-                            Due: {task.dueDate}
-                          </span>
-                        </div>
-                        <p className="truncate text-sm font-semibold text-[var(--text-primary)]">
-                          {task.title}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Link
-                      href={task.link}
-                      className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-2.5 text-xs font-bold text-white transition hover:opacity-90 sm:w-auto"
-                    >
-                      {task.btnLabel}
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </div>
-                );
-              })
-            ) : (
-              <div className="rounded-2xl border border-dashed border-[var(--border)] px-6 py-10 text-center">
-                <PartyPopper className="mx-auto mb-3 h-8 w-8 text-amber-500" />
-                <p className="text-sm font-medium text-[var(--text-muted)]">
-                  All caught up! No tasks awaiting attention today.
-                </p>
-              </div>
-            )}
-          </div>
-        </Card>
-
-        {/* KPI Cards */}
-        <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
-          {statCards.map((card) => {
-            const Icon = card.icon;
-            return (
-              <Link key={card.label} href={card.href} className="block">
-                <Card className="group h-full p-5 transition hover:-translate-y-0.5 hover:shadow-md">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
-                        {card.label}
-                      </p>
-                      <p className="mt-2 text-3xl font-black tracking-tight text-[var(--text-primary)]">
-                        {card.value}
-                      </p>
-                      <p className="mt-1 text-xs text-[var(--text-muted)]">
-                        {card.desc}
-                      </p>
-                    </div>
-                    <div className={`rounded-xl p-3 ${card.accent}`}>
-                      <Icon className="h-5 w-5" />
-                    </div>
-                  </div>
-                </Card>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Forecast */}
-      <Suspense fallback={<ForecastSkeleton />}>
-        <ForecastIntelligenceSection />
+      {/* ── Hero Banner ─────────────────────────────────────── */}
+      <Suspense fallback={
+        <div className="h-40 rounded-3xl animate-pulse" style={{ background: "var(--surface)" }} />
+      }>
+        <HeroSection />
       </Suspense>
 
-      {/* Activity + Recent RFQs */}
+      {/* ── KPI Cards ───────────────────────────────────────── */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        {statCards.map((card) => (
+          <StatCard
+            key={card.label}
+            label={card.label}
+            value={card.value}
+            desc={card.desc}
+            href={card.href}
+            Icon={card.icon}
+            accentClass={card.accentClass}
+          />
+        ))}
+      </div>
+
+      {/* ── Tasks + Activity ────────────────────────────────── */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-5">
+
+        {/* Today's Tasks */}
+        <div className="xl:col-span-3">
+          <div
+            className="h-full overflow-hidden rounded-3xl border"
+            style={{
+              background: "var(--surface)",
+              borderColor: "var(--border)",
+              boxShadow: "var(--shadow-card)",
+            }}
+          >
+            {/* Card header */}
+            <div
+              className="flex items-center justify-between gap-4 border-b px-6 py-5"
+              style={{ borderColor: "var(--border)" }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="flex h-9 w-9 items-center justify-center rounded-xl"
+                  style={{ background: "var(--accent-glass)", color: "var(--accent)" }}
+                >
+                  <Target className="h-4.5 w-4.5" />
+                </div>
+                <div>
+                  <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
+                    Today&apos;s Tasks
+                  </h2>
+                  <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                    Urgent workflows awaiting your action
+                  </p>
+                </div>
+              </div>
+              <span
+                className="rounded-full px-3 py-1 text-xs font-bold"
+                style={{
+                  background: "var(--accent-glass)",
+                  color: "var(--accent)",
+                  border: "1px solid var(--border-accent)",
+                }}
+              >
+                {tasks.length} pending
+              </span>
+            </div>
+
+            {/* Tasks list */}
+            <div className="p-4 space-y-3">
+              {tasks.length > 0 ? (
+                tasks.map((task) => {
+                  const Icon = taskIcon[task.type];
+                  return (
+                    <div
+                      key={task.id}
+                      className="group flex flex-col gap-4 rounded-2xl border p-4 transition-all duration-200 hover:border-[var(--border-accent)] hover:shadow-sm sm:flex-row sm:items-center sm:justify-between"
+                      style={{
+                        background: "var(--bg-deep)",
+                        borderColor: "var(--border)",
+                      }}
+                    >
+                      <div className="flex min-w-0 items-start gap-3">
+                        <div
+                          className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-sm"
+                          style={{ background: "var(--surface)", color: "var(--accent)" }}
+                        >
+                          <Icon className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="mb-1 flex flex-wrap items-center gap-2">
+                            <span
+                              className={`rounded-md border px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide ${taskAccent[task.type]}`}
+                            >
+                              {task.badge}
+                            </span>
+                            <span
+                              className="text-xs font-medium"
+                              style={{ color: "var(--text-muted)" }}
+                            >
+                              Due: {task.dueDate}
+                            </span>
+                          </div>
+                          <p
+                            className="truncate text-sm font-semibold"
+                            style={{ color: "var(--text-primary)" }}
+                          >
+                            {task.title}
+                          </p>
+                        </div>
+                      </div>
+
+                      <Link
+                        href={task.link}
+                        className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold text-white transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5 sm:shrink-0"
+                        style={{ background: "var(--accent)" }}
+                      >
+                        {task.btnLabel}
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
+                    </div>
+                  );
+                })
+              ) : (
+                <div
+                  className="flex flex-col items-center gap-3 rounded-2xl border border-dashed px-6 py-12 text-center"
+                  style={{ borderColor: "var(--border)" }}
+                >
+                  <PartyPopper className="h-10 w-10 text-amber-500" />
+                  <div>
+                    <p className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>
+                      All caught up!
+                    </p>
+                    <p className="text-xs mt-1" style={{ color: "var(--text-muted)" }}>
+                      No pending tasks require your attention today.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Activity Feed */}
         <div className="xl:col-span-2">
           <ActivityFeed limit={10} />
         </div>
+      </div>
 
-        <div className="xl:col-span-3">
-          <TableContainer id="recent-solicitations" className="scroll-mt-24">
-            <div className="border-b border-[var(--border)] px-6 py-4">
-              <SectionHeader
-                title="Recent Solicitations"
-                action={
-                  <span className="rounded-full bg-[var(--bg-dark)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)]">
-                    Last {rfqs.length} records
-                  </span>
-                }
-              />
+      {/* ── Forecast Intelligence ────────────────────────────── */}
+      <div
+        className="overflow-hidden rounded-3xl border"
+        style={{
+          background: "var(--surface)",
+          borderColor: "var(--border)",
+          boxShadow: "var(--shadow-card)",
+        }}
+      >
+        {/* Forecast header */}
+        <div
+          className="flex flex-wrap items-center justify-between gap-4 border-b px-6 py-5"
+          style={{ borderColor: "var(--border)" }}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-xl"
+              style={{ background: "rgba(166,118,29,0.1)", color: "var(--secondary)" }}
+            >
+              <Sparkles className="h-4.5 w-4.5" />
             </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[720px] border-collapse text-sm">
-                <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--bg-dark)]">
-                    {["RFQ No.", "Title", "Budget (₱)", "Deadline", "Status"].map((h) => (
-                      <th
-                        key={h}
-                        className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]"
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {rfqs.map((rfq) => {
-                    const deadline = rfq.deadlineDate ? new Date(rfq.deadlineDate) : null;
-                    let remainingLabel = "—";
-                    let remainingClass = "text-emerald-600";
-
-                    if (deadline) {
-                      const now = new Date();
-                      const dDate = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
-                      const nDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-                      const diffDays = Math.ceil((dDate.getTime() - nDate.getTime()) / (1000 * 60 * 60 * 24));
-
-                      if (diffDays < 0) {
-                        remainingLabel = "Expired";
-                        remainingClass = "text-red-600";
-                      } else if (diffDays === 0) {
-                        remainingLabel = "Expiring Today";
-                        remainingClass = "text-red-600";
-                      } else if (diffDays === 1) {
-                        remainingLabel = "1 Day Remaining";
-                        remainingClass = "text-red-600";
-                      } else if (diffDays <= 5) {
-                        remainingLabel = `${diffDays} Days Remaining`;
-                        remainingClass = "text-amber-600";
-                      } else {
-                        remainingLabel = `${diffDays} Days Remaining`;
-                        remainingClass = "text-emerald-600";
-                      }
-                    }
-
-                    return (
-                      <tr
-                        key={rfq.id}
-                        className="border-b border-[var(--border)] transition hover:bg-[var(--surface-hover)]"
-                      >
-                        <td className="px-5 py-4 font-bold whitespace-nowrap">
-                          <Link
-                            href={`/dashboard/officer/rfq/${rfq.id}`}
-                            className="text-[var(--accent)] hover:underline"
-                          >
-                            {rfq.rfqNumber}
-                          </Link>
-                        </td>
-                        <td className="max-w-[280px] px-5 py-4 font-medium text-[var(--text-primary)]">
-                          {rfq.title}
-                        </td>
-                        <td className="px-5 py-4 font-semibold whitespace-nowrap text-[var(--text-secondary)]">
-                          ₱
-                          {Number(rfq.approvedBudgetContract).toLocaleString("en-PH", {
-                            minimumFractionDigits: 2,
-                          })}
-                        </td>
-                        <td className="px-5 py-4 whitespace-nowrap">
-                          {deadline ? (
-                            <div className="flex flex-col gap-0.5">
-                              <span className="font-semibold text-[var(--text-secondary)]">
-                                {deadline.toLocaleDateString("en-PH", {
-                                  month: "short",
-                                  day: "numeric",
-                                  year: "numeric",
-                                })}
-                              </span>
-                              <span className={`text-xs font-extrabold ${remainingClass}`}>
-                                {remainingLabel}
-                              </span>
-                            </div>
-                          ) : (
-                            "—"
-                          )}
-                        </td>
-                        <td className="px-5 py-4">
-                          <StatusBadge status={rfq.status} />
-                        </td>
-                      </tr>
-                    );
-                  })}
-
-                  {rfqs.length === 0 && (
-                    <tr>
-                      <td colSpan={5} className="p-4">
-                        <EmptyState
-                          preset="rfq"
-                          title="No Active Solicitations"
-                          description="No requests for quotation have been created yet. Draft a new RFQ from the solicitation workspace."
-                          action={{ label: "+ New RFQ", href: "/dashboard/officer/rfq/new" }}
-                        />
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+            <div>
+              <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
+                Forecast Intelligence
+              </h2>
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                ARIMA-powered price prediction for smarter procurement timing
+              </p>
             </div>
-          </TableContainer>
+          </div>
+          <div
+            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
+            style={{
+              background: "rgba(166,118,29,0.1)",
+              color: "var(--secondary)",
+              border: "1px solid rgba(166,118,29,0.2)",
+            }}
+          >
+            <TrendingUp className="h-3 w-3" />
+            AI-Powered
+          </div>
+        </div>
+
+        <div className="p-6">
+          <Suspense fallback={<ForecastSkeleton />}>
+            <ForecastIntelligenceSection />
+          </Suspense>
         </div>
       </div>
+
+      {/* ── Recent Solicitations ─────────────────────────────── */}
+      <div
+        id="recent-solicitations"
+        className="overflow-hidden rounded-3xl border scroll-mt-24"
+        style={{
+          background: "var(--surface)",
+          borderColor: "var(--border)",
+          boxShadow: "var(--shadow-card)",
+        }}
+      >
+        {/* Table header */}
+        <div
+          className="flex flex-wrap items-center justify-between gap-4 border-b px-6 py-5"
+          style={{ borderColor: "var(--border)" }}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              className="flex h-9 w-9 items-center justify-center rounded-xl"
+              style={{ background: "var(--accent-glass)", color: "var(--accent)" }}
+            >
+              <ClipboardList className="h-4.5 w-4.5" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
+                Recent Solicitations
+              </h2>
+              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                Latest Requests for Quotation
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <span
+              className="rounded-full px-3 py-1 text-xs font-semibold"
+              style={{
+                background: "var(--bg-dark)",
+                color: "var(--text-muted)",
+              }}
+            >
+              Last {rfqs.length} records
+            </span>
+            <Link
+              href="/dashboard/officer/rfq"
+              className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all duration-200 hover:-translate-y-0.5"
+              style={{
+                background: "var(--accent-glass)",
+                color: "var(--accent)",
+                border: "1px solid var(--border-accent)",
+              }}
+            >
+              View All
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[720px] border-collapse text-sm">
+            <thead>
+              <tr style={{ background: "var(--bg-deep)", borderBottom: "1px solid var(--border)" }}>
+                {["RFQ No.", "Title", "Budget (₱)", "Deadline", "Status"].map((h) => (
+                  <th
+                    key={h}
+                    className="px-6 py-3.5 text-left text-xs font-bold uppercase tracking-wide"
+                    style={{ color: "var(--text-secondary)" }}
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rfqs.map((rfq) => {
+                const deadline = rfq.deadlineDate ? new Date(rfq.deadlineDate) : null;
+                let remainingLabel = "—";
+                let remainingClass = "text-emerald-600";
+
+                if (deadline) {
+                  const now = new Date();
+                  const dDate = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
+                  const nDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                  const diffDays = Math.ceil((dDate.getTime() - nDate.getTime()) / (1000 * 60 * 60 * 24));
+
+                  if (diffDays < 0) {
+                    remainingLabel = "Expired";
+                    remainingClass = "text-red-600";
+                  } else if (diffDays === 0) {
+                    remainingLabel = "Expiring Today";
+                    remainingClass = "text-red-600";
+                  } else if (diffDays === 1) {
+                    remainingLabel = "1 Day Remaining";
+                    remainingClass = "text-red-600";
+                  } else if (diffDays <= 5) {
+                    remainingLabel = `${diffDays} Days Remaining`;
+                    remainingClass = "text-amber-600";
+                  } else {
+                    remainingLabel = `${diffDays} Days Remaining`;
+                    remainingClass = "text-emerald-600";
+                  }
+                }
+
+                return (
+                  <tr
+                    key={rfq.id}
+                    className="group border-b transition-colors duration-150"
+                    style={{
+                      borderColor: "var(--border)",
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLTableRowElement).style.background = "var(--surface-hover)";
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLTableRowElement).style.background = "transparent";
+                    }}
+                  >
+                    <td className="px-6 py-4 font-bold whitespace-nowrap">
+                      <Link
+                        href={`/dashboard/officer/rfq/${rfq.id}`}
+                        className="font-bold transition-colors duration-150 hover:underline"
+                        style={{ color: "var(--accent)" }}
+                      >
+                        {rfq.rfqNumber}
+                      </Link>
+                    </td>
+                    <td
+                      className="max-w-[280px] px-6 py-4 font-medium"
+                      style={{ color: "var(--text-primary)" }}
+                    >
+                      {rfq.title}
+                    </td>
+                    <td
+                      className="px-6 py-4 font-semibold whitespace-nowrap"
+                      style={{ color: "var(--text-secondary)" }}
+                    >
+                      ₱
+                      {Number(rfq.approvedBudgetContract).toLocaleString("en-PH", {
+                        minimumFractionDigits: 2,
+                      })}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {deadline ? (
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-semibold" style={{ color: "var(--text-secondary)" }}>
+                            {deadline.toLocaleDateString("en-PH", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
+                          <span className={`text-xs font-extrabold ${remainingClass}`}>
+                            {remainingLabel}
+                          </span>
+                        </div>
+                      ) : (
+                        <span style={{ color: "var(--text-muted)" }}>—</span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4">
+                      <StatusBadge status={rfq.status} />
+                    </td>
+                  </tr>
+                );
+              })}
+
+              {rfqs.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="p-6">
+                    <EmptyState
+                      preset="rfq"
+                      title="No Active Solicitations"
+                      description="No requests for quotation have been created yet. Draft a new RFQ from the solicitation workspace."
+                      action={{ label: "+ New RFQ", href: "/dashboard/officer/rfq/new" }}
+                    />
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   );
 }
