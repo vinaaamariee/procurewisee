@@ -17,7 +17,7 @@ export default async function ActivityFeed({
   return (
     <div
       id="activity-feed"
-      className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)] scroll-mt-24"
+      className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)] scroll-mt-24"
     >
       {/* Header */}
       <div className="flex items-center justify-between gap-4 border-b border-[var(--border)] px-5 py-4 flex-wrap">

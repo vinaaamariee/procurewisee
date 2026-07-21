@@ -139,7 +139,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
       className="relative flex w-72 flex-col overflow-hidden shadow-lg"
       style={{
         background:
-          "linear-gradient(180deg, #0B3B6E 0%, #08284F 100%)",
+          "linear-gradient(180deg, #74171B 0%, #4B0B0E 100%)",
         borderRight: "1px solid rgba(255,255,255,.08)",
       }}
     >
@@ -148,7 +148,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
         className="h-[4px] w-full flex-shrink-0"
         style={{
           background:
-            "linear-gradient(90deg,#0B3B6E 0 34%,#D4A017 34% 67%,#B7202E 67% 100%)",
+            "linear-gradient(90deg,#74171B 0 34%,#D4A017 34% 67%,#B7202E 67% 100%)",
         }}
       />
 

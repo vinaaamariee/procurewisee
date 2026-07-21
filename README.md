@@ -18,6 +18,12 @@ The authenticated workspace now shares the same card, table, and typography trea
 
 ---
 
+## Procurement Officer Dashboard Refresh
+
+The Procurement Officer dashboard now follows the updated operational workspace design: a maroon BSC-branded navigation rail, a concise greeting and action area, live RFQ information center, priority task queue, KPI cards, activity feed, forecasting insight, and a full-width RFQ table. Existing database queries and procurement workflow links are retained so the visual refresh does not alter operational behavior.
+
+---
+
 ## 🌟 Overview
 
 ProcureWise is a modern web application built to streamline and automate the public procurement process at Batanes State College. By replacing manual paperwork and convoluted spreadsheets with structured workflows, automated canvassing, and objective scoring, the system ensures transparency, speeds up purchasing decisions, and optimizes government budget utilization.
