@@ -63,7 +63,7 @@ export default function QuickActions() {
         const { label, sublabel, href, Icon, variant } = action;
 
         const base =
-          "group inline-flex items-center gap-2.5 rounded-lg px-4 py-2.5 text-sm font-bold transition-all duration-200 border shadow-sm shrink-0";
+          "group inline-flex items-center gap-2.5 rounded-lg px-5 py-4 text-sm font-bold transition-all duration-200 border shadow-sm shrink-0";
 
         const styles: Record<string, string> = {
           primary:

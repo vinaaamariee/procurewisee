@@ -8,7 +8,7 @@ export default function DashboardHeader() {
     <header className="relative z-10 mb-6 font-sans">
       {/* Breadcrumb Navigation */}
       <div
-        className="mb-1.5 flex items-center gap-2 text-xs font-semibold"
+        className="mb-2 flex items-center gap-2 text-xs font-semibold"
         style={{ color: "var(--text-muted)" }}
       >
         <LayoutDashboard className="h-3.5 w-3.5 shrink-0" />

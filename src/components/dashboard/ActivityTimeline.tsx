@@ -45,14 +45,14 @@ export default function ActivityTimeline({
                             className="text-xs"
                             style={{ color: "var(--text-muted)" }}
                         >
-                            Latest procurement transactions
+                            Live feed · Latest procurement transactions
                         </p>
                     </div>
                 </div>
             </div>
 
             {/* Existing Activity Feed */}
-            <div className="p-4 font-sans">
+            <div className="p-6 font-sans">
                 <ActivityFeed limit={limit} />
             </div>
         </section>

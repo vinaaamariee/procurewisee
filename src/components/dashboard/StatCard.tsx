@@ -26,7 +26,7 @@ export default function StatCard({
   return (
     <Link href={href} className="block group font-sans">
       <div
-        className="flex flex-col justify-between h-full p-5 rounded-2xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg font-sans"
+        className="flex flex-col justify-between h-full p-6 rounded-2xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg font-sans"
         style={{
           background: "var(--surface)",
           borderColor: "var(--border)",
@@ -60,7 +60,7 @@ export default function StatCard({
         </div>
 
         {/* 2. Large Number in the middle (mt-4) */}
-        <div className="mt-4">
+        <div className="mt-2">
           <p
             className="text-4xl font-bold tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)] font-sans"
             style={{ color: "var(--text-primary)", fontFamily: "var(--font-body)" }}
@@ -70,7 +70,7 @@ export default function StatCard({
         </div>
 
         {/* 3. Subtitle at the bottom */}
-        <div className="mt-2">
+        <div className="mt-1">
           <p
             className="text-xs font-normal font-sans"
             style={{ color: "var(--text-muted)", fontFamily: "var(--font-body)" }}

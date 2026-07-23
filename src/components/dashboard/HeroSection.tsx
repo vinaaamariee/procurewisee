@@ -52,7 +52,7 @@ export default async function HeroSection() {
         style={{ background: "var(--secondary)" }}
       />
 
-      <div className="relative z-10 flex flex-col gap-6 px-8 py-8 md:flex-row md:items-center md:justify-between">
+      <div className="relative z-10 flex flex-col gap-6 px-8 py-8 md:flex-row md:items-center md:justify-between md:gap-12">
         {/* Left: Greeting */}
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">

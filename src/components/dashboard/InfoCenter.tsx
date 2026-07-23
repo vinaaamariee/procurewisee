@@ -81,7 +81,7 @@ export default function InfoCenter({
       <div className="space-y-6 p-6 font-sans">
         {/* Active RFQs */}
         <section
-          className="rounded-2xl p-5"
+          className="rounded-2xl p-4"
           style={{
             background: "var(--accent-glass)",
             border: "1px solid var(--border-accent)",
@@ -134,11 +134,11 @@ export default function InfoCenter({
             </h3>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             {announcements.map((item) => (
               <article
                 key={item.title}
-                className="rounded-2xl border p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                className="rounded-2xl border p-3 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
                 style={{
                   borderColor: "var(--border)",
                   background: "var(--surface)",

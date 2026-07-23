@@ -94,7 +94,7 @@ export default function TodayTasks({ tasks }: TodayTasksProps) {
       </div>
 
       {/* Tasks list */}
-      <div className="p-4 space-y-3 font-sans">
+      <div className="p-6 space-y-2 font-sans">
         {tasks.length > 0 ? (
           tasks.map((task) => {
             const Icon = taskIcon[task.type];
@@ -152,7 +152,7 @@ export default function TodayTasks({ tasks }: TodayTasksProps) {
 
                 <Link
                   href={task.link}
-                  className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition-all duration-200 hover:-translate-y-0.5 sm:shrink-0 ${
+                  className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs font-bold transition-all duration-200 hover:-translate-y-0.5 sm:shrink-0 ${
                     overdue
                       ? "bg-red-700 text-white hover:bg-red-800 shadow-sm"
                       : "bg-[var(--accent)] text-white hover:opacity-90"
