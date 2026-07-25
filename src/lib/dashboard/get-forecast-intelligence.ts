@@ -5,9 +5,26 @@ import { startTimer } from '@/lib/performance-logger';
 export async function getForecastingIntelligence() {
   const timer = startTimer('getForecastingIntelligence');
 
-  // Fetch active catalog products
-  const products = await prisma.catalogProduct.findMany({
-    where: { isActive: true },
+  // Find product IDs with at least 6 historical price records
+  const historicalGroups = await prisma.historicalPrice.groupBy({
+    by: ['productId'],
+    where: {
+      productId: { not: null },
+      product: { isActive: true },
+    },
+    _count: { id: true },
+  });
+
+  const validProductIds = historicalGroups
+    .filter((g) => g._count.id >= 6) // MIN_SERIES_LENGTH is 6
+    .map((g) => g.productId as number);
+
+  // Fetch only catalog products that have sufficient historical series data
+  const products = validProductIds.length === 0 ? [] : await prisma.catalogProduct.findMany({
+    where: {
+      id: { in: validProductIds },
+      isActive: true,
+    },
     select: {
       id: true,
       name: true,
