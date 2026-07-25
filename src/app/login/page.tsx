@@ -33,7 +33,7 @@ function LoginPage() {
     <div className="login-container-wrapper min-h-screen relative overflow-x-hidden">
       <style dangerouslySetInnerHTML={{
         __html: `
-        /* --- ProcureWise login — official portal theme --- */
+        /* --- ProcureWise login — official Batanes Maroon & Gold theme --- */
         .login-container-wrapper {
             display: flex;
             min-height: 100vh;
@@ -48,20 +48,21 @@ function LoginPage() {
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 3px;
-            background: linear-gradient(90deg, #0B2D5C 0 34%, #A6761D 34% 67%, #B7202E 67% 100%);
+            background: linear-gradient(90deg, #7B1E1E 0 34%, #D4A017 34% 67%, #B7202E 67% 100%);
             z-index: 20;
         }
 
         /* --- Left Panel (institutional identity) --- */
         .left-panel {
             width: 50%;
-            background: #0B2D5C;
+            background: linear-gradient(135deg, #74171B 0%, #4B0B0E 100%);
             position: relative;
-            padding: 40px;
+            padding: 48px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             overflow: hidden;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .left-panel-watermark {
@@ -72,29 +73,29 @@ function LoginPage() {
             font-weight: 800;
             font-size: 340px;
             line-height: 1;
-            color: rgba(255, 255, 255, 0.045);
+            color: rgba(255, 255, 255, 0.03);
             pointer-events: none;
             user-select: none;
             z-index: 0;
         }
 
-        .logo-container { display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; }
+        .logo-container { display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
 
         .tagline {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 13.5px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
             line-height: 1.6;
-            max-width: 440px;
-            margin-top: 20px;
+            max-width: 460px;
+            margin-top: 24px;
             position: relative;
             z-index: 1;
         }
 
         .left-panel-footer {
-            color: rgba(255, 255, 255, 0.45);
+            color: rgba(255, 255, 255, 0.4);
             font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
             position: relative;
             z-index: 1;
@@ -108,14 +109,14 @@ function LoginPage() {
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px;
+            padding: 48px;
         }
 
         .right-panel-inner {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            min-height: calc(100vh - 80px);
+            min-height: calc(100vh - 96px);
             width: 100%;
             max-width: 440px;
         }
@@ -126,72 +127,76 @@ function LoginPage() {
         .login-card {
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: var(--radius-md);
+            border-radius: 24px;
             padding: 40px;
             width: 100%;
-            box-shadow: var(--shadow-card);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
             margin: auto 0;
+            transition: var(--transition);
         }
 
         .card-header h2 {
             font-size: 12px;
-            color: var(--secondary);
-            font-weight: 700;
+            color: #D4A017;
+            font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 1.2px;
-            margin-bottom: 10px;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
         }
 
         .card-header h1 {
             font-family: var(--font-display);
-            font-size: 26px;
+            font-size: 28px;
             color: var(--text-primary);
             font-weight: 700;
             margin-bottom: 8px;
-            letter-spacing: 0;
+            letter-spacing: -0.5px;
         }
 
         .card-header p {
-            font-size: 13.5px;
+            font-size: 14px;
             color: var(--text-secondary);
-            margin-bottom: 26px;
+            margin-bottom: 28px;
         }
 
-        .form-group { margin-bottom: 18px; position: relative; }
+        .form-group { margin-bottom: 20px; position: relative; }
 
         .form-group label {
             display: block;
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .input-wrapper { position: relative; }
 
         .form-group input {
             width: 100%;
-            padding: 13px 44px 13px 14px;
+            padding: 14px 44px 14px 16px;
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            font-size: 14.5px;
+            border-radius: 12px;
+            font-size: 14px;
             background-color: var(--surface);
             color: var(--text-primary);
             outline: none;
             font-family: inherit;
-            transition: var(--transition);
+            transition: all 0.2s ease;
         }
 
         .form-group input::placeholder { color: var(--text-muted); }
 
         .form-group input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 2px var(--accent-glass);
+            border-color: #7B1E1E;
+            box-shadow: 0 0 0 4px rgba(123, 30, 30, 0.08);
+            background-color: var(--surface);
         }
 
         .input-icon {
             position: absolute;
-            right: 14px;
+            right: 16px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
@@ -208,38 +213,65 @@ function LoginPage() {
             font-size: 13px;
             color: var(--text-secondary);
             text-decoration: none;
-            margin-top: -6px;
-            margin-bottom: 22px;
+            margin-top: -8px;
+            margin-bottom: 24px;
+            font-weight: 600;
         }
-        .forgot-password:hover { color: var(--accent); text-decoration: underline; }
+        .forgot-password:hover { color: #7B1E1E; text-decoration: underline; }
 
         .btn-submit {
             width: 100%;
-            padding: 13px;
-            border: 1px solid var(--accent);
-            border-radius: var(--radius-sm);
-            background: var(--accent);
+            padding: 14px;
+            border: 1px solid #7B1E1E;
+            border-radius: 12px;
+            background: #7B1E1E;
             color: #ffffff;
             font-size: 14px;
             font-weight: 700;
             letter-spacing: 0.2px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.2s ease;
         }
-        .btn-submit:hover { background: var(--accent-light); border-color: var(--accent-light); }
-        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-submit:hover { background: #5E1414; border-color: #5E1414; transform: translateY(-1px); }
+        .btn-submit:active { transform: translateY(0); }
+        .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        /* Dark Mode overrides inside CSS block */
+        .dark .login-card {
+            background-color: #161D2C;
+            border-color: #2A3345;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+        }
+        .dark .form-group input {
+            background-color: #0E1420;
+            border-color: #2A3345;
+            color: #EEF1F6;
+        }
+        .dark .form-group input:focus {
+            border-color: #D4A017;
+            box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.15);
+        }
+        .dark .forgot-password:hover { color: #D4A017; }
+        .dark .btn-submit {
+            background: #7B1E1E;
+            border-color: #7B1E1E;
+        }
+        .dark .btn-submit:hover {
+            background: #952929;
+            border-color: #952929;
+        }
 
         /* Responsive */
         @media (max-width: 900px) {
             .login-container-wrapper { flex-direction: column; }
             .left-panel {
                 width: 100%;
-                min-height: 30vh;
-                padding: 28px;
+                min-height: 35vh;
+                padding: 32px 24px;
             }
             .left-panel-watermark { font-size: 180px; right: -20px; bottom: -40px; }
-            .right-panel { width: 100%; padding: 28px 20px; }
-            .login-card { padding: 28px 22px; }
+            .right-panel { width: 100%; padding: 32px 20px; }
+            .login-card { padding: 32px 24px; border-radius: 20px; }
         }
       `}} />
 
@@ -249,13 +281,13 @@ function LoginPage() {
 
         <div>
           <div className="logo-container">
-            <div style={{ backgroundColor: '#ffffff', border: '1px solid rgba(255,255,255,0.4)', borderRadius: '6px', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '22px', flexShrink: 0 }}>
-              <span style={{ color: '#0B2D5C' }}>P</span><span style={{ color: '#A6761D' }}>W</span>
+            <div style={{ backgroundColor: '#ffffff', border: '1px solid rgba(255,255,255,0.4)', borderRadius: '10px', width: '52px', height: '52px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '22px', flexShrink: 0, boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+              <span style={{ color: '#7B1E1E' }}>P</span><span style={{ color: '#D4A017' }}>W</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-              <div style={{ fontFamily: 'var(--font-display)', color: '#ffffff', fontSize: '28px', fontWeight: 700, lineHeight: 1.15, letterSpacing: 0 }}>ProcureWise</div>
-              <div style={{ color: '#C99A2E', fontSize: '11px', fontWeight: 700, letterSpacing: '1px', textTransform: 'uppercase', marginTop: '5px' }}>Procurement Management System</div>
-              <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.5px', marginTop: '3px' }}>Batanes State College</div>
+              <div style={{ fontFamily: 'var(--font-display)', color: '#ffffff', fontSize: '28px', fontWeight: 800, lineHeight: 1.1, letterSpacing: '-0.5px' }}>ProcureWise</div>
+              <div style={{ color: '#D4A017', fontSize: '11px', fontWeight: 800, letterSpacing: '1.2px', textTransform: 'uppercase', marginTop: '4px' }}>Procurement Management System</div>
+              <div style={{ color: 'rgba(255,255,255,0.65)', fontSize: '10px', fontWeight: 600, letterSpacing: '0.5px', marginTop: '2px' }}>Batanes State College</div>
             </div>
           </div>
 
