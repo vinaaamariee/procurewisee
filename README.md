@@ -24,6 +24,22 @@ The Procurement Officer dashboard now follows the updated operational workspace 
 
 ---
 
+## Login Page Component Refactor
+
+The monolithic login page has been fully refactored to separate concerns. Large inline `<style>` injections have been extracted into a CSS Module (`login.module.css`), and the code is split into single-responsibility subcomponents:
+- **LoginHero:** Renders the left institutional panel, watermark, and footer.
+- **LoginForm:** Renders the sign-in form, supporting browser autocompletes and toggles with proper screen-reader labels.
+- **LoginAlert:** A reusable warning/success badge powered by Lucide icons.
+- **LoginFooter:** Institutional links and language controls.
+
+---
+
+## RFQ Creation Page Restoration
+
+Fixed a critical layout bug where `/dashboard/officer/rfq/new` rendered a duplicate of the RFQ listings table. The page now properly fetches annual procurement plan (APP) items, active catalog items, and calculates the next sequence number (e.g. `2026-001`) before loading the `RfqCreationForm` component.
+
+---
+
 ## 🌟 Overview
 
 ProcureWise is a modern web application built to streamline and automate the public procurement process at Batanes State College. By replacing manual paperwork and convoluted spreadsheets with structured workflows, automated canvassing, and objective scoring, the system ensures transparency, speeds up purchasing decisions, and optimizes government budget utilization.

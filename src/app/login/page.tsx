@@ -8,7 +8,7 @@ import LoginForm from '@/components/auth/LoginForm';
 import LoginFooter from '@/components/auth/LoginFooter';
 import styles from './login.module.css';
 
-function LoginPage() {
+function LoginPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -44,14 +44,14 @@ function LoginPage() {
   );
 }
 
-export default function LoginPageWrapper() {
+export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="flex min-h-screen items-center justify-center bg-[#F2F3EF] dark:bg-[#0E1420]">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#0B2D5C] border-t-transparent" />
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-[#7B1E1E] border-t-transparent" />
       </div>
     }>
-      <LoginPage />
+      <LoginPageContent />
     </Suspense>
   );
 }
