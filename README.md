@@ -736,13 +736,43 @@ To ensure a unified visual identity and layout consistency across the ERP system
 3. **[SectionHeader](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/components/ui/SectionHeader.tsx)**: A consistent header layout rendering section headings, description text/subtitles, and header actions (e.g., download buttons or status badges).
 4. **[TableContainer](file:///c:/Users/Syra%20Cabrera/Desktop/procurewise/src/components/ui/TableContainer.tsx)**: A wrapper ensuring consistent overflow behavior, borders, and shadows for table displays across registry dashboards.
 
+---
 
+## 🚀 Local Development Setup
 
+To run this project locally, ensure you have the following prerequisites installed:
 
+1. **Node.js**: Version 20.19+, 22.12+, or 24.0+ (required by Prisma).
+2. **pnpm**: Version 11.6.0 (configured as the project's package manager in `package.json`).
 
+### Installation Steps
 
+1. **Install pnpm**:
+   If `pnpm` is not installed or recognized on Windows, you can install it using the Windows Package Manager (`winget`):
+   ```bash
+   winget install --id pnpm.pnpm --source winget
+   ```
+   *Note: Restart your terminal/IDE or refresh your environment PATH variable after installation for the command to be recognized.*
 
+2. **Install Dependencies**:
+   ```bash
+   pnpm install
+   ```
 
+3. **Configure Environment Variables**:
+   Copy `.env.example` to `.env` and fill in the required database and authentication credentials (e.g. `DATABASE_URL`):
+   ```bash
+   cp .env.example .env
+   ```
 
+4. **Generate Prisma Client**:
+   ```bash
+   pnpm exec prisma generate
+   ```
+
+5. **Run Development Server**:
+   ```bash
+   pnpm dev
+   ```
 
 
