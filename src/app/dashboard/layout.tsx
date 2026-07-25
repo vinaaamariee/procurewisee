@@ -70,35 +70,20 @@ export default async function DashboardLayout({
               </div>
             </Link>
 
-            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-              <Link
-                href={dashboardHome}
-                className="inline-flex h-9 items-center gap-2 rounded-md border px-3 text-xs font-bold transition-colors hover:bg-[var(--surface-hover)] lg:hidden"
-                style={{ borderColor: "var(--border)", color: "var(--accent)" }}
-              >
-                <LayoutDashboard className="h-4 w-4" />
-                <span className="hidden sm:inline">Dashboard</span>
-              </Link>
-              <span
-                className="hidden rounded-md px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] xl:inline-flex"
-                style={{
-                  background: "var(--accent-glass)",
-                  border: "1px solid var(--border-accent)",
-                  color: "var(--accent)",
-                }}
-              >
-                {profile.role}
-              </span>
+            <div className="flex items-center gap-4">
+              <GlobalSearch />
+              <NotificationBell currentUser={profile} />
+              <ThemeToggle />
 
               <div
-                className="flex items-center gap-3 rounded-md border p-1.5 pr-3"
+                className="flex items-center gap-3 rounded-xl border px-3 py-1.5"
                 style={{
                   background: "var(--surface)",
                   borderColor: "var(--border)",
                 }}
               >
                 <div
-                  className="flex h-9 w-9 items-center justify-center rounded-full font-bold text-white"
+                  className="flex h-8 w-8 items-center justify-center rounded-full font-bold text-white text-xs"
                   style={{ background: "var(--accent)" }}
                 >
                   {profile.fullName?.[0]?.toUpperCase() ?? "U"}
@@ -106,28 +91,24 @@ export default async function DashboardLayout({
 
                 <div className="hidden min-w-0 leading-tight xl:block">
                   <div
-                    className="text-sm font-semibold"
+                    className="text-xs font-bold"
                     style={{ color: "var(--text-primary)" }}
                   >
                     {profile.fullName}
                   </div>
                   <div
-                    className="text-xs"
+                    className="text-[10px]"
                     style={{ color: "var(--text-muted)" }}
                   >
-                    {profile.email}
+                    {profile.role}
                   </div>
                 </div>
               </div>
 
-              <GlobalSearch />
-              <NotificationBell currentUser={profile} />
-              <ThemeToggle />
-
               <form action={signout}>
                 <button
                   type="submit"
-                  className="rounded-md border border-red-500/30 px-3 py-2 text-xs font-semibold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-900/20 sm:px-4"
+                  className="rounded-xl border border-red-500/30 px-3.5 py-1.5 text-xs font-bold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-900/20"
                 >
                   <span className="hidden sm:inline">Sign Out</span><span className="sm:hidden">Out</span>
                 </button>

@@ -25,7 +25,7 @@
 /* ---------- CSS Variables ---------- */
 :root {
   /* Default: Light Mode — Official Government Portal Theme */
-  --font-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-display: 'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
   --font-body:    'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
 
   --accent:           #0B2D5C; /* Official Navy */
@@ -123,6 +123,18 @@
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+
+/* Visible, non-blurred keyboard focus everywhere — required for a public-sector site */
+a:focus-visible, button:focus-visible, input:focus-visible,
+select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 
