@@ -6,11 +6,21 @@
    ============================================================ */
 
 @import "tailwindcss";
-@config "../../tailwind.config.ts";
 @source "../**/*.{js,ts,jsx,tsx,mdx}";
 @plugin "tailwindcss-animate";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* ── Spacing / sizing tokens missing from Tailwind v4 defaults ── */
+  --spacing-5\.5: 1.375rem;   /* h-5.5, w-5.5  */
+  --spacing-13:   3.25rem;    /* h-13,  w-13   */
+
+  /* ── Font families ── */
+  --font-family-sans:    'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
+  --font-family-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-family-mono:    var(--font-geist-mono, ui-monospace, monospace);
+}
 
 /* ---------- CSS Variables ---------- */
 :root {
