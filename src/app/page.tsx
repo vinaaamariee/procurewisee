@@ -58,7 +58,7 @@ export default async function LandingPage() {
 
             {/* Statistics */}
             <StatisticsCards
-  stats={[
+              stats={[
                 {
                   title: "Total Products",
                   value: stats.totalProducts.toLocaleString(),
@@ -88,6 +88,9 @@ export default async function LandingPage() {
                   bgColor: "rgba(99, 102, 241, 0.08)",
                 },
               ]}
+            />
+
+            {/* Category Grid */}
             <CategoryGrid categories={categories} />
 
             {/* Bottom Two-Column Section */}
