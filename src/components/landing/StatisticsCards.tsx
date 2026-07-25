@@ -47,8 +47,13 @@ export default function StatisticsCards({
           return (
             <div
               key={stat.title}
-              className="group bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
+              className="group relative bg-white dark:bg-slate-900 rounded-3xl border border-gray-200/80 dark:border-slate-800 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden"
             >
+              {/* Top accent bar */}
+              <div
+                className="absolute top-0 left-0 right-0 h-[3px] rounded-t-3xl"
+                style={{ background: stat.color ?? "#7B1E1E" }}
+              />
               <div className="flex items-start justify-between gap-4">
                 <div
                   className="flex h-14 w-14 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-105"

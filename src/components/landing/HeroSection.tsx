@@ -101,21 +101,22 @@ export default function HeroSection({ activeRfqs = [] }: HeroSectionProps) {
   const rfqsToDisplay = activeRfqs.length > 0 ? activeRfqs : FALLBACK_RFQS;
 
   return (
-    <section className="relative overflow-hidden bg-[#F7F8FA] dark:bg-slate-950 transition-colors duration-300">
+    <section className="relative overflow-hidden bg-gradient-to-br from-[#F7F8FA] via-white to-[#FDF8F0] dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300">
       {/* Decorative Subtle Grid Pattern */}
-      <div className="pointer-events-none absolute inset-0 opacity-[0.03] dark:opacity-[0.02]">
+      <div className="pointer-events-none absolute inset-0 opacity-[0.025] dark:opacity-[0.015]">
         <div
           className="absolute inset-0"
           style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #111827 1px, transparent 0)`,
-            backgroundSize: "32px 32px",
+            backgroundImage: `radial-gradient(circle at 1px 1px, #7B1E1E 1px, transparent 0)`,
+            backgroundSize: "28px 28px",
           }}
         />
       </div>
 
-      {/* Ambient Lighting Orbs */}
-      <div className="pointer-events-none absolute -left-40 -top-40 h-[450px] w-[450px] rounded-full blur-[120px] bg-[#7B1E1E]/10 dark:bg-red-500/5" />
-      <div className="pointer-events-none absolute -bottom-40 -right-40 h-[450px] w-[450px] rounded-full blur-[120px] bg-[#D4A017]/10 dark:bg-yellow-500/5" />
+      {/* Ambient Lighting Orbs — stronger */}
+      <div className="pointer-events-none absolute -left-32 -top-32 h-[500px] w-[500px] rounded-full blur-[100px] opacity-40 dark:opacity-20" style={{ background: 'radial-gradient(circle, rgba(123,30,30,0.18) 0%, transparent 70%)' }} />
+      <div className="pointer-events-none absolute -bottom-32 -right-32 h-[500px] w-[500px] rounded-full blur-[100px] opacity-40 dark:opacity-20" style={{ background: 'radial-gradient(circle, rgba(212,160,23,0.15) 0%, transparent 70%)' }} />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full blur-[120px] opacity-20 dark:opacity-10" style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)' }} />
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">

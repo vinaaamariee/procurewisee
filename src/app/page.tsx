@@ -43,7 +43,7 @@ export default async function LandingPage() {
   ]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F7F8FA] dark:bg-slate-950 text-[#111827] dark:text-slate-100 font-sans">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#F7F8FA] via-[#F3F4F6] to-[#F7F8FA] dark:bg-slate-950 text-[#111827] dark:text-slate-100 font-sans">
       <Header />
 
       <main className="flex-1">
