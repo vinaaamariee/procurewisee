@@ -243,7 +243,8 @@ export default async function OfficerDashboard() {
 
       {/* ── Forecast Intelligence ────────────────────────────── */}
       <div
-        className="overflow-hidden rounded-3xl border"
+        id="forecast-intelligence"
+        className="scroll-mt-24 overflow-hidden rounded-3xl border"
         style={{
           background: "var(--surface)",
           borderColor: "var(--border)",
@@ -292,7 +293,9 @@ export default async function OfficerDashboard() {
       </div>
 
       {/* ── Recent Solicitations Table ───────────────────────── */}
-      <RecentRFQTable rfqs={rfqs} />
+      <div id="recent-solicitations" className="scroll-mt-24">
+        <RecentRFQTable rfqs={rfqs} />
+      </div>
 
       {/* ── Footer ──────────────────────────────────────────── */}
       <Footer />

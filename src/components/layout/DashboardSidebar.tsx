@@ -17,6 +17,8 @@ import {
   ChartNoAxesCombined,
   CalendarDays,
   Star,
+  Sparkles,
+  ListOrdered,
 } from "lucide-react";
 
 type NavItem = {
@@ -77,6 +79,16 @@ export default function DashboardSidebar({ role }: { role: string }) {
             label: "Reports & Insights",
             href: "/dashboard/officer/analytics",
             icon: BarChart3,
+          },
+          {
+            label: "Forecast Intelligence",
+            href: "/dashboard/officer#forecast-intelligence",
+            icon: Sparkles,
+          },
+          {
+            label: "Recent Solicitations",
+            href: "/dashboard/officer#recent-solicitations",
+            icon: ListOrdered,
           },
         ],
       },
