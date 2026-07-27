@@ -52,12 +52,22 @@ export default async function HeroSection() {
         style={{ background: "var(--secondary)" }}
       />
 
-      <div className="relative z-10 flex flex-col gap-6 px-8 py-8 md:flex-row md:items-center md:justify-between md:gap-12">
-        {/* Left: Greeting */}
-        <div className="flex flex-col gap-3">
+      {/*
+        Layout fix:
+        - items-start (not items-center) on mobile stack so the badge doesn't
+          get vertically centered oddly when it wraps under the actions.
+        - gap-8 (32px) instead of gap-12 (48px): the previous 48px gap was
+          stealing width from QuickActions, forcing the whole row to wrap
+          earlier than necessary.
+      */}
+      <div className="relative z-10 flex flex-col gap-6 px-8 py-8 md:flex-row md:items-center md:justify-between md:gap-8">
+        {/* Left: Greeting — shrink-0 stops flexbox from compressing this
+            column (and wrapping the badge text) when QuickActions needs
+            more horizontal space. */}
+        <div className="flex flex-col gap-3 shrink-0">
           <div className="flex items-center gap-2">
             <span
-              className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest"
+              className="flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3 py-1 text-[11px] font-extrabold uppercase tracking-widest"
               style={{
                 background: "rgba(255,255,255,0.14)",
                 borderColor: "rgba(255,255,255,0.25)",
@@ -90,8 +100,10 @@ export default async function HeroSection() {
           </div>
         </div>
 
-        {/* Right: Quick Actions */}
-        <div className="flex flex-col gap-3">
+        {/* Right: Quick Actions — min-w-0 lets this column shrink/wrap
+            internally (via QuickActions' own flex-wrap) instead of pushing
+            the overall row wider than the container. */}
+        <div className="flex min-w-0 flex-col gap-3">
           <p
             className="text-xs font-bold uppercase tracking-widest"
             style={{ color: "rgba(255,255,255,0.7)" }}
