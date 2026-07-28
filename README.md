@@ -6,6 +6,12 @@
 
 ---
 
+## React 19 ThemeProvider Console Warning Fix
+
+Resolved a React 19 development console warning ("Encountered a script tag while rendering React component") triggered by `next-themes` injecting an inline script tag to prevent Theme FOUC. Updated `src/components/theme-provider.tsx` to handle React 19 dev-mode script tag warnings gracefully without affecting theme functionality or hydration behavior.
+
+---
+
 ## Landing Page Visual Refresh
 
 The public landing page now uses a consistent institutional portal treatment: a navy-and-gold hierarchy, document-like card corners, shared surface and border tokens, and calmer hover states. The hero provides clear catalog and request-tracking paths, while the information center retains its interactive RFQ, announcement, and news panels. The temporary Tailwind verification banner has also been removed.
