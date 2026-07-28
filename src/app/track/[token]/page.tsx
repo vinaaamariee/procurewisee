@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { rateLimit } from "@/lib/rate-limit";
+import { headers } from "next/headers";
 
 interface TrackingPageProps {
   params: Promise<{ token: string }>;
@@ -10,6 +12,22 @@ export const dynamic = "force-dynamic";
 
 export default async function RequisitionTrackingPage({ params }: TrackingPageProps) {
   const { token } = await params;
+
+  const headersList = await headers();
+  const ip = headersList.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+
+  if (!rateLimit(`track:${ip}`)) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
+        <div className="max-w-md p-6 bg-white rounded-xl shadow-sm border border-[#E7E5E0] text-center">
+          <h1 className="text-xl font-bold text-[#7e191b] mb-2">Too Many Requests</h1>
+          <p className="text-sm text-gray-600">
+            You&apos;ve made too many tracking lookups. Please wait a minute and try again.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // 1. Try to fetch as public Requisition first
   let requisition = await prisma.requisition.findUnique({

@@ -119,14 +119,15 @@ export async function createPrFromCartAction(input: CreatePrInput) {
         }
       });
 
-      return pr;
-    });
+      await logAuditTrail({
+        actionType: "CREATE_PR",
+        tableAffected: "purchase_requests",
+        recordId: pr.id,
+        newState: pr,
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: "CREATE_PR",
-      tableAffected: "purchase_requests",
-      recordId: result.id,
-      newState: result,
+      return pr;
     });
 
     revalidatePath("/", "layout");
@@ -158,15 +159,16 @@ export async function submitPrAction(id: number) {
         },
       });
 
-      return pr;
-    });
+      await logAuditTrail({
+        actionType: "SUBMIT_PR",
+        tableAffected: "purchase_requests",
+        recordId: id,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: "SUBMIT_PR",
-      tableAffected: "purchase_requests",
-      recordId: id,
-      oldState: old,
-      newState: updated,
+      return pr;
     });
 
     revalidatePath("/", "layout");
@@ -187,6 +189,22 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
 
+    // Source-state guard: only allow valid forward transitions
+    const VALID_TRANSITIONS: Record<PrStatus, PrStatus[]> = {
+      Draft: ["Submitted"],
+      Submitted: ["Received", "UnderReview", "ReturnedForRevision", "Rejected"],
+      Received: ["UnderReview", "ReturnedForRevision", "Rejected"],
+      UnderReview: ["Approved", "ReturnedForRevision", "Rejected"],
+      ReturnedForRevision: ["Submitted"],
+      Approved: [],
+      Rejected: [],
+      Cancelled: [],
+    };
+    const allowed = VALID_TRANSITIONS[old.status] || [];
+    if (!allowed.includes(status)) {
+      return { success: false, error: `Cannot transition from ${old.status} to ${status}.` };
+    }
+
     const updated = await prisma.$transaction(async (tx) => {
       const pr = await tx.purchaseRequest.update({
         where: { id },
@@ -197,9 +215,10 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
         },
       });
 
-      // Recalculate spent budget: budget is committed when status transitions to Approved or Received
-      const isNewApproved = status === PrStatus.Approved || status === PrStatus.Received;
-      const isOldApproved = old.status === PrStatus.Approved || old.status === PrStatus.Received;
+      // Budget is committed ONLY on transition to Approved (not Received).
+      // Received is an intake state, not an approved state.
+      const isNewApproved = status === PrStatus.Approved;
+      const isOldApproved = old.status === PrStatus.Approved;
 
       if (isNewApproved && !isOldApproved) {
         const deptBudget = await tx.departmentBudget.findUnique({
@@ -231,7 +250,7 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
         }
       }
 
-      // Record in status history table if history logger exists
+      // Record in status history table
       await tx.purchaseRequestStatusHistory.create({
         data: {
           purchaseRequestId: id,
@@ -241,15 +260,17 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
         }
       });
 
-      return pr;
-    });
+      // Audit log inside the transaction so it commits atomically with the PR change
+      await logAuditTrail({
+        actionType: "REVIEW_PR",
+        tableAffected: "purchase_requests",
+        recordId: id,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: "REVIEW_PR",
-      tableAffected: "purchase_requests",
-      recordId: id,
-      oldState: old,
-      newState: updated,
+      return pr;
     });
 
     revalidatePath("/", "layout");
@@ -299,15 +320,16 @@ export async function receivePrAction(id: number) {
         },
       });
 
-      return pr;
-    });
+      await logAuditTrail({
+        actionType: "RECEIVE_PR",
+        tableAffected: "purchase_requests",
+        recordId: id,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: "RECEIVE_PR",
-      tableAffected: "purchase_requests",
-      recordId: id,
-      oldState: old,
-      newState: updated,
+      return pr;
     });
 
     revalidatePath("/", "layout");
@@ -399,14 +421,15 @@ export async function updatePrItemAction(
         }
       });
 
-      return { pr: updatedPr, item: updatedItem };
-    });
+      await logAuditTrail({
+        actionType: "UPDATE_PR_ITEM",
+        tableAffected: "purchase_request_items",
+        recordId: itemId,
+        newState: { pr: updatedPr, item: updatedItem },
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: "UPDATE_PR_ITEM",
-      tableAffected: "purchase_request_items",
-      recordId: itemId,
-      newState: result,
+      return { pr: updatedPr, item: updatedItem };
     });
 
     revalidatePath("/", "layout");
@@ -632,15 +655,16 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
         }
       });
 
-      return pr;
-    });
+      await logAuditTrail({
+        actionType: "RESUBMIT_PR",
+        tableAffected: "purchase_requests",
+        recordId: id,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: "RESUBMIT_PR",
-      tableAffected: "purchase_requests",
-      recordId: id,
-      oldState: old,
-      newState: result,
+      return pr;
     });
 
     revalidatePath("/", "layout");

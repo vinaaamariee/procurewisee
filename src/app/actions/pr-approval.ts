@@ -69,8 +69,8 @@ export async function approvePr(prId: number, remarks?: string) {
     const old = await prisma.purchaseRequest.findUnique({ where: { id: prId } });
     if (!old) return { success: false, error: 'Purchase Request not found.' };
 
-    if (old.status !== 'UnderReview') {
-      return { success: false, error: 'Purchase Request must be Under Review to approve.' };
+    if (old.status !== 'UnderReview' && old.status !== 'Submitted') {
+      return { success: false, error: 'Purchase Request must be Submitted or Under Review to approve.' };
     }
 
     const updated = await prisma.$transaction(async (tx) => {
@@ -107,15 +107,17 @@ export async function approvePr(prId: number, remarks?: string) {
         });
       }
 
-      return pr;
-    });
+      // Audit log inside the transaction so it commits atomically
+      await logAuditTrail({
+        actionType: 'APPROVE_PR',
+        tableAffected: 'purchase_requests',
+        recordId: prId,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: 'APPROVE_PR',
-      tableAffected: 'purchase_requests',
-      recordId: prId,
-      oldState: old,
-      newState: updated,
+      return pr;
     });
 
     // Notify Requisitioner (End User)
@@ -147,7 +149,7 @@ export async function approvePr(prId: number, remarks?: string) {
 
 /**
  * Administrative Approver returns the PR for revision.
- * Releases (decrements) the department's spent budget.
+ * PR must be Under Review (not yet Approved) so no budget release is needed.
  */
 export async function returnPr(prId: number, remarks: string) {
   try {
@@ -179,15 +181,17 @@ export async function returnPr(prId: number, remarks: string) {
         },
       });
 
-      return pr;
-    });
+      // Audit log inside the transaction
+      await logAuditTrail({
+        actionType: 'RETURN_PR_FOR_REVISION',
+        tableAffected: 'purchase_requests',
+        recordId: prId,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: 'RETURN_PR_FOR_REVISION',
-      tableAffected: 'purchase_requests',
-      recordId: prId,
-      oldState: old,
-      newState: updated,
+      return pr;
     });
 
     // Notify Requisitioner (End User)
@@ -212,7 +216,7 @@ export async function returnPr(prId: number, remarks: string) {
 
 /**
  * Administrative Approver rejects the Purchase Request.
- * Releases (decrements) the department's spent budget.
+ * PR must be Under Review (not yet Approved) so no budget release is needed.
  */
 export async function rejectPr(prId: number, remarks: string) {
   try {
@@ -244,15 +248,17 @@ export async function rejectPr(prId: number, remarks: string) {
         },
       });
 
-      return pr;
-    });
+      // Audit log inside the transaction
+      await logAuditTrail({
+        actionType: 'REJECT_PR',
+        tableAffected: 'purchase_requests',
+        recordId: prId,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: 'REJECT_PR',
-      tableAffected: 'purchase_requests',
-      recordId: prId,
-      oldState: old,
-      newState: updated,
+      return pr;
     });
 
     // Notify Requisitioner (End User)

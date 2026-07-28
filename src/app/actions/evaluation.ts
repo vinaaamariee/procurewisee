@@ -153,14 +153,15 @@ export async function submitSupplierEvaluationAction(input: SubmitEvaluationInpu
         }
       });
 
-      return evalRow;
-    });
+      await logAuditTrail({
+        actionType: "SUBMIT_SUPPLIER_EVALUATION",
+        tableAffected: "supplier_evaluations",
+        recordId: evalRow.id,
+        newState: evalRow,
+        tx,
+      });
 
-    logAuditTrail({
-      actionType: "SUBMIT_SUPPLIER_EVALUATION",
-      tableAffected: "supplier_evaluations",
-      recordId: result.id,
-      newState: result,
+      return evalRow;
     });
 
     // Notify Procurement Officers

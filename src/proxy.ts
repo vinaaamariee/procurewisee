@@ -36,7 +36,7 @@ export default async function proxy(request: NextRequest) {
   // Create a Supabase client that can read/write cookies on this request
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
@@ -91,16 +91,27 @@ export default async function proxy(request: NextRequest) {
   let role = request.cookies.get('pw-user-role')?.value;
   let didFetchRole = false;
 
+  let isActive: boolean | null = null;
+
   if (!role) {
     // Fallback: Query profile from database
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('role')
+      .select('role, is_active')
       .eq('id', user.id)
       .single();
 
     role = profile?.role;
+    isActive = profile?.is_active ?? null;
     didFetchRole = true;
+  } else {
+    // Role came from cookie — still need to check is_active
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('is_active')
+      .eq('id', user.id)
+      .single();
+    isActive = profile?.is_active ?? null;
   }
 
   // No profile row → account not fully set up
@@ -108,6 +119,16 @@ export default async function proxy(request: NextRequest) {
     await supabase.auth.signOut();
     const redirectResponse = NextResponse.redirect(
       new URL('/login?error=Account not configured. Contact your administrator.', request.url),
+    );
+    redirectResponse.cookies.delete('pw-user-role');
+    return redirectResponse;
+  }
+
+  // Check if the user account is deactivated
+  if (isActive === false) {
+    await supabase.auth.signOut();
+    const redirectResponse = NextResponse.redirect(
+      new URL('/login?error=Your account has been deactivated. Contact your administrator.', request.url),
     );
     redirectResponse.cookies.delete('pw-user-role');
     return redirectResponse;
