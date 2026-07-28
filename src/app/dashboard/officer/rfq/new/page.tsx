@@ -1,6 +1,6 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { prisma } from '@/lib/prisma';
-import RfqCreationForm from '@/components/officer/RfqCreationForm';
+import RFQDocument from '@/components/rfq/RFQDocument';
 import Link from 'next/link';
 import SectionHeader from '@/components/ui/SectionHeader';
 import Card from '@/components/ui/Card';
@@ -111,9 +111,9 @@ export default async function NewRfqPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 p-6">
+    <div className="max-w-6xl mx-auto space-y-6 p-4 sm:p-6">
       {/* Page Header */}
-      <div className="space-y-2">
+      <div className="space-y-2 print:hidden">
         <Link
           href="/dashboard/officer/rfq"
           className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-semibold text-[var(--text-primary)] transition hover:bg-[var(--surface-hover)]"
@@ -121,15 +121,18 @@ export default async function NewRfqPage() {
           ← Back to RFQs
         </Link>
         <SectionHeader
-          title="Create New Request for Quotation (RFQ)"
-          subtitle="Fill in the details to digitally generate and publish a solicitation for suppliers."
+          title="Digital Request for Quotation (RFQ)"
+          subtitle="Official Batanes State College RFQ document editor. Complete the form fields below to generate and publish solicitations."
         />
       </div>
 
-      {/* Creation Form Container */}
-      <Card className="p-8">
-        <RfqCreationForm appItems={appItems} catalogProducts={catalogProducts} nextRfqNumber={nextRfqNumber} />
-      </Card>
+      {/* Official Digital RFQ Document Editor */}
+      <RFQDocument
+        mode="create"
+        appItems={appItems}
+        catalogProducts={catalogProducts}
+        nextRfqNumber={nextRfqNumber}
+      />
     </div>
   );
 }

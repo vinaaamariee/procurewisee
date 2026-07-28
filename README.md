@@ -6,6 +6,25 @@
 
 ---
 
+## 📄 Official Batanes State College RFQ Digital Document Redesign
+
+**Branch**: `feat/rfq-official-redesign`
+
+Redesigned the Create New Request for Quotation (RFQ) module (`src/app/dashboard/officer/rfq/new`) into an official digital version of the Batanes State College Request for Quotation paper document. All backend functionality, Prisma models, Supabase integration, Server Actions (`createRfqAction`), sequence override audit trails, and validation rules are 100% preserved.
+
+### Modular Document Components Created (`src/components/rfq/`)
+
+- **`RFQDocument.tsx`**: Master document wrapper supporting `create`, `edit`, and `view` modes, rendering an A4 centered digital document layout with `@media print` rules.
+- **`RFQCollegeInformation.tsx`**: Replicates official institutional header with Republic of the Philippines branding, BSC Seal logo, address, and Procurement Unit heading.
+- **`RFQHeader.tsx`**: Document metadata grid (RFQ No., Date, Mode of Procurement, ABC Budget, Submission Deadline, Delivery Period, and audited sequence override justification).
+- **`RFQSupplierInformation.tsx`**: Official supplier/bidder information block (Company Name, TIN, Business Address, Contact Person, Phone, Email, and Quotation Date).
+- **`RFQItemsTable.tsx`**: Itemized specifications & price schedule table featuring dynamic row addition/deletion, APP item & product catalog linkage dropdowns, line total calculations, and Grand Total ABC summary.
+- **`RFQTermsAndConditions.tsx`**: Preserves official BSC bidding instructions and general terms & conditions.
+- **`RFQSignatureSection.tsx`**: Official signature blocks for Prepared By (Procurement Officer), Approved By (Head of Procuring Entity), and Supplier Conforme.
+- **`RFQActions.tsx`**: Floating action bar providing Save Draft, Publish Solicitation, Toggle Edit/Preview, Print RFQ, and Export PDF controls (automatically excluded during printing).
+
+---
+
 ## React 19 ThemeProvider Console Warning Fix
 
 Resolved a React 19 development console warning ("Encountered a script tag while rendering React component") triggered by `next-themes` injecting an inline script tag to prevent Theme FOUC. Updated `src/components/theme-provider.tsx` to handle React 19 dev-mode script tag warnings gracefully without affecting theme functionality or hydration behavior.
