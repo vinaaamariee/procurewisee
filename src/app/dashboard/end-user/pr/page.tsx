@@ -36,17 +36,24 @@ export default async function PrTrackerPage() {
   });
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
-      <div>
-        <h1 style={{ fontSize: "1.875rem", fontWeight: 800, color: "#1f2937", margin: 0, letterSpacing: "-0.5px" }}>
-          Purchase Request Tracker
-        </h1>
-        <p style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#6b7280", margin: "0.5rem 0 0 0" }}>
-          Track procurement status, assigned officers, and submit drafts for review.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 style={{ fontSize: "1.875rem", fontWeight: 800, color: "#1f2937", margin: 0, letterSpacing: "-0.5px" }}>
+            Purchase Request Tracker
+          </h1>
+          <p style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#6b7280", margin: "0.5rem 0 0 0" }}>
+            Track procurement status, assigned officers, and submit digital Purchase Requests.
+          </p>
+        </div>
+        <a
+          href="/dashboard/end-user/pr/new"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#7B1E1E] px-4 py-2.5 text-sm font-bold text-white shadow-md hover:bg-[#922424] transition shrink-0"
+        >
+          + New Purchase Request
+        </a>
       </div>
 
       <PrTrackerClient initialPrs={prs as any} />
-    </div>
+    </div >
   );
 }

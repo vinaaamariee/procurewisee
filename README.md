@@ -6,6 +6,24 @@
 
 ---
 
+## 📄 Official Batanes State College Purchase Request (PR) Digital Document Redesign
+
+**Branch**: `feat/pr-official-redesign`
+
+Redesigned the **Create Purchase Request (PR)** module (`src/app/dashboard/end-user/pr/new`) into an official digital version of the Batanes State College Purchase Request paper document. All backend functionality, Prisma models, Supabase integration, Server Actions (`createPrFromCartAction`), approval workflows, and validation rules are 100% preserved.
+
+### Modular Document Components Created (`src/components/pr/`)
+
+- **`PRDocument.tsx`**: Master document wrapper supporting `create`, `edit`, and `view` modes, rendering an A4 centered digital PR layout with `@media print` rules.
+- **`PRHeader.tsx`**: Replicates official institutional header with Republic of the Philippines branding, BSC Seal logo, address, and Purchase Request title.
+- **`PRGeneralInformation.tsx`**: Document metadata grid (Entity Name, Fund Cluster, Office/Section, PR No., Date, and Responsibility Center Code).
+- **`PRItemsTable.tsx`**: Recreation of the official PR table featuring Stock/Property No., Unit, Item Description (with Product Catalog autocomplete), Quantity (>0), Unit Cost (₱), line total calculations, dynamic row addition/deletion, and Grand Total.
+- **`PRPurposeSection.tsx`**: Multiline purpose/justification area visually integrated into the document.
+- **`PRSignatureSection.tsx`**: Official signature blocks for Requested By (Requisitioner) and Approved By (Head of Procuring Entity / SUC President).
+- **`PRToolbar.tsx`**: Floating action bar providing Save Draft, Submit PR, Toggle Edit/Preview, Print PR, and Export PDF controls (automatically excluded during printing).
+
+---
+
 ## 📄 Official Batanes State College RFQ Digital Document Redesign
 
 **Branch**: `feat/rfq-official-redesign`

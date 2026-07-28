@@ -1,0 +1,310 @@
+'use client';
+
+import React from 'react';
+
+export interface CatalogProductOption {
+  id: number;
+  sku: string;
+  name: string;
+  category: string;
+  description: string;
+  unitOfMeasure: string;
+  estimatedUnitCost: number;
+}
+
+export interface PRItemRow {
+  id: string;
+  stockNo: string;
+  unit: string;
+  description: string;
+  brand?: string;
+  quantity: number;
+  estimatedUnitCost: number;
+  estimatedCost: number;
+  productId?: number | null;
+  specification?: string;
+}
+
+interface PRItemsTableProps {
+  items: PRItemRow[];
+  setItems?: React.Dispatch<React.SetStateAction<PRItemRow[]>>;
+  catalogProducts?: CatalogProductOption[];
+  isReadOnly?: boolean;
+}
+
+export default function PRItemsTable({
+  items,
+  setItems,
+  catalogProducts = [],
+  isReadOnly = false,
+}: PRItemsTableProps) {
+  const getSequentialStockNo = (index: number) => {
+    return String(index + 1).padStart(3, '0');
+  };
+
+  const handleAddItem = () => {
+    if (!setItems) return;
+    setItems((prev) => [
+      ...prev,
+      {
+        id: Math.random().toString(),
+        stockNo: getSequentialStockNo(prev.length),
+        unit: 'pcs',
+        description: '',
+        quantity: 1,
+        estimatedUnitCost: 0,
+        estimatedCost: 0,
+        productId: null,
+      },
+    ]);
+  };
+
+  const handleDeleteItem = (id: string) => {
+    if (!setItems) return;
+    if (items.length === 1) return;
+    setItems((prev) => {
+      const filtered = prev.filter((item) => item.id !== id);
+      return filtered.map((item, index) => ({
+        ...item,
+        stockNo: getSequentialStockNo(index),
+      }));
+    });
+  };
+
+  const handleItemFieldChange = (id: string, field: keyof PRItemRow, value: any) => {
+    if (!setItems) return;
+    setItems((prev) =>
+      prev.map((item) => {
+        if (item.id !== id) return item;
+
+        // If linking a Catalog Product, pre-fill description, unit, and unit cost
+        if (field === 'productId') {
+          const prodVal = value ? parseInt(value) : null;
+          const matchedProduct = catalogProducts.find((p) => p.id === prodVal);
+          const unitCost = matchedProduct ? matchedProduct.estimatedUnitCost : item.estimatedUnitCost;
+          const description = matchedProduct
+            ? `${matchedProduct.name} - ${matchedProduct.description}`
+            : item.description;
+          const unit = matchedProduct ? matchedProduct.unitOfMeasure : item.unit;
+
+          return {
+            ...item,
+            productId: prodVal,
+            description,
+            unit,
+            estimatedUnitCost: unitCost,
+            estimatedCost: item.quantity * unitCost,
+          };
+        }
+
+        // Recalculate total cost if quantity or unit cost changes
+        if (field === 'quantity') {
+          const qty = parseInt(value) || 0;
+          return {
+            ...item,
+            quantity: qty,
+            estimatedCost: qty * item.estimatedUnitCost,
+          };
+        }
+
+        if (field === 'estimatedUnitCost') {
+          const cost = parseFloat(value) || 0;
+          return {
+            ...item,
+            estimatedUnitCost: cost,
+            estimatedCost: item.quantity * cost,
+          };
+        }
+
+        return { ...item, [field]: value };
+      })
+    );
+  };
+
+  // Grand Total Calculation
+  const grandTotal = items.reduce((sum, item) => sum + (item.estimatedCost || (item.quantity * item.estimatedUnitCost)), 0);
+
+  return (
+    <div className="my-4 font-serif space-y-2">
+      {/* Table Header Controls */}
+      <div className="flex items-center justify-between">
+        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-sans">
+          Requisitioned Items & Estimated Schedule
+        </h3>
+        {!isReadOnly && setItems && (
+          <button
+            type="button"
+            onClick={handleAddItem}
+            className="inline-flex items-center gap-1 text-xs font-sans font-bold text-[#7B1E1E] hover:underline bg-amber-50 border border-amber-300 px-2.5 py-1 rounded print:hidden"
+          >
+            <span>+ Add Item Row</span>
+          </button>
+        )}
+      </div>
+
+      {/* Official Bordered Table */}
+      <div className="overflow-x-auto border border-slate-900">
+        <table className="w-full border-collapse text-xs">
+          <thead>
+            <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px] font-sans">
+              <th className="border-r border-slate-900 p-2 text-center w-24">
+                Stock / Property No.
+              </th>
+              <th className="border-r border-slate-900 p-2 text-center w-20">Unit</th>
+              <th className="border-r border-slate-900 p-2 text-left">
+                Item Description / Technical Specifications
+              </th>
+              <th className="border-r border-slate-900 p-2 text-center w-20">Quantity</th>
+              <th className="border-r border-slate-900 p-2 text-right w-28">
+                Unit Cost (₱)
+              </th>
+              <th className="border-r border-slate-900 p-2 text-right w-32">
+                Total Cost (₱)
+              </th>
+              {!isReadOnly && <th className="p-2 text-center w-10 print:hidden">Action</th>}
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-800">
+            {items.map((item, index) => {
+              const lineTotal = item.estimatedCost || (item.quantity * item.estimatedUnitCost);
+
+              return (
+                <tr key={item.id || index} className="hover:bg-slate-50/50">
+                  {/* Stock / Property No */}
+                  <td className="border-r border-slate-800 p-2 text-center font-semibold text-slate-900 align-top">
+                    {isReadOnly ? (
+                      item.stockNo
+                    ) : (
+                      <input
+                        type="text"
+                        value={item.stockNo}
+                        onChange={(e) => handleItemFieldChange(item.id, 'stockNo', e.target.value)}
+                        className="w-full text-center font-semibold bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
+                      />
+                    )}
+                  </td>
+
+                  {/* Unit */}
+                  <td className="border-r border-slate-800 p-2 text-center align-top">
+                    {isReadOnly ? (
+                      item.unit
+                    ) : (
+                      <input
+                        type="text"
+                        required
+                        value={item.unit}
+                        onChange={(e) => handleItemFieldChange(item.id, 'unit', e.target.value)}
+                        placeholder="pcs, reams"
+                        className="w-full text-center bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
+                      />
+                    )}
+                  </td>
+
+                  {/* Item Description */}
+                  <td className="border-r border-slate-800 p-2 align-top space-y-1.5">
+                    {!isReadOnly && catalogProducts.length > 0 && (
+                      <select
+                        value={item.productId || ''}
+                        onChange={(e) => handleItemFieldChange(item.id, 'productId', e.target.value)}
+                        className="w-full text-[11px] p-1 border border-slate-300 rounded bg-white text-slate-700 print:hidden"
+                      >
+                        <option value="">-- Autocomplete from Product Catalog (Optional) --</option>
+                        {catalogProducts.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            [{p.sku}] {p.name} (₱{Number(p.estimatedUnitCost).toLocaleString('en-PH')})
+                          </option>
+                        ))}
+                      </select>
+                    )}
+
+                    {isReadOnly ? (
+                      <div className="whitespace-pre-wrap leading-relaxed text-slate-900 font-serif">
+                        {item.description}
+                      </div>
+                    ) : (
+                      <textarea
+                        required
+                        rows={2}
+                        value={item.description}
+                        onChange={(e) => handleItemFieldChange(item.id, 'description', e.target.value)}
+                        placeholder="Detailed item description and technical specifications..."
+                        className="w-full p-1.5 text-xs bg-amber-50/50 border border-slate-300 rounded font-serif text-slate-900 resize-y"
+                      />
+                    )}
+                  </td>
+
+                  {/* Quantity */}
+                  <td className="border-r border-slate-800 p-2 text-center align-top">
+                    {isReadOnly ? (
+                      item.quantity
+                    ) : (
+                      <input
+                        type="number"
+                        min="1"
+                        required
+                        value={item.quantity}
+                        onChange={(e) => handleItemFieldChange(item.id, 'quantity', e.target.value)}
+                        className="w-full text-center font-semibold bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
+                      />
+                    )}
+                  </td>
+
+                  {/* Unit Cost */}
+                  <td className="border-r border-slate-800 p-2 text-right align-top">
+                    {isReadOnly ? (
+                      `₱ ${item.estimatedUnitCost.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
+                    ) : (
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        required
+                        value={item.estimatedUnitCost || ''}
+                        onChange={(e) => handleItemFieldChange(item.id, 'estimatedUnitCost', e.target.value)}
+                        placeholder="0.00"
+                        className="w-full text-right font-semibold bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
+                      />
+                    )}
+                  </td>
+
+                  {/* Total Cost (Read-Only) */}
+                  <td className="border-r border-slate-800 p-2 text-right font-bold text-slate-900 align-top">
+                    ₱ {lineTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
+                  </td>
+
+                  {/* Action Column */}
+                  {!isReadOnly && (
+                    <td className="p-2 text-center align-top print:hidden">
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteItem(item.id)}
+                        disabled={items.length === 1}
+                        title="Delete item row"
+                        className={`p-1 rounded text-red-600 hover:bg-red-50 ${
+                          items.length === 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
+                        }`}
+                      >
+                        🗑️
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+
+            {/* Grand Total Footer Row */}
+            <tr className="bg-slate-100 border-t-2 border-slate-900 font-bold font-sans text-xs">
+              <td colSpan={5} className="border-r border-slate-900 p-2.5 text-right uppercase tracking-wider text-slate-950">
+                Grand Total / Estimated Total Cost:
+              </td>
+              <td className="p-2.5 text-right text-[#7B1E1E] text-sm">
+                ₱ {grandTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
+              </td>
+              {!isReadOnly && <td className="print:hidden"></td>}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
