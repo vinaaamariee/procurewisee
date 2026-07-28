@@ -47,7 +47,6 @@ export default function RFQItemsTable({
   catalogProducts = [],
   isReadOnly = false,
 }: RFQItemsTableProps) {
-  // Helper to format sequence number e.g. "001", "002"
   const getSequentialNumber = (index: number) => {
     return String(index + 1).padStart(3, '0');
   };
@@ -308,9 +307,8 @@ export default function RFQItemsTable({
                         onClick={() => handleDeleteItem(item.id)}
                         disabled={items.length === 1}
                         title="Delete line item"
-                        className={`p-1 rounded text-red-600 hover:bg-red-50 ${
-                          items.length === 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
-                        }`}
+                        className={`p-1 rounded text-red-600 hover:bg-red-50 ${items.length === 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
+                          }`}
                       >
                         🗑️
                       </button>

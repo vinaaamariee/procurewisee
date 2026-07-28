@@ -3,95 +3,88 @@
 import React from 'react';
 
 interface RFQSignatureSectionProps {
-  preparedByName?: string;
-  preparedByTitle?: string;
-  setPreparedByName?: (val: string) => void;
-  approvedByName?: string;
-  approvedByTitle?: string;
-  setApprovedByName?: (val: string) => void;
+  rfqNumber?: string;
+  setRfqNumber?: (val: string) => void;
+  printedName?: string;
+  setPrintedName?: (val: string) => void;
+  bacChairperson?: string;
+  setBacChairperson?: (val: string) => void;
   isReadOnly?: boolean;
 }
 
 export default function RFQSignatureSection({
-  preparedByName = 'Procurement Officer',
-  preparedByTitle = 'Procurement Unit Head',
-  setPreparedByName,
-  approvedByName = 'Dr. Djovi R. Durante',
-  approvedByTitle = 'Head of the Procuring Entity / SUC President',
-  setApprovedByName,
+  rfqNumber = '2026-001',
+  setRfqNumber,
+  printedName = '',
+  setPrintedName,
+  bacChairperson = 'BAC Chairperson',
+  setBacChairperson,
   isReadOnly = false,
 }: RFQSignatureSectionProps) {
   return (
-    <div className="mt-8 pt-4 border-t-2 border-slate-900 font-serif text-xs space-y-6">
-      <div className="text-[11px] text-slate-700 italic">
-        After having carefully read and accepted your General Terms and Conditions, I / We quote you on the item(s) at prices noted above.
+    <div className="font-sans text-xs text-black space-y-4 pt-2">
+      {/* Conforme Statement */}
+      <p className="text-center text-[11px] leading-tight text-black font-sans">
+        After having carefully read and accepted your conditions, I/We have place my /our best and final price offer on the item/s listed above.
+      </p>
+
+      {/* Signature Grid */}
+      <div className="grid grid-cols-2 gap-8 pt-4">
+        {/* Left Side: Supplier Printed Name/Signature */}
+        <div className="space-y-1 self-end">
+          <div className="border-b border-black w-4/5 h-8">
+            {!isReadOnly && setPrintedName && (
+              <input
+                type="text"
+                value={printedName}
+                onChange={(e) => setPrintedName(e.target.value)}
+                placeholder="Printed Name / Signature..."
+                className="w-full text-xs font-sans bg-transparent focus:outline-none h-full text-black pt-3"
+              />
+            )}
+          </div>
+          <div className="text-xs font-sans text-black pt-0.5">
+            Printed Name/Signature
+          </div>
+        </div>
+
+        {/* Right Side: Very truly yours, / BAC Chairperson */}
+        <div className="space-y-1 text-right self-end">
+          <div className="text-xs font-sans text-black pr-8">Very truly yours,</div>
+          <div className="border-b border-black w-4/5 ml-auto h-8"></div>
+          <div className="text-xs font-sans italic text-black pr-4 pt-0.5">
+            {isReadOnly ? (
+              bacChairperson
+            ) : (
+              <input
+                type="text"
+                value={bacChairperson}
+                onChange={(e) => setBacChairperson?.(e.target.value)}
+                className="text-right text-xs font-sans italic bg-transparent focus:outline-none w-full text-black"
+              />
+            )}
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4 text-center">
-        {/* Prepared By Block */}
-        <div className="space-y-8 flex flex-col justify-between">
-          <div className="font-bold text-slate-900 uppercase text-[11px] text-left">
-            Prepared By:
-          </div>
-          <div className="space-y-1">
-            <div className="border-b border-slate-900 w-4/5 mx-auto h-8"></div>
-            {isReadOnly ? (
-              <div className="font-bold uppercase text-slate-950 pt-1">
-                {preparedByName}
-              </div>
-            ) : (
-              <input
-                type="text"
-                value={preparedByName}
-                onChange={(e) => setPreparedByName?.(e.target.value)}
-                placeholder="Name of Procurement Officer"
-                className="w-4/5 text-center font-bold uppercase text-slate-950 border-b border-dotted border-slate-400 py-0.5 text-xs bg-transparent focus:outline-none"
-              />
-            )}
-            <div className="text-[10px] text-slate-600 font-sans">{preparedByTitle}</div>
-          </div>
+      {/* Ref.# Footer Line */}
+      <div className="pt-4 flex justify-between items-baseline text-xs font-sans border-t border-slate-200 mt-4">
+        <div className="flex items-baseline gap-1">
+          <span className="font-sans">Ref.#</span>
+          {isReadOnly ? (
+            <span className="font-sans border-b border-black px-2 min-w-[80px] inline-block">
+              {rfqNumber}
+            </span>
+          ) : (
+            <input
+              type="text"
+              value={rfqNumber}
+              onChange={(e) => setRfqNumber?.(e.target.value)}
+              placeholder="2026-001"
+              className="border-b border-black px-1 text-xs bg-transparent focus:outline-none w-28 text-black"
+            />
+          )}
         </div>
-
-        {/* Approved By Block */}
-        <div className="space-y-8 flex flex-col justify-between">
-          <div className="font-bold text-slate-900 uppercase text-[11px] text-left">
-            Approved By:
-          </div>
-          <div className="space-y-1">
-            <div className="border-b border-slate-900 w-4/5 mx-auto h-8"></div>
-            {isReadOnly ? (
-              <div className="font-bold uppercase text-slate-950 pt-1">
-                {approvedByName}
-              </div>
-            ) : (
-              <input
-                type="text"
-                value={approvedByName}
-                onChange={(e) => setApprovedByName?.(e.target.value)}
-                placeholder="Name of Head of Procuring Entity"
-                className="w-4/5 text-center font-bold uppercase text-slate-950 border-b border-dotted border-slate-400 py-0.5 text-xs bg-transparent focus:outline-none"
-              />
-            )}
-            <div className="text-[10px] text-slate-600 font-sans">{approvedByTitle}</div>
-          </div>
-        </div>
-
-        {/* Supplier Representative Conforme Block */}
-        <div className="space-y-8 flex flex-col justify-between">
-          <div className="font-bold text-slate-900 uppercase text-[11px] text-left">
-            Supplier Conforme / Bidder:
-          </div>
-          <div className="space-y-1">
-            <div className="border-b border-slate-900 w-4/5 mx-auto h-8"></div>
-            <div className="font-bold uppercase text-slate-950 pt-1 text-[11px]">
-              Signature Over Printed Name
-            </div>
-            <div className="text-[10px] text-slate-600 font-sans">
-              Authorized Representative & Date Signed
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
   );

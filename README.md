@@ -24,22 +24,21 @@ Redesigned the **Create Purchase Request (PR)** module (`src/app/dashboard/end-u
 
 ---
 
-## 📄 Official Batanes State College RFQ Digital Document Redesign
+## 📄 Official Batanes State College RFQ Digital Document Redesign (Annex D Replica)
 
 **Branch**: `feat/rfq-official-redesign`
 
-Redesigned the Create New Request for Quotation (RFQ) module (`src/app/dashboard/officer/rfq/new`) into an official digital version of the Batanes State College Request for Quotation paper document. All backend functionality, Prisma models, Supabase integration, Server Actions (`createRfqAction`), sequence override audit trails, and validation rules are 100% preserved.
+Redesigned the **Create Request for Quotation (RFQ)** module (`src/app/dashboard/officer/rfq/new`) into a 100% pixel-perfect digital replica of the official **Batanes State College Request for Price Quotation (Annex D)** document. All backend functionality, Prisma models, Supabase integration, Server Actions (`createRfqAction`), sequence override audit trails, and validation rules are 100% preserved.
 
-### Modular Document Components Created (`src/components/rfq/`)
+### Modular Document Components (`src/components/rfq/`)
 
-- **`RFQDocument.tsx`**: Master document wrapper supporting `create`, `edit`, and `view` modes, rendering an A4 centered digital document layout with `@media print` rules.
-- **`RFQCollegeInformation.tsx`**: Replicates official institutional header with Republic of the Philippines branding, BSC Seal logo, address, and Procurement Unit heading.
-- **`RFQHeader.tsx`**: Document metadata grid (RFQ No., Date, Mode of Procurement, ABC Budget, Submission Deadline, Delivery Period, and audited sequence override justification).
-- **`RFQSupplierInformation.tsx`**: Official supplier/bidder information block (Company Name, TIN, Business Address, Contact Person, Phone, Email, and Quotation Date).
-- **`RFQItemsTable.tsx`**: Itemized specifications & price schedule table featuring dynamic row addition/deletion, APP item & product catalog linkage dropdowns, line total calculations, and Grand Total ABC summary.
-- **`RFQTermsAndConditions.tsx`**: Preserves official BSC bidding instructions and general terms & conditions.
-- **`RFQSignatureSection.tsx`**: Official signature blocks for Prepared By (Procurement Officer), Approved By (Head of Procuring Entity), and Supplier Conforme.
-- **`RFQActions.tsx`**: Floating action bar providing Save Draft, Publish Solicitation, Toggle Edit/Preview, Print RFQ, and Export PDF controls (automatically excluded during printing).
+- **`RFQDocument.tsx`**: Master document wrapper rendering an A4 centered Annex D digital paper layout (`max-w-[800px] bg-white border border-slate-400 p-8 text-black font-sans`) with `@media print` rules.
+- **`RFQHeader.tsx`**: Top header featuring `Annex D`, centered `REQUEST FOR PRICE QUOTATION` title, and right-aligned `Date:` field.
+- **`RFQSupplierSection.tsx`**: Supplier/addressee line (`MOJR Construction Trading & General Services, Ltd, Co.`) and submission deadline instruction paragraph.
+- **`RFQTerms.tsx`**: Replicates the exact official NOTE section (items 1 through 6) including lot-basis evaluation rules, 30-day delivery period, sealed envelope requirements, Approved Budget for this Procurement (ABC) in Pesos (₱), Annex H Appendix A document requirements, and "None" availability instructions.
+- **`RFQItemsTable.tsx`**: Recreates the exact official table grid (`Item #`, `Qty.`, `Unit`, `PARTICULAR`, `Unit Price`, `Total`), pre-padded with 10 rows minimum (`001` through `010`), line total calculations, catalog lookups, and bottom-right `Total` sum.
+- **`RFQSignatureSection.tsx`**: Official conforme statement (*After having carefully read and accepted your conditions...*), left-side `Printed Name/Signature` block, right-side `Very truly yours,` / `BAC Chairperson` signature slot, and bottom `Ref.#` footer field.
+- **`RFQToolbar.tsx`**: Floating action bar providing Save Draft, Publish RFQ, Toggle Edit/Preview, Print RFQ, and Export PDF controls (automatically excluded during printing).
 
 ---
 

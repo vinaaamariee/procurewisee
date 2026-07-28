@@ -36,6 +36,7 @@ export default async function PrTrackerPage() {
   });
 
   return (
+    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 style={{ fontSize: "1.875rem", fontWeight: 800, color: "#1f2937", margin: 0, letterSpacing: "-0.5px" }}>
@@ -54,6 +55,6 @@ export default async function PrTrackerPage() {
       </div>
 
       <PrTrackerClient initialPrs={prs as any} />
-    </div >
+    </div>
   );
 }

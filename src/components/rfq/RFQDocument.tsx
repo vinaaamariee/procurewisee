@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useTransition } from 'react';
-import RFQCollegeInformation from './RFQCollegeInformation';
 import RFQHeader from './RFQHeader';
-import RFQSupplierInformation, { SupplierInfo } from './RFQSupplierInformation';
+import RFQSupplierSection from './RFQSupplierSection';
+import RFQTerms from './RFQTerms';
 import RFQItemsTable, { AppItem, CatalogProduct, ItemRow } from './RFQItemsTable';
-import RFQTermsAndConditions from './RFQTermsAndConditions';
 import RFQSignatureSection from './RFQSignatureSection';
-import RFQActions from './RFQActions';
+import RFQToolbar from './RFQToolbar';
 import { createRfqAction } from '@/app/actions/rfq-actions';
 import { useRouter } from 'next/navigation';
 
@@ -16,21 +15,14 @@ export interface RFQDocumentData {
   rfqNumber?: string;
   title?: string;
   date?: string;
-  modeOfProcurement?: string;
+  supplierName?: string;
   approvedBudgetContract?: number | '';
   deadlineDate?: string;
   deliveryPeriod?: string;
   status?: 'Draft' | 'Published' | 'Closed' | 'Evaluated';
-  supplier?: SupplierInfo;
   items?: ItemRow[];
-  termsAndConditions?: string[];
-  preparedByName?: string;
-  preparedByTitle?: string;
-  approvedByName?: string;
-  approvedByTitle?: string;
-  isManualOverride?: boolean;
-  overrideCategory?: string;
-  overrideDetails?: string;
+  printedName?: string;
+  bacChairperson?: string;
 }
 
 interface RFQDocumentProps {
@@ -59,22 +51,18 @@ export default function RFQDocument({
     return date.toISOString().split('T')[0];
   };
 
-  // Form State
-  const [title, setTitle] = useState(initialData.title || '');
+  // State
   const [rfqNumber, setRfqNumber] = useState(initialData.rfqNumber || nextRfqNumber);
-  const [isManualOverride, setIsManualOverride] = useState(initialData.isManualOverride || false);
-  const [overrideCategory, setOverrideCategory] = useState(initialData.overrideCategory || 'Urgent Operational Requirement');
-  const [overrideDetails, setOverrideDetails] = useState(initialData.overrideDetails || '');
   const [date, setDate] = useState(initialData.date || new Date().toISOString().split('T')[0]);
-  const [modeOfProcurement, setModeOfProcurement] = useState(initialData.modeOfProcurement || 'Small Value Procurement (Sec. 53.9)');
+  const [supplierName, setSupplierName] = useState(
+    initialData.supplierName || 'MOJR Construction Trading & General Services, Ltd, Co.'
+  );
   const [approvedBudget, setApprovedBudget] = useState<number | ''>(initialData.approvedBudgetContract ?? '');
   const [deadlineDate, setDeadlineDate] = useState(initialData.deadlineDate || getDefaultDeadlineDate());
-  const [deliveryPeriod, setDeliveryPeriod] = useState(initialData.deliveryPeriod || '15 Calendar Days');
+  const [deliveryPeriod, setDeliveryPeriod] = useState(initialData.deliveryPeriod || 'Thirty (30) calendar days.');
+  const [title, setTitle] = useState(initialData.title || 'Procurement of Goods & Infrastructure Services');
 
-  // Supplier Information
-  const [supplier, setSupplier] = useState<SupplierInfo>(initialData.supplier || {});
-
-  // Line Items State
+  // Items State
   const [items, setItems] = useState<ItemRow[]>(
     initialData.items && initialData.items.length > 0
       ? initialData.items
@@ -93,26 +81,24 @@ export default function RFQDocument({
         ]
   );
 
-  // Terms and Signature State
-  const [terms, setTerms] = useState<string[] | undefined>(initialData.termsAndConditions);
-  const [preparedByName, setPreparedByName] = useState(initialData.preparedByName || 'Procurement Officer');
-  const [approvedByName, setApprovedByName] = useState(initialData.approvedByName || 'Dr. Djovi R. Durante');
+  // Signature State
+  const [printedName, setPrintedName] = useState(initialData.printedName || '');
+  const [bacChairperson, setBacChairperson] = useState(initialData.bacChairperson || 'BAC Chairperson');
 
-  // Mode Read-Only Toggle
+  // Read-only Toggle
   const [isReadOnly, setIsReadOnly] = useState(mode === 'view');
 
-  // Sync nextRfqNumber when not manual override
+  // Sync nextRfqNumber
   useEffect(() => {
-    if (!isManualOverride && nextRfqNumber && mode === 'create') {
+    if (nextRfqNumber && mode === 'create' && !rfqNumber) {
       setRfqNumber(nextRfqNumber);
     }
-  }, [nextRfqNumber, isManualOverride, mode]);
+  }, [nextRfqNumber, mode, rfqNumber]);
 
   // Alerts
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Form Submit Handler
   const handleSubmit = (submitStatus: 'Draft' | 'Published') => {
     setErrorMsg(null);
     setSuccessMsg(null);
@@ -121,40 +107,17 @@ export default function RFQDocument({
       setErrorMsg('Please enter an RFQ reference number.');
       return;
     }
-    if (!title.trim()) {
-      setErrorMsg('Please enter an RFQ title/subject.');
-      return;
-    }
     if (!approvedBudget || approvedBudget <= 0) {
-      setErrorMsg('Please enter a valid Approved Budget for the Contract (ABC).');
-      return;
-    }
-    if (!deadlineDate) {
-      setErrorMsg('Please select a submission deadline.');
+      setErrorMsg('Please enter the Approved Budget for this Procurement (ABC).');
       return;
     }
 
-    if (isManualOverride) {
-      if (overrideCategory === 'Other (specify below)' && !overrideDetails.trim()) {
-        setErrorMsg('Please specify details for your sequence override reason.');
-        return;
-      }
-    }
+    // Filter non-empty items
+    const activeItems = items.filter((item) => item.particulars.trim() !== '');
 
-    // Line items validation
-    for (const item of items) {
-      if (!item.particulars.trim()) {
-        setErrorMsg(`Item ${item.itemNumber} description / specification cannot be empty.`);
-        return;
-      }
-      if (item.quantity <= 0) {
-        setErrorMsg(`Item ${item.itemNumber} quantity must be 1 or more.`);
-        return;
-      }
-      if (!item.unit.trim()) {
-        setErrorMsg(`Item ${item.itemNumber} unit (e.g. pcs, reams) is required.`);
-        return;
-      }
+    if (activeItems.length === 0) {
+      setErrorMsg('Please enter at least one line item particular/specification.');
+      return;
     }
 
     startTransition(async () => {
@@ -164,18 +127,13 @@ export default function RFQDocument({
             rfqNumber,
             title,
             date,
-            modeOfProcurement,
+            supplierName,
             approvedBudgetContract: Number(approvedBudget),
             deadlineDate,
             deliveryPeriod,
-            supplier,
-            items,
-            termsAndConditions: terms,
-            preparedByName,
-            approvedByName,
-            isManualOverride,
-            overrideCategory,
-            overrideDetails,
+            items: activeItems,
+            printedName,
+            bacChairperson,
           },
           submitStatus
         );
@@ -193,27 +151,20 @@ export default function RFQDocument({
           setErrorMsg(res.error || 'Failed to save RFQ.');
         }
       } else {
-        // Default execution calling createRfqAction
         const res = await createRfqAction({
           rfqNumber,
-          title,
+          title: title || 'Procurement Solicitation',
           approvedBudgetContract: Number(approvedBudget),
           deadlineDate,
           status: submitStatus,
-          items: items.map((item) => ({
+          items: activeItems.map((item) => ({
             itemNumber: item.itemNumber,
             particulars: item.particulars,
             quantity: item.quantity,
-            unit: item.unit,
+            unit: item.unit || 'pcs',
             appItemId: item.appItemId,
             productId: item.productId,
           })),
-          overrideReason: isManualOverride
-            ? overrideCategory === 'Other (specify below)'
-              ? `Other: ${overrideDetails.trim()}`
-              : overrideCategory
-            : undefined,
-          originalRfqNumber: isManualOverride ? nextRfqNumber : undefined,
         });
 
         if (res.success) {
@@ -235,7 +186,7 @@ export default function RFQDocument({
 
   return (
     <div className="relative pb-24">
-      {/* Print Media Styles */}
+      {/* Print Media CSS Rules */}
       <style jsx global>{`
         @media print {
           body {
@@ -268,62 +219,45 @@ export default function RFQDocument({
 
       {/* Alert Notifications */}
       {errorMsg && (
-        <div className="max-w-[850px] mx-auto mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
+        <div className="max-w-[800px] mx-auto mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
           <span>⚠️</span>
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="max-w-[850px] mx-auto mb-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
+        <div className="max-w-[800px] mx-auto mb-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
           <span>✅</span>
           <span>{successMsg}</span>
         </div>
       )}
 
-      {/* Centered A4 Digital RFQ Document Container */}
+      {/* Centered Digital Official Annex D Document */}
       <div id="rfq-document-container" className="w-full flex justify-center">
         <div
           id="rfq-document"
-          className="w-full max-w-[850px] min-h-[1056px] bg-white text-slate-950 shadow-2xl border border-slate-300 p-6 sm:p-10 md:p-12 font-serif text-xs leading-snug rounded-sm"
+          className="w-full max-w-[800px] min-h-[1056px] bg-white text-black shadow-xl border border-slate-400 p-6 sm:p-10 font-sans text-xs leading-snug rounded-none"
         >
-          {/* 1. College Institutional Header */}
-          <RFQCollegeInformation />
+          {/* 1. Header (Annex D & Date) */}
+          <RFQHeader date={date} setDate={setDate} isReadOnly={isReadOnly} />
 
-          {/* 2. RFQ Metadata & Header */}
-          <RFQHeader
-            title={title}
-            setTitle={setTitle}
-            rfqNumber={rfqNumber}
-            setRfqNumber={setRfqNumber}
-            isManualOverride={isManualOverride}
-            setIsManualOverride={setIsManualOverride}
-            overrideCategory={overrideCategory}
-            setOverrideCategory={setOverrideCategory}
-            overrideDetails={overrideDetails}
-            setOverrideDetails={setOverrideDetails}
-            nextRfqNumber={nextRfqNumber}
-            date={date}
-            setDate={setDate}
-            modeOfProcurement={modeOfProcurement}
-            setModeOfProcurement={setModeOfProcurement}
+          {/* 2. Supplier Section */}
+          <RFQSupplierSection
+            supplierName={supplierName}
+            setSupplierName={setSupplierName}
+            isReadOnly={isReadOnly}
+          />
+
+          {/* 3. Official NOTE Instructions (1 to 6) */}
+          <RFQTerms
             approvedBudget={approvedBudget}
             setApprovedBudget={setApprovedBudget}
-            deadlineDate={deadlineDate}
-            setDeadlineDate={setDeadlineDate}
             deliveryPeriod={deliveryPeriod}
             setDeliveryPeriod={setDeliveryPeriod}
             isReadOnly={isReadOnly}
           />
 
-          {/* 3. Supplier Information Block */}
-          <RFQSupplierInformation
-            supplier={supplier}
-            setSupplier={setSupplier}
-            isReadOnly={isReadOnly}
-          />
-
-          {/* 4. RFQ Items Table */}
+          {/* 4. Table Grid */}
           <RFQItemsTable
             items={items}
             setItems={setItems}
@@ -332,26 +266,21 @@ export default function RFQDocument({
             isReadOnly={isReadOnly}
           />
 
-          {/* 5. Terms & Conditions Section */}
-          <RFQTermsAndConditions
-            terms={terms}
-            setTerms={setTerms}
-            isReadOnly={isReadOnly}
-          />
-
-          {/* 6. Signature Section */}
+          {/* 5. Signature Section & Ref.# Footer */}
           <RFQSignatureSection
-            preparedByName={preparedByName}
-            setPreparedByName={setPreparedByName}
-            approvedByName={approvedByName}
-            setApprovedByName={setApprovedByName}
+            rfqNumber={rfqNumber}
+            setRfqNumber={setRfqNumber}
+            printedName={printedName}
+            setPrintedName={setPrintedName}
+            bacChairperson={bacChairperson}
+            setBacChairperson={setBacChairperson}
             isReadOnly={isReadOnly}
           />
         </div>
       </div>
 
       {/* Floating Action Bar */}
-      <RFQActions
+      <RFQToolbar
         onSaveDraft={() => handleSubmit('Draft')}
         onPublish={() => handleSubmit('Published')}
         isReadOnly={isReadOnly}
