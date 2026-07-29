@@ -4,11 +4,7 @@ allowBuilds:
   prisma: true
   sharp: true
   unrs-resolver: true
+minimumReleaseAge: 0
 minimumReleaseAgeExclude:
-  - '@supabase/auth-js@2.108.0'
-  - '@supabase/functions-js@2.108.0'
-  - '@supabase/postgrest-js@2.108.0'
-  - '@supabase/realtime-js@2.108.0'
-  - '@supabase/ssr@0.12.0'
-  - '@supabase/storage-js@2.108.0'
-  - '@supabase/supabase-js@2.108.0'
+  - '@supabase/*'
+
