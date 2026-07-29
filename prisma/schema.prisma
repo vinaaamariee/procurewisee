@@ -52,7 +52,6 @@ model Supplier {
   evaluations             SupplierEvaluation[]
   productPrices           SupplierProductPrice[]
   quotes                  SupplierQuote[]
-  rfqAcknowledgements     RfqAcknowledgementLog[]
 
   @@map("suppliers")
 }
@@ -94,20 +93,19 @@ model AppItem {
 }
 
 model RequestForQuote {
-  id                     Int                     @id @default(autoincrement()) @map("rfq_id")
-  rfqNumber              String                  @unique @db.VarChar(50)
-  title                  String                  @db.VarChar(255)
-  approvedBudgetContract Decimal                 @db.Decimal(12, 2)
-  deadlineDate           DateTime                @db.Date
-  status                 RfqStatus               @default(Draft)
+  id                     Int              @id @default(autoincrement()) @map("rfq_id")
+  rfqNumber              String           @unique @db.VarChar(50)
+  title                  String           @db.VarChar(255)
+  approvedBudgetContract Decimal          @db.Decimal(12, 2)
+  deadlineDate           DateTime         @db.Date
+  status                 RfqStatus        @default(Draft)
   createdById            String?
-  createdAt              DateTime                @default(now())
+  createdAt              DateTime         @default(now())
   canvasAbstracts        CanvasAbstract[]
   purchaseOrders         PurchaseOrder[]
-  createdBy              UserProfile?            @relation("RfqCreatedBy", fields: [createdById], references: [id])
+  createdBy              UserProfile?     @relation("RfqCreatedBy", fields: [createdById], references: [id])
   items                  RfqItem[]
   quotes                 SupplierQuote[]
-  acknowledgementLogs    RfqAcknowledgementLog[]
 
   @@index([status])
   @@index([createdAt])
@@ -540,17 +538,6 @@ model PurchaseOrder {
   status                  PoStatus                 @default(Draft)
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
-  // Appendix 61 extended fields
-  entityName              String?                  @db.VarChar(150)
-  modeOfProcurement       String?                  @db.VarChar(100)
-  placeOfDelivery         String?                  @db.VarChar(200)
-  dateOfDelivery          DateTime?
-  fundCluster             String?                  @db.VarChar(50)
-  orsBursNumber           String?                  @db.VarChar(50)
-  fundsAvailable          Decimal?                 @db.Decimal(12, 2)
-  dateOfOrsBurs           DateTime?
-  chiefAccountantName     String?                  @db.VarChar(100)
-  authorizedOfficialName  String?                  @db.VarChar(100)
   acknowledgementReceipts AcknowledgementReceipt[]
   items                   PurchaseOrderItem[]
   pr                      PurchaseRequest?         @relation(fields: [prId], references: [id])
@@ -566,15 +553,17 @@ model PurchaseOrder {
 }
 
 model PurchaseOrderItem {
-  id          Int           @id @default(autoincrement()) @map("po_item_id")
-  poId        Int
-  description String
-  quantity    Int
-  unit        String?       @db.VarChar(50)
-  stockNo     String?       @db.VarChar(20)
-  unitPrice   Decimal       @db.Decimal(12, 2)
-  totalCost   Decimal       @db.Decimal(12, 2)
-  po          PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  id            Int           @id @default(autoincrement()) @map("po_item_id")
+  poId          Int
+  description   String
+  brand         String?       @db.VarChar(100)
+  specification String?
+  quantity      Int
+  unit          String?       @db.VarChar(50)
+  stockNo       String?       @db.VarChar(20)
+  unitPrice     Decimal       @db.Decimal(12, 2)
+  totalCost     Decimal       @db.Decimal(12, 2)
+  po            PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
 
   @@index([poId])
   @@map("purchase_order_items")
@@ -620,32 +609,18 @@ model SupplierEvaluation {
   evaluationType          EvaluationType
   evaluatorName           String         @db.VarChar(100)
   evaluationDate          DateTime       @db.Date
-  // End-User criteria (BSC official 4-category form)
-  productQuality          Int?           // Quality cat: met quality standards
-  deliveryCompliance      Int?           // Quality cat: delivered per delivery term
-  accuracy                Int?           // Quality cat: accurate & complete per specs
-  responsiveness          Int?           // Communication cat: responsive to inquiries
-  communication           Int?           // Communication cat: willing to address issues
-  clearCommunication      Int?           // Communication cat: clear throughout ordering
-  costEffectiveness       Int?           // Cost cat: competitive pricing
-  valueForMoney           Int?           // Cost cat: products justify cost
-  wouldRecommend          Int?           // Overall cat: would recommend supplier
-  // Procurement Office criteria
+  productQuality          Int?
+  deliveryCompliance      Int?
+  accuracy                Int?
+  responsiveness          Int?
+  communication           Int?
+  costEffectiveness       Int?
+  overallSatisfaction     Int?
   rfqResponsiveness       Int?
   competitivePricing      Int?
   specificationCompliance Int?
   documentCompliance      Int?
   deliveryPerformance     Int?
-  // Header fields for PO variant
-  purchaseRequestNo       String?        @db.VarChar(50)
-  poNo                    String?        @db.VarChar(50)
-  philGepsRn              String?        @db.VarChar(50)
-  philGepsDateRegistered  DateTime?      @db.Date
-  philGepsExpirationDate  DateTime?      @db.Date
-  // Header fields for End-User variant
-  typeOfGoodsServices     String?        @db.VarChar(200)
-  officeUnit              String?        @db.VarChar(100)
-  respondentName          String?        @db.VarChar(100)
   comments                String?
   recommendation          String?
   signature               String?
@@ -654,22 +629,6 @@ model SupplierEvaluation {
 
   @@index([supplierId])
   @@map("supplier_evaluations")
-}
-
-model RfqAcknowledgementLog {
-  id           Int             @id @default(autoincrement())
-  rfqId        Int
-  supplierId   Int
-  receivedBy   String?         @db.VarChar(100)
-  dateReceived DateTime?
-  acknowledged Boolean         @default(false)
-  createdAt    DateTime        @default(now())
-  rfq          RequestForQuote @relation(fields: [rfqId], references: [id], onDelete: Cascade)
-  supplier     Supplier        @relation(fields: [supplierId], references: [id])
-
-  @@unique([rfqId, supplierId])
-  @@index([rfqId])
-  @@map("rfq_acknowledgement_logs")
 }
 
 model FormTemplate {
@@ -788,9 +747,14 @@ enum PrStatus {
 
 enum PoStatus {
   Draft
+  PendingApproval @map("Pending Approval")
   Approved
+  SentToSupplier  @map("Sent to Supplier")
+  PartiallyDelivered @map("Partially Delivered")
   Delivered
+  Completed
   Closed
+  Cancelled
 }
 
 enum DeliveryStatus {

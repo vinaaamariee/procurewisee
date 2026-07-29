@@ -89,7 +89,7 @@ export default async function PrDetailPage({ params }: PageProps) {
         </Link>
       </div>
 
-      <PrDetailsClient initialPr={pr as any} budgets={budgets} officerId={profile.id} />
+      <PrDetailsClient initialPr={(pr as any)} budgets={budgets} officerId={profile.id} />
     </div>
   );
 }

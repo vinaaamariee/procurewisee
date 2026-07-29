@@ -4,78 +4,75 @@
 
 **Capstone Project for Batanes State College**
 
----
 
-## 📄 Official Batanes State College Purchase Request (PR) Digital Document Redesign
+## ✅ Purchase Order Module — Appendix 61 (Philippine Government Form)
 
-**Branch**: `feat/pr-official-redesign`
+**Date**: July 2026
 
-Redesigned the **Create Purchase Request (PR)** module (`src/app/dashboard/end-user/pr/new`) into an official digital version of the Batanes State College Purchase Request paper document. All backend functionality, Prisma models, Supabase integration, Server Actions (`createPrFromCartAction`), approval workflows, and validation rules are 100% preserved.
+The Purchase Order (PO) module has been significantly enhanced to fully comply with the **Philippine Government Procurement Manual — Appendix 61 Purchase Order Form**. The printed output now faithfully reproduces the official government document layout.
 
----
+### What Was Built / Updated
 
-## 🏛️ Official Batanes State College Forms System (ProcureWise Multi-Document Redesign)
+#### New Components
+- **`src/components/po/POItemUpload.tsx`** — Drag-and-drop Excel (.xlsx) / CSV upload for PO line items with:
+  - Client-side XLSX parsing (uses existing `xlsx` package)
+  - Validation: Description, Unit, Quantity, Unit Cost required; Quantity > 0, Unit Cost ≥ 0
+  - Upload summary: total rows / successful / invalid
+  - Downloadable error report (.xlsx)
+  - Downloadable template (.xlsx) with sample rows
 
-Implemented complete digital replicas of all 6 official Batanes State College (BSC) procurement forms with on-screen editing, live total calculations, and unified institutional letterhead header/footer branding on all printed and exported pages via `DocumentLayout.tsx`:
+#### Modified Components
+- **`src/components/po/PODocument.tsx`** — Full Appendix 61 layout rewrite:
+  - **Correct layout order**: Gentlemen paragraph now appears before the delivery table (matches reference image)
+  - **Add / Delete item rows**: "+" row at bottom, "×" delete per row when in Draft mode
+  - **Brand & Specification toggle**: Optional extra columns per item (screen-only, excluded from print)
+  - **Excel upload panel**: Integrated inline above items table in Draft mode
+  - **Item persistence**: `upsertPoItemsAction` called on Save to sync all item changes to DB
+  - **Improved accounting section**: Fund Cluster, ORS/BURS No., Date of ORS/BURS, Funds Available, Amount, Chief Accountant signature
+- **`src/app/dashboard/officer/po/[id]/PoDetailsClient.tsx`** — Extended controls:
+  - **Status workflow**: Draft → Pending Approval → Approved → Sent to Supplier → Delivered → Completed
+  - **Cancel PO** button with confirmation
+  - **Download PDF** via `html2pdf.js` (browser-only, captures `#po-document` element)
+  - **Status badge** with color-coded indicator
+  - **PO Summary** side panel (PO#, supplier, line item count, total)
+- **`src/app/dashboard/officer/po/PoDraftingClient.tsx`** — Enhanced list page:
+  - **Status filter pills** (All / Draft / Approved / Sent / Completed / Cancelled)
+  - **Dropdown filter** + **search bar** combined
+  - **Supplier avatar** initials
+  - **Notification badge** on Awards tab when pending awards exist
 
-1. **Purchase Request (PR — Appendix 60)**:
-   - All 6 header fields (Entity Name, Fund Cluster, PR No., Date, Office/Section, Responsibility Center Code).
-   - Editable items table with automatic totals and designation fields in signature section.
-   - Wrapped in `DocumentLayout` for automatic BSC letterhead & footer on print.
+#### Server Actions (`src/app/actions/po.ts`)
+- `createPoFromAwardAction` — now pre-fills default Appendix 61 fields
+- `upsertPoItemsAction` — replace-all items in a transaction; recalculates PO total
+- `deletePoItemAction` — delete single item; recalculates PO total
+- `updatePoStatusAction` — supports extended PoStatus values
+- All existing actions preserved
 
-2. **Request for Quotation (RFQ — Annex D)**:
-   - Official 6-point terms & conditions block, Lot/Item procurement mode, ABC, and Conforme block.
-   - Prices entered exclusively through separate bid workflow (`quotes.ts`).
-   - Wrapped in `DocumentLayout` for automatic BSC print branding.
+#### Database Changes (Prisma Migration)
+- `PurchaseOrderItem` — Added `brand String? @db.VarChar(100)` and `specification String?` columns
+- `PoStatus` enum — Extended with: `PendingApproval`, `SentToSupplier`, `PartiallyDelivered`, `Completed`, `Cancelled`
 
-3. **RFQ Acknowledgement Receipt (Annex E — `AcknowledgementReceiptDocument.tsx`)**:
-   - Official Annex E table for tracking supplier invitations and physical/digital receipt dates.
-   - Per-supplier acknowledgement checkboxes and interactive record updates via `rfq-acknowledgement.ts`.
-   - Accessible via `/dashboard/officer/rfq/[id]/ack`.
-
-4. **Abstract of Quotation (AOQ — Annex F — `AOQDocument.tsx`)**:
-   - Official Annex F matrix comparing all submitted supplier bids side-by-side per item.
-   - Live lowest-price unit price and total cost highlighting (emerald accent).
-   - Reads directly from `SupplierQuote` + `QuoteDetail` records without data duplication.
-   - Accessible via `/dashboard/officer/rfq/[id]/aoq`.
-
-5. **Purchase Order (PO — Appendix 61 — `PODocument.tsx`)**:
-   - Full digital replica of standard COA/GAM Appendix 61.
-   - On-screen editable fields for Entity Name, Mode of Procurement, Place/Date of Delivery, Delivery/Payment Terms, Fund Cluster, ORS/BURS No., Funds Available, Date of ORS/BURS, and Chief Accountant signature name.
-   - Auto-generates **Total Amount in Words** (e.g. *"TWELVE THOUSAND THREE HUNDRED PESOS AND 00/100"*) using pure TS utility `numberToWords()`.
-
-6. **Supplier Evaluation Forms**:
-   - **End-User Form (`EvaluationFormClient.tsx`)**: Official BSC 4-category evaluation (Quality, Communication, Cost, Overall) with 9 Likert-scale criteria (4=Strongly Agree to 1=Strongly Disagree), PO No., Office/Unit, and Type of Goods metadata.
-   - **Procurement Office Form (`OfficerEvaluationsClient.tsx`)**: Official 5-criteria procurement evaluation including PhilGEPS RN, Date Registered, and Expiration Date metadata, with live supplier performance scorecard calculations.
-
-
-### Modular Document Components Created (`src/components/pr/`)
-
-- **`PRDocument.tsx`**: Master document wrapper supporting `create`, `edit`, and `view` modes, rendering an A4 centered digital PR layout with `@media print` rules.
-- **`PRHeader.tsx`**: Replicates official institutional header with Republic of the Philippines branding, BSC Seal logo, address, and Purchase Request title.
-- **`PRGeneralInformation.tsx`**: Document metadata grid (Entity Name, Fund Cluster, Office/Section, PR No., Date, and Responsibility Center Code).
-- **`PRItemsTable.tsx`**: Recreation of the official PR table featuring Stock/Property No., Unit, Item Description (with Product Catalog autocomplete), Quantity (>0), Unit Cost (₱), line total calculations, dynamic row addition/deletion, and Grand Total.
-- **`PRPurposeSection.tsx`**: Multiline purpose/justification area visually integrated into the document.
-- **`PRSignatureSection.tsx`**: Official signature blocks for Requested By (Requisitioner) and Approved By (Head of Procuring Entity / SUC President).
-- **`PRToolbar.tsx`**: Floating action bar providing Save Draft, Submit PR, Toggle Edit/Preview, Print PR, and Export PDF controls (automatically excluded during printing).
+#### Package Added
+- `html2pdf.js ^0.14.0` — Client-side PDF generation from DOM element
 
 ---
 
-## 📄 Official Batanes State College RFQ Digital Document Redesign (Annex D Replica)
+
 
 **Branch**: `feat/rfq-official-redesign`
 
-Redesigned the **Create Request for Quotation (RFQ)** module (`src/app/dashboard/officer/rfq/new`) into a 100% pixel-perfect digital replica of the official **Batanes State College Request for Price Quotation (Annex D)** document. All backend functionality, Prisma models, Supabase integration, Server Actions (`createRfqAction`), sequence override audit trails, and validation rules are 100% preserved.
+Redesigned the Create New Request for Quotation (RFQ) module (`src/app/dashboard/officer/rfq/new`) into an official digital version of the Batanes State College Request for Quotation paper document. All backend functionality, Prisma models, Supabase integration, Server Actions (`createRfqAction`), sequence override audit trails, and validation rules are 100% preserved.
 
-### Modular Document Components (`src/components/rfq/`)
+### Modular Document Components Created (`src/components/rfq/`)
 
-- **`RFQDocument.tsx`**: Master document wrapper rendering an A4 centered Annex D digital paper layout (`max-w-[800px] bg-white border border-slate-400 p-8 text-black font-sans`) with `@media print` rules.
-- **`RFQHeader.tsx`**: Top header featuring `Annex D`, centered `REQUEST FOR PRICE QUOTATION` title, and right-aligned `Date:` field.
-- **`RFQSupplierSection.tsx`**: Supplier/addressee line (`MOJR Construction Trading & General Services, Ltd, Co.`) and submission deadline instruction paragraph.
-- **`RFQTerms.tsx`**: Replicates the exact official NOTE section (items 1 through 6) including lot-basis evaluation rules, 30-day delivery period, sealed envelope requirements, Approved Budget for this Procurement (ABC) in Pesos (₱), Annex H Appendix A document requirements, and "None" availability instructions.
-- **`RFQItemsTable.tsx`**: Recreates the exact official table grid (`Item #`, `Qty.`, `Unit`, `PARTICULAR`, `Unit Price`, `Total`), pre-padded with 10 rows minimum (`001` through `010`), line total calculations, catalog lookups, and bottom-right `Total` sum.
-- **`RFQSignatureSection.tsx`**: Official conforme statement (*After having carefully read and accepted your conditions...*), left-side `Printed Name/Signature` block, right-side `Very truly yours,` / `BAC Chairperson` signature slot, and bottom `Ref.#` footer field.
-- **`RFQToolbar.tsx`**: Floating action bar providing Save Draft, Publish RFQ, Toggle Edit/Preview, Print RFQ, and Export PDF controls (automatically excluded during printing).
+- **`RFQDocument.tsx`**: Master document wrapper supporting `create`, `edit`, and `view` modes, rendering an A4 centered digital document layout with `@media print` rules.
+- **`RFQCollegeInformation.tsx`**: Replicates official institutional header with Republic of the Philippines branding, BSC Seal logo, address, and Procurement Unit heading.
+- **`RFQHeader.tsx`**: Document metadata grid (RFQ No., Date, Mode of Procurement, ABC Budget, Submission Deadline, Delivery Period, and audited sequence override justification).
+- **`RFQSupplierInformation.tsx`**: Official supplier/bidder information block (Company Name, TIN, Business Address, Contact Person, Phone, Email, and Quotation Date).
+- **`RFQItemsTable.tsx`**: Itemized specifications & price schedule table featuring dynamic row addition/deletion, APP item & product catalog linkage dropdowns, line total calculations, and Grand Total ABC summary.
+- **`RFQTermsAndConditions.tsx`**: Preserves official BSC bidding instructions and general terms & conditions.
+- **`RFQSignatureSection.tsx`**: Official signature blocks for Prepared By (Procurement Officer), Approved By (Head of Procuring Entity), and Supplier Conforme.
+- **`RFQActions.tsx`**: Floating action bar providing Save Draft, Publish Solicitation, Toggle Edit/Preview, Print RFQ, and Export PDF controls (automatically excluded during printing).
 
 ---
 
@@ -939,4 +936,6 @@ OfficerDashboard (/dashboard/officer)
 
 - **Supabase Key Fallback**: Updated `src/proxy.ts`, `src/lib/supabase/server.ts`, `src/lib/supabase/client.ts`, and `src/app/actions/users.ts` to support both `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` environment variable names dynamically. Added `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env` to avoid 500 runtime errors on SSR middleware checks.
 - **PNPM Release Age Exclude Policy**: Added `minimumReleaseAge: 0` and `@supabase/*` pattern to `pnpm-workspace.yaml` to ensure local development commands (e.g. `pnpm start`) bypass package release age cutoff restrictions on newly published dependencies.
+- **Turbopack JSX Casting Fix (Branch: `fix/jsx-casting-turbopack`)**: Parenthesized inline `as any` type assertions across dashboard pages (`end-user/pr`, `approver/forms`, `approver/workflows`, `officer/po`, `officer/pr`, `officer/rfq`) to ensure strict SWC/Turbopack ECMAScript parser compatibility.
+
 

@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { updatePoAction, approvePoAction, logPoPrintedAction } from "@/app/actions/po";
-import PODocument, { PODocumentData, POItemRow } from "@/components/po/PODocument";
+import React, { useState, useEffect, useCallback } from "react";
+import { updatePoAction, approvePoAction, logPoPrintedAction, updatePoStatusAction } from "@/app/actions/po";
+import PODocument, { PODocumentData } from "@/components/po/PODocument";
 
 interface Supplier {
   id: number;
@@ -25,6 +25,8 @@ interface PoItem {
   totalCost: any;
   unit?: string | null;
   stockNo?: string | null;
+  brand?: string | null;
+  specification?: string | null;
 }
 
 interface PurchaseOrder {
@@ -40,7 +42,6 @@ interface PurchaseOrder {
   status: string;
   createdAt: Date | string;
   items: PoItem[];
-  // Appendix 61 fields
   entityName?: string | null;
   modeOfProcurement?: string | null;
   placeOfDelivery?: string | null;
@@ -56,6 +57,27 @@ interface PurchaseOrder {
 interface PoDetailsClientProps {
   initialPo: PurchaseOrder;
 }
+
+// Status workflow: what button appears next for each status
+const STATUS_TRANSITIONS: Record<string, { label: string; nextStatus: string; color: string }> = {
+  Draft: { label: "Submit for Approval", nextStatus: "Pending Approval", color: "#2563eb" },
+  "Pending Approval": { label: "Approve & Sign", nextStatus: "Approved", color: "#059669" },
+  Approved: { label: "Mark as Sent to Supplier", nextStatus: "Sent to Supplier", color: "#7c3aed" },
+  "Sent to Supplier": { label: "Mark as Delivered", nextStatus: "Delivered", color: "#0891b2" },
+  Delivered: { label: "Mark as Completed", nextStatus: "Completed", color: "#059669" },
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  Draft: "#6b7280",
+  "Pending Approval": "#d97706",
+  Approved: "#059669",
+  "Sent to Supplier": "#7c3aed",
+  "Partially Delivered": "#0891b2",
+  Delivered: "#0891b2",
+  Completed: "#059669",
+  Closed: "#374151",
+  Cancelled: "#ef4444",
+};
 
 export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
   const [po, setPo] = useState<PurchaseOrder>(initialPo);
@@ -103,17 +125,22 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
     }
   };
 
-  const handleApprovePo = async () => {
+  const handleStatusTransition = async (nextStatus: string) => {
     setIsProcessing(true);
     setErrorMsg(null);
     setSuccessMsg(null);
     try {
-      const res = await approvePoAction(po.id);
-      if (res.success && res.po) {
-        setPo(prev => ({ ...prev, status: "Approved" }));
-        setSuccessMsg("Purchase Order approved and signed digitally!");
+      let res: any;
+      if (nextStatus === "Approved") {
+        res = await approvePoAction(po.id);
       } else {
-        setErrorMsg(res.error || "Failed to approve Purchase Order.");
+        res = await updatePoStatusAction(po.id, nextStatus as any);
+      }
+      if (res.success) {
+        setPo(prev => ({ ...prev, status: nextStatus }));
+        setSuccessMsg(`Status updated to: ${nextStatus}`);
+      } else {
+        setErrorMsg(res.error || "Failed to update status.");
       }
     } catch (err: any) {
       setErrorMsg(err.message || "An error occurred.");
@@ -122,10 +149,48 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
     }
   };
 
+  const handleCancel = async () => {
+    if (!confirm("Are you sure you want to cancel this Purchase Order? This action cannot be undone.")) return;
+    setIsProcessing(true);
+    const res = await updatePoStatusAction(po.id, "Cancelled" as any);
+    setIsProcessing(false);
+    if (res.success) {
+      setPo(prev => ({ ...prev, status: "Cancelled" }));
+      setSuccessMsg("Purchase Order cancelled.");
+    } else {
+      setErrorMsg(res.error || "Failed to cancel PO.");
+    }
+  };
+
   const handlePrint = async () => {
-    try { await logPoPrintedAction(po.id); } catch (e) { /* non-fatal */ }
+    try { await logPoPrintedAction(po.id); } catch { /* non-fatal */ }
     window.print();
   };
+
+  const handleDownloadPdf = useCallback(async () => {
+    try {
+      // html2pdf.js is CJS; the callable factory may be on .default or the module root
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const mod = (await import("html2pdf.js")) as any;
+      const html2pdf = mod.default ?? mod;
+      const element = document.getElementById("po-document");
+      if (!element) {
+        alert("Could not find PO document to export.");
+        return;
+      }
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `PO_${po.poNumber}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+      };
+      await html2pdf().set(opt).from(element).save();
+    } catch (err: any) {
+      alert("PDF generation failed: " + (err?.message ?? String(err)));
+    }
+  }, [po.poNumber]);
 
   const theme = {
     textMain: "var(--text-primary)",
@@ -136,7 +201,6 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
     accent: "var(--accent)",
   };
 
-  // Shape po into PODocumentData
   const poDocData: PODocumentData = {
     id: po.id,
     poNumber: po.poNumber,
@@ -162,18 +226,24 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
     totalCost: Number(po.totalCost),
     items: po.items.map((item, idx) => ({
       id: item.id,
-      stockNo: item.stockNo || String(idx + 1).padStart(3, "0"),
+      stockNo: item.stockNo || String(idx + 1),
       unit: item.unit || "unit",
       description: item.description,
+      brand: item.brand ?? null,
+      specification: item.specification ?? null,
       quantity: item.quantity,
       unitPrice: Number(item.unitPrice),
       totalCost: Number(item.totalCost),
     })),
   };
 
+  const isDraft = po.status === "Draft";
+  const nextTransition = STATUS_TRANSITIONS[po.status];
+  const statusColor = STATUS_COLORS[po.status] || "#6b7280";
+
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }} className="lg:grid-cols-3">
-      {/* Main Appendix 61 PO Document — 2/3 width */}
+      {/* Main document — 2/3 width */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-2">
         {errorMsg && (
           <div className="no-print p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
@@ -185,27 +255,60 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
             ✅ {successMsg}
           </div>
         )}
-
         <PODocument
           initialPo={poDocData}
-          isReadOnly={po.status !== "Draft"}
-          onSave={po.status === "Draft" ? handleSavePoFields : undefined}
+          isReadOnly={!isDraft}
+          onSave={isDraft ? handleSavePoFields : undefined}
         />
       </div>
 
-      {/* Right Column: Controls & Timeline */}
+      {/* Right panel — controls + traceability */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-1 no-print">
+
+        {/* Status badge */}
+        <div style={{
+          background: theme.glassBg,
+          border: `1px solid ${theme.glassBorder}`,
+          borderRadius: "1.25rem",
+          padding: "1.25rem",
+          boxShadow: theme.shadow,
+        }}>
+          <div style={{ fontSize: "0.72rem", color: theme.textMuted, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.5rem" }}>
+            Current Status
+          </div>
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            background: `${statusColor}18`,
+            color: statusColor,
+            border: `1px solid ${statusColor}40`,
+            borderRadius: "2rem",
+            padding: "0.35rem 0.9rem",
+            fontSize: "0.78rem",
+            fontWeight: 800,
+          }}>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: statusColor, display: "inline-block" }} />
+            {po.status}
+          </div>
+        </div>
 
         {/* Document Controls */}
         <div style={{
-          background: theme.glassBg, border: `1px solid ${theme.glassBorder}`,
-          borderRadius: "1.25rem", padding: "1.5rem", boxShadow: theme.shadow,
-          display: "flex", flexDirection: "column", gap: "1rem"
+          background: theme.glassBg,
+          border: `1px solid ${theme.glassBorder}`,
+          borderRadius: "1.25rem",
+          padding: "1.5rem",
+          boxShadow: theme.shadow,
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.75rem",
         }}>
           <h3 style={{ fontSize: "1rem", fontWeight: 800, color: theme.textMain, margin: 0 }}>
             ⚙️ Document Controls
           </h3>
 
+          {/* Print */}
           <button
             onClick={handlePrint}
             style={{
@@ -217,32 +320,58 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
             🖨️ Print Purchase Order
           </button>
 
-          {po.status === "Draft" && (
+          {/* Download PDF */}
+          <button
+            onClick={handleDownloadPdf}
+            style={{
+              width: "100%", padding: "0.65rem", borderRadius: "0.5rem",
+              border: `1px solid #7c3aed40`, background: "#7c3aed10",
+              color: "#7c3aed", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
+            }}
+          >
+            📄 Download PDF
+          </button>
+
+          {/* Status transition */}
+          {nextTransition && po.status !== "Cancelled" && po.status !== "Completed" && po.status !== "Closed" && (
             <button
-              onClick={handleApprovePo}
+              onClick={() => handleStatusTransition(nextTransition.nextStatus)}
               disabled={isProcessing}
               style={{
                 width: "100%", padding: "0.75rem", borderRadius: "0.5rem", border: "none",
-                background: `linear-gradient(90deg, var(--accent), #b88a1b)`, color: "#fff",
+                background: nextTransition.color, color: "#fff",
                 fontWeight: 800, fontSize: "0.8rem", cursor: "pointer",
-                boxShadow: "0 4px 12px rgba(126,25,27,0.2)",
+                opacity: isProcessing ? 0.6 : 1,
               }}
             >
-              ✍️ Approve &amp; Sign Digitally
+              {isProcessing ? "Processing…" : `✅ ${nextTransition.label}`}
             </button>
           )}
 
-          {po.status === "Approved" && (
-            <div style={{ textAlign: "center", color: "#059669", fontWeight: 700, fontSize: "0.8rem" }}>
-              ✅ Approved &amp; Signed
-            </div>
+          {/* Cancel (only if not already terminal) */}
+          {!["Cancelled", "Completed", "Closed", "Delivered"].includes(po.status) && (
+            <button
+              onClick={handleCancel}
+              disabled={isProcessing}
+              style={{
+                width: "100%", padding: "0.55rem", borderRadius: "0.5rem",
+                border: "1px solid #ef444440", background: "transparent",
+                color: "#ef4444", fontWeight: 700, fontSize: "0.75rem", cursor: "pointer",
+                opacity: isProcessing ? 0.6 : 1,
+              }}
+            >
+              🚫 Cancel PO
+            </button>
           )}
         </div>
 
         {/* Traceability */}
         <div style={{
-          background: theme.glassBg, border: `1px solid ${theme.glassBorder}`,
-          borderRadius: "1.25rem", padding: "1.5rem", boxShadow: theme.shadow,
+          background: theme.glassBg,
+          border: `1px solid ${theme.glassBorder}`,
+          borderRadius: "1.25rem",
+          padding: "1.5rem",
+          boxShadow: theme.shadow,
         }}>
           <h3 style={{ fontSize: "1rem", fontWeight: 800, color: theme.textMain, margin: "0 0 1rem 0" }}>
             📁 Traceability
@@ -264,15 +393,48 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
                 </div>
               </div>
             )}
-            {po.status === "Approved" && (
+            {po.status !== "Draft" && (
               <div style={{ display: "flex", gap: "8px" }}>
                 <span style={{ color: "#10b981" }}>✓</span>
                 <div>
-                  <div style={{ fontWeight: 700, color: theme.textMain }}>Approved &amp; Signed</div>
-                  <div style={{ color: theme.textMuted }}>Verification log stored.</div>
+                  <div style={{ fontWeight: 700, color: theme.textMain }}>Status: {po.status}</div>
+                  <div style={{ color: theme.textMuted }}>Workflow updated.</div>
                 </div>
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Summary stats */}
+        <div style={{
+          background: theme.glassBg,
+          border: `1px solid ${theme.glassBorder}`,
+          borderRadius: "1.25rem",
+          padding: "1.25rem",
+          boxShadow: theme.shadow,
+        }}>
+          <h3 style={{ fontSize: "0.9rem", fontWeight: 800, color: theme.textMain, margin: "0 0 0.75rem 0" }}>
+            📋 PO Summary
+          </h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.78rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ color: theme.textMuted }}>PO Number</span>
+              <span style={{ fontWeight: 700, color: theme.accent, fontFamily: "monospace" }}>{po.poNumber}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ color: theme.textMuted }}>Supplier</span>
+              <span style={{ fontWeight: 600 }}>{po.supplier.companyName}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ color: theme.textMuted }}>Line Items</span>
+              <span style={{ fontWeight: 600 }}>{po.items.length}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", borderTop: `1px solid ${theme.glassBorder}`, paddingTop: "0.5rem", marginTop: "0.25rem" }}>
+              <span style={{ color: theme.textMuted, fontWeight: 700 }}>Total Amount</span>
+              <span style={{ fontWeight: 800, color: theme.accent, fontSize: "0.9rem" }}>
+                ₱{Number(po.totalCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+              </span>
+            </div>
           </div>
         </div>
       </div>

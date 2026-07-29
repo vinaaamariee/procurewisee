@@ -37,7 +37,7 @@ export default async function PrAuditingPage() {
         subtitle="Verify requisitions, validate product specifications and quantities, modify units of measure, and approve workflow transitions."
       />
 
-      <PrAuditClient initialPrs={prs as any} />
+      <PrAuditClient initialPrs={(prs as any)} />
     </div>
   );
 }

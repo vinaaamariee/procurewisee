@@ -65,8 +65,8 @@ export default async function PoDraftingPage() {
     />
 
     <PoDraftingClient
-      pendingAwards={pendingAwards as any}
-      initialPos={pos as any}
+      pendingAwards={(pendingAwards as any)}
+      initialPos={(pos as any)}
     />
   </div>
 );

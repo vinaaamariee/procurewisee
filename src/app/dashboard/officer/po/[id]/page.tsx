@@ -63,7 +63,7 @@ export default async function PoDetailPage({ params }: PageProps) {
         </Link>
       </div>
 
-      <PoDetailsClient initialPo={po as any} />
+      <PoDetailsClient initialPo={(po as any)} />
     </div>
   );
 }

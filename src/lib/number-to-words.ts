@@ -1,76 +1,79 @@
 /**
- * Converts a numeric peso amount to Philippine English words form.
- * Used by the PO Appendix 61 "Total Amount in Words" field.
- * Output: "TWELVE THOUSAND THREE HUNDRED FORTY-FIVE PESOS AND 00/100"
+ * numberToWords — converts a numeric amount to Philippine Peso words
+ * Used on Appendix 61 Purchase Order document for the "Total Amount in Words" field.
+ *
+ * Example: 125340.00 → "One Hundred Twenty-Five Thousand Three Hundred Forty Pesos Only"
  */
 
-const ones = [
-  '', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE',
-  'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', 'FOURTEEN', 'FIFTEEN', 'SIXTEEN',
-  'SEVENTEEN', 'EIGHTEEN', 'NINETEEN',
+const ONES = [
+  "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+  "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+  "Seventeen", "Eighteen", "Nineteen",
 ];
 
-const tens = [
-  '', '', 'TWENTY', 'THIRTY', 'FORTY', 'FIFTY', 'SIXTY', 'SEVENTY', 'EIGHTY', 'NINETY',
+const TENS = [
+  "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety",
 ];
 
-function convertHundreds(n: number): string {
-  if (n === 0) return '';
-  const h = Math.floor(n / 100);
-  const remainder = n % 100;
-  let result = '';
-  if (h > 0) {
-    result += ones[h] + ' HUNDRED';
-    if (remainder > 0) result += ' ';
+function belowThousand(n: number): string {
+  if (n === 0) return "";
+  if (n < 20) return ONES[n];
+  if (n < 100) {
+    const rem = n % 10;
+    return TENS[Math.floor(n / 10)] + (rem ? "-" + ONES[rem] : "");
   }
-  if (remainder > 0) {
-    if (remainder < 20) {
-      result += ones[remainder];
-    } else {
-      const t = Math.floor(remainder / 10);
-      const o = remainder % 10;
-      result += tens[t];
-      if (o > 0) result += '-' + ones[o];
-    }
-  }
-  return result;
+  const rem = n % 100;
+  return ONES[Math.floor(n / 100)] + " Hundred" + (rem ? " " + belowThousand(rem) : "");
 }
 
-function convertLargeNumber(n: number): string {
-  if (n === 0) return 'ZERO';
+function integerToWords(n: number): string {
+  if (n === 0) return "Zero";
 
-  const billion = Math.floor(n / 1_000_000_000);
-  const million = Math.floor((n % 1_000_000_000) / 1_000_000);
-  const thousand = Math.floor((n % 1_000_000) / 1_000);
-  const hundred = n % 1_000;
+  const GROUPS = [
+    { value: 1_000_000_000, label: "Billion" },
+    { value: 1_000_000, label: "Million" },
+    { value: 1_000, label: "Thousand" },
+    { value: 1, label: "" },
+  ];
 
-  const parts: string[] = [];
-  if (billion > 0) parts.push(convertHundreds(billion) + ' BILLION');
-  if (million > 0) parts.push(convertHundreds(million) + ' MILLION');
-  if (thousand > 0) parts.push(convertHundreds(thousand) + ' THOUSAND');
-  if (hundred > 0) parts.push(convertHundreds(hundred));
+  let result = "";
+  let remaining = Math.floor(Math.abs(n));
 
-  return parts.join(' ');
+  for (const { value, label } of GROUPS) {
+    if (remaining >= value) {
+      const chunk = Math.floor(remaining / value);
+      remaining %= value;
+      const chunkWords = belowThousand(chunk);
+      result += (result ? " " : "") + chunkWords + (label ? " " + label : "");
+    }
+  }
+
+  return result.trim();
 }
 
 /**
- * Converts a peso amount to its Philippine English words form.
- * @param amount - The numeric peso amount (e.g. 12345.67)
- * @returns Formatted string (e.g. "TWELVE THOUSAND THREE HUNDRED FORTY-FIVE PESOS AND 67/100")
+ * Converts a numeric peso amount to its written-out form.
+ *
+ * @param amount - The numeric amount (can include centavos)
+ * @returns e.g. "One Hundred Twenty-Five Thousand Pesos Only" or
+ *          "One Thousand Five Hundred Pesos and 50/100 Centavos"
  */
 export function numberToWords(amount: number): string {
-  if (isNaN(amount) || !isFinite(amount)) return '';
+  if (!isFinite(amount) || isNaN(amount)) return "";
 
   const isNegative = amount < 0;
-  const absAmount = Math.abs(amount);
-  const intPart = Math.floor(absAmount);
-  const centsPart = Math.round((absAmount - intPart) * 100);
+  const abs = Math.abs(amount);
+  const pesos = Math.floor(abs);
+  const centavos = Math.round((abs - pesos) * 100);
 
-  const pesoWords = intPart === 0 ? 'ZERO' : convertLargeNumber(intPart);
-  const centsStr = String(centsPart).padStart(2, '0');
+  const pesoWords = integerToWords(pesos);
+  let result = `${pesoWords} Peso${pesos !== 1 ? "s" : ""}`;
 
-  let result = `${pesoWords} PESOS AND ${centsStr}/100`;
-  if (isNegative) result = 'MINUS ' + result;
+  if (centavos > 0) {
+    result += ` and ${String(centavos).padStart(2, "0")}/100 Centavos`;
+  } else {
+    result += " Only";
+  }
 
-  return result;
+  return (isNegative ? "Negative " : "") + result;
 }

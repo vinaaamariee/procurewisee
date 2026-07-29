@@ -23,7 +23,7 @@ export default async function FormTemplatesPage() {
         </p>
       </div>
 
-      <FormTemplatesClient initialTemplates={templates as any} />
+      <FormTemplatesClient initialTemplates={(templates as any)} />
     </div>
   );
 }
