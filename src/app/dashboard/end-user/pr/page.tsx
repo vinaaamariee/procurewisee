@@ -35,6 +35,8 @@ export default async function PrTrackerPage() {
     }
   });
 
+  const initialPrs = prs as any;
+
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -54,7 +56,7 @@ export default async function PrTrackerPage() {
         </a>
       </div>
 
-      <PrTrackerClient initialPrs={prs as any} />
+      <PrTrackerClient initialPrs={initialPrs} />
     </div>
   );
 }
