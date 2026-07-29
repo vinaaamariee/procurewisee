@@ -6,6 +6,7 @@ import PRGeneralInformation, { PRGeneralInfo } from './PRGeneralInformation';
 import PRItemsTable, { CatalogProductOption, PRItemRow } from './PRItemsTable';
 import PRPurposeSection from './PRPurposeSection';
 import PRSignatureSection from './PRSignatureSection';
+import PRItemUpload from './PRItemUpload';
 import PRToolbar from './PRToolbar';
 import DocumentLayout from '@/components/documents/DocumentLayout';
 import { createPrFromCartAction } from '@/app/actions/pr';
@@ -216,6 +217,19 @@ export default function PRDocument({
               setInfo={setInfo}
               isReadOnly={isReadOnly}
             />
+
+            {/* Excel / CSV Item Upload Panel (Editable mode only) */}
+            {!isReadOnly && (
+              <div className="my-4 print:hidden">
+                <PRItemUpload
+                  disabled={isReadOnly}
+                  onItemsParsed={(uploadedItems) => {
+                    setItems(uploadedItems);
+                    setSuccessMsg(`✅ ${uploadedItems.length} line items imported from spreadsheet.`);
+                  }}
+                />
+              </div>
+            )}
 
             {/* 3. Items Schedule Table */}
             <PRItemsTable
