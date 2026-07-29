@@ -13,7 +13,6 @@ import {
   Cpu,
   ArrowRight,
   Sparkles,
-  BookOpen,
 } from "lucide-react";
 
 export const metadata: Metadata = {
