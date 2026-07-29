@@ -5,6 +5,7 @@ import { forecastProductPrice } from '@/lib/forecast/engine';
 import RfqEvaluationClient from './RfqEvaluationClient';
 import { startTimer } from '@/lib/performance-logger';
 import SectionHeader from "@/components/ui/SectionHeader";
+import Link from 'next/link';
 
 export const metadata = { title: 'Evaluate Solicitations — ProcureWise' };
 
@@ -182,6 +183,26 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
       title="Solicitation Canvass & Evaluation"
       subtitle="Evaluate submitted bids using the MCDM engine, run sensitivity analyses, and export structured recommendations."
     />
+
+    {/* Official Document Quick Links — Annex E & F */}
+    <div className="flex flex-wrap gap-3 print:hidden">
+      <Link
+        href={`/dashboard/officer/rfq/${rfqId}/ack`}
+        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-sm font-semibold text-slate-700 shadow-sm transition"
+      >
+        <span>📋</span>
+        <span>Acknowledgement Receipt</span>
+        <span className="text-[10px] text-slate-400 font-normal">(Annex E)</span>
+      </Link>
+      <Link
+        href={`/dashboard/officer/rfq/${rfqId}/aoq`}
+        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-sm font-semibold text-slate-700 shadow-sm transition"
+      >
+        <span>📊</span>
+        <span>Abstract of Quotation</span>
+        <span className="text-[10px] text-slate-400 font-normal">(Annex F)</span>
+      </Link>
+    </div>
 
     <RfqEvaluationClient
       rfq={rfq}

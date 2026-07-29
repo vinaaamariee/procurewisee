@@ -2,15 +2,7 @@
 
 import React from 'react';
 
-export interface AppItem {
-  id: number;
-  papCode: string;
-  projectTitle: string;
-  generalDescription: string;
-  estimatedBudget: number;
-}
-
-export interface CatalogProduct {
+export interface CatalogProductOption {
   id: number;
   sku: string;
   name: string;
@@ -20,34 +12,33 @@ export interface CatalogProduct {
   estimatedUnitCost: number;
 }
 
-export interface ItemRow {
+export interface PRItemRow {
   id: string;
-  itemNumber: string;
-  particulars: string;
-  quantity: number;
+  stockNo: string;
   unit: string;
-  unitCost?: number;
-  totalCost?: number;
-  appItemId?: number | null;
+  description: string;
+  brand?: string;
+  quantity: number;
+  estimatedUnitCost: number;
+  estimatedCost: number;
   productId?: number | null;
+  specification?: string;
 }
 
-interface RFQItemsTableProps {
-  items: ItemRow[];
-  setItems?: React.Dispatch<React.SetStateAction<ItemRow[]>>;
-  appItems?: AppItem[];
-  catalogProducts?: CatalogProduct[];
+interface PRItemsTableProps {
+  items: PRItemRow[];
+  setItems?: React.Dispatch<React.SetStateAction<PRItemRow[]>>;
+  catalogProducts?: CatalogProductOption[];
   isReadOnly?: boolean;
 }
 
-export default function RFQItemsTable({
+export default function PRItemsTable({
   items,
   setItems,
-  appItems = [],
   catalogProducts = [],
   isReadOnly = false,
-}: RFQItemsTableProps) {
-  const getSequentialNumber = (index: number) => {
+}: PRItemsTableProps) {
+  const getSequentialStockNo = (index: number) => {
     return String(index + 1).padStart(3, '0');
   };
 
@@ -57,13 +48,12 @@ export default function RFQItemsTable({
       ...prev,
       {
         id: Math.random().toString(),
-        itemNumber: getSequentialNumber(prev.length),
-        particulars: '',
-        quantity: 1,
+        stockNo: getSequentialStockNo(prev.length),
         unit: 'pcs',
-        unitCost: 0,
-        totalCost: 0,
-        appItemId: null,
+        description: '',
+        quantity: 1,
+        estimatedUnitCost: 0,
+        estimatedCost: 0,
         productId: null,
       },
     ]);
@@ -76,61 +66,53 @@ export default function RFQItemsTable({
       const filtered = prev.filter((item) => item.id !== id);
       return filtered.map((item, index) => ({
         ...item,
-        itemNumber: getSequentialNumber(index),
+        stockNo: getSequentialStockNo(index),
       }));
     });
   };
 
-  const handleItemFieldChange = (id: string, field: keyof ItemRow, value: any) => {
+  const handleItemFieldChange = (id: string, field: keyof PRItemRow, value: any) => {
     if (!setItems) return;
     setItems((prev) =>
       prev.map((item) => {
         if (item.id !== id) return item;
 
-        // Linking APP Item pre-fills particulars
-        if (field === 'appItemId') {
-          const appItemVal = value ? parseInt(value) : null;
-          const matchedAppItem = appItems.find((a) => a.id === appItemVal);
-          return {
-            ...item,
-            appItemId: appItemVal,
-            particulars: matchedAppItem ? matchedAppItem.generalDescription : item.particulars,
-          };
-        }
-
-        // Linking Catalog Product pre-fills name/specs, unit, and unit cost
+        // If linking a Catalog Product, pre-fill description, unit, and unit cost
         if (field === 'productId') {
           const prodVal = value ? parseInt(value) : null;
           const matchedProduct = catalogProducts.find((p) => p.id === prodVal);
-          const newUnitCost = matchedProduct ? matchedProduct.estimatedUnitCost : (item.unitCost || 0);
+          const unitCost = matchedProduct ? matchedProduct.estimatedUnitCost : item.estimatedUnitCost;
+          const description = matchedProduct
+            ? `${matchedProduct.name} - ${matchedProduct.description}`
+            : item.description;
+          const unit = matchedProduct ? matchedProduct.unitOfMeasure : item.unit;
+
           return {
             ...item,
             productId: prodVal,
-            particulars: matchedProduct
-              ? `${matchedProduct.name} - SKU: ${matchedProduct.sku} (${matchedProduct.description})`
-              : item.particulars,
-            unit: matchedProduct ? matchedProduct.unitOfMeasure : item.unit,
-            unitCost: newUnitCost,
-            totalCost: item.quantity * newUnitCost,
+            description,
+            unit,
+            estimatedUnitCost: unitCost,
+            estimatedCost: item.quantity * unitCost,
           };
         }
 
-        // Recalculate total cost if qty or unitCost changes
+        // Recalculate total cost if quantity or unit cost changes
         if (field === 'quantity') {
           const qty = parseInt(value) || 0;
           return {
             ...item,
             quantity: qty,
-            totalCost: qty * (item.unitCost || 0),
+            estimatedCost: qty * item.estimatedUnitCost,
           };
         }
 
-        if (field === 'unitCost') {
+        if (field === 'estimatedUnitCost') {
           const cost = parseFloat(value) || 0;
           return {
             ...item,
-            unitCost: cost,
-            totalCost: item.quantity * cost,
+            estimatedUnitCost: cost,
+            estimatedCost: item.quantity * cost,
           };
         }
 
@@ -140,17 +122,14 @@ export default function RFQItemsTable({
   };
 
   // Grand Total Calculation
-  const grandTotal = items.reduce((sum, item) => {
-    const cost = item.totalCost || (item.quantity * (item.unitCost || 0));
-    return sum + cost;
-  }, 0);
+  const grandTotal = items.reduce((sum, item) => sum + (item.estimatedCost || (item.quantity * item.estimatedUnitCost)), 0);
 
   return (
     <div className="my-4 font-serif space-y-2">
-      {/* Header and Add Button */}
+      {/* Table Header Controls */}
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-sans">
-          Itemized Specifications & Price Schedule
+          Requisitioned Items & Estimated Schedule
         </h3>
         {!isReadOnly && setItems && (
           <button
@@ -158,7 +137,7 @@ export default function RFQItemsTable({
             onClick={handleAddItem}
             className="inline-flex items-center gap-1 text-xs font-sans font-bold text-[#7B1E1E] hover:underline bg-amber-50 border border-amber-300 px-2.5 py-1 rounded print:hidden"
           >
-            <span>+ Add Line Item</span>
+            <span>+ Add Item Row</span>
           </button>
         )}
       </div>
@@ -168,12 +147,14 @@ export default function RFQItemsTable({
         <table className="w-full border-collapse text-xs">
           <thead>
             <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px] font-sans">
-              <th className="border-r border-slate-900 p-2 text-center w-12">Item No.</th>
-              <th className="border-r border-slate-900 p-2 text-center w-16">Qty</th>
+              <th className="border-r border-slate-900 p-2 text-center w-24">
+                Stock / Property No.
+              </th>
               <th className="border-r border-slate-900 p-2 text-center w-20">Unit</th>
               <th className="border-r border-slate-900 p-2 text-left">
                 Item Description / Technical Specifications
               </th>
+              <th className="border-r border-slate-900 p-2 text-center w-20">Quantity</th>
               <th className="border-r border-slate-900 p-2 text-right w-28">
                 Unit Cost (₱)
               </th>
@@ -185,26 +166,19 @@ export default function RFQItemsTable({
           </thead>
           <tbody className="divide-y divide-slate-800">
             {items.map((item, index) => {
-              const lineTotal = item.totalCost || (item.quantity * (item.unitCost || 0));
+              const lineTotal = item.estimatedCost || (item.quantity * item.estimatedUnitCost);
 
               return (
                 <tr key={item.id || index} className="hover:bg-slate-50/50">
-                  {/* Item Number */}
-                  <td className="border-r border-slate-800 p-2 text-center font-bold text-slate-900 align-top">
-                    {item.itemNumber}
-                  </td>
-
-                  {/* Quantity */}
-                  <td className="border-r border-slate-800 p-2 text-center align-top">
+                  {/* Stock / Property No */}
+                  <td className="border-r border-slate-800 p-2 text-center font-semibold text-slate-900 align-top">
                     {isReadOnly ? (
-                      item.quantity
+                      item.stockNo
                     ) : (
                       <input
-                        type="number"
-                        min="1"
-                        required
-                        value={item.quantity}
-                        onChange={(e) => handleItemFieldChange(item.id, 'quantity', e.target.value)}
+                        type="text"
+                        value={item.stockNo}
+                        onChange={(e) => handleItemFieldChange(item.id, 'stockNo', e.target.value)}
                         className="w-full text-center font-semibold bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
                       />
                     )}
@@ -226,53 +200,51 @@ export default function RFQItemsTable({
                     )}
                   </td>
 
-                  {/* Particulars / Specifications */}
+                  {/* Item Description */}
                   <td className="border-r border-slate-800 p-2 align-top space-y-1.5">
-                    {!isReadOnly && (appItems.length > 0 || catalogProducts.length > 0) && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 print:hidden">
-                        {appItems.length > 0 && (
-                          <select
-                            value={item.appItemId || ''}
-                            onChange={(e) => handleItemFieldChange(item.id, 'appItemId', e.target.value)}
-                            className="w-full text-[11px] p-1 border border-slate-300 rounded bg-white text-slate-700"
-                          >
-                            <option value="">-- Link APP Item (Optional) --</option>
-                            {appItems.map((a) => (
-                              <option key={a.id} value={a.id}>
-                                [{a.papCode}] {a.projectTitle} (₱{Number(a.estimatedBudget).toLocaleString('en-PH')})
-                              </option>
-                            ))}
-                          </select>
-                        )}
-                        {catalogProducts.length > 0 && (
-                          <select
-                            value={item.productId || ''}
-                            onChange={(e) => handleItemFieldChange(item.id, 'productId', e.target.value)}
-                            className="w-full text-[11px] p-1 border border-slate-300 rounded bg-white text-slate-700"
-                          >
-                            <option value="">-- Link Product Catalog (Optional) --</option>
-                            {catalogProducts.map((p) => (
-                              <option key={p.id} value={p.id}>
-                                [{p.sku}] {p.name} (₱{Number(p.estimatedUnitCost).toLocaleString('en-PH')})
-                              </option>
-                            ))}
-                          </select>
-                        )}
-                      </div>
+                    {!isReadOnly && catalogProducts.length > 0 && (
+                      <select
+                        value={item.productId || ''}
+                        onChange={(e) => handleItemFieldChange(item.id, 'productId', e.target.value)}
+                        className="w-full text-[11px] p-1 border border-slate-300 rounded bg-white text-slate-700 print:hidden"
+                      >
+                        <option value="">-- Autocomplete from Product Catalog (Optional) --</option>
+                        {catalogProducts.map((p) => (
+                          <option key={p.id} value={p.id}>
+                            [{p.sku}] {p.name} (₱{Number(p.estimatedUnitCost).toLocaleString('en-PH')})
+                          </option>
+                        ))}
+                      </select>
                     )}
 
                     {isReadOnly ? (
                       <div className="whitespace-pre-wrap leading-relaxed text-slate-900 font-serif">
-                        {item.particulars}
+                        {item.description}
                       </div>
                     ) : (
                       <textarea
                         required
                         rows={2}
-                        value={item.particulars}
-                        onChange={(e) => handleItemFieldChange(item.id, 'particulars', e.target.value)}
-                        placeholder="Detailed item particulars and specifications..."
+                        value={item.description}
+                        onChange={(e) => handleItemFieldChange(item.id, 'description', e.target.value)}
+                        placeholder="Detailed item description and technical specifications..."
                         className="w-full p-1.5 text-xs bg-amber-50/50 border border-slate-300 rounded font-serif text-slate-900 resize-y"
+                      />
+                    )}
+                  </td>
+
+                  {/* Quantity */}
+                  <td className="border-r border-slate-800 p-2 text-center align-top">
+                    {isReadOnly ? (
+                      item.quantity
+                    ) : (
+                      <input
+                        type="number"
+                        min="1"
+                        required
+                        value={item.quantity}
+                        onChange={(e) => handleItemFieldChange(item.id, 'quantity', e.target.value)}
+                        className="w-full text-center font-semibold bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
                       />
                     )}
                   </td>
@@ -280,35 +252,37 @@ export default function RFQItemsTable({
                   {/* Unit Cost */}
                   <td className="border-r border-slate-800 p-2 text-right align-top">
                     {isReadOnly ? (
-                      item.unitCost ? `₱ ${item.unitCost.toLocaleString('en-PH', { minimumFractionDigits: 2 })}` : '—'
+                      `₱ ${item.estimatedUnitCost.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
                     ) : (
                       <input
                         type="number"
                         step="0.01"
                         min="0"
-                        value={item.unitCost || ''}
-                        onChange={(e) => handleItemFieldChange(item.id, 'unitCost', e.target.value)}
+                        required
+                        value={item.estimatedUnitCost || ''}
+                        onChange={(e) => handleItemFieldChange(item.id, 'estimatedUnitCost', e.target.value)}
                         placeholder="0.00"
                         className="w-full text-right font-semibold bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
                       />
                     )}
                   </td>
 
-                  {/* Total Cost */}
+                  {/* Total Cost (Read-Only) */}
                   <td className="border-r border-slate-800 p-2 text-right font-bold text-slate-900 align-top">
                     ₱ {lineTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                   </td>
 
-                  {/* Delete Action */}
+                  {/* Action Column */}
                   {!isReadOnly && (
                     <td className="p-2 text-center align-top print:hidden">
                       <button
                         type="button"
                         onClick={() => handleDeleteItem(item.id)}
                         disabled={items.length === 1}
-                        title="Delete line item"
-                        className={`p-1 rounded text-red-600 hover:bg-red-50 ${items.length === 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
-                          }`}
+                        title="Delete item row"
+                        className={`p-1 rounded text-red-600 hover:bg-red-50 ${
+                          items.length === 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
+                        }`}
                       >
                         🗑️
                       </button>
@@ -320,10 +294,10 @@ export default function RFQItemsTable({
 
             {/* Grand Total Footer Row */}
             <tr className="bg-slate-100 border-t-2 border-slate-900 font-bold font-sans text-xs">
-              <td colSpan={4} className="border-r border-slate-900 p-2.5 text-right uppercase tracking-wider text-slate-950">
-                Grand Total / Approved Budget Total:
+              <td colSpan={5} className="border-r border-slate-900 p-2.5 text-right uppercase tracking-wider text-slate-950">
+                Grand Total / Estimated Total Cost:
               </td>
-              <td colSpan={2} className="p-2.5 text-right text-[#7B1E1E] text-sm">
+              <td className="p-2.5 text-right text-[#7B1E1E] text-sm">
                 ₱ {grandTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </td>
               {!isReadOnly && <td className="print:hidden"></td>}

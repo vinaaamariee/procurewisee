@@ -11,14 +11,16 @@ interface SubmitEvaluationInput {
   evaluationType: EvaluationType;
   evaluatorName: string;
   
-  // End User ratings (1-4)
-  productQuality?: number;
-  deliveryCompliance?: number;
-  accuracy?: number;
-  responsiveness?: number;
-  communication?: number;
-  costEffectiveness?: number;
-  overallSatisfaction?: number;
+  // End User ratings (1-4, BSC official 4-category form)
+  productQuality?: number;       // Quality: met quality standards
+  deliveryCompliance?: number;   // Quality: delivered per delivery term
+  accuracy?: number;             // Quality: accurate & complete per specs
+  responsiveness?: number;       // Communication: responsive to inquiries
+  communication?: number;        // Communication: willing to address issues
+  clearCommunication?: number;   // Communication: clear throughout ordering
+  costEffectiveness?: number;    // Cost: competitive pricing
+  valueForMoney?: number;        // Cost: products justify cost
+  wouldRecommend?: number;       // Overall: would recommend
 
   // Procurement Office ratings (1-4)
   rfqResponsiveness?: number;
@@ -30,6 +32,18 @@ interface SubmitEvaluationInput {
   comments?: string;
   recommendation?: string;
   signature?: string;
+
+  // End-User header fields
+  typeOfGoodsServices?: string;
+  officeUnit?: string;
+  poNo?: string;
+  respondentName?: string;
+
+  // Procurement Office header fields
+  purchaseRequestNo?: string;
+  philGepsRn?: string;
+  philGepsDateRegistered?: string;
+  philGepsExpirationDate?: string;
 }
 
 export async function submitSupplierEvaluationAction(input: SubmitEvaluationInput) {
@@ -42,23 +56,39 @@ export async function submitSupplierEvaluationAction(input: SubmitEvaluationInpu
           evaluationType: input.evaluationType,
           evaluatorName: input.evaluatorName,
           evaluationDate: new Date(),
+          // End-User criteria
           productQuality: input.productQuality || null,
           deliveryCompliance: input.deliveryCompliance || null,
           accuracy: input.accuracy || null,
           responsiveness: input.responsiveness || null,
           communication: input.communication || null,
+          clearCommunication: input.clearCommunication || null,
           costEffectiveness: input.costEffectiveness || null,
-          overallSatisfaction: input.overallSatisfaction || null,
+          valueForMoney: input.valueForMoney || null,
+          wouldRecommend: input.wouldRecommend || null,
+          // Office criteria
           rfqResponsiveness: input.rfqResponsiveness || null,
           competitivePricing: input.competitivePricing || null,
           specificationCompliance: input.specificationCompliance || null,
           documentCompliance: input.documentCompliance || null,
           deliveryPerformance: input.deliveryPerformance || null,
+          // Comments & sig
           comments: input.comments || null,
           recommendation: input.recommendation || null,
           signature: input.signature || null,
-        }
+          // End-User header metadata
+          typeOfGoodsServices: input.typeOfGoodsServices || null,
+          officeUnit: input.officeUnit || null,
+          poNo: input.poNo || null,
+          respondentName: input.respondentName || null,
+          // Officer header metadata
+          purchaseRequestNo: input.purchaseRequestNo || null,
+          philGepsRn: input.philGepsRn || null,
+          philGepsDateRegistered: input.philGepsDateRegistered ? new Date(input.philGepsDateRegistered) : null,
+          philGepsExpirationDate: input.philGepsExpirationDate ? new Date(input.philGepsExpirationDate) : null,
+        } as any
       });
+
 
       // 2. Query all evaluations for this supplier to recalculate metrics
       const evals = await tx.supplierEvaluation.findMany({
@@ -76,33 +106,42 @@ export async function submitSupplierEvaluationAction(input: SubmitEvaluationInpu
 
       for (const ev of evals) {
         if (ev.evaluationType === EvaluationType.EndUser) {
+          // All 9 End-User criteria for overall reliability
           const fields = [
             ev.productQuality,
             ev.deliveryCompliance,
             ev.accuracy,
             ev.responsiveness,
             ev.communication,
+            (ev as any).clearCommunication,
             ev.costEffectiveness,
-            ev.overallSatisfaction
+            (ev as any).valueForMoney,
+            (ev as any).wouldRecommend,
           ];
 
           fields.forEach(f => {
-            if (f !== null) {
+            if (f !== null && f !== undefined) {
               totalScoreSum += f;
               totalFieldsCount++;
             }
           });
 
-          if (ev.productQuality !== null) {
-            qualitySum += ev.productQuality;
-            qualityCount++;
-          }
+          // Quality category (criteria 1-3) drives qualityComplianceRate
+          const qualityFields = [ev.productQuality, ev.deliveryCompliance, ev.accuracy];
+          qualityFields.forEach(f => {
+            if (f !== null && f !== undefined) {
+              qualitySum += f;
+              qualityCount++;
+            }
+          });
 
-          if (ev.deliveryCompliance !== null) {
+          // Delivery compliance criterion drives onTimeDeliveryRate
+          if (ev.deliveryCompliance !== null && ev.deliveryCompliance !== undefined) {
             deliverySum += ev.deliveryCompliance;
             deliveryCount++;
           }
         } else {
+
           const fields = [
             ev.rfqResponsiveness,
             ev.competitivePricing,

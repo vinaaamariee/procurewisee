@@ -778,7 +778,7 @@ async function main() {
       responsiveness: 4,
       communication: 4,
       costEffectiveness: 3,
-      overallSatisfaction: 4,
+      wouldRecommend: 4,
       comments: "Excellent print quality on the vinyl sticker wraps. Highly recommended.",
     }
   });

@@ -4,54 +4,54 @@ import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 import {
   Package,
-  Shield,
+  ShieldCheck,
   Award,
   BarChart3,
   CheckCircle2,
   Building2,
   FileCheck,
-  TrendingUp,
-  BrainCircuit,
+  Cpu,
   ArrowRight,
   Sparkles,
+  BookOpen,
 } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About ProcureWise — Intelligent Procurement Analytics | Batanes State College",
   description:
-    "Learn about ProcureWise: Batanes State College's automated canvassing, MCDM best-value recommendation engine, and transparent procurement analytics platform.",
+    "Learn about ProcureWise: Batanes State College's automated canvassing, MCDM best-value recommendation engine, and transparent procurement analytics platform. Compliant with RA 9184 and COA/GAM rules.",
 };
 
 const pillars = [
   {
-    icon: BrainCircuit,
-    title: "MCDM Recommendation Engine",
+    icon: Cpu,
+    title: "MCDM Best-Value Engine",
     description:
-      "Multi-Criteria Decision Making algorithms automatically calculate standardized score vectors balancing price, lead time, and supplier reliability.",
+      "Employs Multi-Criteria Decision Making (MCDM) algorithms to evaluate bids across price, delivery compliance, and supplier reliability ratings.",
     color: "#7B1E1E",
     bg: "rgba(123, 30, 30, 0.08)",
   },
   {
     icon: FileCheck,
-    title: "Automated Canvassing & Abstract",
+    title: "Official BSC Digital Forms",
     description:
-      "Eliminates manual tabulation by auto-aggregating supplier bids into official, audit-ready abstracts of canvas for instant review.",
+      "Standardized digital paper layouts for PR (Appendix 60), RFQ (Annex D), Ack Receipt (Annex E), AOQ (Annex F), and PO (Appendix 61) with official institutional letterheads.",
     color: "#D4A017",
     bg: "rgba(212, 160, 23, 0.08)",
   },
   {
-    icon: Shield,
-    title: "Forensic Audit Trail",
+    icon: ShieldCheck,
+    title: "RA 9184 & COA Compliance",
     description:
-      "Every status transition, budget allocation, and bid entry is asynchronously stamped into an immutable audit trail using modern Next.js schedulers.",
+      "Strict audit trails, role-based approval controls (Requisitioner, Officer, Approver), and digital signatures per Republic Act 9184 IRR.",
     color: "#059669",
     bg: "rgba(5, 150, 105, 0.08)",
   },
   {
-    icon: TrendingUp,
+    icon: BarChart3,
     title: "Historical Price Tracking",
     description:
-      "Preserves long-term item price histories to identify market inflation trends and optimize departmental procurement budget allocations.",
+      "ARIMA-powered price forecasting and historical price trends derived from historical Small Value Procurement (SVP) workbooks.",
     color: "#6366f1",
     bg: "rgba(99, 102, 241, 0.08)",
   },
@@ -174,6 +174,8 @@ export default function AboutPage() {
                   <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Public Tracking</div>
                 </div>
               </div>
+
+              </div>
             </div>
           </div>
 
@@ -209,6 +211,7 @@ export default function AboutPage() {
                       <p className="text-xs text-gray-600 dark:text-slate-400 leading-relaxed">
                         {pillar.description}
                       </p>
+
                     </div>
                   </div>
                 );
@@ -216,6 +219,29 @@ export default function AboutPage() {
             </div>
           </div>
 
+          {/* Bottom Call to Action */}
+          <div className="bg-gradient-to-r from-[#7B1E1E] to-[#5E1414] rounded-3xl p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+            <div className="space-y-2 text-center sm:text-left">
+              <h3 className="text-xl font-black">Ready to explore ProcureWise?</h3>
+              <p className="text-xs text-slate-200">
+                Browse public item catalogs, track existing Purchase Requests, or sign into your operational role.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 shrink-0">
+              <Link
+                href="/catalog"
+                className="px-5 py-2.5 rounded-xl bg-[#D4A017] text-slate-950 text-xs font-bold hover:bg-[#b88a1b] transition shadow-md"
+              >
+                Browse Catalog
+              </Link>
+              <Link
+                href="/login"
+                className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold transition"
+              >
+                Sign In
+              </Link>
+            </div>
+          </div>
         </div>
       </main>
 

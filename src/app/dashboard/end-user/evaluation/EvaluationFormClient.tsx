@@ -5,7 +5,6 @@ import { submitSupplierEvaluationAction } from "@/app/actions/evaluation";
 
 enum EvaluationType {
   EndUser = "EndUser",
-  ProcurementOffice = "ProcurementOffice"
 }
 
 interface Supplier {
@@ -17,47 +16,112 @@ interface Supplier {
 interface EvaluationFormClientProps {
   suppliers: Supplier[];
   evaluatorName: string;
+  evaluatorOffice?: string;
 }
 
-const CRITERIA = [
-  { key: "productQuality", label: "Product Quality", description: "The durability, performance, and craftsmanship of the delivered goods." },
-  { key: "deliveryCompliance", label: "Delivery Compliance", description: "Timeliness of deliveries and adherence to the agreed schedules." },
-  { key: "accuracy", label: "Accuracy of Order", description: "Adherence of the delivered items to the requested specifications and counts." },
-  { key: "responsiveness", label: "Responsiveness", description: "Speed and helpfulness in resolving questions, changes, or issues." },
-  { key: "communication", label: "Communication Flow", description: "Clarity, availability, and professionalism in correspondence." },
-  { key: "costEffectiveness", label: "Cost Effectiveness", description: "Value provided relative to market prices and competition." },
-  { key: "overallSatisfaction", label: "Overall Satisfaction", description: "Your subjective satisfaction rating of the overall partnership." }
+// Official BSC End-User Supplier Evaluation — 4 categories, 9 criteria
+// Rating scale: 4=Strongly Agree, 3=Agree, 2=Disagree, 1=Strongly Disagree
+const CATEGORIES = [
+  {
+    label: "Quality",
+    criteria: [
+      {
+        key: "productQuality",
+        label: "The supplier/dealer met the quality standards of the products/services received.",
+      },
+      {
+        key: "deliveryCompliance",
+        label: "The products/services were delivered as per the specified delivery term.",
+      },
+      {
+        key: "accuracy",
+        label: "The delivered products/services were accurate and complete as per specifications.",
+      },
+    ],
+  },
+  {
+    label: "Communication",
+    criteria: [
+      {
+        key: "responsiveness",
+        label: "The supplier was responsive to inquiries and concerns during the transaction.",
+      },
+      {
+        key: "communication",
+        label: "The supplier was willing and able to address issues or defects encountered.",
+      },
+      {
+        key: "clearCommunication",
+        label: "Communication with the supplier was clear throughout the ordering process.",
+      },
+    ],
+  },
+  {
+    label: "Cost",
+    criteria: [
+      {
+        key: "costEffectiveness",
+        label: "The pricing offered is competitive compared to market rates.",
+      },
+      {
+        key: "valueForMoney",
+        label: "The products/services justify the cost paid (value for money).",
+      },
+    ],
+  },
+  {
+    label: "Overall",
+    criteria: [
+      {
+        key: "wouldRecommend",
+        label: "I would recommend this supplier for future procurement transactions.",
+      },
+    ],
+  },
+] as const;
+
+const RATING_OPTIONS = [
+  { value: 4, label: "Strongly Agree" },
+  { value: 3, label: "Agree" },
+  { value: 2, label: "Disagree" },
+  { value: 1, label: "Strongly Disagree" },
 ];
 
-const RATING_LABELS = [
-  { value: 1, label: "Poor", color: "#ef4444" },
-  { value: 2, label: "Fair", color: "#f59e0b" },
-  { value: 3, label: "Good", color: "#3b82f6" },
-  { value: 4, label: "Excellent", color: "#10b981" }
-];
+const defaultRatings = () => ({
+  productQuality: 4,
+  deliveryCompliance: 4,
+  accuracy: 4,
+  responsiveness: 4,
+  communication: 4,
+  clearCommunication: 4,
+  costEffectiveness: 4,
+  valueForMoney: 4,
+  wouldRecommend: 4,
+});
 
-export default function EvaluationFormClient({ suppliers, evaluatorName }: EvaluationFormClientProps) {
-  const [selectedSupplierId, setSelectedSupplierId] = useState<string>("");
-  const [ratings, setRatings] = useState<Record<string, number>>({
-    productQuality: 4,
-    deliveryCompliance: 4,
-    accuracy: 4,
-    responsiveness: 4,
-    communication: 4,
-    costEffectiveness: 4,
-    overallSatisfaction: 4
-  });
+export default function EvaluationFormClient({
+  suppliers,
+  evaluatorName,
+  evaluatorOffice = "",
+}: EvaluationFormClientProps) {
+  const [selectedSupplierId, setSelectedSupplierId] = useState("");
+  const [typeOfGoods, setTypeOfGoods] = useState("");
+  const [officeUnit, setOfficeUnit] = useState(evaluatorOffice);
+  const [poNo, setPoNo] = useState("");
+
+  const [ratings, setRatings] = useState<Record<string, number>>(defaultRatings());
   const [comments, setComments] = useState("");
-  const [recommendation, setRecommendation] = useState("");
-  const [signature, setSignature] = useState("");
-  
+  const [respondentName, setRespondentName] = useState(evaluatorName);
+  const [evaluationDate, setEvaluationDate] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  const handleRatingChange = (key: string, val: number) => {
+  const handleRating = (key: string, val: number) =>
     setRatings(prev => ({ ...prev, [key]: val }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,8 +129,8 @@ export default function EvaluationFormClient({ suppliers, evaluatorName }: Evalu
       setErrorMsg("Please select a supplier to evaluate.");
       return;
     }
-    if (!signature.trim()) {
-      setErrorMsg("Please enter your name/signature block to authorize this evaluation.");
+    if (!respondentName.trim()) {
+      setErrorMsg("Please enter your name in the signature block.");
       return;
     }
 
@@ -78,28 +142,32 @@ export default function EvaluationFormClient({ suppliers, evaluatorName }: Evalu
       const res = await submitSupplierEvaluationAction({
         supplierId: parseInt(selectedSupplierId),
         evaluationType: EvaluationType.EndUser,
-        evaluatorName,
-        ...ratings,
+        evaluatorName: respondentName,
+        productQuality: ratings.productQuality,
+        deliveryCompliance: ratings.deliveryCompliance,
+        accuracy: ratings.accuracy,
+        responsiveness: ratings.responsiveness,
+        communication: ratings.communication,
+        // clearCommunication, valueForMoney, wouldRecommend map to extended fields
+        clearCommunication: ratings.clearCommunication,
+        costEffectiveness: ratings.costEffectiveness,
+        valueForMoney: ratings.valueForMoney,
+        wouldRecommend: ratings.wouldRecommend,
         comments,
-        recommendation,
-        signature
-      });
+        // Pass header metadata
+        typeOfGoodsServices: typeOfGoods,
+        officeUnit,
+        poNo,
+        respondentName,
+      } as any);
 
       if (res.success) {
-        setSuccessMsg("Evaluation submitted successfully! Supplier metrics updated.");
-        // Reset fields
+        setSuccessMsg("Evaluation submitted successfully! Thank you for your feedback.");
         setComments("");
-        setRecommendation("");
-        setSignature("");
-        setRatings({
-          productQuality: 4,
-          deliveryCompliance: 4,
-          accuracy: 4,
-          responsiveness: 4,
-          communication: 4,
-          costEffectiveness: 4,
-          overallSatisfaction: 4
-        });
+        setPoNo("");
+        setTypeOfGoods("");
+        setRatings(defaultRatings());
+        setSelectedSupplierId("");
       } else {
         setErrorMsg(res.error || "Failed to submit evaluation.");
       }
@@ -114,169 +182,234 @@ export default function EvaluationFormClient({ suppliers, evaluatorName }: Evalu
     crimson: "#7e191b",
     gold: "#dcb353",
     goldDark: "#b88a1b",
-    textMain: "#1f2937",
-    textMuted: "#6b7280",
-    glassBg: "rgba(255, 255, 255, 0.75)",
-    glassBorder: "rgba(255, 255, 255, 0.95)",
-    shadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+    textMain: "var(--text-primary, #1f2937)",
+    textMuted: "var(--text-muted, #6b7280)",
+    glassBg: "var(--surface, rgba(255,255,255,0.75))",
+    glassBorder: "var(--border, rgba(255,255,255,0.95))",
+    shadow: "var(--shadow-card, 0 10px 30px rgba(0,0,0,0.04))",
+  };
+
+  const cardStyle: React.CSSProperties = {
+    background: theme.glassBg,
+    border: `1px solid ${theme.glassBorder}`,
+    borderRadius: "1.25rem",
+    padding: "2rem",
+    boxShadow: theme.shadow,
+  };
+
+  const labelStyle: React.CSSProperties = {
+    fontSize: "0.72rem",
+    fontWeight: 800,
+    color: theme.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
+    marginBottom: "0.35rem",
+    display: "block",
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "0.65rem 0.85rem",
+    borderRadius: "0.65rem",
+    border: "1px solid rgba(0,0,0,0.12)",
+    fontSize: "0.85rem",
+    background: "rgba(255,255,255,0.8)",
+    outline: "none",
+    color: theme.textMain,
   };
 
   return (
     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       {errorMsg && (
-        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#dc2626", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(239,68,68,0.1)", color: "#dc2626", fontSize: "0.85rem", fontWeight: 600 }}>
           ⚠️ {errorMsg}
         </div>
       )}
-
       {successMsg && (
-        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "#059669", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(16,185,129,0.1)", color: "#059669", fontSize: "0.85rem", fontWeight: 600 }}>
           ✅ {successMsg}
         </div>
       )}
 
-      {/* Supplier Selection Panel */}
-      <div style={{
-        background: theme.glassBg, backdropFilter: "blur(20px)",
-        border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "1.5rem 2rem",
-        boxShadow: theme.shadow
-      }}>
-        <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, margin: "0 0 1.25rem 0" }}>Supplier Selection</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-          <label style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Select Supplier to Evaluate</label>
-          <select
-            value={selectedSupplierId}
-            onChange={(e) => setSelectedSupplierId(e.target.value)}
-            style={{
-              width: "100%", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.12)",
-              fontSize: "0.85rem", background: "rgba(255,255,255,0.8)", outline: "none", color: theme.textMain
-            }}
-          >
-            <option value="">-- Select Company --</option>
-            {suppliers.map(s => (
-              <option key={s.id} value={s.id}>{s.companyName}</option>
-            ))}
-          </select>
+      {/* ── Header Fields ── */}
+      <div style={cardStyle}>
+        <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: theme.textMain, marginBottom: "1.5rem" }}>
+          📋 Evaluation Details
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={labelStyle}>Name of Supplier</label>
+            <select
+              value={selectedSupplierId}
+              onChange={e => setSelectedSupplierId(e.target.value)}
+              style={inputStyle}
+              required
+            >
+              <option value="">— Select Supplier —</option>
+              {suppliers.map(s => (
+                <option key={s.id} value={s.id}>{s.companyName}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label style={labelStyle}>Type of Goods / Services Provided</label>
+            <input
+              type="text"
+              value={typeOfGoods}
+              onChange={e => setTypeOfGoods(e.target.value)}
+              placeholder="e.g. Office Supplies, Hardware, Repairs"
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Office / Unit</label>
+            <input
+              type="text"
+              value={officeUnit}
+              onChange={e => setOfficeUnit(e.target.value)}
+              placeholder="e.g. Registrar's Office"
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>PO No.</label>
+            <input
+              type="text"
+              value={poNo}
+              onChange={e => setPoNo(e.target.value)}
+              placeholder="e.g. PO-2026-0001"
+              style={inputStyle}
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Date</label>
+            <input
+              type="date"
+              value={evaluationDate}
+              onChange={e => setEvaluationDate(e.target.value)}
+              style={inputStyle}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Ratings Panel */}
-      <div style={{
-        background: theme.glassBg, backdropFilter: "blur(20px)",
-        border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "2rem",
-        boxShadow: theme.shadow, display: "flex", flexDirection: "column", gap: "2rem"
-      }}>
-        <div>
-          <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, margin: 0 }}>Supplier Rating sheet (1 - 4 Likert Scale)</h2>
-          <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.8rem", color: theme.textMuted }}>
-            Evaluate the supplier's performance on the following criteria based on recent deliveries.
-          </p>
+      {/* ── Rating Scale Legend ── */}
+      <div style={{ ...cardStyle, padding: "1rem 2rem" }}>
+        <div style={{ display: "flex", gap: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Scale:</span>
+          {RATING_OPTIONS.map(o => (
+            <span key={o.value} style={{ fontSize: "0.78rem", color: theme.textMain }}>
+              <strong>{o.value}</strong> = {o.label}
+            </span>
+          ))}
         </div>
+      </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-          {CRITERIA.map((criterion) => {
-            const currentRating = ratings[criterion.key];
-            return (
-              <div key={criterion.key} style={{
-                paddingBottom: "1.5rem", borderBottom: "1px solid rgba(0,0,0,0.06)",
-                display: "grid", gridTemplateColumns: "1fr", gap: "1rem"
-              }} className="md:grid-cols-2">
-                <div>
-                  <h3 style={{ fontSize: "0.9rem", fontWeight: 700, color: theme.textMain, margin: 0 }}>{criterion.label}</h3>
-                  <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.75rem", color: theme.textMuted }}>{criterion.description}</p>
-                </div>
-                
-                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                  {RATING_LABELS.map((opt) => {
-                    const selected = currentRating === opt.value;
+      {/* ── Criteria by Category ── */}
+      {CATEGORIES.map(category => (
+        <div key={category.label} style={cardStyle}>
+          <h2 style={{
+            fontSize: "0.95rem", fontWeight: 800, color: "#fff",
+            background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`,
+            padding: "0.5rem 1rem", borderRadius: "0.5rem",
+            marginBottom: "1.5rem", display: "inline-block",
+          }}>
+            {category.label}
+          </h2>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
+            {category.criteria.map((c, idx) => (
+              <div key={c.key} style={{
+                paddingBottom: "1.25rem",
+                borderBottom: idx < category.criteria.length - 1 ? "1px solid rgba(0,0,0,0.06)" : "none",
+              }}>
+                {/* Row number + criterion label */}
+                <p style={{ fontSize: "0.85rem", color: theme.textMain, marginBottom: "0.75rem", fontWeight: 500 }}>
+                  {c.label}
+                </p>
+
+                {/* Radio buttons */}
+                <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+                  {RATING_OPTIONS.map(opt => {
+                    const selected = ratings[c.key] === opt.value;
                     return (
-                      <button
+                      <label
                         key={opt.value}
-                        type="button"
-                        onClick={() => handleRatingChange(criterion.key, opt.value)}
                         style={{
-                          flex: 1, padding: "0.5rem 0.25rem", borderRadius: "0.5rem",
-                          border: selected ? `1.5px solid ${opt.color}` : "1.5px solid rgba(0,0,0,0.06)",
-                          background: selected ? `${opt.color}15` : "rgba(255,255,255,0.6)",
-                          color: selected ? opt.color : theme.textMuted,
-                          fontWeight: 700, fontSize: "0.75rem", cursor: "pointer", transition: "all 0.15s",
-                          textAlign: "center"
+                          display: "flex", alignItems: "center", gap: "0.35rem",
+                          padding: "0.4rem 0.85rem", borderRadius: "2rem",
+                          border: selected ? `2px solid ${theme.crimson}` : "1.5px solid rgba(0,0,0,0.1)",
+                          background: selected ? `${theme.crimson}12` : "rgba(255,255,255,0.6)",
+                          cursor: "pointer", fontSize: "0.8rem", fontWeight: selected ? 700 : 500,
+                          color: selected ? theme.crimson : theme.textMuted,
+                          transition: "all 0.15s",
                         }}
                       >
-                        {opt.value} - {opt.label}
-                      </button>
+                        <input
+                          type="radio"
+                          name={c.key}
+                          value={opt.value}
+                          checked={selected}
+                          onChange={() => handleRating(c.key, opt.value)}
+                          style={{ accentColor: theme.crimson }}
+                        />
+                        <span>{opt.value} – {opt.label}</span>
+                      </label>
                     );
                   })}
                 </div>
               </div>
-            );
-          })}
+            ))}
+          </div>
         </div>
-      </div>
+      ))}
 
-      {/* Comments and Authorization */}
-      <div style={{
-        background: theme.glassBg, backdropFilter: "blur(20px)",
-        border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "2rem",
-        boxShadow: theme.shadow, display: "flex", flexDirection: "column", gap: "1.5rem"
-      }}>
-        <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, margin: 0 }}>Comments & Recommendations</h2>
+      {/* ── Comments & Signature ── */}
+      <div style={cardStyle}>
+        <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: theme.textMain, marginBottom: "1.5rem" }}>
+          📝 Comments &amp; Signature
+        </h2>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }} className="grid grid-cols-1 md:grid-cols-2">
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-            <label style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Evaluation Comments</label>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div>
+            <label style={labelStyle}>Additional Comments / Suggestions</label>
             <textarea
               value={comments}
-              onChange={(e) => setComments(e.target.value)}
-              placeholder="Provide comments regarding quality, speed, or other performance aspects..."
-              style={{
-                width: "100%", height: "100px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.12)",
-                fontSize: "0.85rem", background: "rgba(255,255,255,0.8)", outline: "none", color: theme.textMain, fontFamily: "inherit"
-              }}
-            />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-            <label style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Corrective Actions / Recommendations</label>
-            <textarea
-              value={recommendation}
-              onChange={(e) => setRecommendation(e.target.value)}
-              placeholder="Provide suggestions for improvement or recommend renewal/termination..."
-              style={{
-                width: "100%", height: "100px", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.12)",
-                fontSize: "0.85rem", background: "rgba(255,255,255,0.8)", outline: "none", color: theme.textMain, fontFamily: "inherit"
-              }}
-            />
-          </div>
-        </div>
-
-        <div style={{ borderTop: "1px solid rgba(0,0,0,0.06)", paddingTop: "1.5rem", display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem" }} className="md:grid-cols-2">
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
-            <label style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Evaluator Signature block</label>
-            <input
-              type="text"
-              value={signature}
-              onChange={(e) => setSignature(e.target.value)}
-              placeholder="Type your full name as digital signature (e.g. Juan De Cruz)"
-              style={{
-                width: "100%", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.12)",
-                fontSize: "0.85rem", background: "rgba(255,255,255,0.8)", outline: "none", color: theme.textMain
-              }}
+              onChange={e => setComments(e.target.value)}
+              placeholder="Optional: additional remarks on the supplier's performance..."
+              rows={4}
+              style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }}
             />
           </div>
 
-          <div style={{ display: "flex", alignItems: "flex-end" }}>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              style={{
-                width: "100%", padding: "0.75rem", borderRadius: "0.75rem", border: "none",
-                background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`, color: "#fff",
-                fontWeight: 700, fontSize: "0.85rem", cursor: "pointer", transition: "all 0.2s",
-                boxShadow: "0 4px 12px rgba(126, 25, 27, 0.2)"
-              }}
-            >
-              {isSubmitting ? "Submitting Evaluation..." : "✍️ Submit Supplier Evaluation"}
-            </button>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", borderTop: "1px solid rgba(0,0,0,0.07)", paddingTop: "1rem" }}>
+            <div>
+              <label style={labelStyle}>Name of Respondent</label>
+              <input
+                type="text"
+                value={respondentName}
+                onChange={e => setRespondentName(e.target.value)}
+                placeholder="Full name of the evaluator"
+                style={inputStyle}
+                required
+              />
+            </div>
+            <div style={{ display: "flex", alignItems: "flex-end" }}>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                style={{
+                  width: "100%", padding: "0.75rem", borderRadius: "0.75rem", border: "none",
+                  background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`,
+                  color: "#fff", fontWeight: 700, fontSize: "0.85rem",
+                  cursor: isSubmitting ? "not-allowed" : "pointer",
+                  opacity: isSubmitting ? 0.7 : 1,
+                  boxShadow: "0 4px 12px rgba(126,25,27,0.25)", transition: "all 0.2s",
+                }}
+              >
+                {isSubmitting ? "Submitting…" : "✍️ Submit Evaluation"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
