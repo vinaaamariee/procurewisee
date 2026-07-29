@@ -168,9 +168,11 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
   };
 
   const handleDownloadPdf = useCallback(async () => {
-    // Dynamically import html2pdf.js (browser only)
     try {
-      const html2pdf = (await import("html2pdf.js")).default;
+      // html2pdf.js is CJS; the callable factory may be on .default or the module root
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const mod = (await import("html2pdf.js")) as any;
+      const html2pdf = mod.default ?? mod;
       const element = document.getElementById("po-document");
       if (!element) {
         alert("Could not find PO document to export.");
@@ -181,12 +183,12 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
         filename: `PO_${po.poNumber}.pdf`,
         image: { type: "jpeg", quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" as const },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         pagebreak: { mode: ["avoid-all", "css", "legacy"] },
       };
       await html2pdf().set(opt).from(element).save();
     } catch (err: any) {
-      alert("PDF generation failed: " + err.message);
+      alert("PDF generation failed: " + (err?.message ?? String(err)));
     }
   }, [po.poNumber]);
 
