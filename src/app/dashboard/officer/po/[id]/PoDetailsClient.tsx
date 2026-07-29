@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { updatePoAction, approvePoAction, logPoPrintedAction } from "@/app/actions/po";
-import DocumentLayout from "@/components/documents/DocumentLayout";
+import React, { useState, useEffect, useCallback } from "react";
+import { updatePoAction, approvePoAction, logPoPrintedAction, updatePoStatusAction } from "@/app/actions/po";
+import PODocument, { PODocumentData } from "@/components/po/PODocument";
 
 interface Supplier {
   id: number;
@@ -23,6 +23,10 @@ interface PoItem {
   quantity: number;
   unitPrice: any;
   totalCost: any;
+  unit?: string | null;
+  stockNo?: string | null;
+  brand?: string | null;
+  specification?: string | null;
 }
 
 interface PurchaseOrder {
@@ -38,44 +42,105 @@ interface PurchaseOrder {
   status: string;
   createdAt: Date | string;
   items: PoItem[];
+  entityName?: string | null;
+  modeOfProcurement?: string | null;
+  placeOfDelivery?: string | null;
+  dateOfDelivery?: Date | string | null;
+  fundCluster?: string | null;
+  orsBursNumber?: string | null;
+  fundsAvailable?: any;
+  dateOfOrsBurs?: Date | string | null;
+  chiefAccountantName?: string | null;
+  authorizedOfficialName?: string | null;
 }
 
 interface PoDetailsClientProps {
   initialPo: PurchaseOrder;
 }
 
+// Status workflow: what button appears next for each status
+const STATUS_TRANSITIONS: Record<string, { label: string; nextStatus: string; color: string }> = {
+  Draft: { label: "Submit for Approval", nextStatus: "Pending Approval", color: "#2563eb" },
+  "Pending Approval": { label: "Approve & Sign", nextStatus: "Approved", color: "#059669" },
+  Approved: { label: "Mark as Sent to Supplier", nextStatus: "Sent to Supplier", color: "#7c3aed" },
+  "Sent to Supplier": { label: "Mark as Delivered", nextStatus: "Delivered", color: "#0891b2" },
+  Delivered: { label: "Mark as Completed", nextStatus: "Completed", color: "#059669" },
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  Draft: "#6b7280",
+  "Pending Approval": "#d97706",
+  Approved: "#059669",
+  "Sent to Supplier": "#7c3aed",
+  "Partially Delivered": "#0891b2",
+  Delivered: "#0891b2",
+  Completed: "#059669",
+  Closed: "#374151",
+  Cancelled: "#ef4444",
+};
+
 export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
   const [po, setPo] = useState<PurchaseOrder>(initialPo);
-
-  // Terms states
-  const [deliveryTerms, setDeliveryTerms] = useState(initialPo.deliveryTerms || "");
-  const [paymentTerms, setPaymentTerms] = useState(initialPo.paymentTerms || "");
-
-  // Processing indicators
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Sync state if initialPo changes
   useEffect(() => {
     setPo(initialPo);
-    setDeliveryTerms(initialPo.deliveryTerms || "");
-    setPaymentTerms(initialPo.paymentTerms || "");
     setErrorMsg(null);
     setSuccessMsg(null);
   }, [initialPo]);
 
-  const handleSaveTerms = async () => {
+  const handleSavePoFields = async (data: Partial<PODocumentData>) => {
     setIsProcessing(true);
     setErrorMsg(null);
     setSuccessMsg(null);
     try {
-      const res = await updatePoAction(po.id, { deliveryTerms, paymentTerms });
-      if (res.success && res.po) {
-        setPo(prev => ({ ...prev, deliveryTerms, paymentTerms }));
-        setSuccessMsg("Delivery and Payment terms saved successfully.");
+      const res = await updatePoAction(po.id, {
+        deliveryTerms: data.deliveryTerms ?? undefined,
+        paymentTerms: data.paymentTerms ?? undefined,
+        entityName: data.entityName,
+        modeOfProcurement: data.modeOfProcurement,
+        placeOfDelivery: data.placeOfDelivery,
+        dateOfDelivery: data.dateOfDelivery ?? null,
+        fundCluster: data.fundCluster,
+        orsBursNumber: data.orsBursNumber,
+        fundsAvailable: data.fundsAvailable !== undefined ? Number(data.fundsAvailable) : null,
+        dateOfOrsBurs: data.dateOfOrsBurs ?? null,
+        chiefAccountantName: data.chiefAccountantName,
+        authorizedOfficialName: data.authorizedOfficialName,
+      });
+      if (res.success) {
+        return { success: true };
       } else {
-        setErrorMsg(res.error || "Failed to save terms.");
+        setErrorMsg(res.error || "Failed to save PO.");
+        return { success: false, error: res.error };
+      }
+    } catch (err: any) {
+      const msg = err.message || "An error occurred.";
+      setErrorMsg(msg);
+      return { success: false, error: msg };
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleStatusTransition = async (nextStatus: string) => {
+    setIsProcessing(true);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    try {
+      let res: any;
+      if (nextStatus === "Approved") {
+        res = await approvePoAction(po.id);
+      } else {
+        res = await updatePoStatusAction(po.id, nextStatus as any);
+      }
+      if (res.success) {
+        setPo(prev => ({ ...prev, status: nextStatus }));
+        setSuccessMsg(`Status updated to: ${nextStatus}`);
+      } else {
+        setErrorMsg(res.error || "Failed to update status.");
       }
     } catch (err: any) {
       setErrorMsg(err.message || "An error occurred.");
@@ -84,209 +149,149 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
     }
   };
 
-  const handleApprovePo = async () => {
+  const handleCancel = async () => {
+    if (!confirm("Are you sure you want to cancel this Purchase Order? This action cannot be undone.")) return;
     setIsProcessing(true);
-    setErrorMsg(null);
-    setSuccessMsg(null);
-    try {
-      const res = await approvePoAction(po.id);
-      if (res.success && res.po) {
-        setPo(prev => ({ ...prev, status: "Approved" }));
-        setSuccessMsg("Purchase Order approved and signed digitally!");
-      } else {
-        setErrorMsg(res.error || "Failed to approve Purchase Order.");
-      }
-    } catch (err: any) {
-      setErrorMsg(err.message || "An error occurred.");
-    } finally {
-      setIsProcessing(false);
+    const res = await updatePoStatusAction(po.id, "Cancelled" as any);
+    setIsProcessing(false);
+    if (res.success) {
+      setPo(prev => ({ ...prev, status: "Cancelled" }));
+      setSuccessMsg("Purchase Order cancelled.");
+    } else {
+      setErrorMsg(res.error || "Failed to cancel PO.");
     }
   };
 
   const handlePrint = async () => {
-    try {
-      await logPoPrintedAction(po.id);
-    } catch (e) {
-      console.error("Error logging PO print:", e);
-    }
+    try { await logPoPrintedAction(po.id); } catch { /* non-fatal */ }
     window.print();
   };
 
+  const handleDownloadPdf = useCallback(async () => {
+    // Dynamically import html2pdf.js (browser only)
+    try {
+      const html2pdf = (await import("html2pdf.js")).default;
+      const element = document.getElementById("po-document");
+      if (!element) {
+        alert("Could not find PO document to export.");
+        return;
+      }
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `PO_${po.poNumber}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" as const },
+        pagebreak: { mode: ["avoid-all", "css", "legacy"] },
+      };
+      await html2pdf().set(opt).from(element).save();
+    } catch (err: any) {
+      alert("PDF generation failed: " + err.message);
+    }
+  }, [po.poNumber]);
+
   const theme = {
-    crimson: "var(--accent)",
-    gold: "var(--accent-light)",
-    goldDark: "var(--accent)",
     textMain: "var(--text-primary)",
     textMuted: "var(--text-muted)",
     glassBg: "var(--surface)",
     glassBorder: "var(--border)",
     shadow: "var(--shadow-card)",
+    accent: "var(--accent)",
   };
+
+  const poDocData: PODocumentData = {
+    id: po.id,
+    poNumber: po.poNumber,
+    createdAt: po.createdAt,
+    status: po.status,
+    supplierId: po.supplierId,
+    supplierName: po.supplier.companyName,
+    supplierAddress: po.supplier.businessAddress,
+    supplierTin: po.supplier.tin,
+    entityName: po.entityName,
+    modeOfProcurement: po.modeOfProcurement,
+    placeOfDelivery: po.placeOfDelivery,
+    dateOfDelivery: po.dateOfDelivery ? new Date(po.dateOfDelivery).toISOString().split("T")[0] : null,
+    deliveryTerms: po.deliveryTerms,
+    paymentTerms: po.paymentTerms,
+    fundCluster: po.fundCluster,
+    orsBursNumber: po.orsBursNumber,
+    fundsAvailable: po.fundsAvailable !== null && po.fundsAvailable !== undefined
+      ? Number(po.fundsAvailable) : null,
+    dateOfOrsBurs: po.dateOfOrsBurs ? new Date(po.dateOfOrsBurs).toISOString().split("T")[0] : null,
+    chiefAccountantName: po.chiefAccountantName,
+    authorizedOfficialName: po.authorizedOfficialName,
+    totalCost: Number(po.totalCost),
+    items: po.items.map((item, idx) => ({
+      id: item.id,
+      stockNo: item.stockNo || String(idx + 1),
+      unit: item.unit || "unit",
+      description: item.description,
+      brand: item.brand ?? null,
+      specification: item.specification ?? null,
+      quantity: item.quantity,
+      unitPrice: Number(item.unitPrice),
+      totalCost: Number(item.totalCost),
+    })),
+  };
+
+  const isDraft = po.status === "Draft";
+  const nextTransition = STATUS_TRANSITIONS[po.status];
+  const statusColor = STATUS_COLORS[po.status] || "#6b7280";
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }} className="lg:grid-cols-3">
-      {/* Main PO Government Layout (Appendix 61) */}
+      {/* Main document — 2/3 width */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-2">
-        {/* Control and feedback panel */}
         {errorMsg && (
-          <div className="no-print" style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#dc2626", fontSize: "0.8rem", fontWeight: 600 }}>
+          <div className="no-print p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
             ⚠️ {errorMsg}
           </div>
         )}
-
         {successMsg && (
-          <div className="no-print" style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "#059669", fontSize: "0.8rem", fontWeight: 600 }}>
+          <div className="no-print p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
             ✅ {successMsg}
           </div>
         )}
-
-        {/* Appendix 61 Government PO Layout Sheet */}
-        <DocumentLayout title="PURCHASE ORDER" documentRef={po.poNumber} printAreaId="poPrintArea">
-          <div
-            id="poPrintArea"
-            className="print-section"
-            style={{
-              background: "#fff",
-              color: "#000",
-              border: "2px solid #000",
-              borderRadius: "0.25rem",
-              padding: "2.5rem",
-              boxShadow: "0 10px 25px rgba(0,0,0,0.05)",
-              fontFamily: "Arial, sans-serif",
-              display: "flex",
-              flexDirection: "column"
-            }}
-          >
-            {/* Header block - hidden during print to prioritize official graphic header */}
-            <div className="print:hidden" style={{ textAlign: "center", marginBottom: "1.5rem", borderBottom: "2px double #000", paddingBottom: "1rem" }}>
-              <span style={{ fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase", display: "block" }}>Appendix 61</span>
-              <h2 style={{ fontSize: "1.2rem", fontWeight: "bold", margin: "0.5rem 0 0.1rem 0" }}>PURCHASE ORDER</h2>
-              <div style={{ fontSize: "1.1rem", fontWeight: "bold", letterSpacing: "1px" }}>BATANES STATE COLLEGE</div>
-              <div style={{ fontSize: "0.8rem", fontStyle: "italic" }}>Basco, Batanes, Philippines</div>
-            </div>
-
-            {/* PO metadata fields */}
-            <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #000", marginBottom: "1rem" }}>
-              <tbody>
-                <tr>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem", verticalAlign: "top" }}>
-                    <strong>Supplier:</strong> {po.supplier.companyName}<br />
-                    <strong>Address:</strong> {po.supplier.businessAddress}<br />
-                    <strong>TIN:</strong> {po.supplier.tin || "N/A"}
-                  </td>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem", verticalAlign: "top" }}>
-                    <strong>P.O. No:</strong> {po.poNumber}<br />
-                    <strong>Date:</strong> {new Date(po.createdAt).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}<br />
-                    <strong>Mode of Procurement:</strong> Small Value Procurement
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            <p style={{ margin: "1rem 0", fontSize: "0.8rem" }}>
-              Gentlemen:<br />
-              Please furnish this Office the following articles subject to the terms and conditions contained herein:
-            </p>
-
-            {/* Delivery terms block */}
-            <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #000", marginBottom: "1.5rem" }}>
-              <tbody>
-                <tr>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
-                    <strong>Place of Delivery:</strong> BSC Supply Office, Basco, Batanes
-                  </td>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
-                    <strong>Delivery Term:</strong> {po.deliveryTerms || "FOB Destination"}
-                  </td>
-                </tr>
-                <tr>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
-                    <strong>Date of Delivery:</strong> Within lead time upon PO approval
-                  </td>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", width: "50%", fontSize: "0.85rem" }}>
-                    <strong>Payment Term:</strong> {po.paymentTerms || "Charge Account"}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            {/* Items Table */}
-            <table style={{ width: "100%", borderCollapse: "collapse", border: "1px solid #000", fontSize: "0.82rem", marginBottom: "1rem" }}>
-              <thead>
-                <tr style={{ backgroundColor: "#f9fafb" }}>
-                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "8%", textAlign: "center" }}>Stock No.</th>
-                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "8%", textAlign: "center" }}>Unit</th>
-                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "44%", textAlign: "left" }}>Description</th>
-                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "10%", textAlign: "center" }}>Quantity</th>
-                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "12%", textAlign: "right" }}>Unit Cost</th>
-                  <th style={{ border: "1px solid #000", padding: "0.5rem", width: "18%", textAlign: "right" }}>Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {po.items.map((item, idx) => (
-                  <tr key={item.id}>
-                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "center" }}>{idx + 1}</td>
-                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "center" }}>unit</td>
-                    <td style={{ border: "1px solid #000", padding: "0.4rem" }}>{item.description}</td>
-                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "center" }}>{item.quantity}</td>
-                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "right" }}>₱{Number(item.unitPrice).toLocaleString()}</td>
-                    <td style={{ border: "1px solid #000", padding: "0.4rem", textAlign: "right", fontWeight: "bold" }}>₱{Number(item.totalCost).toLocaleString()}</td>
-                  </tr>
-                ))}
-                <tr>
-                  <td colSpan={5} style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", fontWeight: "bold" }}>
-                    TOTAL AMOUNT
-                  </td>
-                  <td style={{ border: "1px solid #000", padding: "0.6rem", textAlign: "right", fontWeight: "black", color: "#7e191b", fontSize: "0.9rem" }}>
-                    ₱{Number(po.totalCost).toLocaleString()}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-
-            {/* Total in words */}
-            <div style={{ border: "1px solid #000", padding: "0.6rem", fontSize: "0.78rem", marginBottom: "1.5rem" }}>
-              <strong>(Total Amount in Words):</strong> <span style={{ textTransform: "uppercase", fontStyle: "italic" }}>Pesos Only</span>
-            </div>
-
-            <p style={{ fontSize: "0.78rem", lineHeight: "1.4", margin: "0 0 2rem 0" }}>
-              In case of failure to make the full delivery within the time specified above, a penalty of one-tenth (1/10) of one percent for every day of delay shall be imposed on the undelivered item/s.
-            </p>
-
-            {/* Signatures */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "2rem", marginTop: "1rem" }}>
-              <div>
-                <p style={{ margin: "0 0 1.5rem 0", fontSize: "0.8rem" }}>Conforme:</p>
-                <div style={{ borderBottom: "1.5px solid #000", width: "80%", height: "20px" }}></div>
-                <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", color: "#333" }}>Signature over Printed Name of Supplier</p>
-                <div style={{ borderBottom: "1.5px solid #000", width: "80%", height: "20px", marginTop: "1rem" }}></div>
-                <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", color: "#333" }}>Date</p>
-              </div>
-
-              <div style={{ textAlign: "right", display: "flex", flexDirection: "column", alignItems: "flex-end" }}>
-                <p style={{ margin: "0 0 1.5rem 0", fontSize: "0.8rem", width: "80%", textAlign: "left" }}>Very truly yours,</p>
-                {po.status === "Approved" ? (
-                  <div style={{ fontStyle: "italic", fontSize: "1rem", fontWeight: "bold", color: "#7e191b", width: "80%", textAlign: "left", fontFamily: "cursive", height: "20px" }}>
-                    ✓ Digitally Signed
-                  </div>
-                ) : (
-                  <div style={{ height: "20px" }}></div>
-                )}
-                <div style={{ borderBottom: "1.5px solid #000", width: "80%", marginTop: "0.5rem" }}></div>
-                <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", width: "80%", textAlign: "left" }}>
-                  <strong>DR. ELIZABETH T. CHIARRE</strong><br />
-                  College President, Batanes State College
-                </p>
-              </div>
-            </div>
-          </div>
-        </DocumentLayout>
+        <PODocument
+          initialPo={poDocData}
+          isReadOnly={!isDraft}
+          onSave={isDraft ? handleSavePoFields : undefined}
+        />
       </div>
 
-      {/* Right Column: PO Configuration, Edit Terms & Document Timeline */}
+      {/* Right panel — controls + traceability */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-1 no-print">
-        
-        {/* Configuration Actions */}
+
+        {/* Status badge */}
+        <div style={{
+          background: theme.glassBg,
+          border: `1px solid ${theme.glassBorder}`,
+          borderRadius: "1.25rem",
+          padding: "1.25rem",
+          boxShadow: theme.shadow,
+        }}>
+          <div style={{ fontSize: "0.72rem", color: theme.textMuted, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: "0.5rem" }}>
+            Current Status
+          </div>
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            background: `${statusColor}18`,
+            color: statusColor,
+            border: `1px solid ${statusColor}40`,
+            borderRadius: "2rem",
+            padding: "0.35rem 0.9rem",
+            fontSize: "0.78rem",
+            fontWeight: 800,
+          }}>
+            <span style={{ width: 7, height: 7, borderRadius: "50%", background: statusColor, display: "inline-block" }} />
+            {po.status}
+          </div>
+        </div>
+
+        {/* Document Controls */}
         <div style={{
           background: theme.glassBg,
           border: `1px solid ${theme.glassBorder}`,
@@ -295,130 +300,139 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
           boxShadow: theme.shadow,
           display: "flex",
           flexDirection: "column",
-          gap: "1.25rem"
+          gap: "0.75rem",
         }}>
-          <h3 style={{ fontSize: "1rem", fontWeight: 800, color: theme.textMain, margin: 0 }}>⚙️ Document Controls</h3>
-          
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+          <h3 style={{ fontSize: "1rem", fontWeight: 800, color: theme.textMain, margin: 0 }}>
+            ⚙️ Document Controls
+          </h3>
+
+          {/* Print */}
+          <button
+            onClick={handlePrint}
+            style={{
+              width: "100%", padding: "0.65rem", borderRadius: "0.5rem",
+              border: `1px solid ${theme.glassBorder}`, background: "transparent",
+              color: theme.textMain, fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
+            }}
+          >
+            🖨️ Print Purchase Order
+          </button>
+
+          {/* Download PDF */}
+          <button
+            onClick={handleDownloadPdf}
+            style={{
+              width: "100%", padding: "0.65rem", borderRadius: "0.5rem",
+              border: `1px solid #7c3aed40`, background: "#7c3aed10",
+              color: "#7c3aed", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
+            }}
+          >
+            📄 Download PDF
+          </button>
+
+          {/* Status transition */}
+          {nextTransition && po.status !== "Cancelled" && po.status !== "Completed" && po.status !== "Closed" && (
             <button
-              onClick={handlePrint}
+              onClick={() => handleStatusTransition(nextTransition.nextStatus)}
+              disabled={isProcessing}
               style={{
-                width: "100%", padding: "0.65rem", borderRadius: "0.5rem", border: `1px solid ${theme.glassBorder}`,
-                background: "transparent", color: theme.textMain, fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
-                display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px"
+                width: "100%", padding: "0.75rem", borderRadius: "0.5rem", border: "none",
+                background: nextTransition.color, color: "#fff",
+                fontWeight: 800, fontSize: "0.8rem", cursor: "pointer",
+                opacity: isProcessing ? 0.6 : 1,
               }}
             >
-              🖨️ Print Purchase Order
+              {isProcessing ? "Processing…" : `✅ ${nextTransition.label}`}
             </button>
+          )}
 
-            {po.status === "Draft" && (
-              <button
-                onClick={handleApprovePo}
-                disabled={isProcessing}
-                style={{
-                  width: "100%", padding: "0.75rem", borderRadius: "0.5rem", border: "none",
-                  background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`, color: "#fff",
-                  fontWeight: 800, fontSize: "0.8rem", cursor: "pointer",
-                  display: "inline-flex", alignItems: "center", justifyContent: "center", gap: "6px",
-                  boxShadow: "0 4px 12px rgba(126, 25, 27, 0.2)"
-                }}
-              >
-                ✍️ Approve & Sign digitally
-              </button>
+          {/* Cancel (only if not already terminal) */}
+          {!["Cancelled", "Completed", "Closed", "Delivered"].includes(po.status) && (
+            <button
+              onClick={handleCancel}
+              disabled={isProcessing}
+              style={{
+                width: "100%", padding: "0.55rem", borderRadius: "0.5rem",
+                border: "1px solid #ef444440", background: "transparent",
+                color: "#ef4444", fontWeight: 700, fontSize: "0.75rem", cursor: "pointer",
+                opacity: isProcessing ? 0.6 : 1,
+              }}
+            >
+              🚫 Cancel PO
+            </button>
+          )}
+        </div>
+
+        {/* Traceability */}
+        <div style={{
+          background: theme.glassBg,
+          border: `1px solid ${theme.glassBorder}`,
+          borderRadius: "1.25rem",
+          padding: "1.5rem",
+          boxShadow: theme.shadow,
+        }}>
+          <h3 style={{ fontSize: "1rem", fontWeight: 800, color: theme.textMain, margin: "0 0 1rem 0" }}>
+            📁 Traceability
+          </h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", fontSize: "0.78rem" }}>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <span style={{ color: "#10b981" }}>✓</span>
+              <div>
+                <div style={{ fontWeight: 700, color: theme.textMain }}>PO Created</div>
+                <div style={{ color: theme.textMuted }}>{new Date(po.createdAt).toLocaleString()}</div>
+              </div>
+            </div>
+            {po.rfq && (
+              <div style={{ display: "flex", gap: "8px" }}>
+                <span style={{ color: "#10b981" }}>✓</span>
+                <div>
+                  <div style={{ fontWeight: 700, color: theme.textMain }}>From RFQ</div>
+                  <div style={{ color: theme.textMuted }}>{po.rfq.rfqNumber} — {po.rfq.title}</div>
+                </div>
+              </div>
+            )}
+            {po.status !== "Draft" && (
+              <div style={{ display: "flex", gap: "8px" }}>
+                <span style={{ color: "#10b981" }}>✓</span>
+                <div>
+                  <div style={{ fontWeight: 700, color: theme.textMain }}>Status: {po.status}</div>
+                  <div style={{ color: theme.textMuted }}>Workflow updated.</div>
+                </div>
+              </div>
             )}
           </div>
         </div>
 
-        {/* Edit Delivery and Payment Terms */}
-        {po.status === "Draft" && (
-          <div style={{
-            background: theme.glassBg,
-            border: `1px solid ${theme.glassBorder}`,
-            borderRadius: "1.25rem",
-            padding: "1.5rem",
-            boxShadow: theme.shadow,
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.25rem"
-          }}>
-            <h3 style={{ fontSize: "1rem", fontWeight: 800, color: theme.textMain, margin: 0 }}>✏️ Configure PO Terms</h3>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              <div>
-                <label style={{ display: "block", fontSize: "0.72rem", color: theme.textMuted, fontWeight: 700, textTransform: "uppercase", marginBottom: "0.35rem" }}>Delivery Terms</label>
-                <input
-                  type="text"
-                  placeholder="e.g. FOB Destination"
-                  value={deliveryTerms}
-                  onChange={(e) => setDeliveryTerms(e.target.value)}
-                  style={{
-                    width: "100%", padding: "0.55rem 0.75rem", borderRadius: "0.5rem",
-                    border: `1px solid ${theme.glassBorder}`, background: "rgba(0,0,0,0.02)",
-                    color: theme.textMain, fontSize: "0.85rem", outline: "none"
-                  }}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: "block", fontSize: "0.72rem", color: theme.textMuted, fontWeight: 700, textTransform: "uppercase", marginBottom: "0.35rem" }}>Payment Terms</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Charge Account"
-                  value={paymentTerms}
-                  onChange={(e) => setPaymentTerms(e.target.value)}
-                  style={{
-                    width: "100%", padding: "0.55rem 0.75rem", borderRadius: "0.5rem",
-                    border: `1px solid ${theme.glassBorder}`, background: "rgba(0,0,0,0.02)",
-                    color: theme.textMain, fontSize: "0.85rem", outline: "none"
-                  }}
-                />
-              </div>
-
-              <button
-                onClick={handleSaveTerms}
-                disabled={isProcessing}
-                style={{
-                  width: "100%", padding: "0.6rem", borderRadius: "0.5rem", border: "none",
-                  background: "#10b981", color: "#fff", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
-                  transition: "opacity 0.2s"
-                }}
-                className="hover:opacity-90"
-              >
-                Save Terms & Conditions
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Timeline audit tracker */}
+        {/* Summary stats */}
         <div style={{
           background: theme.glassBg,
           border: `1px solid ${theme.glassBorder}`,
           borderRadius: "1.25rem",
-          padding: "1.5rem",
+          padding: "1.25rem",
           boxShadow: theme.shadow,
-          display: "flex",
-          flexDirection: "column",
-          gap: "1rem"
         }}>
-          <h3 style={{ fontSize: "1rem", fontWeight: 800, color: theme.textMain, margin: 0 }}>📁 Traceability Timeline</h3>
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", fontSize: "0.78rem" }}>
-            <div style={{ display: "flex", gap: "8px", alignItems: "start" }}>
-              <span style={{ color: "#10b981", marginTop: "2px" }}>✓</span>
-              <div>
-                <div style={{ fontWeight: 700, color: theme.textMain }}>Purchase Order Created</div>
-                <div style={{ color: theme.textMuted }}>{new Date(po.createdAt).toLocaleString()}</div>
-              </div>
+          <h3 style={{ fontSize: "0.9rem", fontWeight: 800, color: theme.textMain, margin: "0 0 0.75rem 0" }}>
+            📋 PO Summary
+          </h3>
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.78rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ color: theme.textMuted }}>PO Number</span>
+              <span style={{ fontWeight: 700, color: theme.accent, fontFamily: "monospace" }}>{po.poNumber}</span>
             </div>
-            {po.status === "Approved" && (
-              <div style={{ display: "flex", gap: "8px", alignItems: "start" }}>
-                <span style={{ color: "#10b981", marginTop: "2px" }}>✓</span>
-                <div>
-                  <div style={{ fontWeight: 700, color: theme.textMain }}>Approved & Digitally Signed</div>
-                  <div style={{ color: theme.textMuted }}>Verification log stored securely.</div>
-                </div>
-              </div>
-            )}
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ color: theme.textMuted }}>Supplier</span>
+              <span style={{ fontWeight: 600 }}>{po.supplier.companyName}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <span style={{ color: theme.textMuted }}>Line Items</span>
+              <span style={{ fontWeight: 600 }}>{po.items.length}</span>
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", borderTop: `1px solid ${theme.glassBorder}`, paddingTop: "0.5rem", marginTop: "0.25rem" }}>
+              <span style={{ color: theme.textMuted, fontWeight: 700 }}>Total Amount</span>
+              <span style={{ fontWeight: 800, color: theme.accent, fontSize: "0.9rem" }}>
+                ₱{Number(po.totalCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+              </span>
+            </div>
           </div>
         </div>
       </div>

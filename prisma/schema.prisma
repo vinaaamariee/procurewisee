@@ -553,13 +553,17 @@ model PurchaseOrder {
 }
 
 model PurchaseOrderItem {
-  id          Int           @id @default(autoincrement()) @map("po_item_id")
-  poId        Int
-  description String
-  quantity    Int
-  unitPrice   Decimal       @db.Decimal(12, 2)
-  totalCost   Decimal       @db.Decimal(12, 2)
-  po          PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  id            Int           @id @default(autoincrement()) @map("po_item_id")
+  poId          Int
+  description   String
+  brand         String?       @db.VarChar(100)
+  specification String?
+  quantity      Int
+  unit          String?       @db.VarChar(50)
+  stockNo       String?       @db.VarChar(20)
+  unitPrice     Decimal       @db.Decimal(12, 2)
+  totalCost     Decimal       @db.Decimal(12, 2)
+  po            PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
 
   @@index([poId])
   @@map("purchase_order_items")
@@ -743,9 +747,14 @@ enum PrStatus {
 
 enum PoStatus {
   Draft
+  PendingApproval @map("Pending Approval")
   Approved
+  SentToSupplier  @map("Sent to Supplier")
+  PartiallyDelivered @map("Partially Delivered")
   Delivered
+  Completed
   Closed
+  Cancelled
 }
 
 enum DeliveryStatus {

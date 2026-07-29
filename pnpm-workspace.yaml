@@ -1,5 +1,6 @@
 allowBuilds:
   '@prisma/engines': true
+  core-js: set this to true or false
   esbuild: true
   prisma: true
   sharp: true
@@ -7,4 +8,3 @@ allowBuilds:
 minimumReleaseAge: 0
 minimumReleaseAgeExclude:
   - '@supabase/*'
-

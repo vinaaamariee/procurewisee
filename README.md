@@ -4,9 +4,60 @@
 
 **Capstone Project for Batanes State College**
 
+
+## ✅ Purchase Order Module — Appendix 61 (Philippine Government Form)
+
+**Date**: July 2026
+
+The Purchase Order (PO) module has been significantly enhanced to fully comply with the **Philippine Government Procurement Manual — Appendix 61 Purchase Order Form**. The printed output now faithfully reproduces the official government document layout.
+
+### What Was Built / Updated
+
+#### New Components
+- **`src/components/po/POItemUpload.tsx`** — Drag-and-drop Excel (.xlsx) / CSV upload for PO line items with:
+  - Client-side XLSX parsing (uses existing `xlsx` package)
+  - Validation: Description, Unit, Quantity, Unit Cost required; Quantity > 0, Unit Cost ≥ 0
+  - Upload summary: total rows / successful / invalid
+  - Downloadable error report (.xlsx)
+  - Downloadable template (.xlsx) with sample rows
+
+#### Modified Components
+- **`src/components/po/PODocument.tsx`** — Full Appendix 61 layout rewrite:
+  - **Correct layout order**: Gentlemen paragraph now appears before the delivery table (matches reference image)
+  - **Add / Delete item rows**: "+" row at bottom, "×" delete per row when in Draft mode
+  - **Brand & Specification toggle**: Optional extra columns per item (screen-only, excluded from print)
+  - **Excel upload panel**: Integrated inline above items table in Draft mode
+  - **Item persistence**: `upsertPoItemsAction` called on Save to sync all item changes to DB
+  - **Improved accounting section**: Fund Cluster, ORS/BURS No., Date of ORS/BURS, Funds Available, Amount, Chief Accountant signature
+- **`src/app/dashboard/officer/po/[id]/PoDetailsClient.tsx`** — Extended controls:
+  - **Status workflow**: Draft → Pending Approval → Approved → Sent to Supplier → Delivered → Completed
+  - **Cancel PO** button with confirmation
+  - **Download PDF** via `html2pdf.js` (browser-only, captures `#po-document` element)
+  - **Status badge** with color-coded indicator
+  - **PO Summary** side panel (PO#, supplier, line item count, total)
+- **`src/app/dashboard/officer/po/PoDraftingClient.tsx`** — Enhanced list page:
+  - **Status filter pills** (All / Draft / Approved / Sent / Completed / Cancelled)
+  - **Dropdown filter** + **search bar** combined
+  - **Supplier avatar** initials
+  - **Notification badge** on Awards tab when pending awards exist
+
+#### Server Actions (`src/app/actions/po.ts`)
+- `createPoFromAwardAction` — now pre-fills default Appendix 61 fields
+- `upsertPoItemsAction` — replace-all items in a transaction; recalculates PO total
+- `deletePoItemAction` — delete single item; recalculates PO total
+- `updatePoStatusAction` — supports extended PoStatus values
+- All existing actions preserved
+
+#### Database Changes (Prisma Migration)
+- `PurchaseOrderItem` — Added `brand String? @db.VarChar(100)` and `specification String?` columns
+- `PoStatus` enum — Extended with: `PendingApproval`, `SentToSupplier`, `PartiallyDelivered`, `Completed`, `Cancelled`
+
+#### Package Added
+- `html2pdf.js ^0.14.0` — Client-side PDF generation from DOM element
+
 ---
 
-## 📄 Official Batanes State College RFQ Digital Document Redesign
+
 
 **Branch**: `feat/rfq-official-redesign`
 
