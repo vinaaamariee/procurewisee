@@ -174,8 +174,6 @@ export default function AboutPage() {
                   <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Public Tracking</div>
                 </div>
               </div>
-
-              </div>
             </div>
           </div>
 
@@ -211,7 +209,6 @@ export default function AboutPage() {
                       <p className="text-xs text-gray-600 dark:text-slate-400 leading-relaxed">
                         {pillar.description}
                       </p>
-
                     </div>
                   </div>
                 );
