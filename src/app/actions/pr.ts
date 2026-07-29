@@ -753,10 +753,7 @@ export async function convertPrToRfqAction(prId: number) {
           rfqNumber,
           prId: pr.id,
           title: `Procurement for ${pr.purpose || pr.department}`,
-          category: pr.department,
-          deliveryPeriod: "15-30 calendar days",
           approvedBudgetContract: pr.totalCost,
-          solicitationDate: new Date(),
           deadlineDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days deadline default
           status: "Draft",
           createdById: profile.id,
