@@ -46,6 +46,7 @@ model Supplier {
   onTimeDeliveryRate      Decimal?                 @db.Decimal(5, 2)
   totalDeliveriesCount    Int                      @default(0)
   acknowledgementReceipts AcknowledgementReceipt[]
+  rfqAcknowledgements     RfqAcknowledgementLog[]
   historicalPrices        HistoricalPrice[]
   purchaseOrders          PurchaseOrder[]
   recommendations         Recommendation[]
@@ -101,6 +102,7 @@ model RequestForQuote {
   status                 RfqStatus        @default(Draft)
   createdById            String?
   createdAt              DateTime         @default(now())
+  acknowledgementLogs    RfqAcknowledgementLog[]
   canvasAbstracts        CanvasAbstract[]
   purchaseOrders         PurchaseOrder[]
   createdBy              UserProfile?     @relation("RfqCreatedBy", fields: [createdById], references: [id])
@@ -652,6 +654,22 @@ model SupplierEvaluation {
 
   @@index([supplierId])
   @@map("supplier_evaluations")
+}
+
+model RfqAcknowledgementLog {
+  id           Int             @id @default(autoincrement())
+  rfqId        Int
+  supplierId   Int
+  receivedBy   String?         @db.VarChar(100)
+  dateReceived DateTime?
+  acknowledged Boolean         @default(false)
+  createdAt    DateTime        @default(now())
+  rfq          RequestForQuote @relation(fields: [rfqId], references: [id], onDelete: Cascade)
+  supplier     Supplier        @relation(fields: [supplierId], references: [id])
+
+  @@unique([rfqId, supplierId])
+  @@index([rfqId])
+  @@map("rfq_acknowledgement_logs")
 }
 
 model FormTemplate {
