@@ -743,6 +743,7 @@ enum UserRole {
   Administrator          @map("Administrator")
   ProcurementOfficer     @map("Procurement Officer")
   AdministrativeApprover @map("Administrative Approver")
+  EndUser                @map("End User")
   Supplier               @map("Supplier")
 }
 
@@ -778,9 +779,10 @@ enum PpmpStatus {
 enum PrStatus {
   Draft
   Submitted
-  UnderReview
-  ReturnedForRevision @map("Returned for Revision")
+  UnderReview            @map("Under Review")
+  ReturnedForRevision    @map("Returned for Revision")
   Approved
+  ConvertedToRfq         @map("Converted to RFQ")
   Received
   Rejected
   Cancelled

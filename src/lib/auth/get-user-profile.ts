@@ -61,6 +61,8 @@ export const getAuthenticatedUser = cache(async (): Promise<{
     appRole = 'Procurement Officer';
   } else if (appRole === 'AdministrativeApprover') {
     appRole = 'Administrative Approver';
+  } else if (appRole === 'EndUser') {
+    appRole = 'End User';
   }
 
   if (appRole === 'Supplier') {
@@ -95,15 +97,16 @@ export const getAuthenticatedUser = cache(async (): Promise<{
 });
 
 /**
- * Verifies auth AND enforces a specific role.
+ * Verifies auth AND enforces specific role(s).
  * Redirects to /unauthorized if the user's role doesn't match.
  */
 export async function requireRole(
-  allowedRole: UserProfile['role'],
+  allowedRole: UserProfile['role'] | UserProfile['role'][],
 ): Promise<{ user: { id: string; email?: string }; profile: UserProfile }> {
   const { user, profile } = await getAuthenticatedUser();
 
-  if (profile.role !== allowedRole) {
+  const allowed = Array.isArray(allowedRole) ? allowedRole.includes(profile.role) : profile.role === allowedRole;
+  if (!allowed) {
     redirect('/unauthorized');
   }
 

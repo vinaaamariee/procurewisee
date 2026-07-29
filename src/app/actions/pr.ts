@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
 import crypto from "crypto";
 import { requireRole, getAuthenticatedUser } from "@/lib/auth/get-user-profile";
+import { createNotificationHelper } from "@/app/actions/notifications";
 
 interface PrItemInput {
   productId?: number;
@@ -342,13 +343,26 @@ export async function receivePrAction(id: number) {
 
 export async function getPurchaseRequests(filters?: { department?: string; status?: PrStatus }) {
   try {
+    const { profile } = await getAuthenticatedUser();
     const where: any = {};
+
+    // End Users can ONLY access their own Purchase Requests
+    if (profile.role === "End User") {
+      where.requestedById = profile.id;
+    }
+
     if (filters?.department) where.department = filters.department;
     if (filters?.status) where.status = filters.status;
 
     return await prisma.purchaseRequest.findMany({
       where,
-      include: { items: { include: { product: true } }, ppmp: true, requestedBy: true, assignedOfficer: true },
+      include: {
+        items: { include: { product: true, unit: true } },
+        ppmp: true,
+        requestedBy: true,
+        assignedOfficer: true,
+        statusHistory: { include: { changedBy: true }, orderBy: { createdAt: "desc" } },
+      },
       orderBy: { createdAt: "desc" },
     });
   } catch (error) {
@@ -672,5 +686,138 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
   } catch (error: any) {
     console.error("Error resubmitting PR:", error);
     return { success: false, error: error.message || "Failed to resubmit PR." };
+  }
+}
+
+// Delete a Draft PR (End User permission)
+export async function deletePrDraftAction(id: number) {
+  try {
+    const { profile } = await getAuthenticatedUser();
+    const pr = await prisma.purchaseRequest.findUnique({ where: { id } });
+
+    if (!pr) return { success: false, error: "Purchase Request not found." };
+
+    if (profile.role === "End User" && pr.requestedById !== profile.id) {
+      return { success: false, error: "You can only delete your own Purchase Requests." };
+    }
+
+    if (pr.status !== PrStatus.Draft) {
+      return { success: false, error: "Only Draft Purchase Requests can be deleted." };
+    }
+
+    await prisma.purchaseRequest.delete({ where: { id } });
+
+    logAuditTrail({
+      actionType: "DELETE_PR_DRAFT",
+      tableAffected: "purchase_requests",
+      recordId: id,
+      oldState: pr,
+    });
+
+    revalidatePath("/", "layout");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Error deleting PR draft:", error);
+    return { success: false, error: error.message || "Failed to delete Purchase Request." };
+  }
+}
+
+// Convert an Approved PR into a new RFQ (Procurement Officer action)
+export async function convertPrToRfqAction(prId: number) {
+  try {
+    const { profile } = await requireRole("Procurement Officer");
+
+    const pr = await prisma.purchaseRequest.findUnique({
+      where: { id: prId },
+      include: { items: { include: { unit: true } } },
+    });
+
+    if (!pr) return { success: false, error: "Purchase Request not found." };
+
+    if (pr.status !== PrStatus.Approved) {
+      return { success: false, error: "Only Approved Purchase Requests can be converted to an RFQ." };
+    }
+
+    const year = new Date().getFullYear();
+    const count = await prisma.requestForQuote.count({
+      where: { rfqNumber: { startsWith: `RFQ-${year}-` } },
+    });
+    const seq = String(count + 1).padStart(4, "0");
+    const rfqNumber = `RFQ-${year}-${seq}`;
+
+    const rfq = await prisma.$transaction(async (tx) => {
+      // 1. Create RFQ master
+      const newRfq = await tx.requestForQuote.create({
+        data: {
+          rfqNumber,
+          prId: pr.id,
+          title: `Procurement for ${pr.purpose || pr.department}`,
+          category: pr.department,
+          deliveryPeriod: "15-30 calendar days",
+          approvedBudgetContract: pr.totalCost,
+          solicitationDate: new Date(),
+          deadlineDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days deadline default
+          status: "Draft",
+          createdById: profile.id,
+        },
+      });
+
+      // 2. Populate RFQ Items from PR items (no re-encoding needed)
+      for (let i = 0; i < pr.items.length; i++) {
+        const item = pr.items[i];
+        await tx.rfqItem.create({
+          data: {
+            rfqId: newRfq.id,
+            itemNumber: String(i + 1),
+            particulars: item.description + (item.specification ? ` (${item.specification})` : ""),
+            quantity: item.quantity,
+            unitId: item.unitId,
+            productId: item.productId || null,
+          },
+        });
+      }
+
+      // 3. Update PR status to ConvertedToRfq
+      await tx.purchaseRequest.update({
+        where: { id: prId },
+        data: { status: PrStatus.ConvertedToRfq },
+      });
+
+      // 4. Record in PR status history
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: prId,
+          status: PrStatus.ConvertedToRfq,
+          remarks: `Converted to RFQ #${rfqNumber} by Procurement Officer`,
+          changedById: profile.id,
+        },
+      });
+
+      await logAuditTrail({
+        actionType: "CONVERT_PR_TO_RFQ",
+        tableAffected: "requests_for_quote",
+        recordId: newRfq.id,
+        newState: newRfq,
+        tx,
+      });
+
+      return newRfq;
+    });
+
+    // Notify requesting End User if present
+    if (pr.requestedById) {
+      await createNotificationHelper({
+        title: "RFQ Generated from your PR",
+        description: `Official RFQ ${rfq.rfqNumber} has been generated from your approved Purchase Request ${pr.prNumber}.`,
+        icon: "📋",
+        userId: pr.requestedById,
+      });
+    }
+
+    revalidatePath("/", "layout");
+    return { success: true, rfq };
+  } catch (error: any) {
+    console.error("Error converting PR to RFQ:", error);
+    return { success: false, error: error.message || "Failed to convert PR to RFQ." };
   }
 }
