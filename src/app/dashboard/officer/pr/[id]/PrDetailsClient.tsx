@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { reviewPrAction, receivePrAction, updatePrItemAction, getPreCanvassingData } from "@/app/actions/pr";
+import { reviewPrAction, receivePrAction, updatePrItemAction, getPreCanvassingData, convertPrToRfqAction } from "@/app/actions/pr";
+import { useRouter } from "next/navigation";
 import DocumentLayout from "@/components/documents/DocumentLayout";
 
 interface Product {
@@ -80,8 +81,30 @@ interface PrDetailsClientProps {
 }
 
 export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDetailsClientProps) {
+  const router = useRouter();
   const [pr, setPr] = useState<PurchaseRequest>(initialPr);
   const [verifiedItems, setVerifiedItems] = useState<Record<number, { specs: boolean; qty: boolean }>>({});
+
+  const handleConvertPrToRfq = async () => {
+    setIsProcessing(true);
+    setErrorMsg(null);
+    setSuccessMsg(null);
+    try {
+      const res = await convertPrToRfqAction(pr.id);
+      if (res.success && res.rfq) {
+        setSuccessMsg(`Official RFQ #${res.rfq.rfqNumber} generated from PR! Redirecting to RFQ manager...`);
+        setTimeout(() => {
+          router.push(`/dashboard/officer/rfq/${res.rfq.id}`);
+        }, 1200);
+      } else {
+        setErrorMsg(res.error || "Failed to convert PR to RFQ.");
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "An error occurred.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   // Inline editing states for items
   const [editingItemId, setEditingItemId] = useState<number | null>(null);
@@ -522,6 +545,21 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
                   }}
                 >
                   ✅ Receive Requisition
+                </button>
+              )}
+
+              {(pr.status === "Approved" || pr.status === "Received") && (
+                <button
+                  onClick={handleConvertPrToRfq}
+                  disabled={isProcessing}
+                  style={{
+                    padding: "0.6rem 1.4rem", borderRadius: "0.75rem", border: "none",
+                    background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`, color: "#fff",
+                    fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
+                    boxShadow: "0 4px 12px rgba(126, 25, 27, 0.2)"
+                  }}
+                >
+                  ⚡ Generate RFQ from Approved PR
                 </button>
               )}
             </div>
