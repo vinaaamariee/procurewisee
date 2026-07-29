@@ -116,15 +116,17 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
   });
 
   quotes.forEach(q => {
-    taskList.push({
-      id: `quote-${q.id}`,
-      type: 'quote',
-      title: `Quote from ${q.supplier.companyName} for ${q.rfq.rfqNumber}`,
-      badge: 'Quote Review',
-      dueDate: new Date(q.submissionDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
-      link: `/dashboard/officer/rfq/${q.rfq.id}`,
-      btnLabel: 'Review Quote'
-    });
+    if (q.supplier && q.rfq) {
+      taskList.push({
+        id: `quote-${q.id}`,
+        type: 'quote',
+        title: `Quote from ${q.supplier.companyName} for ${q.rfq.rfqNumber}`,
+        badge: 'Quote Review',
+        dueDate: new Date(q.submissionDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
+        link: `/dashboard/officer/rfq/${q.rfq.id}`,
+        btnLabel: 'Review Quote'
+      });
+    }
   });
 
   return taskList;

@@ -37,9 +37,9 @@ export async function getForecastingIntelligence() {
   for (const p of products) {
     const forecast = await forecastProductPrice(p.id).catch(() => null);
     if (forecast && forecast.points.length > 0) {
-      const currentPrice = Number(p.estimatedUnitCost);
+      const currentPrice = Number(p.estimatedUnitCost) || 0;
       const forecastPrice = forecast.points[0].value;
-      const changePct = ((forecastPrice - currentPrice) / currentPrice) * 100;
+      const changePct = currentPrice > 0 ? ((forecastPrice - currentPrice) / currentPrice) * 100 : 0;
       
       summaries.push({
         id: p.id,
