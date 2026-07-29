@@ -10,17 +10,14 @@ import { logAuditTrail } from '@/lib/audit';
  */
 export async function initRfqAcknowledgementsAction(rfqId: number) {
   try {
-    // Get all unique suppliers who received quotes for this RFQ or are in the supplier table
-    // For now, initialize from quotes submitted against this RFQ
     const quotes = await prisma.supplierQuote.findMany({
       where: { rfqId },
       select: { supplierId: true, supplier: { select: { companyName: true } } },
     });
 
-    // Also create entries for manually invited suppliers if specified
     const results = await Promise.all(
       quotes.map((q) =>
-        prisma.rfqAcknowledgementLog.upsert({
+        (prisma as any).rfqAcknowledgementLog.upsert({
           where: { rfqId_supplierId: { rfqId, supplierId: q.supplierId } },
           update: {},
           create: {
@@ -52,7 +49,7 @@ export async function updateRfqAcknowledgementAction(
   }
 ) {
   try {
-    const updated = await prisma.rfqAcknowledgementLog.update({
+    const updated = await (prisma as any).rfqAcknowledgementLog.update({
       where: { id },
       data: {
         receivedBy: data.receivedBy ?? undefined,
@@ -82,7 +79,7 @@ export async function updateRfqAcknowledgementAction(
  */
 export async function addSupplierToRfqAckAction(rfqId: number, supplierId: number) {
   try {
-    const log = await prisma.rfqAcknowledgementLog.upsert({
+    const log = await (prisma as any).rfqAcknowledgementLog.upsert({
       where: { rfqId_supplierId: { rfqId, supplierId } },
       update: {},
       create: { rfqId, supplierId, acknowledged: false },
@@ -100,7 +97,7 @@ export async function addSupplierToRfqAckAction(rfqId: number, supplierId: numbe
  */
 export async function getRfqAcknowledgementsAction(rfqId: number) {
   try {
-    const logs = await prisma.rfqAcknowledgementLog.findMany({
+    const logs = await (prisma as any).rfqAcknowledgementLog.findMany({
       where: { rfqId },
       include: {
         supplier: {
