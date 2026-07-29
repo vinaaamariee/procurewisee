@@ -54,7 +54,9 @@ export default function AOQDocument({
   supplierQuotes,
   openingDate,
 }: AOQDocumentProps) {
-  const [procurementType, setProcurementType] = useState(PROCUREMENT_TYPES[0]);
+  const [procurementType, setProcurementType] = useState<(typeof PROCUREMENT_TYPES)[number]>(
+    PROCUREMENT_TYPES[0]
+  );
   const [placeOfDelivery, setPlaceOfDelivery] = useState('BATANES STATE COLLEGE');
   const [openedAt] = useState(
     openingDate || new Date().toLocaleDateString('en-PH', { month: 'long', day: 'numeric', year: 'numeric' })
