@@ -55,6 +55,20 @@ The Purchase Order (PO) module has been significantly enhanced to fully comply w
 #### Package Added
 - `html2pdf.js ^0.14.0` — Client-side PDF generation from DOM element
 
+## ✅ Production Build & Vercel Deployment Resolution
+
+**Date**: July 2026
+
+Successfully resolved all Turbopack compilation and schema relation errors, resulting in a clean production build on Vercel (`https://procurewisee.vercel.app`).
+
+### Key Fixes Applied
+
+- **`PurchaseOrder` Appendix 61 Schema Fields**: Restored missing `entityName`, `modeOfProcurement`, `placeOfDelivery`, `dateOfDelivery`, `fundCluster`, `orsBursNumber`, `fundsAvailable`, `dateOfOrsBurs`, `chiefAccountantName`, and `authorizedOfficialName` fields in `prisma/schema.prisma`.
+- **`RfqAcknowledgementLog` Model & Relations**: Added missing `RfqAcknowledgementLog` model and linked `acknowledgementLogs` to `RequestForQuote` and `rfqAcknowledgements` to `Supplier`.
+- **`SupplierEvaluation` Model Restoration**: Restored `wouldRecommend`, `clearCommunication`, `valueForMoney`, and official header fields across `prisma/schema.prisma`.
+- **Clean About Page Rewrite**: Rewrote `src/app/about/page.tsx` cleanly to resolve Turbopack JSX parser errors (`Expected '</', got 'jsx text'`).
+- **`pnpm-workspace.yaml` Build Policy**: Updated `core-js: true` in `allowBuilds` to permit postinstall scripts required by `html2pdf.js`.
+
 ---
 
 
