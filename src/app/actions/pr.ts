@@ -194,10 +194,11 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
     const VALID_TRANSITIONS: Record<PrStatus, PrStatus[]> = {
       Draft: ["Submitted"],
       Submitted: ["Received", "UnderReview", "ReturnedForRevision", "Rejected"],
-      Received: ["UnderReview", "ReturnedForRevision", "Rejected"],
+      Received: ["UnderReview", "ReturnedForRevision", "Rejected", "Approved"],
       UnderReview: ["Approved", "ReturnedForRevision", "Rejected"],
       ReturnedForRevision: ["Submitted"],
-      Approved: [],
+      Approved: ["ConvertedToRfq"],
+      ConvertedToRfq: [],
       Rejected: [],
       Cancelled: [],
     };

@@ -105,7 +105,9 @@ model RequestForQuote {
   acknowledgementLogs    RfqAcknowledgementLog[]
   canvasAbstracts        CanvasAbstract[]
   purchaseOrders         PurchaseOrder[]
-  createdBy              UserProfile?     @relation("RfqCreatedBy", fields: [createdById], references: [id])
+  prId                   Int?
+  pr                     PurchaseRequest?        @relation(fields: [prId], references: [id])
+  createdBy              UserProfile?            @relation("RfqCreatedBy", fields: [createdById], references: [id])
   items                  RfqItem[]
   quotes                 SupplierQuote[]
 
@@ -493,6 +495,7 @@ model PurchaseRequest {
   submittedAt        DateTime?
   trackingCode       String?                        @unique
   purchaseOrders     PurchaseOrder[]
+  rfqs               RequestForQuote[]
   items              PurchaseRequestItem[]
   statusHistory      PurchaseRequestStatusHistory[]
   assignedOfficer    UserProfile?                   @relation("PrAssignedOfficer", fields: [assignedOfficerId], references: [id])
