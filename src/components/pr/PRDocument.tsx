@@ -7,6 +7,7 @@ import PRItemsTable, { CatalogProductOption, PRItemRow } from './PRItemsTable';
 import PRPurposeSection from './PRPurposeSection';
 import PRSignatureSection from './PRSignatureSection';
 import PRToolbar from './PRToolbar';
+import DocumentLayout from '@/components/documents/DocumentLayout';
 import { createPrFromCartAction } from '@/app/actions/pr';
 import { useRouter } from 'next/navigation';
 
@@ -177,39 +178,9 @@ export default function PRDocument({
     });
   };
 
+
   return (
     <div className="relative pb-24">
-      {/* Print Media CSS Rules */}
-      <style jsx global>{`
-        @media print {
-          body {
-            background-color: #ffffff !important;
-            color: #000000 !important;
-          }
-          .print\\:hidden,
-          nav,
-          header,
-          aside,
-          footer {
-            display: none !important;
-          }
-          #pr-document-container {
-            padding: 0 !important;
-            margin: 0 !important;
-            max-width: 100% !important;
-            width: 100% !important;
-          }
-          #pr-document {
-            box-shadow: none !important;
-            border: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-        }
-      `}</style>
-
       {/* Alert Banners */}
       {errorMsg && (
         <div className="max-w-[850px] mx-auto mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
@@ -225,45 +196,51 @@ export default function PRDocument({
         </div>
       )}
 
-      {/* Centered Digital PR Document */}
+      {/* Centered Digital PR Document — wrapped in DocumentLayout for BSC print header/footer */}
       <div id="pr-document-container" className="w-full flex justify-center">
         <div
           id="pr-document"
           className="w-full max-w-[850px] min-h-[1056px] bg-white text-slate-950 shadow-2xl border border-slate-300 p-6 sm:p-10 md:p-12 font-serif text-xs leading-snug rounded-sm"
         >
-          {/* 1. Official Header */}
-          <PRHeader />
+          <DocumentLayout
+            title="PURCHASE REQUEST"
+            documentRef={info.prNumber}
+            printAreaId="pr-document"
+          >
+            {/* 1. Official Header — on-screen branding */}
+            <PRHeader />
 
-          {/* 2. General Information Block */}
-          <PRGeneralInformation
-            info={info}
-            setInfo={setInfo}
-            isReadOnly={isReadOnly}
-          />
+            {/* 2. General Information Block */}
+            <PRGeneralInformation
+              info={info}
+              setInfo={setInfo}
+              isReadOnly={isReadOnly}
+            />
 
-          {/* 3. Items Schedule Table */}
-          <PRItemsTable
-            items={items}
-            setItems={setItems}
-            catalogProducts={catalogProducts}
-            isReadOnly={isReadOnly}
-          />
+            {/* 3. Items Schedule Table */}
+            <PRItemsTable
+              items={items}
+              setItems={setItems}
+              catalogProducts={catalogProducts}
+              isReadOnly={isReadOnly}
+            />
 
-          {/* 4. Purpose Section */}
-          <PRPurposeSection
-            purpose={purpose}
-            setPurpose={setPurpose}
-            isReadOnly={isReadOnly}
-          />
+            {/* 4. Purpose Section */}
+            <PRPurposeSection
+              purpose={purpose}
+              setPurpose={setPurpose}
+              isReadOnly={isReadOnly}
+            />
 
-          {/* 5. Signature Section */}
-          <PRSignatureSection
-            requestedByName={requestedByName}
-            setRequestedByName={setRequestedByName}
-            approvedByName={approvedByName}
-            setApprovedByName={setApprovedByName}
-            isReadOnly={isReadOnly}
-          />
+            {/* 5. Signature Section */}
+            <PRSignatureSection
+              requestedByName={requestedByName}
+              setRequestedByName={setRequestedByName}
+              approvedByName={approvedByName}
+              setApprovedByName={setApprovedByName}
+              isReadOnly={isReadOnly}
+            />
+          </DocumentLayout>
         </div>
       </div>
 

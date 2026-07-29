@@ -12,6 +12,43 @@
 
 Redesigned the **Create Purchase Request (PR)** module (`src/app/dashboard/end-user/pr/new`) into an official digital version of the Batanes State College Purchase Request paper document. All backend functionality, Prisma models, Supabase integration, Server Actions (`createPrFromCartAction`), approval workflows, and validation rules are 100% preserved.
 
+---
+
+## 🏛️ Official Batanes State College Forms System (ProcureWise Multi-Document Redesign)
+
+Implemented complete digital replicas of all 6 official Batanes State College (BSC) procurement forms with on-screen editing, live total calculations, and unified institutional letterhead header/footer branding on all printed and exported pages via `DocumentLayout.tsx`:
+
+1. **Purchase Request (PR — Appendix 60)**:
+   - All 6 header fields (Entity Name, Fund Cluster, PR No., Date, Office/Section, Responsibility Center Code).
+   - Editable items table with automatic totals and designation fields in signature section.
+   - Wrapped in `DocumentLayout` for automatic BSC letterhead & footer on print.
+
+2. **Request for Quotation (RFQ — Annex D)**:
+   - Official 6-point terms & conditions block, Lot/Item procurement mode, ABC, and Conforme block.
+   - Prices entered exclusively through separate bid workflow (`quotes.ts`).
+   - Wrapped in `DocumentLayout` for automatic BSC print branding.
+
+3. **RFQ Acknowledgement Receipt (Annex E — `AcknowledgementReceiptDocument.tsx`)**:
+   - Official Annex E table for tracking supplier invitations and physical/digital receipt dates.
+   - Per-supplier acknowledgement checkboxes and interactive record updates via `rfq-acknowledgement.ts`.
+   - Accessible via `/dashboard/officer/rfq/[id]/ack`.
+
+4. **Abstract of Quotation (AOQ — Annex F — `AOQDocument.tsx`)**:
+   - Official Annex F matrix comparing all submitted supplier bids side-by-side per item.
+   - Live lowest-price unit price and total cost highlighting (emerald accent).
+   - Reads directly from `SupplierQuote` + `QuoteDetail` records without data duplication.
+   - Accessible via `/dashboard/officer/rfq/[id]/aoq`.
+
+5. **Purchase Order (PO — Appendix 61 — `PODocument.tsx`)**:
+   - Full digital replica of standard COA/GAM Appendix 61.
+   - On-screen editable fields for Entity Name, Mode of Procurement, Place/Date of Delivery, Delivery/Payment Terms, Fund Cluster, ORS/BURS No., Funds Available, Date of ORS/BURS, and Chief Accountant signature name.
+   - Auto-generates **Total Amount in Words** (e.g. *"TWELVE THOUSAND THREE HUNDRED PESOS AND 00/100"*) using pure TS utility `numberToWords()`.
+
+6. **Supplier Evaluation Forms**:
+   - **End-User Form (`EvaluationFormClient.tsx`)**: Official BSC 4-category evaluation (Quality, Communication, Cost, Overall) with 9 Likert-scale criteria (4=Strongly Agree to 1=Strongly Disagree), PO No., Office/Unit, and Type of Goods metadata.
+   - **Procurement Office Form (`OfficerEvaluationsClient.tsx`)**: Official 5-criteria procurement evaluation including PhilGEPS RN, Date Registered, and Expiration Date metadata, with live supplier performance scorecard calculations.
+
+
 ### Modular Document Components Created (`src/components/pr/`)
 
 - **`PRDocument.tsx`**: Master document wrapper supporting `create`, `edit`, and `view` modes, rendering an A4 centered digital PR layout with `@media print` rules.

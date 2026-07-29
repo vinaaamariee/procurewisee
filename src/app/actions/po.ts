@@ -126,6 +126,17 @@ export async function updatePoAction(
     deliveryTerms?: string;
     paymentTerms?: string;
     status?: PoStatus;
+    // Appendix 61 fields
+    entityName?: string | null;
+    modeOfProcurement?: string | null;
+    placeOfDelivery?: string | null;
+    dateOfDelivery?: string | null;
+    fundCluster?: string | null;
+    orsBursNumber?: string | null;
+    fundsAvailable?: number | null;
+    dateOfOrsBurs?: string | null;
+    chiefAccountantName?: string | null;
+    authorizedOfficialName?: string | null;
   }
 ) {
   try {
@@ -143,7 +154,24 @@ export async function updatePoAction(
         deliveryTerms: data.deliveryTerms ?? old.deliveryTerms,
         paymentTerms: data.paymentTerms ?? old.paymentTerms,
         status: data.status ?? old.status,
-      }
+        // Appendix 61 fields
+        ...(data.entityName !== undefined && { entityName: data.entityName }),
+        ...(data.modeOfProcurement !== undefined && { modeOfProcurement: data.modeOfProcurement }),
+        ...(data.placeOfDelivery !== undefined && { placeOfDelivery: data.placeOfDelivery }),
+        ...(data.dateOfDelivery !== undefined && {
+          dateOfDelivery: data.dateOfDelivery ? new Date(data.dateOfDelivery) : null,
+        }),
+        ...(data.fundCluster !== undefined && { fundCluster: data.fundCluster }),
+        ...(data.orsBursNumber !== undefined && { orsBursNumber: data.orsBursNumber }),
+        ...(data.fundsAvailable !== undefined && {
+          fundsAvailable: data.fundsAvailable !== null ? new Prisma.Decimal(data.fundsAvailable) : null,
+        }),
+        ...(data.dateOfOrsBurs !== undefined && {
+          dateOfOrsBurs: data.dateOfOrsBurs ? new Date(data.dateOfOrsBurs) : null,
+        }),
+        ...(data.chiefAccountantName !== undefined && { chiefAccountantName: data.chiefAccountantName }),
+        ...(data.authorizedOfficialName !== undefined && { authorizedOfficialName: data.authorizedOfficialName }),
+      },
     });
 
     logAuditTrail({

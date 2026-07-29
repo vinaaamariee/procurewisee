@@ -5,8 +5,7 @@ import { submitSupplierEvaluationAction, getSupplierScorecard } from "@/app/acti
 import EmptyState from "@/components/ui/EmptyState";
 
 enum EvaluationType {
-  EndUser = "EndUser",
-  ProcurementOffice = "ProcurementOffice"
+  ProcurementOffice = "ProcurementOffice",
 }
 
 interface Supplier {
@@ -19,43 +18,66 @@ interface OfficerEvaluationsClientProps {
   officerName: string;
 }
 
+// Official BSC Procurement Office Supplier Evaluation — 5 criteria
+// Rating scale: 4=Strongly Agree, 3=Agree, 2=Disagree, 1=Strongly Disagree
 const OFFICE_CRITERIA = [
-  { key: "rfqResponsiveness", label: "RFQ Responsiveness", description: "Timeliness and completeness of bid quotes submitted in response to RFQs." },
-  { key: "competitivePricing", label: "Competitive Pricing", description: "Pricing competitiveness compared to general market rates and canvasses." },
-  { key: "specificationCompliance", label: "Specification Compliance", description: "Supplier's adherence to the precise specs and standards requested." },
-  { key: "documentCompliance", label: "Document Compliance", description: "Prompt submission of required government documents (Mayor's Permit, PhilGEPS, TIN, etc.)." },
-  { key: "deliveryPerformance", label: "Delivery Performance", description: "Consistency in meeting lead times and handling partial/delayed deliveries." }
+  {
+    key: "rfqResponsiveness",
+    label: "The supplier responds to the RFQ/price canvass within the specified date.",
+  },
+  {
+    key: "competitivePricing",
+    label: "The supplier offers competitive pricing compared to other suppliers/bidders.",
+  },
+  {
+    key: "specificationCompliance",
+    label: "The supplier's offer conforms to the product sample or specification requirements.",
+  },
+  {
+    key: "documentCompliance",
+    label: "The supplier submits required documentary requirements (per RA 9184 IRR) within 1–2 days upon request.",
+  },
+  {
+    key: "deliveryPerformance",
+    label: "The supplier delivers goods per the delivery term stated in the PO/Contract.",
+  },
+] as const;
+
+const RATING_OPTIONS = [
+  { value: 4, label: "Strongly Agree" },
+  { value: 3, label: "Agree" },
+  { value: 2, label: "Disagree" },
+  { value: 1, label: "Strongly Disagree" },
 ];
 
-const RATING_LABELS = [
-  { value: 1, label: "Poor", color: "#ef4444" },
-  { value: 2, label: "Fair", color: "#f59e0b" },
-  { value: 3, label: "Good", color: "#3b82f6" },
-  { value: 4, label: "Excellent", color: "#10b981" }
-];
+const defaultRatings = () => ({
+  rfqResponsiveness: 4,
+  competitivePricing: 4,
+  specificationCompliance: 4,
+  documentCompliance: 4,
+  deliveryPerformance: 4,
+});
 
 export default function OfficerEvaluationsClient({ suppliers, officerName }: OfficerEvaluationsClientProps) {
-  const [selectedSupplierId, setSelectedSupplierId] = useState<string>("");
+  const [selectedSupplierId, setSelectedSupplierId] = useState("");
   const [scorecard, setScorecard] = useState<any>(null);
-  
-  // Rating states
-  const [ratings, setRatings] = useState<Record<string, number>>({
-    rfqResponsiveness: 4,
-    competitivePricing: 4,
-    specificationCompliance: 4,
-    documentCompliance: 4,
-    deliveryPerformance: 4
-  });
+
+  // Header fields (Procurement Office variant)
+  const [purchaseRequestNo, setPurchaseRequestNo] = useState("");
+  const [poNo, setPoNo] = useState("");
+  const [philGepsRn, setPhilGepsRn] = useState("");
+  const [philGepsDateRegistered, setPhilGepsDateRegistered] = useState("");
+  const [philGepsExpirationDate, setPhilGepsExpirationDate] = useState("");
+
+  const [ratings, setRatings] = useState<Record<string, number>>(defaultRatings());
   const [comments, setComments] = useState("");
-  const [recommendation, setRecommendation] = useState("");
-  const [signature, setSignature] = useState("");
+  const [evaluationDate, setEvaluationDate] = useState(new Date().toISOString().split("T")[0]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
 
-  // Fetch scorecard when supplier is selected
   useEffect(() => {
     if (selectedSupplierId) {
       fetchScorecard(parseInt(selectedSupplierId));
@@ -76,9 +98,8 @@ export default function OfficerEvaluationsClient({ suppliers, officerName }: Off
     }
   };
 
-  const handleRatingChange = (key: string, val: number) => {
+  const handleRating = (key: string, val: number) =>
     setRatings(prev => ({ ...prev, [key]: val }));
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,11 +107,6 @@ export default function OfficerEvaluationsClient({ suppliers, officerName }: Off
       setErrorMsg("Please select a supplier to evaluate.");
       return;
     }
-    if (!signature.trim()) {
-      setErrorMsg("Please type your name/signature block to authorize this evaluation.");
-      return;
-    }
-
     setIsSubmitting(true);
     setErrorMsg(null);
     setSuccessMsg(null);
@@ -100,26 +116,31 @@ export default function OfficerEvaluationsClient({ suppliers, officerName }: Off
         supplierId: parseInt(selectedSupplierId),
         evaluationType: EvaluationType.ProcurementOffice,
         evaluatorName: officerName,
-        ...ratings,
+        rfqResponsiveness: ratings.rfqResponsiveness,
+        competitivePricing: ratings.competitivePricing,
+        specificationCompliance: ratings.specificationCompliance,
+        documentCompliance: ratings.documentCompliance,
+        deliveryPerformance: ratings.deliveryPerformance,
         comments,
-        recommendation,
-        signature
-      });
+        // Pass header metadata
+        purchaseRequestNo,
+        poNo,
+        philGepsRn,
+        philGepsDateRegistered: philGepsDateRegistered || undefined,
+        philGepsExpirationDate: philGepsExpirationDate || undefined,
+      } as any);
 
       if (res.success) {
-        setSuccessMsg("Procurement Office evaluation recorded successfully!");
+        setSuccessMsg("Evaluation submitted. Supplier metrics updated.");
         setComments("");
-        setRecommendation("");
-        setSignature("");
-        setRatings({
-          rfqResponsiveness: 4,
-          competitivePricing: 4,
-          specificationCompliance: 4,
-          documentCompliance: 4,
-          deliveryPerformance: 4
-        });
-        // Reload scorecard
-        fetchScorecard(parseInt(selectedSupplierId));
+        setPurchaseRequestNo("");
+        setPoNo("");
+        setPhilGepsRn("");
+        setPhilGepsDateRegistered("");
+        setPhilGepsExpirationDate("");
+        setRatings(defaultRatings());
+        setSelectedSupplierId("");
+        setScorecard(null);
       } else {
         setErrorMsg(res.error || "Failed to submit evaluation.");
       }
@@ -134,284 +155,258 @@ export default function OfficerEvaluationsClient({ suppliers, officerName }: Off
     crimson: "#7e191b",
     gold: "#dcb353",
     goldDark: "#b88a1b",
-    textMain: "#1f2937",
-    textMuted: "#6b7280",
-    glassBg: "rgba(255, 255, 255, 0.75)",
-    glassBorder: "rgba(255, 255, 255, 0.95)",
-    shadow: "0 10px 30px rgba(0, 0, 0, 0.04)",
+    textMain: "var(--text-primary, #1f2937)",
+    textMuted: "var(--text-muted, #6b7280)",
+    glassBg: "var(--surface, rgba(255,255,255,0.75))",
+    glassBorder: "var(--border, rgba(255,255,255,0.95))",
+    shadow: "var(--shadow-card, 0 10px 30px rgba(0,0,0,0.04))",
   };
 
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
-      {/* Selection Box */}
-      <div style={{
-        background: theme.glassBg, backdropFilter: "blur(20px)",
-        border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "1.5rem 2rem",
-        boxShadow: theme.shadow
-      }}>
-        <label style={{ display: "block", fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase", marginBottom: "0.5rem" }}>
-          Select Supplier for Performance Scorecard
-        </label>
-        <select
-          value={selectedSupplierId}
-          onChange={(e) => setSelectedSupplierId(e.target.value)}
-          style={{
-            width: "100%", padding: "0.75rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.12)",
-            fontSize: "0.85rem", background: "#fff", outline: "none", color: theme.textMain, fontWeight: 600
-          }}
-        >
-          <option value="">-- Select Company to View --</option>
-          {suppliers.map(s => (
-            <option key={s.id} value={s.id}>{s.companyName}</option>
-          ))}
-        </select>
-      </div>
+  const cardStyle: React.CSSProperties = {
+    background: theme.glassBg,
+    border: `1px solid ${theme.glassBorder}`,
+    borderRadius: "1.25rem",
+    padding: "2rem",
+    boxShadow: theme.shadow,
+  };
 
-      {isFetching && (
-        <div style={{ textAlign: "center", padding: "2rem", color: theme.textMuted, fontWeight: 600 }}>
-          🔄 Loading Supplier Performance Scorecard...
+  const labelStyle: React.CSSProperties = {
+    fontSize: "0.72rem",
+    fontWeight: 800,
+    color: theme.textMuted,
+    textTransform: "uppercase",
+    letterSpacing: "0.06em",
+    marginBottom: "0.35rem",
+    display: "block",
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    padding: "0.65rem 0.85rem",
+    borderRadius: "0.65rem",
+    border: "1px solid rgba(0,0,0,0.12)",
+    fontSize: "0.85rem",
+    background: "rgba(255,255,255,0.8)",
+    outline: "none",
+    color: theme.textMain,
+  };
+
+  if (suppliers.length === 0) {
+    return (
+      <EmptyState
+        preset="suppliers"
+        title="No Suppliers Found"
+        description="There are no registered suppliers in the system yet. Add suppliers before evaluating."
+      />
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+      {errorMsg && (
+        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(239,68,68,0.1)", color: "#dc2626", fontSize: "0.85rem", fontWeight: 600 }}>
+          ⚠️ {errorMsg}
+        </div>
+      )}
+      {successMsg && (
+        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(16,185,129,0.1)", color: "#059669", fontSize: "0.85rem", fontWeight: 600 }}>
+          ✅ {successMsg}
         </div>
       )}
 
-      {selectedSupplierId && scorecard && !isFetching && (
-        <>
-          {/* Scorecard Analytics Grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "1.5rem" }} className="md:grid-cols-3">
-            {/* Reliability Card */}
-            <div style={{
-              background: theme.glassBg, backdropFilter: "blur(20px)",
-              border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "1.5rem",
-              boxShadow: theme.shadow, textAlign: "center"
-            }}>
-              <span style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Overall Reliability</span>
-              <div style={{ fontSize: "2.25rem", fontWeight: 900, color: theme.crimson, margin: "0.5rem 0" }}>
-                {scorecard.reliabilityRating.toFixed(2)} <span style={{ fontSize: "1rem", color: theme.textMuted }}>/ 5.0</span>
-              </div>
-              <div style={{ display: "flex", justifyContent: "center", gap: "0.25rem" }}>
-                {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} style={{ color: i < Math.round(scorecard.reliabilityRating) ? theme.gold : "rgba(0,0,0,0.1)", fontSize: "1.1rem" }}>★</span>
-                ))}
-              </div>
-            </div>
-
-            {/* Quality Compliance Card */}
-            <div style={{
-              background: theme.glassBg, backdropFilter: "blur(20px)",
-              border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "1.5rem",
-              boxShadow: theme.shadow, textAlign: "center"
-            }}>
-              <span style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Quality Compliance Rate</span>
-              <div style={{ fontSize: "2.25rem", fontWeight: 900, color: "#10b981", margin: "0.5rem 0" }}>
-                {scorecard.qualityComplianceRate.toFixed(1)}%
-              </div>
-              <div style={{ width: "100%", height: "6px", background: "rgba(0,0,0,0.06)", borderRadius: "999px", overflow: "hidden" }}>
-                <div style={{ width: `${scorecard.qualityComplianceRate}%`, height: "100%", background: "#10b981" }} />
-              </div>
-            </div>
-
-            {/* Delivery Performance Card */}
-            <div style={{
-              background: theme.glassBg, backdropFilter: "blur(20px)",
-              border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "1.5rem",
-              boxShadow: theme.shadow, textAlign: "center"
-            }}>
-              <span style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>On-Time Delivery Rate</span>
-              <div style={{ fontSize: "2.25rem", fontWeight: 900, color: "#3b82f6", margin: "0.5rem 0" }}>
-                {scorecard.onTimeDeliveryRate.toFixed(1)}%
-              </div>
-              <div style={{ width: "100%", height: "6px", background: "rgba(0,0,0,0.06)", borderRadius: "999px", overflow: "hidden" }}>
-                <div style={{ width: `${scorecard.onTimeDeliveryRate}%`, height: "100%", background: "#3b82f6" }} />
-              </div>
-            </div>
+      {/* ── Header Fields ── */}
+      <div style={cardStyle}>
+        <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: theme.textMain, marginBottom: "1.5rem" }}>
+          📋 Evaluation Header
+        </h2>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+          <div style={{ gridColumn: "1 / -1" }}>
+            <label style={labelStyle}>Name of Supplier</label>
+            <select
+              value={selectedSupplierId}
+              onChange={e => setSelectedSupplierId(e.target.value)}
+              style={inputStyle}
+              required
+            >
+              <option value="">— Select Supplier —</option>
+              {suppliers.map(s => (
+                <option key={s.id} value={s.id}>{s.companyName}</option>
+              ))}
+            </select>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }} className="lg:grid-cols-2">
-            {/* Left Column: Historical Evaluation Logs */}
+          {/* Scorecard mini-panel */}
+          {isFetching && (
+            <div style={{ gridColumn: "1 / -1", color: theme.textMuted, fontSize: "0.8rem" }}>
+              Loading supplier scorecard…
+            </div>
+          )}
+          {scorecard && !isFetching && (
             <div style={{
-              background: theme.glassBg, backdropFilter: "blur(20px)",
-              border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "2rem",
-              boxShadow: theme.shadow, display: "flex", flexDirection: "column", gap: "1.5rem"
+              gridColumn: "1 / -1",
+              background: "rgba(126,25,27,0.04)",
+              border: "1px solid rgba(126,25,27,0.12)",
+              borderRadius: "0.75rem",
+              padding: "1rem",
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: "1rem",
+              fontSize: "0.8rem",
             }}>
               <div>
-                <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, margin: 0 }}>Evaluation Audit History</h3>
-                <p style={{ margin: "0.2rem 0 0 0", fontSize: "0.8rem", color: theme.textMuted }}>
-                  Total of {scorecard.totalEvaluations} evaluations filed by Requisitioners and Officers.
-                </p>
+                <div style={{ color: theme.textMuted, fontWeight: 700 }}>Reliability</div>
+                <div style={{ fontWeight: 800, fontSize: "1.1rem", color: theme.crimson }}>
+                  {Number(scorecard.reliabilityRating).toFixed(2)} / 5
+                </div>
               </div>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxHeight: "400px", overflowY: "auto", paddingRight: "0.5rem" }}>
-                {scorecard.evaluations.map((ev: any) => (
-                  <div key={ev.id} style={{
-                    padding: "1rem", borderRadius: "0.75rem", border: "1px solid rgba(0,0,0,0.06)",
-                    background: ev.evaluationType === "EndUser" ? "rgba(126, 25, 27, 0.02)" : "rgba(59, 130, 246, 0.02)",
-                    display: "flex", flexDirection: "column", gap: "0.4rem"
-                  }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{
-                        padding: "0.2rem 0.5rem", borderRadius: "999px", fontSize: "0.65rem", fontWeight: 800,
-                        backgroundColor: ev.evaluationType === "EndUser" ? "rgba(126, 25, 27, 0.1)" : "rgba(59, 130, 246, 0.1)",
-                        color: ev.evaluationType === "EndUser" ? theme.crimson : "#3b82f6"
-                      }}>
-                        {ev.evaluationType === "EndUser" ? "End User" : "Procurement"}
-                      </span>
-                      <span style={{ fontSize: "0.7rem", color: theme.textMuted }}>{new Date(ev.evaluationDate).toLocaleDateString()}</span>
-                    </div>
-                    <div style={{ fontSize: "0.82rem", fontWeight: 700, color: theme.textMain }}>
-                      Evaluator: {ev.evaluatorName}
-                    </div>
-                    {ev.comments && (
-                      <div style={{ fontSize: "0.8rem", color: theme.textMain, fontStyle: "italic", marginTop: "0.2rem" }}>
-                        "{ev.comments}"
-                      </div>
-                    )}
-                    {ev.recommendation && (
-                      <div style={{ fontSize: "0.78rem", color: theme.textMuted }}>
-                        <strong>Rec:</strong> {ev.recommendation}
-                      </div>
-                    )}
-                  </div>
-                ))}
-                {scorecard.evaluations.length === 0 && (
-                  <EmptyState
-                    preset="evaluations"
-                    title="No Evaluations Filed Yet"
-                    description="No performance evaluations have been submitted for this supplier yet. Be the first to evaluate their delivery, quality, and responsiveness."
-                    compact
-                  />
-                )}
+              <div>
+                <div style={{ color: theme.textMuted, fontWeight: 700 }}>Quality Compliance</div>
+                <div style={{ fontWeight: 800, fontSize: "1.1rem", color: theme.crimson }}>
+                  {Number(scorecard.qualityComplianceRate).toFixed(1)}%
+                </div>
+              </div>
+              <div>
+                <div style={{ color: theme.textMuted, fontWeight: 700 }}>On-Time Delivery</div>
+                <div style={{ fontWeight: 800, fontSize: "1.1rem", color: theme.crimson }}>
+                  {scorecard.onTimeDeliveryRate !== null ? `${Number(scorecard.onTimeDeliveryRate).toFixed(1)}%` : "—"}
+                </div>
+              </div>
+              <div style={{ gridColumn: "1 / -1", color: theme.textMuted, fontSize: "0.75rem" }}>
+                Based on {scorecard.totalEvaluations} past evaluation(s)
               </div>
             </div>
+          )}
 
-            {/* Right Column: Submit Officer Rating Form */}
-            <div style={{
-              background: theme.glassBg, backdropFilter: "blur(20px)",
-              border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "2rem",
-              boxShadow: theme.shadow
+          <div>
+            <label style={labelStyle}>Purchase Request No.</label>
+            <input type="text" value={purchaseRequestNo} onChange={e => setPurchaseRequestNo(e.target.value)}
+              placeholder="e.g. PR-2026-0001" style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>PO No.</label>
+            <input type="text" value={poNo} onChange={e => setPoNo(e.target.value)}
+              placeholder="e.g. PO-2026-0001" style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>PhilGEPS Registration No.</label>
+            <input type="text" value={philGepsRn} onChange={e => setPhilGepsRn(e.target.value)}
+              placeholder="PhilGEPS RN" style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Date Registered (PhilGEPS)</label>
+            <input type="date" value={philGepsDateRegistered} onChange={e => setPhilGepsDateRegistered(e.target.value)} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>PhilGEPS Expiration Date</label>
+            <input type="date" value={philGepsExpirationDate} onChange={e => setPhilGepsExpirationDate(e.target.value)} style={inputStyle} />
+          </div>
+          <div>
+            <label style={labelStyle}>Evaluation Date</label>
+            <input type="date" value={evaluationDate} onChange={e => setEvaluationDate(e.target.value)} style={inputStyle} />
+          </div>
+        </div>
+      </div>
+
+      {/* ── Rating Scale Legend ── */}
+      <div style={{ ...cardStyle, padding: "1rem 2rem" }}>
+        <div style={{ display: "flex", gap: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
+          <span style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Scale:</span>
+          {RATING_OPTIONS.map(o => (
+            <span key={o.value} style={{ fontSize: "0.78rem", color: theme.textMain }}>
+              <strong>{o.value}</strong> = {o.label}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Procurement Office Criteria ── */}
+      <div style={cardStyle}>
+        <div style={{
+          fontSize: "0.95rem", fontWeight: 800, color: "#fff",
+          background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`,
+          padding: "0.5rem 1rem", borderRadius: "0.5rem",
+          marginBottom: "1.5rem", display: "inline-block",
+        }}>
+          Procurement Office Evaluation Criteria
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+          {OFFICE_CRITERIA.map((c, idx) => (
+            <div key={c.key} style={{
+              paddingBottom: "1.5rem",
+              borderBottom: idx < OFFICE_CRITERIA.length - 1 ? "1px solid rgba(0,0,0,0.06)" : "none",
             }}>
-              <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: theme.textMain, marginBottom: "1.5rem" }}>File Procurement Office Evaluation</h3>
-
-              <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-                {errorMsg && (
-                  <div style={{ padding: "0.75rem 1.25rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#dc2626", fontSize: "0.8rem", fontWeight: 600 }}>
-                    ⚠️ {errorMsg}
-                  </div>
-                )}
-
-                {successMsg && (
-                  <div style={{ padding: "0.75rem 1.25rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "#059669", fontSize: "0.8rem", fontWeight: 600 }}>
-                    ✅ {successMsg}
-                  </div>
-                )}
-
-                {/* Ratings Checklist */}
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                  {OFFICE_CRITERIA.map((criterion) => {
-                    const currentRating = ratings[criterion.key];
-                    return (
-                      <div key={criterion.key} style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
-                          <span style={{ fontSize: "0.85rem", fontWeight: 700, color: theme.textMain }}>{criterion.label}</span>
-                          <span style={{ fontSize: "0.75rem", color: theme.textMuted }}>{criterion.description}</span>
-                        </div>
-                        <div style={{ display: "flex", gap: "0.25rem" }}>
-                          {RATING_LABELS.map((opt) => {
-                            const selected = currentRating === opt.value;
-                            return (
-                              <button
-                                key={opt.value}
-                                type="button"
-                                onClick={() => handleRatingChange(criterion.key, opt.value)}
-                                style={{
-                                  flex: 1, padding: "0.4rem 0.2rem", borderRadius: "0.35rem",
-                                  border: selected ? `1px solid ${opt.color}` : "1px solid rgba(0,0,0,0.06)",
-                                  background: selected ? `${opt.color}15` : "rgba(255,255,255,0.6)",
-                                  color: selected ? opt.color : theme.textMuted,
-                                  fontWeight: 700, fontSize: "0.72rem", cursor: "pointer", transition: "all 0.15s"
-                                }}
-                              >
-                                {opt.value} - {opt.label}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Comments / Recommendations */}
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                  <label style={{ fontSize: "0.72rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Comments</label>
-                  <textarea
-                    value={comments}
-                    onChange={(e) => setComments(e.target.value)}
-                    placeholder="Enter audit/performance notes..."
-                    style={{
-                      width: "100%", height: "60px", padding: "0.5rem", borderRadius: "0.5rem", border: "1px solid rgba(0,0,0,0.12)",
-                      fontSize: "0.82rem", outline: "none", color: theme.textMain, fontFamily: "inherit"
-                    }}
-                  />
-                </div>
-
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                  <label style={{ fontSize: "0.72rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Recommendations</label>
-                  <textarea
-                    value={recommendation}
-                    onChange={(e) => setRecommendation(e.target.value)}
-                    placeholder="Renewal, blacklisting, or corrections..."
-                    style={{
-                      width: "100%", height: "60px", padding: "0.5rem", borderRadius: "0.5rem", border: "1px solid rgba(0,0,0,0.12)",
-                      fontSize: "0.82rem", outline: "none", color: theme.textMain, fontFamily: "inherit"
-                    }}
-                  />
-                </div>
-
-                {/* Signature and Submit */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                    <label style={{ fontSize: "0.72rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase" }}>Officer Signature</label>
-                    <input
-                      type="text"
-                      value={signature}
-                      onChange={(e) => setSignature(e.target.value)}
-                      placeholder="Type name to sign"
+              <p style={{ fontSize: "0.85rem", color: theme.textMain, marginBottom: "0.75rem", fontWeight: 500 }}>
+                <strong style={{ color: theme.crimson }}>{idx + 1}.</strong> {c.label}
+              </p>
+              <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
+                {RATING_OPTIONS.map(opt => {
+                  const selected = ratings[c.key] === opt.value;
+                  return (
+                    <label
+                      key={opt.value}
                       style={{
-                        width: "100%", padding: "0.5rem", borderRadius: "0.5rem", border: "1px solid rgba(0,0,0,0.12)",
-                        fontSize: "0.82rem", outline: "none", color: theme.textMain
-                      }}
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", alignItems: "flex-end" }}>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      style={{
-                        width: "100%", padding: "0.6rem", borderRadius: "0.5rem", border: "none",
-                        background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`, color: "#fff",
-                        fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
-                        boxShadow: "0 4px 12px rgba(126, 25, 27, 0.2)"
+                        display: "flex", alignItems: "center", gap: "0.35rem",
+                        padding: "0.4rem 0.85rem", borderRadius: "2rem",
+                        border: selected ? `2px solid ${theme.crimson}` : "1.5px solid rgba(0,0,0,0.1)",
+                        background: selected ? `${theme.crimson}12` : "rgba(255,255,255,0.6)",
+                        cursor: "pointer", fontSize: "0.8rem", fontWeight: selected ? 700 : 500,
+                        color: selected ? theme.crimson : theme.textMuted,
+                        transition: "all 0.15s",
                       }}
                     >
-                      {isSubmitting ? "Filing..." : "✍️ File Evaluation"}
-                    </button>
-                  </div>
-                </div>
-              </form>
+                      <input
+                        type="radio"
+                        name={c.key}
+                        value={opt.value}
+                        checked={selected}
+                        onChange={() => handleRating(c.key, opt.value)}
+                        style={{ accentColor: theme.crimson }}
+                      />
+                      <span>{opt.value} – {opt.label}</span>
+                    </label>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </>
-      )}
-
-      {!selectedSupplierId && (
-        <div style={{
-          background: theme.glassBg, backdropFilter: "blur(20px)",
-          border: `1px solid ${theme.glassBorder}`, borderRadius: "1.25rem", padding: "4rem",
-          boxShadow: theme.shadow, textAlign: "center", color: theme.textMuted
-        }}>
-          Select a supplier from the dropdown above to load their aggregated scorecard, view historical evaluations, and file official performance reviews.
+          ))}
         </div>
-      )}
-    </div>
+      </div>
+
+      {/* ── Comments & Submit ── */}
+      <div style={cardStyle}>
+        <h2 style={{ fontSize: "1.1rem", fontWeight: 800, color: theme.textMain, marginBottom: "1.5rem" }}>
+          📝 Comments / Feedback
+        </h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <textarea
+            value={comments}
+            onChange={e => setComments(e.target.value)}
+            placeholder="Additional comments or corrective actions recommended..."
+            rows={4}
+            style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }}
+          />
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: "0.8rem", color: theme.textMuted }}>
+              Evaluator: <strong>{officerName}</strong>
+            </span>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              style={{
+                padding: "0.75rem 2rem", borderRadius: "0.75rem", border: "none",
+                background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`,
+                color: "#fff", fontWeight: 700, fontSize: "0.85rem",
+                cursor: isSubmitting ? "not-allowed" : "pointer",
+                opacity: isSubmitting ? 0.7 : 1,
+                boxShadow: "0 4px 12px rgba(126,25,27,0.25)", transition: "all 0.2s",
+              }}
+            >
+              {isSubmitting ? "Submitting…" : "✍️ Submit Evaluation"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
   );
 }

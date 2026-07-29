@@ -7,6 +7,7 @@ import RFQTerms from './RFQTerms';
 import RFQItemsTable, { AppItem, CatalogProduct, ItemRow } from './RFQItemsTable';
 import RFQSignatureSection from './RFQSignatureSection';
 import RFQToolbar from './RFQToolbar';
+import DocumentLayout from '@/components/documents/DocumentLayout';
 import { createRfqAction } from '@/app/actions/rfq-actions';
 import { useRouter } from 'next/navigation';
 
@@ -186,36 +187,6 @@ export default function RFQDocument({
 
   return (
     <div className="relative pb-24">
-      {/* Print Media CSS Rules */}
-      <style jsx global>{`
-        @media print {
-          body {
-            background-color: #ffffff !important;
-            color: #000000 !important;
-          }
-          .print\\:hidden,
-          nav,
-          header,
-          aside,
-          footer {
-            display: none !important;
-          }
-          #rfq-document-container {
-            padding: 0 !important;
-            margin: 0 !important;
-            max-width: 100% !important;
-            width: 100% !important;
-          }
-          #rfq-document {
-            box-shadow: none !important;
-            border: none !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            width: 100% !important;
-            max-width: 100% !important;
-          }
-        }
-      `}</style>
 
       {/* Alert Notifications */}
       {errorMsg && (
@@ -232,50 +203,56 @@ export default function RFQDocument({
         </div>
       )}
 
-      {/* Centered Digital Official Annex D Document */}
+      {/* Centered Digital Official Annex D Document — routed through DocumentLayout for BSC print header/footer */}
       <div id="rfq-document-container" className="w-full flex justify-center">
         <div
           id="rfq-document"
           className="w-full max-w-[800px] min-h-[1056px] bg-white text-black shadow-xl border border-slate-400 p-6 sm:p-10 font-sans text-xs leading-snug rounded-none"
         >
-          {/* 1. Header (Annex D & Date) */}
-          <RFQHeader date={date} setDate={setDate} isReadOnly={isReadOnly} />
+          <DocumentLayout
+            title="REQUEST FOR PRICE QUOTATION"
+            documentRef={rfqNumber}
+            printAreaId="rfq-document"
+          >
+            {/* 1. Header (Annex D & Date) */}
+            <RFQHeader date={date} setDate={setDate} isReadOnly={isReadOnly} />
 
-          {/* 2. Supplier Section */}
-          <RFQSupplierSection
-            supplierName={supplierName}
-            setSupplierName={setSupplierName}
-            isReadOnly={isReadOnly}
-          />
+            {/* 2. Supplier Section */}
+            <RFQSupplierSection
+              supplierName={supplierName}
+              setSupplierName={setSupplierName}
+              isReadOnly={isReadOnly}
+            />
 
-          {/* 3. Official NOTE Instructions (1 to 6) */}
-          <RFQTerms
-            approvedBudget={approvedBudget}
-            setApprovedBudget={setApprovedBudget}
-            deliveryPeriod={deliveryPeriod}
-            setDeliveryPeriod={setDeliveryPeriod}
-            isReadOnly={isReadOnly}
-          />
+            {/* 3. Official NOTE Instructions (1 to 6) */}
+            <RFQTerms
+              approvedBudget={approvedBudget}
+              setApprovedBudget={setApprovedBudget}
+              deliveryPeriod={deliveryPeriod}
+              setDeliveryPeriod={setDeliveryPeriod}
+              isReadOnly={isReadOnly}
+            />
 
-          {/* 4. Table Grid */}
-          <RFQItemsTable
-            items={items}
-            setItems={setItems}
-            appItems={appItems}
-            catalogProducts={catalogProducts}
-            isReadOnly={isReadOnly}
-          />
+            {/* 4. Table Grid */}
+            <RFQItemsTable
+              items={items}
+              setItems={setItems}
+              appItems={appItems}
+              catalogProducts={catalogProducts}
+              isReadOnly={isReadOnly}
+            />
 
-          {/* 5. Signature Section & Ref.# Footer */}
-          <RFQSignatureSection
-            rfqNumber={rfqNumber}
-            setRfqNumber={setRfqNumber}
-            printedName={printedName}
-            setPrintedName={setPrintedName}
-            bacChairperson={bacChairperson}
-            setBacChairperson={setBacChairperson}
-            isReadOnly={isReadOnly}
-          />
+            {/* 5. Signature Section & Ref.# Footer */}
+            <RFQSignatureSection
+              rfqNumber={rfqNumber}
+              setRfqNumber={setRfqNumber}
+              printedName={printedName}
+              setPrintedName={setPrintedName}
+              bacChairperson={bacChairperson}
+              setBacChairperson={setBacChairperson}
+              isReadOnly={isReadOnly}
+            />
+          </DocumentLayout>
         </div>
       </div>
 
