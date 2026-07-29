@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { submitPrAction, resubmitPrAction } from "@/app/actions/pr";
+import { submitPrAction, resubmitPrAction, deletePrDraftAction } from "@/app/actions/pr";
 import DocumentLayout from "@/components/documents/DocumentLayout";
 import EmptyState from "@/components/ui/EmptyState";
 
@@ -416,18 +416,52 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                   )}
 
                   {selectedPr.status === "Draft" && !isEditing && (
-                    <button
-                      onClick={() => handleSubmit(selectedPr.id)}
-                      disabled={isSubmitting}
-                      style={{
-                        padding: "0.5rem 1.25rem", borderRadius: "0.75rem", border: "none",
-                        background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`, color: "#fff",
-                        fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s",
-                        boxShadow: "0 4px 12px rgba(126, 25, 27, 0.2)"
-                      }}
-                    >
-                      {isSubmitting ? "Submitting..." : "🚀 Submit PR for Review"}
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={async () => {
+                          if (!confirm("Are you sure you want to delete this draft Purchase Request?")) return;
+                          setIsSubmitting(true);
+                          setErrorMessage(null);
+                          setSuccessMessage(null);
+                          try {
+                            const res = await deletePrDraftAction(selectedPr.id);
+                            if (res.success) {
+                              const remaining = prs.filter((p) => p.id !== selectedPr.id);
+                              setPrs(remaining);
+                              setSelectedPrId(remaining.length > 0 ? remaining[0].id : null);
+                              setSuccessMessage("Draft Purchase Request deleted.");
+                            } else {
+                              setErrorMessage(res.error || "Failed to delete draft.");
+                            }
+                          } catch (err: any) {
+                            setErrorMessage(err.message || "An unexpected error occurred.");
+                          } finally {
+                            setIsSubmitting(false);
+                          }
+                        }}
+                        disabled={isSubmitting}
+                        className="no-print"
+                        style={{
+                          padding: "0.5rem 1rem", borderRadius: "0.75rem",
+                          border: "1px solid #ef444440", background: "transparent",
+                          color: "#ef4444", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
+                        }}
+                      >
+                        🗑️ Delete Draft
+                      </button>
+                      <button
+                        onClick={() => handleSubmit(selectedPr.id)}
+                        disabled={isSubmitting}
+                        style={{
+                          padding: "0.5rem 1.25rem", borderRadius: "0.75rem", border: "none",
+                          background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`, color: "#fff",
+                          fontWeight: 700, fontSize: "0.8rem", cursor: "pointer", transition: "all 0.2s",
+                          boxShadow: "0 4px 12px rgba(126, 25, 27, 0.2)"
+                        }}
+                      >
+                        {isSubmitting ? "Submitting..." : "🚀 Submit PR for Review"}
+                      </button>
+                    </div>
                   )}
 
                   {["ReturnedForRevision", "Returned for Revision"].includes(selectedPr.status) && !isEditing && (
