@@ -26,87 +26,124 @@
 :root {
   /* Default: Light Mode — Official Government Portal Theme */
   --font-display: 'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
-  --font-body:    'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
+  --font-body: 'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
 
-  --accent:           #0B2D5C; /* Official Navy */
-  --accent-light:     #1E4A85; /* Navy — hover / links */
-  --accent-glass:     rgba(11, 45, 92, 0.06);
+  --accent: #0B2D5C;
+  /* Official Navy */
+  --accent-light: #1E4A85;
+  /* Navy — hover / links */
+  --accent-glass: rgba(11, 45, 92, 0.06);
 
-  --secondary:        #A6761D; /* Muted Gold — used sparingly for emphasis */
-  --secondary-light:  #C99A2E;
-  --secondary-dim:    rgba(166, 118, 29, 0.08);
+  --secondary: #A6761D;
+  /* Muted Gold — used sparingly for emphasis */
+  --secondary-light: #C99A2E;
+  --secondary-dim: rgba(166, 118, 29, 0.08);
 
-  --alert:            #B7202E; /* Official Red — reserved for required / critical states */
-  --alert-light:      #D33B48;
-  --alert-dim:        rgba(183, 32, 46, 0.08);
+  --alert: #B7202E;
+  /* Official Red — reserved for required / critical states */
+  --alert-light: #D33B48;
+  --alert-dim: rgba(183, 32, 46, 0.08);
 
-  --bg-deep:          #F2F3EF; /* Paper canvas */
-  --bg-dark:          #E7E8E2; /* Secondary section paper */
-  --bg-header:        #ffffff; /* White header background */
+  --bg-deep: #F2F3EF;
+  /* Paper canvas */
+  --bg-dark: #E7E8E2;
+  /* Secondary section paper */
+  --bg-header: #ffffff;
+  /* White header background */
 
-  --green:            #256C3E; /* Official green */
-  --green-dim:        rgba(37, 108, 62, 0.08);
-  --red-dim:          var(--alert-dim);
+  --green: #256C3E;
+  /* Official green */
+  --green-dim: rgba(37, 108, 62, 0.08);
+  --red-dim: var(--alert-dim);
 
-  --text-primary:     #1C2230; /* Ink */
-  --text-secondary:   #4B5567;
-  --text-muted:       #7C879A;
+  --text-primary: #1C2230;
+  /* Ink */
+  --text-secondary: #4B5567;
+  --text-muted: #7C879A;
 
-  --surface:          #ffffff; /* Clean white surface */
-  --surface-hover:    #F5F6F2; /* Hover surface */
-  --border:           #D4D7DE; /* Neutral document border */
-  --border-accent:    rgba(11, 45, 92, 0.25);
+  --surface: #ffffff;
+  /* Clean white surface */
+  --surface-hover: #F5F6F2;
+  /* Hover surface */
+  --border: #D4D7DE;
+  /* Neutral document border */
+  --border-accent: rgba(11, 45, 92, 0.25);
 
   /* Map old variables for compatibility and easy transition */
-  --maroon:         var(--accent);
-  --maroon-dark:    var(--bg-dark);
-  --maroon-deep:    var(--bg-deep);
-  --maroon-light:   var(--accent-light);
-  --maroon-glass:   var(--accent-glass);
-  --gold:           var(--secondary);
-  --gold-light:     var(--secondary-light);
-  --gold-dim:       var(--secondary-dim);
-  --border-gold:    var(--border-accent);
+  --maroon: var(--accent);
+  --maroon-dark: var(--bg-dark);
+  --maroon-deep: var(--bg-deep);
+  --maroon-light: var(--accent-light);
+  --maroon-glass: var(--accent-glass);
+  --gold: var(--secondary);
+  --gold-light: var(--secondary-light);
+  --gold-dim: var(--secondary-dim);
+  --border-gold: var(--border-accent);
 
-  --radius-sm:      3px;
-  --radius-md:      5px;
-  --radius-lg:      7px;
-  --radius-pill:    3px; /* badges/chips read as document tags, not app pills */
-  --shadow-card:    0 1px 2px rgba(16,24,40,0.06), 0 1px 1px rgba(16,24,40,0.04);
-  --transition:     all 0.15s ease;
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 7px;
+  --radius-pill: 3px;
+  /* badges/chips read as document tags, not app pills */
+  --shadow-card: 0 1px 2px rgba(16, 24, 40, 0.06), 0 1px 1px rgba(16, 24, 40, 0.04);
+  --transition: all 0.15s ease;
+
+  /* ---------- Spacing scale (8px base unit) ----------
+     Shared across the app so the landing / price-comparison
+     page and the dashboard (Tailwind p-*, gap-*) read as one
+     consistent system. Use these instead of ad-hoc rem values. */
+  --space-1: 0.5rem;
+  /* 8px  — tight internal spacing */
+  --space-2: 0.75rem;
+  /* 12px — compact rows */
+  --space-3: 1rem;
+  /* 16px — standard internal padding, related items */
+  --space-4: 1.5rem;
+  /* 24px — card padding, spacing between siblings */
+  --space-5: 2rem;
+  /* 32px — spacing between major sections */
+  --space-6: 3rem;
+  /* 48px — top-level page margins (rare) */
 }
 
 .dark {
   /* Dark Mode — same official palette, inverted ground */
-  --accent:           #6C93CC; /* Navy, lifted for contrast on dark */
-  --accent-light:     #89ABDD;
-  --accent-glass:     rgba(108, 147, 204, 0.14);
+  --accent: #6C93CC;
+  /* Navy, lifted for contrast on dark */
+  --accent-light: #89ABDD;
+  --accent-glass: rgba(108, 147, 204, 0.14);
 
-  --secondary:        #C99A2E; /* Gold */
-  --secondary-light:  #E0B84D;
-  --secondary-dim:    rgba(201, 154, 46, 0.14);
+  --secondary: #C99A2E;
+  /* Gold */
+  --secondary-light: #E0B84D;
+  --secondary-dim: rgba(201, 154, 46, 0.14);
 
-  --alert:            #E0707A;
-  --alert-light:      #EA8B93;
-  --alert-dim:        rgba(224, 112, 122, 0.14);
+  --alert: #E0707A;
+  --alert-light: #EA8B93;
+  --alert-dim: rgba(224, 112, 122, 0.14);
 
-  --bg-deep:          #0E1420; /* Solid ink background */
-  --bg-dark:          #161D2C; /* Solid secondary background */
-  --bg-header:        #0E1420; /* Solid Header */
+  --bg-deep: #0E1420;
+  /* Solid ink background */
+  --bg-dark: #161D2C;
+  /* Solid secondary background */
+  --bg-header: #0E1420;
+  /* Solid Header */
 
-  --green:            #55A778;
-  --green-dim:        rgba(85, 167, 120, 0.14);
-  --red-dim:          var(--alert-dim);
+  --green: #55A778;
+  --green-dim: rgba(85, 167, 120, 0.14);
+  --red-dim: var(--alert-dim);
 
-  --text-primary:     #EEF1F6;
-  --text-secondary:   #A8B0C0;
-  --text-muted:       #6B7488;
+  --text-primary: #EEF1F6;
+  --text-secondary: #A8B0C0;
+  --text-muted: #6B7488;
 
-  --surface:          #161D2C; /* Solid Dark Surface */
-  --surface-hover:    #1E2739;
-  --border:           #2A3345; /* Solid border */
-  --border-accent:    rgba(201, 154, 46, 0.3);
-  --shadow-card:      0 1px 3px rgba(0,0,0,0.35);
+  --surface: #161D2C;
+  /* Solid Dark Surface */
+  --surface-hover: #1E2739;
+  --border: #2A3345;
+  /* Solid border */
+  --border-accent: rgba(201, 154, 46, 0.3);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 @layer base {
@@ -114,7 +151,11 @@
 
   html, body {
     min-height: 100%;
+    background-color: var(--bg-deep);
+    background: var(--bg-deep);
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
+    color: var(--text-primary);
   }
 
   /* Visible, non-blurred keyboard focus everywhere — required for a public-sector site */
@@ -125,14 +166,23 @@
   }
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-body);
   font-weight: 700;
 }
 
 /* Visible, non-blurred keyboard focus everywhere — required for a public-sector site */
-a:focus-visible, button:focus-visible, input:focus-visible,
-select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
@@ -166,17 +216,20 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 .pc-header-inner {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0.75rem 1.5rem;
+  padding: var(--space-2) var(--space-4);
+  /* 12px 24px — was 0.75rem 1.5rem, now on-scale */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-3);
+  /* 16px — was 1rem, now on-scale */
 }
 
 .pc-header-brand {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-2);
+  /* 12px — was 0.75rem, now on-scale */
 }
 
 .pc-logo {
@@ -195,8 +248,13 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   flex-shrink: 0;
 }
 
-.pc-logo-p { color: #ffffff; }
-.pc-logo-w { color: var(--secondary-light); }
+.pc-logo-p {
+  color: #ffffff;
+}
+
+.pc-logo-w {
+  color: var(--secondary-light);
+}
 
 .pc-title {
   font-family: var(--font-display);
@@ -217,8 +275,10 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 .pc-header-badge {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.35rem 0.75rem;
+  gap: var(--space-1);
+  /* 8px — was 0.4rem, now on-scale (closest step) */
+  padding: var(--space-1) var(--space-3);
+  /* 8px 16px — was 0.35rem 0.75rem, now on-scale */
   border-radius: var(--radius-sm);
   background: var(--secondary-dim);
   border: 1px solid var(--border-accent);
@@ -228,16 +288,21 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   white-space: nowrap;
 }
 
-.badge-icon { width: 14px; height: 14px; }
+.badge-icon {
+  width: 14px;
+  height: 14px;
+}
 
 /* ---------- Main ---------- */
 .pc-main {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 1.5rem 1.5rem 3rem;
+  padding: var(--space-4) var(--space-4) var(--space-6);
+  /* 24px 24px 48px — was 1.5rem 1.5rem 3rem */
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--space-5);
+  /* 32px — was 1.5rem (24px); major sections now get the larger gap */
 }
 
 /* ---------- Section title ---------- */
@@ -245,7 +310,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-3);
+  /* 16px — was 1rem, now on-scale */
   flex-wrap: wrap;
 }
 
@@ -261,14 +327,16 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 .pc-section-desc {
   font-size: 0.875rem;
   color: var(--text-secondary);
-  margin-top: 0.35rem;
+  margin-top: var(--space-1);
+  /* 8px — was 0.35rem, rounded up to the nearest step */
   max-width: 600px;
   line-height: 1.6;
 }
 
 .pc-date-badge {
   flex-shrink: 0;
-  padding: 0.5rem 1rem;
+  padding: var(--space-1) var(--space-3);
+  /* 8px 16px — was 0.5rem 1rem, now on-scale */
   border-radius: var(--radius-md);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -279,10 +347,14 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 /* ============================================================
    SUMMARY CARDS
+   (These are the four "Quick Access" cards on the landing page —
+   Browse Products / Create PPMP / Submit Purchase Request / Track
+   Request — and the "Procurement at a Glance" stat cards.)
    ============================================================ */
 .summary-card {
   position: relative;
-  padding: 1.25rem;
+  padding: var(--space-4);
+  /* 24px — was 1.25rem (20px); now matches dashboard stat-card p-6 */
   border-radius: var(--radius-md);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -308,7 +380,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 }
 
 .summary-card-icon {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-2);
+  /* 12px — was 0.75rem, now on-scale */
   color: var(--accent);
 }
 
@@ -330,7 +403,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   font-size: 0.78rem;
   font-weight: 700;
   color: var(--text-secondary);
-  margin-top: 0.35rem;
+  margin-top: var(--space-1);
+  /* 8px — was 0.35rem, rounded up */
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -338,7 +412,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 .summary-card-sublabel {
   font-size: 0.72rem;
   color: var(--text-muted);
-  margin-top: 0.15rem;
+  margin-top: 2px;
+  /* left as-is: a hairline gap under the label, below the 8px step on purpose */
 }
 
 /* ============================================================
@@ -347,7 +422,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 .filter-bar {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--space-2);
+  /* 12px — was 0.75rem, now on-scale */
   flex-wrap: wrap;
 }
 
@@ -359,7 +435,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 .filter-search-icon {
   position: absolute;
-  left: 0.75rem;
+  left: var(--space-2);
+  /* 12px — was 0.75rem, now on-scale */
   top: 50%;
   transform: translateY(-50%);
   width: 16px;
@@ -370,7 +447,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 .filter-search-input {
   width: 100%;
-  padding: 0.6rem 2.5rem 0.6rem 2.25rem;
+  padding: var(--space-2) 2.5rem var(--space-2) 2.25rem;
+  /* 12px vert — was 0.6rem, rounded to scale */
   border-radius: var(--radius-sm);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -381,7 +459,10 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   font-family: inherit;
 }
 
-.filter-search-input::placeholder { color: var(--text-muted); }
+.filter-search-input::placeholder {
+  color: var(--text-muted);
+}
+
 .filter-search-input:focus {
   border-color: var(--accent);
   background: var(--surface);
@@ -390,7 +471,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 .filter-clear-btn {
   position: absolute;
-  right: 0.6rem;
+  right: var(--space-2);
+  /* 12px — was 0.6rem, now on-scale */
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -403,10 +485,14 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   border-radius: var(--radius-sm);
   transition: var(--transition);
 }
-.filter-clear-btn:hover { color: var(--text-primary); }
+
+.filter-clear-btn:hover {
+  color: var(--text-primary);
+}
 
 .filter-select {
-  padding: 0.6rem 1rem;
+  padding: var(--space-2) var(--space-3);
+  /* 12px 16px — was 0.6rem 1rem, now on-scale */
   border-radius: var(--radius-sm);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -419,19 +505,26 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   white-space: nowrap;
 }
 
-.filter-select:hover, .filter-select:focus {
+.filter-select:hover,
+.filter-select:focus {
   border-color: var(--accent);
   background: var(--surface-hover);
 }
 
-.filter-select option { background: var(--surface); color: var(--text-primary); }
+.filter-select option {
+  background: var(--surface);
+  color: var(--text-primary);
+}
 
-.filter-supplier-wrapper { position: relative; }
+.filter-supplier-wrapper {
+  position: relative;
+}
 
 .filter-supplier-btn {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-1);
+  /* 8px — was 0.5rem, rounded up to scale */
   background: var(--surface);
 }
 
@@ -440,34 +533,45 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   height: 14px;
   transition: transform 0.2s ease;
 }
-.filter-chevron.open { transform: rotate(180deg); }
+
+.filter-chevron.open {
+  transform: rotate(180deg);
+}
 
 .filter-supplier-dropdown {
   position: absolute;
-  top: calc(100% + 8px);
+  top: calc(100% + var(--space-1));
+  /* 8px gap below trigger — was 8px, kept but tokenized */
   left: 0;
   z-index: 50;
   min-width: 280px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 0.5rem;
+  padding: var(--space-1);
+  /* 8px — was 0.5rem, now on-scale */
   box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 4px;
+  /* left tight on purpose: list items are dense by design */
 }
 
 .filter-supplier-option {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  gap: var(--space-1);
+  /* 8px — was 0.5rem, rounded up to scale */
+  padding: var(--space-1) var(--space-2);
+  /* 8px 12px — was 0.5rem 0.75rem, now on-scale */
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: var(--transition);
 }
-.filter-supplier-option:hover { background: var(--surface-hover); }
+
+.filter-supplier-option:hover {
+  background: var(--surface-hover);
+}
 
 .filter-supplier-checkbox {
   accent-color: var(--accent);
@@ -489,8 +593,10 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 }
 
 .filter-clear-all-btn {
-  margin-top: 0.5rem;
-  padding: 0.4rem;
+  margin-top: var(--space-1);
+  /* 8px — was 0.5rem, now on-scale */
+  padding: var(--space-1);
+  /* 8px — was 0.4rem, rounded up to scale */
   border: 1px solid var(--border-accent);
   background: var(--secondary-dim);
   color: var(--secondary);
@@ -501,7 +607,12 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   transition: var(--transition);
   font-family: inherit;
 }
-.filter-clear-all-btn:hover { background: var(--secondary-dim); border-color: var(--accent); color: var(--accent); }
+
+.filter-clear-all-btn:hover {
+  background: var(--secondary-dim);
+  border-color: var(--accent);
+  color: var(--accent);
+}
 
 /* ============================================================
    TABS
@@ -509,7 +620,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 .pc-tabs {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-1);
+  /* 8px — was 0.5rem, now on-scale */
   border-bottom: 1px solid var(--border);
   padding-bottom: 0;
 }
@@ -517,8 +629,10 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 .pc-tab-btn {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.1rem;
+  gap: 6px;
+  /* left tight: icon-to-label spacing inside a compact control */
+  padding: var(--space-2) var(--space-3);
+  /* 12px 16px — was 0.6rem 1.1rem, now on-scale */
   border: none;
   background: none;
   color: var(--text-muted);
@@ -532,7 +646,10 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
 }
 
-.pc-tab-btn:hover { color: var(--text-secondary); background: var(--surface); }
+.pc-tab-btn:hover {
+  color: var(--text-secondary);
+  background: var(--surface);
+}
 
 .pc-tab-active {
   color: var(--accent) !important;
@@ -540,13 +657,17 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   background: var(--accent-glass) !important;
 }
 
-.tab-icon { width: 16px; height: 16px; }
+.tab-icon {
+  width: 16px;
+  height: 16px;
+}
 
 .pc-tab-count {
   margin-left: auto;
   font-size: 0.78rem;
   color: var(--text-muted);
-  padding: 0.2rem 0.6rem;
+  padding: 2px var(--space-2);
+  /* 2px 12px — was 0.2rem 0.6rem, horizontal now on-scale */
   border-radius: var(--radius-sm);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -583,7 +704,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 }
 
 .comparison-table th {
-  padding: 0.85rem 1rem;
+  padding: var(--space-3) var(--space-3);
+  /* 16px — was 0.85rem 1rem, now on-scale */
   text-align: left;
   font-size: 0.72rem;
   font-weight: 700;
@@ -596,7 +718,9 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   transition: var(--transition);
 }
 
-.comparison-table th:hover { background: var(--surface-hover); }
+.comparison-table th:hover {
+  background: var(--surface-hover);
+}
 
 .col-sticky {
   position: sticky;
@@ -605,19 +729,59 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   background: var(--bg-dark);
 }
 
-.col-item { min-width: 180px; }
-.col-category { min-width: 140px; }
-.col-unit { min-width: 80px; }
-.col-supplier { min-width: 160px; text-align: center; }
-.col-best { min-width: 120px; text-align: center; }
-.col-savings { min-width: 90px; text-align: center; }
+.col-item {
+  min-width: 180px;
+}
 
-.supplier-header { display: flex; flex-direction: column; gap: 2px; align-items: center; }
-.supplier-header-name { font-size: 0.78rem; }
-.supplier-header-rating { font-size: 0.68rem; color: var(--secondary); font-weight: 600; }
+.col-category {
+  min-width: 140px;
+}
 
-.sort-icon-inactive { opacity: 0.3; margin-left: 4px; }
-.sort-icon-active { color: var(--accent); margin-left: 4px; }
+.col-unit {
+  min-width: 80px;
+}
+
+.col-supplier {
+  min-width: 160px;
+  text-align: center;
+}
+
+.col-best {
+  min-width: 120px;
+  text-align: center;
+}
+
+.col-savings {
+  min-width: 90px;
+  text-align: center;
+}
+
+.supplier-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+}
+
+.supplier-header-name {
+  font-size: 0.78rem;
+}
+
+.supplier-header-rating {
+  font-size: 0.68rem;
+  color: var(--secondary);
+  font-weight: 600;
+}
+
+.sort-icon-inactive {
+  opacity: 0.3;
+  margin-left: 4px;
+}
+
+.sort-icon-active {
+  color: var(--accent);
+  margin-left: 4px;
+}
 
 /* Table Rows */
 .table-row {
@@ -625,12 +789,22 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   cursor: pointer;
   transition: var(--transition);
 }
-.table-row:hover { background: var(--surface-hover); }
-.table-row:last-child { border-bottom: none; }
-.row-expanded { background: var(--accent-glass) !important; }
+
+.table-row:hover {
+  background: var(--surface-hover);
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.row-expanded {
+  background: var(--accent-glass) !important;
+}
 
 .comparison-table td {
-  padding: 0.75rem 1rem;
+  padding: var(--space-2) var(--space-3);
+  /* 12px 16px — was 0.75rem 1rem, now on-scale */
   vertical-align: middle;
 }
 
@@ -641,7 +815,10 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   background: inherit;
 }
 
-.item-name { font-weight: 600; color: var(--text-primary); }
+.item-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
 
 .category-chip {
   display: inline-block;
@@ -654,18 +831,44 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   white-space: nowrap;
 }
 
-.col-unit-cell { color: var(--text-muted); font-size: 0.78rem; }
+.col-unit-cell {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+}
 
 /* Price cells */
-.price-cell { text-align: center; }
-.price-cell-inner { display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.price-cell {
+  text-align: center;
+}
 
-.cell-best { background: var(--green-dim) !important; }
-.cell-worst { background: var(--alert-dim) !important; }
-.cell-oos { opacity: 0.4; }
+.price-cell-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
 
-.price-value { font-weight: 700; color: var(--text-primary); font-size: 0.9rem; }
-.price-na { color: var(--text-muted); }
+.cell-best {
+  background: var(--green-dim) !important;
+}
+
+.cell-worst {
+  background: var(--alert-dim) !important;
+}
+
+.cell-oos {
+  opacity: 0.4;
+}
+
+.price-value {
+  font-weight: 700;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.price-na {
+  color: var(--text-muted);
+}
 
 /* Availability badges */
 .avail-badge {
@@ -677,38 +880,85 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
-.badge-instock { background: var(--green-dim); color: var(--green); border: 1px solid rgba(37,108,62,0.35); }
-.badge-limited  { background: var(--secondary-dim); color: var(--secondary); border: 1px solid rgba(166,118,29,0.35); }
-.badge-oos      { background: var(--alert-dim);  color: var(--alert); border: 1px solid rgba(183,32,46,0.35); }
+
+.badge-instock {
+  background: var(--green-dim);
+  color: var(--green);
+  border: 1px solid rgba(37, 108, 62, 0.35);
+}
+
+.badge-limited {
+  background: var(--secondary-dim);
+  color: var(--secondary);
+  border: 1px solid rgba(166, 118, 29, 0.35);
+}
+
+.badge-oos {
+  background: var(--alert-dim);
+  color: var(--alert);
+  border: 1px solid rgba(183, 32, 46, 0.35);
+}
 
 /* Best & Savings columns */
-.col-best-cell { text-align: center; }
+.col-best-cell {
+  text-align: center;
+}
+
 .best-price-tag {
   display: inline-block;
-  padding: 0.25rem 0.6rem;
+  padding: var(--space-1) var(--space-2);
+  /* 8px 12px — was 0.25rem 0.6rem, now on-scale */
   border-radius: var(--radius-sm);
   background: var(--green-dim);
-  border: 1px solid rgba(37,108,62,0.35);
+  border: 1px solid rgba(37, 108, 62, 0.35);
   color: var(--green);
   font-weight: 700;
   font-size: 0.85rem;
 }
 
-.col-savings-cell { text-align: center; }
-.savings-tag { font-size: 0.8rem; color: var(--text-muted); font-weight: 600; }
+.col-savings-cell {
+  text-align: center;
+}
+
+.savings-tag {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 .savings-positive {
   color: var(--green);
   background: var(--green-dim);
   padding: 0.15rem 0.55rem;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(37,108,62,0.3);
+  border: 1px solid rgba(37, 108, 62, 0.3);
 }
 
 /* Detail row */
-.detail-row { background: var(--accent-glass); border-bottom: 1px solid var(--border); }
-.detail-panel { padding: 0.75rem 1rem; }
-.detail-description { font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
-.detail-delivery { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.detail-row {
+  background: var(--accent-glass);
+  border-bottom: 1px solid var(--border);
+}
+
+.detail-panel {
+  padding: var(--space-3);
+}
+
+/* 16px — was 0.75rem 1rem (mixed axis), unified to 16px */
+.detail-description {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-1);
+}
+
+/* 8px — was 0.5rem, now on-scale */
+.detail-delivery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+/* 8px — was 0.4rem, rounded up to scale */
 .delivery-chip {
   padding: 0.25rem 0.65rem;
   border-radius: var(--radius-pill);
@@ -717,19 +967,30 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   font-size: 0.72rem;
   color: var(--text-secondary);
 }
-.delivery-chip strong { color: var(--accent); font-weight: 700; }
+
+.delivery-chip strong {
+  color: var(--accent);
+  font-weight: 700;
+}
 
 /* Empty state */
 .table-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
-  padding: 3rem;
+  gap: var(--space-2);
+  /* 12px — was 0.75rem, now on-scale */
+  padding: var(--space-5);
+  /* 32px — was 3rem (48px); brought down one step so it doesn't dominate */
   color: var(--text-muted);
   font-size: 0.9rem;
 }
-.empty-icon { width: 48px; height: 48px; opacity: 0.5; }
+
+.empty-icon {
+  width: 48px;
+  height: 48px;
+  opacity: 0.5;
+}
 
 /* ============================================================
    PRICE CHART
@@ -738,22 +999,26 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   border-radius: var(--radius-md);
   background: var(--surface);
   border: 1px solid var(--border);
-  padding: 1.5rem;
+  padding: var(--space-4);
+  /* 24px — was 1.5rem, now matches summary-card / dashboard panel padding */
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--space-4);
+  /* 24px — was 1.25rem, rounded up to scale */
 }
 
 .chart-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: var(--space-2);
+  /* 12px — was 0.75rem, now on-scale */
 }
 
 .legend-item {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 6px;
+  /* left tight on purpose: dot-to-label spacing */
   font-size: 0.78rem;
   color: var(--text-secondary);
 }
@@ -765,9 +1030,21 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   flex-shrink: 0;
 }
 
-.chart-rows { display: flex; flex-direction: column; gap: 1.25rem; }
+.chart-rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
 
-.chart-row { display: flex; gap: 1rem; align-items: flex-start; }
+/* 24px — was 1.25rem, rounded up to scale */
+
+.chart-row {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+}
+
+/* 16px — was 1rem, now on-scale */
 
 .chart-item-label {
   width: 160px;
@@ -791,7 +1068,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 .chart-bar-row {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-1);
+  /* 8px — was 0.5rem, now on-scale */
   height: 22px;
 }
 
@@ -806,12 +1084,14 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
   min-width: 4px;
 }
 
-.chart-bar-best { box-shadow: inset 0 0 0 1px rgba(37,108,62,0.4); }
+.chart-bar-best {
+  box-shadow: inset 0 0 0 1px rgba(37, 108, 62, 0.4);
+}
 
 .chart-bar-label {
   font-size: 0.68rem;
   font-weight: 700;
-  color: rgba(0,0,0,0.85);
+  color: rgba(0, 0, 0, 0.85);
   padding: 0 6px;
   white-space: nowrap;
 }
@@ -824,7 +1104,8 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
 
 .chart-empty {
   text-align: center;
-  padding: 2rem;
+  padding: var(--space-4);
+  /* 24px — was 2rem (32px), brought down one step to sit inside the wrapper's own 24px padding */
   color: var(--text-muted);
   font-size: 0.875rem;
 }
@@ -834,10 +1115,12 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
    ============================================================ */
 .pc-footer {
   border-top: 1px solid var(--border);
-  padding-top: 1.25rem;
+  padding-top: var(--space-3);
+  /* 16px — was 1.25rem (20px), rounded down to scale */
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 6px;
+  /* left tight on purpose: footer lines sit close together by convention */
   color: var(--text-muted);
   font-size: 0.72rem;
   line-height: 1.6;
@@ -852,17 +1135,45 @@ select:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
    RESPONSIVE
    ============================================================ */
 @media (max-width: 768px) {
-  .pc-header-badge { display: none; }
-  .pc-section-title { flex-direction: column; }
-  .filter-bar { flex-direction: column; align-items: stretch; }
-  .filter-search-wrapper, .filter-select, .filter-supplier-wrapper { width: 100%; }
-  .chart-item-label { width: 100px; font-size: 0.72rem; }
-  .summary-card-value { font-size: 1.35rem; }
+  .pc-header-badge {
+    display: none;
+  }
+
+  .pc-section-title {
+    flex-direction: column;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-search-wrapper,
+  .filter-select,
+  .filter-supplier-wrapper {
+    width: 100%;
+  }
+
+  .chart-item-label {
+    width: 100px;
+    font-size: 0.72rem;
+  }
+
+  .summary-card-value {
+    font-size: 1.35rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .pc-main { padding: 1rem; gap: 1rem; }
-  .pc-section-heading { font-size: 1.35rem; }
+  .pc-main {
+    padding: var(--space-3);
+    gap: var(--space-3);
+  }
+
+  /* 16px — was 1rem, now on-scale */
+  .pc-section-heading {
+    font-size: 1.35rem;
+  }
 }
 
 /* Chrome/Safari Autofill Styles Overrides */
@@ -915,7 +1226,8 @@ input:-webkit-autofill:active {
 .uiverse-form-container {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--space-3);
+  /* 16px — was 16px already, tokenized */
   position: relative;
 }
 
@@ -953,7 +1265,8 @@ input:-webkit-autofill:active {
 
 .uiverse-form-container label .uiverse-input {
   width: 100%;
-  padding: 22px 12px 8px 12px;
+  padding: 22px var(--space-2) 8px var(--space-2);
+  /* horizontal now on-scale (12px); vertical values kept for the floating-label mechanic */
   outline: 0;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -970,9 +1283,10 @@ input:-webkit-autofill:active {
   box-shadow: 0 0 0 2px var(--accent-glass);
 }
 
-.uiverse-form-container label .uiverse-input + span {
+.uiverse-form-container label .uiverse-input+span {
   position: absolute;
-  left: 12px;
+  left: var(--space-2);
+  /* 12px — was 12px already, tokenized */
   top: 16px;
   color: var(--text-muted);
   font-size: 0.85em;
@@ -982,13 +1296,13 @@ input:-webkit-autofill:active {
   pointer-events: none;
 }
 
-.uiverse-form-container label .uiverse-input:placeholder-shown + span {
+.uiverse-form-container label .uiverse-input:placeholder-shown+span {
   top: 16px;
   font-size: 0.85em;
 }
 
-.uiverse-form-container label .uiverse-input:focus + span,
-.uiverse-form-container label .uiverse-input:not(:placeholder-shown) + span {
+.uiverse-form-container label .uiverse-input:focus+span,
+.uiverse-form-container label .uiverse-input:not(:placeholder-shown)+span {
   top: 6px;
   font-size: 0.68em;
   font-weight: 800;
@@ -999,7 +1313,8 @@ input:-webkit-autofill:active {
   border: 1px solid var(--accent);
   outline: none;
   background: var(--accent);
-  padding: 12px;
+  padding: var(--space-2);
+  /* 12px — was 12px already, tokenized */
   border-radius: var(--radius-sm);
   color: #fff;
   font-size: 15px;
@@ -1007,6 +1322,7 @@ input:-webkit-autofill:active {
   transition: var(--transition);
   cursor: pointer;
 }
+
 .uiverse-submit:hover {
   background: var(--accent-light);
   border-color: var(--accent-light);
@@ -1025,17 +1341,13 @@ input:-webkit-autofill:active {
 
 /* A quiet canvas gives the content more hierarchy without competing with it. */
 body {
-  background-image: radial-gradient(
-    circle at 50% -10%,
-    color-mix(in srgb, var(--accent-light) 7%, transparent),
-    transparent 34rem
-  );
+  background-image: radial-gradient(circle at 50% -10%,
+      color-mix(in srgb, var(--accent-light) 7%, transparent),
+      transparent 34rem);
 }
 
 .dark body {
-  background-image: radial-gradient(
-    circle at 50% -10%,
-    color-mix(in srgb, var(--accent) 14%, transparent),
-    transparent 36rem
-  );
+  background-image: radial-gradient(circle at 50% -10%,
+      color-mix(in srgb, var(--accent) 14%, transparent),
+      transparent 36rem);
 }

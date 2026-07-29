@@ -58,12 +58,16 @@ const ACTIONS: QuickAction[] = [
 
 export default function QuickActions() {
   return (
-    <div className="flex flex-wrap items-center gap-3 font-sans">
+    <div className="flex flex-wrap items-center gap-2.5 font-sans">
       {ACTIONS.map((action) => {
         const { label, sublabel, href, Icon, variant } = action;
 
+        // Padding dialed back from px-5 py-4 to px-4 py-3: still a real
+        // improvement in touch-target size over the original px-4 py-2.5,
+        // but narrow enough that all 6 buttons fit on one row at typical
+        // desktop widths instead of forcing a wrap.
         const base =
-          "group inline-flex items-center gap-2.5 rounded-lg px-5 py-4 text-sm font-bold transition-all duration-200 border shadow-sm shrink-0";
+          "group inline-flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-bold transition-all duration-200 border shadow-sm shrink-0";
 
         const styles: Record<string, string> = {
           primary:
