@@ -880,3 +880,9 @@ OfficerDashboard (/dashboard/officer)
 - Cards: `rounded-3xl` + CSS variable `--border` + `--shadow-card`
 - Hover animations: `-translate-y-1` + `shadow-lg` transitions
 - Color system: `--accent` (Navy), `--secondary` (Gold), `--bg-deep`, `--surface`, fully dark-mode aware
+
+### Supabase Key Fallback & PNPM Supply Chain Policy Fix
+
+- **Supabase Key Fallback**: Updated `src/proxy.ts`, `src/lib/supabase/server.ts`, `src/lib/supabase/client.ts`, and `src/app/actions/users.ts` to support both `NEXT_PUBLIC_SUPABASE_ANON_KEY` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` environment variable names dynamically. Added `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env` to avoid 500 runtime errors on SSR middleware checks.
+- **PNPM Release Age Exclude Policy**: Added `minimumReleaseAge: 0` and `@supabase/*` pattern to `pnpm-workspace.yaml` to ensure local development commands (e.g. `pnpm start`) bypass package release age cutoff restrictions on newly published dependencies.
+
