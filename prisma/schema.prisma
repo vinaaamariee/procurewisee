@@ -609,18 +609,32 @@ model SupplierEvaluation {
   evaluationType          EvaluationType
   evaluatorName           String         @db.VarChar(100)
   evaluationDate          DateTime       @db.Date
-  productQuality          Int?
-  deliveryCompliance      Int?
-  accuracy                Int?
-  responsiveness          Int?
-  communication           Int?
-  costEffectiveness       Int?
-  overallSatisfaction     Int?
+  // End-User criteria (BSC official 4-category form)
+  productQuality          Int?           // Quality cat: met quality standards
+  deliveryCompliance      Int?           // Quality cat: delivered per delivery term
+  accuracy                Int?           // Quality cat: accurate & complete per specs
+  responsiveness          Int?           // Communication cat: responsive to inquiries
+  communication           Int?           // Communication cat: willing to address issues
+  clearCommunication      Int?           // Communication cat: clear throughout ordering
+  costEffectiveness       Int?           // Cost cat: competitive pricing
+  valueForMoney           Int?           // Cost cat: products justify cost
+  wouldRecommend          Int?           // Overall cat: would recommend supplier
+  // Procurement Office criteria
   rfqResponsiveness       Int?
   competitivePricing      Int?
   specificationCompliance Int?
   documentCompliance      Int?
   deliveryPerformance     Int?
+  // Header fields for PO variant
+  purchaseRequestNo       String?        @db.VarChar(50)
+  poNo                    String?        @db.VarChar(50)
+  philGepsRn              String?        @db.VarChar(50)
+  philGepsDateRegistered  DateTime?      @db.Date
+  philGepsExpirationDate  DateTime?      @db.Date
+  // Header fields for End-User variant
+  typeOfGoodsServices     String?        @db.VarChar(200)
+  officeUnit              String?        @db.VarChar(100)
+  respondentName          String?        @db.VarChar(100)
   comments                String?
   recommendation          String?
   signature               String?
