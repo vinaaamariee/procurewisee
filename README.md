@@ -5,6 +5,49 @@
 **Capstone Project for Batanes State College**
 
 
+## 🏛️ End User Role & Institutional Purchase Request Workflow
+
+**Branch**: `feat/end-user-pr-workflow` | **Date**: July 2026
+
+ProcureWise has evolved from a Procurement Office tool into a complete, institution-wide procurement management system by introducing a dedicated **End User** role. End Users (representing faculty, departments, college offices, administrative units, and campus laboratories) originate procurement cycles using the official Batanes State College **Purchase Request (Appendix 60)** digital document.
+
+```
+End User (Create & Submit PR)
+      ↓
+Official Appendix 60 PR Form
+      ↓
+Procurement Officer Review Queue (Approve / Return for Revision)
+      ↓
+Approved PR
+      ↓
+Auto-Generate RFQ (No Re-encoding)
+      ↓
+Supplier Bidding & Evaluation
+      ↓
+Award & Purchase Order
+```
+
+### Key Workflow Features & Permissions
+
+#### 1. End User Role (`EndUser`)
+- **Dedicated Dashboard (`/dashboard/end-user`)**: Department budget allocation tracker, quick PR requisition launcher, recent request activity feed, and pending action items.
+- **Official Appendix 60 PR Form (`/dashboard/end-user/pr/new`)**: Digital representation of official BSC Purchase Request with dynamic line-item calculation, Responsibility Center Code, Fund Cluster, and signature blocks.
+- **Spreadsheet Import (`PRItemUpload.tsx`)**: Drag-and-drop `.xlsx`/`.csv` line item import with column validation and downloadable Excel templates.
+- **PR Tracking & Lifecycle (`/dashboard/end-user/pr`)**: Full status lifecycle (`Draft` → `Submitted` → `UnderReview` → `ReturnedForRevision` / `Approved` → `ConvertedToRfq`).
+- **Revision & Resubmission**: Returned PRs display reviewer remarks and allow inline revision and resubmission.
+- **Data Boundary**: End Users are strictly scoped to their own PRs (`requestedById === profile.id`).
+
+#### 2. Procurement Officer Review & Conversion Queue
+- **Pending Requisitions Review**: Officers receive, verify specifications/quantities, assign staff, add internal notes, return with remarks, or approve PRs.
+- **PR-to-RFQ Auto Conversion (`convertPrToRfqAction`)**: One-click generation of an official RFQ from an approved PR, auto-populating items, quantities, and budget without duplicate data entry.
+
+#### 3. Database & Auth Engine Extensions
+- `UserRole`: Added `EndUser` (`@map("End User")`)
+- `PrStatus`: Added `ConvertedToRfq` (`@map("Converted to RFQ")`)
+- `src/app/actions/pr.ts`: Extended with `deletePrDraftAction`, `convertPrToRfqAction`, End User query scoping, and automated status notifications.
+
+---
+
 ## ✅ Purchase Order Module — Appendix 61 (Philippine Government Form)
 
 **Date**: July 2026
