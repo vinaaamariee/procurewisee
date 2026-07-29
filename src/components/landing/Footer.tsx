@@ -4,6 +4,7 @@ import { Package } from "lucide-react";
 const usefulLinks = [
   { label: "Procurement Catalog", href: "/catalog" },
   { label: "Track Request", href: "/track" },
+  { label: "About ProcureWise", href: "/about" },
   { label: "Submit Purchase Request", href: "/end-user" },
   { label: "Login Portal", href: "/login" },
 ];
