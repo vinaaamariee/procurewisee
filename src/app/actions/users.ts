@@ -102,7 +102,7 @@ export async function createStaffAccount(formData: FormData) {
     // 2. Initialize cookie-free Supabase client
     const supabaseAdmin = createSupabaseClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+      (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)!
     );
 
     // 3. Create the user in Supabase Auth
