@@ -537,7 +537,16 @@ model PurchaseOrder {
   paymentTerms            String?
   status                  PoStatus                 @default(Draft)
   createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @updatedAt
+  entityName              String?                  @db.VarChar(150)
+  modeOfProcurement       String?                  @db.VarChar(100)
+  placeOfDelivery         String?                  @db.VarChar(200)
+  dateOfDelivery          DateTime?
+  fundCluster             String?                  @db.VarChar(50)
+  orsBursNumber           String?                  @db.VarChar(50)
+  fundsAvailable          Decimal?                 @db.Decimal(12, 2)
+  dateOfOrsBurs           DateTime?
+  chiefAccountantName     String?                  @db.VarChar(100)
+  authorizedOfficialName  String?                  @db.VarChar(100)
   acknowledgementReceipts AcknowledgementReceipt[]
   items                   PurchaseOrderItem[]
   pr                      PurchaseRequest?         @relation(fields: [prId], references: [id])
