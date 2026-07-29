@@ -46,7 +46,7 @@ export default async function PrTrackerPage() {
         </p>
       </div>
 
-      <PrTrackerClient initialPrs={prs as any} />
+      <PrTrackerClient initialPrs={(prs as any)} />
     </div>
   );
 }

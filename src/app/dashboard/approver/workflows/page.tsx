@@ -23,7 +23,7 @@ export default async function WorkflowBuilderPage() {
         </p>
       </div>
 
-      <WorkflowsBuilderClient initialConfigs={configs as any} />
+      <WorkflowsBuilderClient initialConfigs={(configs as any)} />
     </div>
   );
 }

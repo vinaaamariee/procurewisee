@@ -334,7 +334,7 @@ export default function RfqEvaluationClient({
           {/* Recommendation Panel */}
           {topScored ? (
             <RecommendationPanel
-              topRecommendation={topScored as any}
+              topRecommendation={(topScored as any)}
               savedRecommendationId={savedRecommendationId}
               forecastInfo={forecastInfo}
             />
@@ -346,7 +346,7 @@ export default function RfqEvaluationClient({
 
           {/* Rankings Table */}
           <SupplierRankingTable
-            rankings={scoredSuppliers as any}
+            rankings={(scoredSuppliers as any)}
             weights={normalizedWeights}
           />
         </div>
