@@ -86,7 +86,7 @@ export async function submitSupplierEvaluationAction(input: SubmitEvaluationInpu
           philGepsRn: input.philGepsRn || null,
           philGepsDateRegistered: input.philGepsDateRegistered ? new Date(input.philGepsDateRegistered) : null,
           philGepsExpirationDate: input.philGepsExpirationDate ? new Date(input.philGepsExpirationDate) : null,
-        }
+        } as any
       });
 
 
