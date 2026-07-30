@@ -1,43 +1,43 @@
 "use client";
 
-import { FileText, Layers, Users, FileCheck, Search, BarChart3 } from "lucide-react";
+import { FileCheck, Layers, Users, FileText, Search, BarChart3 } from "lucide-react";
 
 export default function FeaturesSection() {
   const features = [
     {
       title: "Digital Purchase Requests",
       badge: "Appendix 60 PR",
-      description: "Digital Purchase Request generation with Excel/CSV line item uploads, budget validation, Responsibility Center Codes, and digital approval signatures.",
+      description: "Submit official Appendix 60 Purchase Requests with digital line items, budget validation, Responsibility Center Codes, and item catalog integration. Requires End User login.",
       icon: FileText,
     },
     {
       title: "Official RFQ Generation",
       badge: "PR-to-RFQ",
-      description: "Automated PR-to-RFQ conversion that creates official Request for Quotation documents, populating specifications and items without data re-encoding.",
+      description: "Automated PR-to-RFQ conversion that builds Request for Quotation documents from approved purchase requests without re-encoding data. Managed by Procurement Officers.",
       icon: Layers,
     },
     {
-      title: "Supplier Management",
+      title: "Supplier Quotation Management",
       badge: "Sealed Bidding",
-      description: "Supplier quote submission, sealed bid entry, supplier performance scorecards, and automated Abstract of Quotation (AOQ) generation for BAC evaluation.",
+      description: "Secured submission and management of supplier quotes, with automatic Abstract of Quotation (AOQ) generation and price canvassing tools for BAC evaluation.",
       icon: Users,
     },
     {
       title: "Purchase Order Processing",
       badge: "Appendix 61 PO",
-      description: "Official Philippine Government Appendix 61 Purchase Order document generation with compliant print layout, delivery terms, and item editing.",
+      description: "Official Philippine Government Appendix 61 Purchase Order document generation, including print-ready layout and compliant delivery term management.",
       icon: FileCheck,
     },
     {
       title: "Procurement Tracking",
-      badge: "Real-Time Tracking",
-      description: "End-to-end requisition tracking with unique tracking codes, status timelines, and tamper-evident audit logs across every procurement stage.",
+      badge: "Real-Time Status",
+      description: "End-to-end requisition lifecycle tracking with unique tracking codes, status timelines, and tamper-evident audit logs across every stage of the procurement workflow.",
       icon: Search,
     },
     {
       title: "Reports & Analytics",
-      badge: "Executive Insights",
-      description: "Comprehensive procurement analytics, department budget utilization dashboards, supplier reliability ratings, and price trend monitoring.",
+      badge: "Executive Dashboard",
+      description: "Comprehensive procurement analytics dashboards, department budget utilization, supplier reliability ratings, and PPMP vs. actual expenditure reports.",
       icon: BarChart3,
     },
   ];
@@ -51,10 +51,10 @@ export default function FeaturesSection() {
             System Modules
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#7B1E1E] tracking-tight">
-            Core Institutional Features
+            Institutional Procurement Features
           </h2>
           <p className="text-sm sm:text-base text-base-content/70">
-            Tailored specifically for State Universities and Colleges to enforce Republic Act No. 9184 standards.
+            All modules are accessible exclusively to authenticated institutional users based on their assigned role within Batanes State College.
           </p>
         </div>
 

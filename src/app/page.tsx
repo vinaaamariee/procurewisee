@@ -5,13 +5,14 @@ import HeroSection from "@/components/landing/HeroSection";
 import StatsSection from "@/components/landing/StatsSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
 import UserRolesSection from "@/components/landing/UserRolesSection";
-import CatalogPreviewSection from "@/components/landing/CatalogPreviewSection";
+import AboutSection from "@/components/landing/AboutSection";
+import HelpSection from "@/components/landing/HelpSection";
 import Footer from "@/components/landing/Footer";
 
 export const metadata: Metadata = {
-  title: "Batanes State College — Procurement Management Information System",
+  title: "ProcureWise — Batanes State College Procurement Management Information System",
   description:
-    "Official digital portal for managing institutional purchase requests, procurement activities, supplier quotations, price monitoring, and purchase orders for Batanes State College in compliance with Republic Act No. 9184.",
+    "The official internal Procurement Management Information System (PMIS) of Batanes State College. Manages institutional purchase requests, RFQs, supplier evaluation, and purchase orders in compliance with Republic Act No. 9184. Access restricted to authenticated users.",
   keywords: [
     "ProcureWise",
     "Batanes State College",
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
     "Request for Quotation",
     "Purchase Order",
     "PPMP",
+    "Internal System",
   ],
 };
 
@@ -29,26 +31,32 @@ export const dynamic = "force-dynamic";
 
 export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-base-100 text-base-content font-sans antialiased selection:bg-[#7B1E1E] selection:text-white" data-theme="bsc">
+    <div
+      className="flex min-h-screen flex-col bg-base-100 text-base-content font-sans antialiased selection:bg-[#7B1E1E] selection:text-white"
+      data-theme="bsc"
+    >
       {/* Sticky Institutional Navbar */}
       <Header />
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <main className="flex-1">
-        {/* Two-Column Institutional Hero Section with Vertical Workflow Steps */}
+        {/* Hero: Two-Column Layout — Institution Title + Workflow Steps (auth-gated) */}
         <HeroSection />
 
-        {/* Institutional Stats Section (daisyUI Stats) */}
+        {/* Institutional Stats — RA 9184, 7-Step Process, Role-Based Access, Appendix 60/61 */}
         <StatsSection />
 
-        {/* Core System Features (6 daisyUI Cards) */}
+        {/* Core Procurement Modules — all auth-gated descriptions */}
         <FeaturesSection />
 
-        {/* User Roles & Access Control Section */}
+        {/* Role-Based Access — End User, Procurement Officer, Administrator */}
         <UserRolesSection />
 
-        {/* Public Catalog Preview Section */}
-        <CatalogPreviewSection />
+        {/* About the System — institutional description + BSC background */}
+        <AboutSection />
+
+        {/* Help & Contact — FAQs, contact, and sign-in CTA */}
+        <HelpSection />
       </main>
 
       {/* Institutional Footer */}

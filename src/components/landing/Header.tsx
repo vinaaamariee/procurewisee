@@ -11,7 +11,7 @@ export default function Header() {
       <div className="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20">
         {/* Left: Mobile Dropdown & Brand */}
         <div className="navbar-start gap-2">
-          {/* Mobile Menu Dropdown */}
+          {/* Mobile Menu */}
           <div className="dropdown lg:hidden">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle btn-sm" aria-label="Toggle Navigation Menu">
               <Menu className="h-5 w-5" />
@@ -20,25 +20,18 @@ export default function Header() {
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200 font-semibold"
             >
+              <li><a href="#workflow">Workflow</a></li>
+              <li><a href="#features">Features</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#help">Help</a></li>
+              <li className="divider my-1"></li>
               <li>
-                <a href="#workflow">Workflow</a>
-              </li>
-              <li>
-                <a href="#features">Features</a>
-              </li>
-              <li>
-                <a href="#roles">User Roles</a>
-              </li>
-              <li>
-                <Link href="/catalog">Catalog</Link>
-              </li>
-              <li>
-                <Link href="/track">Track Request</Link>
+                <Link href="/login" className="text-[#7B1E1E] font-bold">Sign In</Link>
               </li>
             </ul>
           </div>
 
-          {/* College Branding */}
+          {/* Brand */}
           <Link href="/" className="flex items-center gap-3 group no-underline">
             <div className="relative h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 flex items-center justify-center rounded-xl bg-white p-1 shadow-sm border border-base-200">
               <Image
@@ -65,34 +58,29 @@ export default function Header() {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 gap-1 font-bold text-sm">
             <li>
-              <a href="#workflow" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
+              <a href="#workflow" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10 rounded-lg">
                 Workflow
               </a>
             </li>
             <li>
-              <a href="#features" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
+              <a href="#features" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10 rounded-lg">
                 Features
               </a>
             </li>
             <li>
-              <a href="#roles" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
-                User Roles
+              <a href="#about" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10 rounded-lg">
+                About
               </a>
             </li>
             <li>
-              <Link href="/catalog" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
-                Catalog
-              </Link>
-            </li>
-            <li>
-              <Link href="/track" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
-                Track Request
-              </Link>
+              <a href="#help" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10 rounded-lg">
+                Help
+              </a>
             </li>
           </ul>
         </div>
 
-        {/* Right: Actions */}
+        {/* Right: Auth Actions */}
         <div className="navbar-end gap-2">
           <ThemeToggle />
 
@@ -106,7 +94,7 @@ export default function Header() {
 
           <Link
             href="/login"
-            className="btn btn-primary btn-sm rounded-lg bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold hidden sm:inline-flex shadow-sm"
+            className="btn btn-sm rounded-lg bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold hidden sm:inline-flex shadow-sm"
           >
             <span>Get Started</span>
             <ArrowRight className="h-4 w-4" />

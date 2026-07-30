@@ -17,10 +17,10 @@ export default function StatsSection() {
               Procurement Workflow
             </div>
             <div className="stat-value text-2xl sm:text-3xl font-black text-[#7B1E1E]">
-              7-Step Digital
+              7-Step Process
             </div>
             <div className="stat-desc text-xs font-semibold text-base-content/70">
-              PR → RFQ → PO Lifecycle
+              PR → Review → RFQ → Quotes → Award → PO → Delivery
             </div>
           </div>
 
@@ -30,13 +30,13 @@ export default function StatsSection() {
               <Users className="h-8 w-8" />
             </div>
             <div className="stat-title text-xs font-bold uppercase tracking-wider text-base-content/60">
-              System Access
+              Institutional Access
             </div>
             <div className="stat-value text-2xl sm:text-3xl font-black text-[#A6761D]">
-              Multi-Role Access
+              Role-Based
             </div>
             <div className="stat-desc text-xs font-semibold text-base-content/70">
-              End User, Officer, BAC & Admin
+              End User, Officer & Administrator
             </div>
           </div>
 
@@ -46,13 +46,13 @@ export default function StatsSection() {
               <FileCheck className="h-8 w-8" />
             </div>
             <div className="stat-title text-xs font-bold uppercase tracking-wider text-base-content/60">
-              Document Templates
+              Official Templates
             </div>
             <div className="stat-value text-2xl sm:text-3xl font-black text-[#7B1E1E]">
               Appendix 60 & 61
             </div>
             <div className="stat-desc text-xs font-semibold text-base-content/70">
-              Official Government Forms
+              GOF PR & PO Government Forms
             </div>
           </div>
 
@@ -65,10 +65,10 @@ export default function StatsSection() {
               Compliance Standard
             </div>
             <div className="stat-value text-2xl sm:text-3xl font-black text-[#A6761D]">
-              100% RA 9184
+              RA 9184
             </div>
             <div className="stat-desc text-xs font-semibold text-base-content/70">
-              Audited & Transparent
+              Government Procurement Reform Act
             </div>
           </div>
         </div>
