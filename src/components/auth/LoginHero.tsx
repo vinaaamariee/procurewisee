@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import { ShieldCheck, Users, Layers, Lock, GraduationCap, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Users, Layers, Lock, GraduationCap, Mail, Phone } from 'lucide-react';
 
 export default function LoginHero() {
   const [imgError, setImgError] = useState(false);
@@ -110,20 +109,26 @@ export default function LoginHero() {
         </div>
 
         {/* New to ProcureWise? */}
-        <div className="flex flex-col gap-2 pt-2 border-t border-base-300/60">
-          <p className="text-xs text-base-content/60 font-medium">
+        <div className="space-y-2 pt-2 border-t border-base-300/60">
+          <p className="text-xs font-extrabold text-base-content/60">
             New to ProcureWise?
           </p>
-          <Link
-            href="/login"
-            className="btn btn-outline btn-sm w-full rounded-xl border-[#7B1E1E] text-[#7B1E1E] hover:bg-[#7B1E1E] hover:text-white font-bold"
-          >
-            <span>Create Account</span>
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <p className="text-[11px] text-base-content/50 text-center">
-            Account provisioning is managed by the System Administrator.
-          </p>
+          <div className="rounded-xl bg-base-200/70 border border-base-300 p-3.5 space-y-2">
+            <p className="text-[11px] text-base-content/70 leading-relaxed">
+              Account access is provisioned by the System Administrator. Self-registration is not available.
+              Contact the Procurement Office or ICT Office to request an account.
+            </p>
+            <div className="space-y-1.5 pt-1">
+              <div className="flex items-center gap-2 text-[11px] text-base-content/70">
+                <Mail className="h-3.5 w-3.5 text-[#A6761D] flex-shrink-0" />
+                <span className="font-semibold">procurement@bsc.edu.ph</span>
+              </div>
+              <div className="flex items-center gap-2 text-[11px] text-base-content/70">
+                <Phone className="h-3.5 w-3.5 text-[#7B1E1E] flex-shrink-0" />
+                <span className="font-semibold">(078) 533-3000</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
