@@ -57,6 +57,35 @@ export default async function PoDraftingPage() {
     );
   });
 
+  // Serialize pos and pendingAwards (convert Decimal to number, Date to ISO string)
+  const serializedPos = pos.map((po) => ({
+    ...po,
+    totalCost: Number(po.totalCost),
+    createdAt: po.createdAt.toISOString(),
+  }));
+
+  const serializedPendingAwards = pendingAwards.map((rec) => ({
+    ...rec,
+    compositeMcdmScore: Number(rec.compositeMcdmScore),
+    priceScore: Number(rec.priceScore),
+    deliveryScore: Number(rec.deliveryScore),
+    reliabilityScore: Number(rec.reliabilityScore),
+    supplierQuote: rec.supplierQuote ? {
+      ...rec.supplierQuote,
+      totalQuotedAmount: Number(rec.supplierQuote.totalQuotedAmount),
+      submissionDate: rec.supplierQuote.submissionDate.toISOString(),
+    } : null,
+    canvas: {
+      ...rec.canvas,
+      rfq: {
+        ...rec.canvas.rfq,
+        approvedBudgetContract: Number(rec.canvas.rfq.approvedBudgetContract),
+        deadlineDate: rec.canvas.rfq.deadlineDate.toISOString(),
+        createdAt: rec.canvas.rfq.createdAt.toISOString(),
+      }
+    }
+  }));
+
  return (
   <div className="space-y-8">
     <SectionHeader
@@ -65,8 +94,8 @@ export default async function PoDraftingPage() {
     />
 
     <PoDraftingClient
-      pendingAwards={(pendingAwards as any)}
-      initialPos={(pos as any)}
+      pendingAwards={(serializedPendingAwards as any)}
+      initialPos={(serializedPos as any)}
     />
   </div>
 );

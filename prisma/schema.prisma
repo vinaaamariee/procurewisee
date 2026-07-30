@@ -542,6 +542,7 @@ model PurchaseOrder {
   paymentTerms            String?
   status                  PoStatus                 @default(Draft)
   createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @default(now()) @updatedAt
   entityName              String?                  @db.VarChar(150)
   modeOfProcurement       String?                  @db.VarChar(100)
   placeOfDelivery         String?                  @db.VarChar(200)
@@ -639,6 +640,7 @@ model SupplierEvaluation {
   specificationCompliance Int?
   documentCompliance      Int?
   deliveryPerformance     Int?
+  overallSatisfaction     Int?
   // Header fields for PO variant
   purchaseRequestNo       String?        @db.VarChar(50)
   poNo                    String?        @db.VarChar(50)
