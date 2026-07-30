@@ -215,7 +215,7 @@ export default async function OfficerDashboard() {
       <DashboardHeader profile={profile} />
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-8">
         {statCards.map((card) => (
           <StatCard
             key={card.label}
@@ -237,7 +237,7 @@ export default async function OfficerDashboard() {
       {/* Forecast Intelligence Section */}
       <div
         id="forecast-intelligence"
-        className="scroll-mt-24 overflow-hidden rounded-xl border border-base-200 bg-base-100 text-left"
+        className="scroll-mt-24 overflow-hidden rounded-xl border border-base-300 bg-base-100 shadow-sm text-left"
       >
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-base-200 px-6 py-4">
           <div className="flex items-center gap-3">

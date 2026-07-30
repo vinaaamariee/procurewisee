@@ -100,9 +100,8 @@ export default function DashboardSidebar({ role }: { role: string }) {
         items: [
           {
             label: "Settings",
-            href: "#",
+            href: "/dashboard/officer/settings",
             icon: Settings,
-            disabled: true,
           },
         ],
       },
