@@ -1,102 +1,98 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { ThemeToggle } from "@/components/theme-toggle";
-import MobileNav from "./MobileNav";
-import { Search, LogIn, Package } from "lucide-react";
-
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Procurement Catalog", href: "/catalog" },
-  { label: "Track Request", href: "/track" },
-  { label: "About", href: "/about" },
-];
+import { LogIn, ArrowRight, FileText, Search } from "lucide-react";
 
 export default function Header() {
-  const pathname = usePathname();
-
-  const isActive = (href: string) => {
-    if (href === "/") return pathname === "/";
-    if (href.startsWith("#")) return false;
-    return pathname.startsWith(href);
-  };
-
   return (
-    <header className="sticky top-0 z-50 border-b border-gray-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl transition-colors">
-      <nav
-        className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8"
-        aria-label="Main navigation"
-      >
-        {/* ── Brand ── */}
-        <Link
-          href="/"
-          className="group flex items-center gap-3.5 no-underline"
-          aria-label="ProcureWise Home"
-        >
-          <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#7B1E1E] to-[#5E1414] text-white font-black text-base shadow-md transition-transform duration-200 group-hover:scale-105">
-            <Package className="h-5.5 w-5.5 text-[#D4A017]" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5 text-lg font-black tracking-tight text-[#111827] dark:text-white leading-tight">
-              <span className="text-[#7B1E1E] dark:text-red-400">Procure</span>
-              <span className="text-[#D4A017]">Wise</span>
+    <header className="sticky top-0 z-50 bg-base-100/95 backdrop-blur border-b border-base-200 shadow-sm transition-colors">
+      <div className="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20">
+        {/* Navbar Start: Brand */}
+        <div className="navbar-start">
+          <Link href="/" className="flex items-center gap-3 group no-underline">
+            <div className="relative h-11 w-11 flex-shrink-0 flex items-center justify-center rounded-xl bg-white p-1 shadow-sm border border-base-200">
+              <Image
+                src="/images/bsc-logo.png"
+                alt="Batanes State College Logo"
+                width={40}
+                height={40}
+                className="object-contain h-full w-full"
+                priority
+              />
             </div>
-            <div className="text-[10px] font-bold uppercase tracking-widest text-[#6B7280] dark:text-slate-400 leading-tight">
-              Batanes State College
+            <div className="hidden sm:block">
+              <div className="text-base font-black tracking-tight text-[#7B1E1E] leading-tight">
+                Batanes State College
+              </div>
+              <div className="text-xs font-bold text-[#A6761D] leading-tight">
+                Procurement Management Information System
+              </div>
             </div>
-          </div>
-        </Link>
-
-        {/* ── Desktop Navigation ── */}
-        <div className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => {
-            const active = isActive(link.href);
-            return (
-              <Link
-                key={link.label}
-                href={link.href}
-                aria-current={active ? "page" : undefined}
-                className={`relative rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 ${
-                  active
-                    ? "text-[#7B1E1E] dark:text-[#D4A017] bg-[#7B1E1E]/5 dark:bg-[#D4A017]/10"
-                    : "text-[#6B7280] dark:text-slate-300 hover:text-[#111827] dark:hover:text-white hover:bg-gray-100/60 dark:hover:bg-slate-800/60"
-                }`}
-              >
-                {link.label}
-                {active && (
-                  <span className="absolute bottom-0 left-1/2 h-[3px] w-6 -translate-x-1/2 rounded-full bg-[#7B1E1E] dark:bg-[#D4A017]" />
-                )}
-              </Link>
-            );
-          })}
+          </Link>
         </div>
 
-        {/* ── Right Actions ── */}
-        <div className="flex items-center gap-3">
-          {/* Catalog Quick Search Trigger (Desktop) */}
-          <Link
-            href="/catalog"
-            className="hidden items-center gap-2 rounded-full border border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 px-3.5 py-1.5 text-xs font-semibold text-[#6B7280] dark:text-slate-400 hover:border-[#7B1E1E]/30 transition-all lg:flex"
-            aria-label="Quick search catalog"
-          >
-            <Search className="h-3.5 w-3.5 text-[#7B1E1E]" />
-            <span>Search supplies...</span>
-          </Link>
+        {/* Navbar Center: Navigation Links */}
+        <div className="navbar-center hidden lg:flex">
+          <ul className="menu menu-horizontal px-1 gap-1 font-semibold text-sm">
+            <li>
+              <a href="#workflow" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
+                Workflow
+              </a>
+            </li>
+            <li>
+              <a href="#features" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
+                Features
+              </a>
+            </li>
+            <li>
+              <a href="#roles" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
+                User Roles
+              </a>
+            </li>
+            <li>
+              <Link href="/catalog" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
+                Public Catalog
+              </Link>
+            </li>
+            <li>
+              <Link href="/track" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10">
+                Track Request
+              </Link>
+            </li>
+          </ul>
+        </div>
 
+        {/* Navbar End: Actions */}
+        <div className="navbar-end gap-2 sm:gap-3">
           <ThemeToggle />
 
           <Link
-            href="/login"
-            className="hidden items-center gap-2 rounded-full bg-[#7B1E1E] hover:bg-[#5E1414] text-white px-5 py-2.5 text-xs font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 md:flex"
+            href="/catalog"
+            className="btn btn-ghost btn-sm hidden sm:inline-flex rounded-lg text-xs font-bold text-base-content/80 hover:text-[#7B1E1E]"
           >
-            <LogIn className="h-3.5 w-3.5" />
+            <Search className="h-4 w-4 text-[#A6761D]" />
+            <span className="hidden xl:inline">Search Supplies</span>
+          </Link>
+
+          <Link
+            href="/login"
+            className="btn btn-outline btn-sm rounded-lg border-[#7B1E1E] text-[#7B1E1E] hover:bg-[#7B1E1E] hover:text-white font-bold"
+          >
+            <LogIn className="h-4 w-4" />
             <span>Sign In</span>
           </Link>
 
-          <MobileNav links={navLinks} />
+          <Link
+            href="/login"
+            className="btn btn-primary btn-sm rounded-lg bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold hidden sm:inline-flex shadow-sm"
+          >
+            <span>Get Started</span>
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
-      </nav>
+      </div>
     </header>
   );
 }

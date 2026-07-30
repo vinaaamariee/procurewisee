@@ -2,106 +2,52 @@ import type { Metadata } from "next";
 
 import Header from "@/components/landing/Header";
 import HeroSection from "@/components/landing/HeroSection";
-import QuickActions from "@/components/landing/QuickActions";
-import StatisticsCards from "@/components/landing/StatisticsCards";
-import CategoryGrid from "@/components/landing/CategoryGrid";
-import RecentlyUpdatedProducts from "@/components/landing/RecentlyUpdatedProducts";
-import WhyProcureWise from "@/components/landing/WhyProcureWise";
+import WorkflowSection from "@/components/landing/WorkflowSection";
+import FeaturesSection from "@/components/landing/FeaturesSection";
+import UserRolesSection from "@/components/landing/UserRolesSection";
 import Footer from "@/components/landing/Footer";
-import { Boxes, Users, LayoutGrid, TrendingUp } from "lucide-react";
-
-import {
-  getLandingStats,
-  getRecentProducts,
-  getCategoriesWithCounts,
-  getActiveRfqs,
-} from "@/features/landing/server/queries";
 
 export const metadata: Metadata = {
-  title: "ProcureWise — Intelligent Procurement Analytics | Batanes State College",
+  title: "Batanes State College — Procurement Management Information System",
   description:
-    "ProcureWise: An Intelligent Procurement Analytics and Automated Canvassing System with Best-Value Recommendation Engine for Batanes State College. Browse products, compare prices, and track procurement requests.",
+    "Official digital portal for managing institutional purchase requests, procurement activities, supplier quotations, price monitoring, and purchase orders for Batanes State College in compliance with Republic Act No. 9184.",
   keywords: [
     "ProcureWise",
-    "procurement",
     "Batanes State College",
-    "government procurement",
-    "canvassing",
-    "purchase request",
+    "Procurement Management Information System",
+    "Government Procurement",
+    "Republic Act 9184",
+    "Purchase Request",
+    "Request for Quotation",
+    "Purchase Order",
     "PPMP",
   ],
 };
 
 export const dynamic = "force-dynamic";
 
-export default async function LandingPage() {
-  const [stats, recentProducts, categories, activeRfqs] = await Promise.all([
-    getLandingStats(),
-    getRecentProducts(),
-    getCategoriesWithCounts(),
-    getActiveRfqs(),
-  ]);
-
+export default function LandingPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#F7F8FA] via-[#F3F4F6] to-[#F7F8FA] dark:bg-slate-950 text-[#111827] dark:text-slate-100 font-sans">
+    <div className="flex min-h-screen flex-col bg-base-100 text-base-content font-sans antialiased selection:bg-[#7B1E1E] selection:text-white" data-theme="bsc">
+      {/* Sticky Institutional Navbar */}
       <Header />
 
+      {/* Main Content Area */}
       <main className="flex-1">
-        {/* Hero */}
-        <HeroSection activeRfqs={activeRfqs} />
+        {/* Hero Section */}
+        <HeroSection />
 
-        {/* Main Content Container */}
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-          <div className="space-y-16 lg:space-y-20">
-            {/* Quick Access */}
-            <QuickActions />
+        {/* 7-Step Procurement Workflow Lifecycle (daisyUI Steps) */}
+        <WorkflowSection />
 
-            {/* Statistics */}
-            <StatisticsCards
-              stats={[
-                {
-                  title: "Total Products",
-                  value: stats.totalProducts.toLocaleString(),
-                  icon: Boxes,
-                  color: "#7B1E1E",
-                  bgColor: "rgba(123, 30, 30, 0.08)",
-                },
-                {
-                  title: "Registered Suppliers",
-                  value: stats.totalSuppliers.toLocaleString(),
-                  icon: Users,
-                  color: "#D4A017",
-                  bgColor: "rgba(212, 160, 23, 0.08)",
-                },
-                {
-                  title: "Categories",
-                  value: stats.totalCategories.toLocaleString(),
-                  icon: LayoutGrid,
-                  color: "#059669",
-                  bgColor: "rgba(5, 150, 105, 0.08)",
-                },
-                {
-                  title: "Monthly Price Updates",
-                  value: stats.monthlyPriceUpdates.toLocaleString(),
-                  icon: TrendingUp,
-                  color: "#6366f1",
-                  bgColor: "rgba(99, 102, 241, 0.08)",
-                },
-              ]}
-            />
+        {/* Core Institutional Features (daisyUI Cards) */}
+        <FeaturesSection />
 
-            {/* Category Grid */}
-            <CategoryGrid categories={categories} />
-
-            {/* Bottom Two-Column Section */}
-            <div className="grid gap-10 lg:grid-cols-2 items-start">
-              <RecentlyUpdatedProducts products={recentProducts} />
-              <WhyProcureWise />
-            </div>
-          </div>
-        </div>
+        {/* System User Roles & Access Control */}
+        <UserRolesSection />
       </main>
 
+      {/* Institutional Footer */}
       <Footer />
     </div>
   );

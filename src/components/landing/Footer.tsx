@@ -1,97 +1,118 @@
+"use client";
+
 import Link from "next/link";
-import { Package } from "lucide-react";
-
-const usefulLinks = [
-  { label: "Procurement Catalog", href: "/catalog" },
-  { label: "Track Request", href: "/track" },
-  { label: "About ProcureWise", href: "/about" },
-  { label: "Submit Purchase Request", href: "/end-user" },
-  { label: "Login Portal", href: "/login" },
-];
-
-const systemLinks = [
-  { label: "Dashboard", href: "/dashboard" },
-  { label: "Price Comparison", href: "/price-comparison" },
-];
+import Image from "next/image";
+import { Mail, Phone, MapPin, ShieldCheck } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-gray-200 dark:border-slate-800 bg-[#F7F8FA] dark:bg-slate-950 text-[#111827] dark:text-slate-100 transition-colors">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          {/* ── College Information ── */}
-          <div className="lg:col-span-2 space-y-4">
+    <footer className="bg-neutral text-neutral-content border-t border-neutral-content/10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
+          {/* Institutional Branding */}
+          <div className="space-y-4 lg:col-span-2">
             <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-[#7B1E1E] to-[#5E1414] text-white font-black text-base shadow-md">
-                <Package className="h-5.5 w-5.5 text-[#D4A017]" />
+              <div className="relative h-12 w-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-white p-1 shadow-sm">
+                <Image
+                  src="/images/bsc-logo.png"
+                  alt="Batanes State College Logo"
+                  width={44}
+                  height={44}
+                  className="object-contain h-full w-full"
+                />
               </div>
               <div>
-                <div className="text-lg font-black tracking-tight text-[#111827] dark:text-white">
-                  <span className="text-[#7B1E1E] dark:text-red-400">Procure</span>
-                  <span className="text-[#D4A017]">Wise</span>
-                </div>
-                <div className="text-xs font-bold uppercase tracking-widest text-[#6B7280] dark:text-slate-400">
+                <div className="text-lg font-black tracking-tight text-white">
                   Batanes State College
+                </div>
+                <div className="text-xs font-bold text-[#A6761D]">
+                  Procurement Management Information System
+                </div>
+                <div className="text-[10px] uppercase font-bold text-neutral-content/60">
+                  Powered by ProcureWise
                 </div>
               </div>
             </div>
-            <p className="max-w-md text-sm text-[#6B7280] dark:text-slate-400 leading-relaxed">
-              An Intelligent Procurement Analytics and Automated Canvassing
-              System with Best-Value Recommendation Engine. Modernizing
-              government procurement for transparency and efficiency.
+
+            <p className="text-xs sm:text-sm text-neutral-content/70 leading-relaxed max-w-md">
+              An enterprise government procurement analytics and canvassing system with best-value decision support,
+              modernizing procurement workflows for Batanes State College in accordance with Republic Act No. 9184.
             </p>
+
+            <div className="inline-flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5 text-xs text-neutral-content/80 font-medium">
+              <ShieldCheck className="h-4 w-4 text-[#A6761D]" />
+              <span>Compliant with Government Procurement Manuals</span>
+            </div>
           </div>
 
-          {/* ── Useful Links ── */}
-          <div>
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-[#7B1E1E] dark:text-red-400">
-              Quick Links
+          {/* Quick Portal Navigation */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-extrabold uppercase tracking-widest text-[#A6761D]">
+              Public Portal
             </h3>
-            <ul className="space-y-2.5">
-              {usefulLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-[#6B7280] dark:text-slate-400 hover:text-[#7B1E1E] dark:hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* ── System ── */}
-          <div>
-            <h3 className="mb-4 text-xs font-bold uppercase tracking-widest text-[#7B1E1E] dark:text-red-400">
-              System
-            </h3>
-            <ul className="space-y-2.5">
-              {systemLinks.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-[#6B7280] dark:text-slate-400 hover:text-[#7B1E1E] dark:hover:text-white transition-colors"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-              <li className="pt-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-3 py-1 text-xs font-bold text-[#6B7280] dark:text-slate-400 shadow-sm">
-                  v0.1.0
-                </span>
+            <ul className="space-y-2 text-xs font-semibold">
+              <li>
+                <Link href="/" className="hover:text-white transition-colors">
+                  Portal Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/catalog" className="hover:text-white transition-colors">
+                  Public Procurement Catalog
+                </Link>
+              </li>
+              <li>
+                <Link href="/track" className="hover:text-white transition-colors">
+                  Track Requisition Status
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="hover:text-white transition-colors">
+                  Institutional Sign In
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:text-white transition-colors">
+                  About System & Governance
+                </Link>
               </li>
             </ul>
           </div>
+
+          {/* College Contact Info */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-extrabold uppercase tracking-widest text-[#A6761D]">
+              Contact Information
+            </h3>
+            <div className="space-y-2 text-xs text-neutral-content/80 font-normal">
+              <div className="flex items-start gap-2.5">
+                <MapPin className="h-4 w-4 text-[#A6761D] flex-shrink-0 mt-0.5" />
+                <span>San Antonio, Basco, Batanes, 3900 Philippines</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Mail className="h-4 w-4 text-[#A6761D] flex-shrink-0" />
+                <span>procurement@bsc.edu.ph</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <Phone className="h-4 w-4 text-[#A6761D] flex-shrink-0" />
+                <span>(078) 533-3000</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* ── Bottom Bar ── */}
-        <div className="mt-12 border-t border-gray-200 dark:border-slate-800 pt-8 text-center text-xs font-medium text-[#6B7280] dark:text-slate-500">
-          © {currentYear} ProcureWise — Batanes State College. All rights
-          reserved.
+        <div className="divider divider-neutral my-8"></div>
+
+        {/* Bottom Bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-content/60 font-medium">
+          <div>
+            © {currentYear} Batanes State College. All rights reserved.
+          </div>
+          <div>
+            Procurement Management Information System (ProcureWise v1.0)
+          </div>
         </div>
       </div>
     </footer>
