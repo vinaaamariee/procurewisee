@@ -1,113 +1,128 @@
-import { createClient } from '@/lib/supabase/server';
+import Image from 'next/image';
+import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
 import { ROLE_HOME } from '@/types/auth';
-import type { UserRole } from '@/types/auth';
+import { signout } from '@/app/actions/auth';
+import { Lock, ShieldAlert, UserCheck, LogOut, ArrowLeft } from 'lucide-react';
 
-export const metadata = { title: '403 Unauthorized — ProcureWise' };
+export const metadata = { title: '403 Access Denied — ProcureWise' };
 
-export default async function UnauthorizedPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+interface PageProps {
+  searchParams: Promise<{ required?: string }>;
+}
 
-  let role: UserRole | null = null;
-  let fullName = '';
-
-  if (user) {
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('role, "fullName"')
-      .eq('id', user.id)
-      .single();
-    if (profile) {
-      role = profile.role as UserRole;
-      fullName = profile.fullName;
-    }
-  }
-
-  const dashboardLink = role ? ROLE_HOME[role] : '/';
+export default async function UnauthorizedPage({ searchParams }: PageProps) {
+  // getAuthenticatedUser checks auth and redirects to /login if unauthenticated
+  const { profile } = await getAuthenticatedUser();
+  
+  const params = await searchParams;
+  const requiredRole = params.required || 'Authorized Role';
+  const dashboardLink = ROLE_HOME[profile.role] || '/';
 
   return (
-    <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'linear-gradient(160deg, var(--bg-deep) 0%, var(--bg-dark) 100%)',
-      padding: '2rem', position: 'relative', overflow: 'hidden',
-    }}>
-      {/* Background glows */}
-      <div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '45%', aspectRatio: '1', borderRadius: '50%', background: 'rgba(239,68,68,0.04)', filter: 'blur(120px)', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', bottom: '-10%', left: '-10%', width: '45%', aspectRatio: '1', borderRadius: '50%', background: 'var(--accent-glass)', filter: 'blur(120px)', pointerEvents: 'none' }} />
+    <div
+      data-theme="bsc"
+      className="min-h-screen flex flex-col items-center justify-center bg-base-200 text-base-content selection:bg-[#7B1E1E]/20 p-4 sm:p-6 relative overflow-hidden"
+    >
+      {/* Background radial glow accents */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-[#7B1E1E]/5 blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[#A6761D]/5 blur-3xl" />
+      </div>
 
-      <div style={{
-        position: 'relative', zIndex: 1,
-        maxWidth: 480, width: '100%',
-        borderRadius: 24,
-        background: 'var(--surface)',
-        border: '1px solid rgba(239,68,68,0.2)',
-        backdropFilter: 'blur(20px)',
-        boxShadow: 'var(--shadow-card)',
-        overflow: 'hidden',
-        textAlign: 'center',
-      }}>
-        {/* Red accent top bar */}
-        <div style={{ height: 3, background: 'linear-gradient(90deg,#ef4444,#f87171,#ef4444)' }} />
+      <div className="relative z-10 w-full max-w-md">
+        {/* daisyUI Card component */}
+        <div className="card bg-base-100 shadow-xl border border-base-200 overflow-hidden rounded-2xl">
+          {/* Maroon/gold accent top bar */}
+          <div className="h-1.5 bg-gradient-to-r from-[#7B1E1E] via-[#A6761D] to-[#7B1E1E]" />
 
-        <div style={{ padding: '2.5rem 2rem' }}>
-          {/* Icon */}
-          <div style={{
-            width: 72, height: 72, borderRadius: 20,
-            background: 'rgba(239,68,68,0.08)',
-            border: '1px solid rgba(239,68,68,0.2)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto 1.5rem',
-            fontSize: '2rem',
-          }}>
-            🔒
+          <div className="card-body p-7 sm:p-9 space-y-6 text-center">
+            {/* Lock Icon */}
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#7B1E1E]/10 text-[#7B1E1E] mx-auto border border-[#7B1E1E]/20 shadow-sm">
+              <Lock className="h-7 w-7" />
+            </div>
+
+            {/* Title & Badge */}
+            <div className="space-y-2">
+              <span className="badge badge-outline border-error/30 text-error text-[10px] font-extrabold uppercase tracking-widest px-3 py-2.5">
+                403 Access Denied
+              </span>
+              <h1 className="text-2xl font-black text-[#7B1E1E] tracking-tight leading-none pt-1">
+                Access Restricted
+              </h1>
+              <p className="text-xs sm:text-sm text-base-content/70 leading-relaxed font-normal">
+                Your account is successfully authenticated, but you don't have permission to access this page.
+              </p>
+            </div>
+
+            {/* Role Comparison Table Box */}
+            <div className="grid grid-cols-2 gap-4 p-4 rounded-xl bg-base-200/60 border border-base-200 text-left">
+              {/* Current Role */}
+              <div className="space-y-1">
+                <span className="text-[10px] uppercase tracking-wider font-extrabold text-base-content/50 block">
+                  Current Role
+                </span>
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-base-content">
+                  <UserCheck className="h-4 w-4 text-[#A6761D] flex-shrink-0" />
+                  <span className="truncate">{profile.role}</span>
+                </div>
+              </div>
+
+              {/* Required Role */}
+              <div className="space-y-1 border-l border-base-300 pl-4">
+                <span className="text-[10px] uppercase tracking-wider font-extrabold text-base-content/50 block">
+                  Required Role
+                </span>
+                <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-error">
+                  <ShieldAlert className="h-4 w-4 text-error flex-shrink-0" />
+                  <span className="truncate">{requiredRole}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Support Message */}
+            <p className="text-xs text-base-content/60 leading-relaxed max-w-sm mx-auto">
+              If you believe you should have access to this resource, please contact your System Administrator or the Procurement Office.
+            </p>
+
+            {/* Actions Button List */}
+            <div className="space-y-2 pt-2">
+              {/* Back to Dashboard */}
+              <a
+                href={dashboardLink}
+                className="btn btn-primary w-full text-white font-bold bg-[#7B1E1E] hover:bg-[#601717] border-none shadow-sm text-sm rounded-xl flex items-center justify-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span>Back to Dashboard</span>
+              </a>
+
+              {/* Sign out Form */}
+              <form action={signout} className="w-full">
+                <button
+                  type="submit"
+                  className="btn btn-outline w-full border-base-300 hover:bg-base-200 text-base-content/85 hover:text-base-content font-bold text-sm rounded-xl flex items-center justify-center gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Sign in with a different account</span>
+                </button>
+              </form>
+            </div>
           </div>
+        </div>
 
-          {/* 403 badge */}
-          <div style={{
-            display: 'inline-block', marginBottom: '1rem',
-            padding: '0.25rem 0.75rem', borderRadius: 999,
-            background: 'rgba(239,68,68,0.08)',
-            border: '1px solid rgba(239,68,68,0.2)',
-            fontSize: '0.7rem', fontWeight: 800, color: '#ef4444',
-            letterSpacing: '1px',
-          }}>
-            403 FORBIDDEN
+        {/* Brand Footer */}
+        <div className="mt-6 flex flex-col items-center justify-center gap-3">
+          <div className="relative h-10 w-10 flex items-center justify-center rounded-xl bg-white border border-base-200 shadow-sm p-1">
+            <Image
+              src="/images/bsc-logo.png"
+              alt="BSC Logo"
+              width={36}
+              height={36}
+              className="object-contain"
+            />
           </div>
-
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.5px', marginBottom: '0.75rem' }}>
-            Access Denied
-          </h1>
-
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: '1.75rem' }}>
-            {fullName ? `${fullName}, you don't` : "You don't"} have permission to access this section.
-            {role && (
-              <><br /><span style={{ color: 'var(--text-muted)' }}>Your role is </span>
-              <span style={{ color: 'var(--accent)', fontWeight: 600 }}>{role}</span>.</>
-            )}
+          <p className="text-[11px] text-base-content/40 font-medium text-center">
+            © {new Date().getFullYear()} Batanes State College · Powered by ProcureWise
           </p>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <a href={dashboardLink} style={{
-              display: 'block', padding: '0.75rem 1.5rem', borderRadius: 12,
-              background: 'var(--accent)',
-              color: '#fff', fontSize: '0.875rem', fontWeight: 700,
-              textDecoration: 'none', boxShadow: '0 4px 16px var(--accent-glass)',
-            }}>
-              ← Back to My Dashboard
-            </a>
-
-            <form action="/api/auth/signout" method="post">
-              <button type="submit" style={{
-                display: 'block', width: '100%', padding: '0.65rem 1.5rem', borderRadius: 12,
-                border: '1px solid var(--border)',
-                background: 'transparent',
-                color: 'var(--text-secondary)', fontSize: '0.82rem', fontWeight: 500,
-                textDecoration: 'none', cursor: 'pointer',
-              }}>
-                Sign in with a different account
-              </button>
-            </form>
-          </div>
         </div>
       </div>
     </div>

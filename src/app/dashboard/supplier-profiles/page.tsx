@@ -15,7 +15,7 @@ export default async function SupplierProfilesPage() {
   // Role Gate: Only Procurement Officer and Administrative Approver can view supplier profiles
   const allowedRoles = ['Procurement Officer', 'Administrative Approver'];
   if (!allowedRoles.includes(profile.role)) {
-    redirect('/unauthorized');
+    redirect(`/unauthorized?required=${encodeURIComponent(allowedRoles.join(' or '))}`);
   }
 
   // Fetch all suppliers

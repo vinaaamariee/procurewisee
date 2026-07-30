@@ -107,7 +107,8 @@ export async function requireRole(
 
   const allowed = Array.isArray(allowedRole) ? allowedRole.includes(profile.role) : profile.role === allowedRole;
   if (!allowed) {
-    redirect('/unauthorized');
+    const required = Array.isArray(allowedRole) ? allowedRole.join(', ') : allowedRole;
+    redirect(`/unauthorized?required=${encodeURIComponent(required)}`);
   }
 
   return { user, profile };

@@ -175,8 +175,9 @@ export default async function proxy(request: NextRequest) {
   );
 
   if (routeGuard && role !== routeGuard.role) {
-    const correctDest = ROLE_HOME[role] ?? '/unauthorized';
-    const redirectResponse = NextResponse.redirect(new URL(correctDest, request.url));
+    const unauthorizedUrl = new URL('/unauthorized', request.url);
+    unauthorizedUrl.searchParams.set('required', routeGuard.role);
+    const redirectResponse = NextResponse.redirect(unauthorizedUrl);
     if (didFetchRole) {
       redirectResponse.cookies.set('pw-user-role', role, {
         path: '/',
