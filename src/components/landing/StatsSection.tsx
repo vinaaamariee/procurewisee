@@ -52,7 +52,7 @@ export default function StatsSection() {
               Appendix 60 & 61
             </div>
             <div className="stat-desc text-xs font-semibold text-base-content/70">
-              GOF PR & PO Government Forms
+              Gov't PR & PO Government Forms
             </div>
           </div>
 
