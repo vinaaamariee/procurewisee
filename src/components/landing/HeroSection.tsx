@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, LogIn, ShieldCheck, Lock, CheckCircle2 } from "lucide-react";
+import { ShieldCheck, Lock, CheckCircle2, LogIn } from "lucide-react";
 
 export default function HeroSection() {
   const workflowSteps = [
@@ -62,29 +62,25 @@ export default function HeroSection() {
               Batanes State College. Access is restricted to authenticated institutional users only.
             </p>
 
-            {/* Auth Gate Notice */}
-            <div className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-50 dark:bg-amber-900/20 px-4 py-2.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
-              <Lock className="h-4 w-4 flex-shrink-0" />
-              <span>All procurement modules are available only after signing in with your institutional account.</span>
-            </div>
-
-            {/* Primary CTA Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            {/* Single primary CTA + account request note */}
+            <div className="flex flex-col gap-3 pt-2">
               <Link
                 href="/login"
-                className="btn btn-primary btn-md rounded-xl bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold shadow-md px-6"
+                className="btn btn-primary btn-md rounded-xl bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold shadow-md px-8 w-fit"
               >
                 <LogIn className="h-4 w-4" />
-                <span>Sign In</span>
+                <span>Sign In to ProcureWise</span>
               </Link>
 
-              <Link
-                href="/login"
-                className="btn btn-outline btn-md rounded-xl border-[#7B1E1E] text-[#7B1E1E] hover:bg-[#7B1E1E] hover:text-white font-bold px-6"
-              >
-                <span>Create Account</span>
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+              <p className="text-xs text-base-content/60 font-medium">
+                No account yet?{" "}
+                <a
+                  href="mailto:procurement@bsc.edu.ph"
+                  className="text-[#A6761D] font-bold hover:underline"
+                >
+                  Request access from the Procurement Office →
+                </a>
+              </p>
             </div>
 
             {/* Sub-feature list */}

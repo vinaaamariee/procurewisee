@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { LogIn, ArrowRight, Menu } from "lucide-react";
+import { LogIn, Menu } from "lucide-react";
 
 export default function Header() {
   return (
@@ -86,18 +86,10 @@ export default function Header() {
 
           <Link
             href="/login"
-            className="btn btn-outline btn-sm rounded-lg border-[#7B1E1E] text-[#7B1E1E] hover:bg-[#7B1E1E] hover:text-white font-bold"
+            className="btn btn-primary btn-sm rounded-lg bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold shadow-sm"
           >
             <LogIn className="h-4 w-4" />
             <span>Sign In</span>
-          </Link>
-
-          <Link
-            href="/login"
-            className="btn btn-sm rounded-lg bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold hidden sm:inline-flex shadow-sm"
-          >
-            <span>Get Started</span>
-            <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
       </div>
