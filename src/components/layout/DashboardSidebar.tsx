@@ -20,6 +20,7 @@ import {
   Sparkles,
   ListOrdered,
   Settings,
+  TrendingUp,
 } from "lucide-react";
 
 type NavItem = {
@@ -92,6 +93,11 @@ export default function DashboardSidebar({ role }: { role: string }) {
             label: "Reports",
             href: "/dashboard/officer/analytics",
             icon: BarChart3,
+          },
+          {
+            label: "Forecasting",
+            href: "/dashboard/officer/forecast",
+            icon: TrendingUp,
           },
         ],
       },

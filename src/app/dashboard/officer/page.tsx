@@ -1,21 +1,16 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { prisma } from '@/lib/prisma';
 import { startTimer } from '@/lib/performance-logger';
-import { Suspense } from 'react';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import StatCard from '@/components/dashboard/StatCard';
 import RecentRFQTable from '@/components/dashboard/RecentRFQTable';
 import TodayTasks, { DashboardTask } from '@/components/dashboard/TodayTasks';
-import ForecastIntelligenceSection from './ForecastIntelligenceSection';
-import ForecastSkeleton from './ForecastSkeleton';
 import {
   FileText,
   ClipboardList,
   ShoppingCart,
   Users,
-  Sparkles,
-  TrendingUp,
 } from "lucide-react";
 
 export const metadata = { title: 'Officer Dashboard — ProcureWise' };
@@ -232,38 +227,6 @@ export default async function OfficerDashboard() {
       {/* Primary Section: Today's Tasks */}
       <div className="w-full">
         <TodayTasks tasks={tasks} />
-      </div>
-
-      {/* Forecast Intelligence Section */}
-      <div
-        id="forecast-intelligence"
-        className="scroll-mt-24 overflow-hidden rounded-xl border border-base-300 bg-base-100 shadow-sm text-left"
-      >
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-base-200 px-6 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-base-200 text-base-content/75">
-              <Sparkles className="h-4.5 w-4.5" />
-            </div>
-            <div>
-              <h2 className="text-sm font-black text-base-content tracking-tight">
-                Forecast Intelligence
-              </h2>
-              <p className="text-xs text-base-content/60">
-                ARIMA-powered price prediction for smarter procurement timing
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-bold bg-[#A6761D]/10 text-[#A6761D]">
-            <TrendingUp className="h-3 w-3" />
-            <span>AI-Powered</span>
-          </div>
-        </div>
-
-        <div className="p-6">
-          <Suspense fallback={<ForecastSkeleton />}>
-            <ForecastIntelligenceSection />
-          </Suspense>
-        </div>
       </div>
 
       {/* Recent Solicitations Table */}
