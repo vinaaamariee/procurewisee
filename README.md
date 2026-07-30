@@ -9,6 +9,11 @@
 
 **Branch**: `feat/end-user-pr-workflow` | **Date**: July 2026
 
+### UI Framework & Styling
+- **Tailwind CSS 4 & daisyUI 5**: Integrated `@import "tailwindcss";` and `@plugin "daisyui";` in [globals.css](file:///c:/Users/merin/Documents/GitHub/procurewisee/src/app/globals.css) and [App.css](file:///c:/Users/merin/Documents/GitHub/procurewisee/src/App.css) for component styling and themes.
+- **pnpm Workspace**: Configured `onlyBuiltDependencies` in [pnpm-workspace.yaml](file:///c:/Users/merin/Documents/GitHub/procurewisee/pnpm-workspace.yaml) to ensure seamless build script approvals (`core-js`, `daisyui`, `prisma`).
+
+
 ProcureWise has evolved from a Procurement Office tool into a complete, institution-wide procurement management system by introducing a dedicated **End User** role. End Users (representing faculty, departments, college offices, administrative units, and campus laboratories) originate procurement cycles using the official Batanes State College **Purchase Request (Appendix 60)** digital document.
 
 ```
