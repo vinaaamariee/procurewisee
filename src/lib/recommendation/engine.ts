@@ -70,8 +70,12 @@ export async function recommendBestSupplierInternal(productId: number): Promise<
     include: {
       supplier: {
         include: {
-          evaluations: true,
-          purchaseOrders: true,
+          evaluations: {
+            select: { id: true, overallRating: true, evaluatedAt: true },
+          },
+          purchaseOrders: {
+            select: { id: true, status: true },
+          },
         },
       },
     },
@@ -108,8 +112,12 @@ export async function recommendBestSupplierInternal(productId: number): Promise<
     const suppliers = await prisma.supplier.findMany({
       where: { id: { in: uniqueSupplierIds } },
       include: {
-        evaluations: true,
-        purchaseOrders: true,
+        evaluations: {
+          select: { id: true, overallRating: true, evaluatedAt: true },
+        },
+        purchaseOrders: {
+          select: { id: true, status: true },
+        },
       },
     });
 
@@ -489,8 +497,12 @@ export async function scoreRfqQuotesInternal(
     include: {
       supplier: {
         include: {
-          evaluations: true,
-          purchaseOrders: true,
+          evaluations: {
+            select: { id: true, overallRating: true, evaluatedAt: true },
+          },
+          purchaseOrders: {
+            select: { id: true, status: true },
+          },
         },
       },
     },
