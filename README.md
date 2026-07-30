@@ -10,8 +10,10 @@
 **Branch**: `feat/end-user-pr-workflow` | **Date**: July 2026
 
 ### UI Framework & Styling
-- **Tailwind CSS 4 & daisyUI 5**: Integrated `@import "tailwindcss";` and `@plugin "daisyui";` in [globals.css](file:///c:/Users/merin/Documents/GitHub/procurewisee/src/app/globals.css) and [App.css](file:///c:/Users/merin/Documents/GitHub/procurewisee/src/App.css) for component styling and themes.
+- **Tailwind CSS 4 & daisyUI 5**: Integrated `@import "tailwindcss";` and `@plugin "daisyui";` with custom `bsc` theme (`#7B1E1E` maroon, `#A6761D` gold, white, light gray) in [globals.css](file:///c:/Users/merin/Documents/GitHub/procurewisee/src/app/globals.css) and [App.css](file:///c:/Users/merin/Documents/GitHub/procurewisee/src/App.css).
+- **BSC Institutional Login Portal (`/login`)**: Responsive two-column layout featuring Batanes State College logo, institutional procurement description, 6-step vertical workflow (`steps-vertical`), centered daisyUI authentication card, and supported role badges (`End User`, `Procurement Officer`, `BAC Secretariat`, `Administrator`).
 - **pnpm Workspace**: Configured `onlyBuiltDependencies` in [pnpm-workspace.yaml](file:///c:/Users/merin/Documents/GitHub/procurewisee/pnpm-workspace.yaml) to ensure seamless build script approvals (`core-js`, `daisyui`, `prisma`).
+
 
 
 ProcureWise has evolved from a Procurement Office tool into a complete, institution-wide procurement management system by introducing a dedicated **End User** role. End Users (representing faculty, departments, college offices, administrative units, and campus laboratories) originate procurement cycles using the official Batanes State College **Purchase Request (Appendix 60)** digital document.
