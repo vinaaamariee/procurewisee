@@ -1,16 +1,21 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { prisma } from '@/lib/prisma';
 import { startTimer } from '@/lib/performance-logger';
+import { Suspense } from 'react';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import DashboardShell from '@/components/dashboard/DashboardShell';
 import StatCard from '@/components/dashboard/StatCard';
 import RecentRFQTable from '@/components/dashboard/RecentRFQTable';
 import TodayTasks, { DashboardTask } from '@/components/dashboard/TodayTasks';
+import ForecastIntelligenceSection from './ForecastIntelligenceSection';
+import ForecastSkeleton from './ForecastSkeleton';
 import {
   FileText,
   ClipboardList,
   ShoppingCart,
   Users,
+  Sparkles,
+  TrendingUp,
 } from "lucide-react";
 
 export const metadata = { title: 'Officer Dashboard — ProcureWise' };
@@ -44,7 +49,7 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
   const [prs, rfqs, pos, quotes] = await Promise.all([
     prisma.purchaseRequest.findMany({
       where: { status: { in: ['Submitted', 'UnderReview'] } },
-      select: { id: true, prNumber: true, purpose: true, requestDate: true },
+      select: { id: true, prNumber: true, purpose: true, requestDate: true, department: true, office: true, estimatedBudget: true },
       orderBy: { requestDate: 'asc' },
       take: 2
     }),
@@ -56,7 +61,7 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
     }),
     prisma.purchaseOrder.findMany({
       where: { status: { in: ['Draft', 'Approved'] } },
-      select: { id: true, poNumber: true, createdAt: true },
+      select: { id: true, poNumber: true, createdAt: true, pr: { select: { department: true, office: true } } },
       orderBy: { createdAt: 'asc' },
       take: 2
     }),
@@ -78,6 +83,7 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
   const taskList: DashboardTask[] = [];
 
   prs.forEach(pr => {
+    const budgetVal = Number(pr.estimatedBudget);
     taskList.push({
       id: `pr-${pr.id}`,
       type: 'pr',
@@ -85,7 +91,9 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
       badge: 'PR Audit',
       dueDate: new Date(pr.requestDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
       link: `/dashboard/officer/pr/${pr.id}`,
-      btnLabel: 'Audit PR'
+      btnLabel: 'Audit PR',
+      originator: pr.office || pr.department || 'Procurement Office',
+      priority: budgetVal > 50000 ? 'High' : 'Medium'
     });
   });
 
@@ -94,10 +102,12 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
       id: `rfq-${rfq.id}`,
       type: 'rfq',
       title: `${rfq.rfqNumber}: ${rfq.title}`,
-      badge: 'RFQ Deadline',
+      badge: 'RFQ Solicitation',
       dueDate: new Date(rfq.deadlineDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
       link: `/dashboard/officer/rfq/${rfq.id}`,
-      btnLabel: 'View RFQ'
+      btnLabel: 'View RFQ',
+      originator: 'Procurement Office',
+      priority: 'Medium'
     });
   });
 
@@ -109,7 +119,9 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
       badge: 'PO Print',
       dueDate: new Date(po.createdAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
       link: `/dashboard/officer/po/${po.id}`,
-      btnLabel: 'Print PO'
+      btnLabel: 'Print PO',
+      originator: po.pr?.office || po.pr?.department || 'Procurement Office',
+      priority: 'Medium'
     });
   });
 
@@ -122,7 +134,9 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
         badge: 'Quote Review',
         dueDate: new Date(q.submissionDate).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }),
         link: `/dashboard/officer/rfq/${q.rfq.id}`,
-        btnLabel: 'Review Quote'
+        btnLabel: 'Review Quote',
+        originator: q.supplier.companyName,
+        priority: 'High'
       });
     }
   });
@@ -164,7 +178,7 @@ export default async function OfficerDashboard() {
     {
       label: "Pending Purchase Requests",
       value: stats.pendingPrs,
-      desc: "Awaiting review & RFQ conversion",
+      desc: "Awaiting review & PR conversion",
       href: "/dashboard/officer/pr",
       icon: FileText,
       accentClass: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
@@ -197,10 +211,10 @@ export default async function OfficerDashboard() {
 
   return (
     <DashboardShell>
-      {/* Page Header (replaces oversized Hero Banner) */}
+      {/* Page Header */}
       <DashboardHeader profile={profile} />
 
-      {/* 4-Card Operational KPI Section */}
+      {/* KPI Cards */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
           <StatCard
@@ -220,7 +234,39 @@ export default async function OfficerDashboard() {
         <TodayTasks tasks={tasks} />
       </div>
 
-      {/* Tabular Data: Recent Solicitations Table */}
+      {/* Forecast Intelligence Section */}
+      <div
+        id="forecast-intelligence"
+        className="scroll-mt-24 overflow-hidden rounded-xl border border-base-200 bg-base-100 text-left"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-base-200 px-6 py-4">
+          <div className="flex items-center gap-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-base-200 text-base-content/75">
+              <Sparkles className="h-4.5 w-4.5" />
+            </div>
+            <div>
+              <h2 className="text-sm font-black text-base-content tracking-tight">
+                Forecast Intelligence
+              </h2>
+              <p className="text-xs text-base-content/60">
+                ARIMA-powered price prediction for smarter procurement timing
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-1.5 rounded px-2.5 py-1 text-xs font-bold bg-[#A6761D]/10 text-[#A6761D]">
+            <TrendingUp className="h-3 w-3" />
+            <span>AI-Powered</span>
+          </div>
+        </div>
+
+        <div className="p-6">
+          <Suspense fallback={<ForecastSkeleton />}>
+            <ForecastIntelligenceSection />
+          </Suspense>
+        </div>
+      </div>
+
+      {/* Recent Solicitations Table */}
       <div id="recent-solicitations" className="scroll-mt-24">
         <RecentRFQTable rfqs={rfqs} />
       </div>

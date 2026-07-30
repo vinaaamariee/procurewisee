@@ -19,12 +19,14 @@ import {
   Star,
   Sparkles,
   ListOrdered,
+  Settings,
 } from "lucide-react";
 
 type NavItem = {
   label: string;
   href: string;
   icon: any;
+  disabled?: boolean;
 };
 
 type NavSection = {
@@ -57,11 +59,12 @@ export default function DashboardSidebar({ role }: { role: string }) {
           },
           {
             label: "Annual Procurement Plan",
-            href: "/dashboard/officer/app",
+            href: "#",
             icon: ClipboardList,
+            disabled: true,
           },
           {
-            label: "RFQs",
+            label: "Requests for Quotation",
             href: "/dashboard/officer/rfq",
             icon: ClipboardList,
           },
@@ -73,32 +76,33 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
       {
-        title: "REPORTING",
+        title: "SUPPLIERS",
         items: [
           {
-            label: "Reports & Insights",
-            href: "/dashboard/officer/analytics",
-            icon: BarChart3,
-          },
-          {
-            label: "Forecast Intelligence",
-            href: "/dashboard/officer#forecast-intelligence",
-            icon: Sparkles,
-          },
-          {
-            label: "Recent Solicitations",
-            href: "/dashboard/officer#recent-solicitations",
-            icon: ListOrdered,
+            label: "Suppliers",
+            href: "/dashboard/supplier-profiles",
+            icon: Users,
           },
         ],
       },
       {
-        title: "ADMINISTRATION",
+        title: "REPORTS",
         items: [
           {
-            label: "Supplier Profiles",
-            href: "/dashboard/supplier-profiles",
-            icon: Users,
+            label: "Reports",
+            href: "/dashboard/officer/analytics",
+            icon: BarChart3,
+          },
+        ],
+      },
+      {
+        title: "SETTINGS",
+        items: [
+          {
+            label: "Settings",
+            href: "#",
+            icon: Settings,
+            disabled: true,
           },
         ],
       },
@@ -237,14 +241,26 @@ export default function DashboardSidebar({ role }: { role: string }) {
                 const Icon = item.icon;
                 const isOverview = item.label === "Dashboard";
                 const isActive =
-                  pathname === item.href ||
-                  (!isOverview && pathname.startsWith(item.href + "/"));
+                  item.href !== "#" && (
+                    pathname === item.href ||
+                    (!isOverview && pathname.startsWith(item.href + "/"))
+                  );
+                const isDisabled = item.disabled;
 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 hover:translate-x-1 hover:bg-white/5"
+                    onClick={(e) => {
+                      if (isDisabled || item.href === "#") {
+                        e.preventDefault();
+                      }
+                    }}
+                    className={`group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 ${
+                      isDisabled
+                        ? "opacity-40 cursor-not-allowed select-none"
+                        : "hover:translate-x-1 hover:bg-white/5"
+                    }`}
                     style={{
                       background: isActive
                         ? "rgba(255,255,255,.10)"
