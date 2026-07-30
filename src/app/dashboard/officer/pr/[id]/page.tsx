@@ -27,7 +27,8 @@ export default async function PrDetailPage({ params }: PageProps) {
       include: {
         items: {
           include: {
-            product: true
+            product: true,
+            unit: true
           }
         },
         ppmp: true,
@@ -59,6 +60,26 @@ export default async function PrDetailPage({ params }: PageProps) {
     return acc;
   }, {} as Record<string, { allocatedBudget: number; spentBudget: number }>);
 
+  // Mapped/Serialized PR to plain JSON types (resolves Prisma Decimals and Dates passing to Client Component)
+  const serializedPr = {
+    ...pr,
+    estimatedBudget: pr.estimatedBudget ? Number(pr.estimatedBudget) : null,
+    totalCost: pr.totalCost ? Number(pr.totalCost) : 0,
+    items: pr.items.map(item => ({
+      ...item,
+      estimatedUnitCost: Number(item.estimatedUnitCost),
+      estimatedCost: Number(item.estimatedCost),
+      unit: item.unit?.abbreviation || 'pcs'
+    })),
+    requestDate: pr.requestDate.toISOString(),
+    createdAt: pr.createdAt.toISOString(),
+    updatedAt: pr.updatedAt.toISOString(),
+    statusHistory: pr.statusHistory?.map(sh => ({
+      ...sh,
+      createdAt: sh.createdAt.toISOString()
+    }))
+  };
+
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
       {/* Breadcrumb Navigation & Back Link */}
@@ -89,7 +110,7 @@ export default async function PrDetailPage({ params }: PageProps) {
         </Link>
       </div>
 
-      <PrDetailsClient initialPr={(pr as any)} budgets={budgets} officerId={profile.id} />
+      <PrDetailsClient initialPr={(serializedPr as any)} budgets={budgets} officerId={profile.id} />
     </div>
   );
 }
