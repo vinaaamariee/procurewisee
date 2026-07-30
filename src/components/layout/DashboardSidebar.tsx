@@ -19,7 +19,6 @@ import {
   Star,
   Sparkles,
   ListOrdered,
-  Settings,
 } from "lucide-react";
 
 type NavItem = {
@@ -62,7 +61,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
             icon: ClipboardList,
           },
           {
-            label: "Requests for Quotation",
+            label: "RFQs",
             href: "/dashboard/officer/rfq",
             icon: ClipboardList,
           },
@@ -74,32 +73,32 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
       {
-        title: "SUPPLIERS",
+        title: "REPORTING",
         items: [
           {
-            label: "Suppliers",
-            href: "/dashboard/supplier-profiles",
-            icon: Users,
-          },
-        ],
-      },
-      {
-        title: "REPORTS",
-        items: [
-          {
-            label: "Reports",
+            label: "Reports & Insights",
             href: "/dashboard/officer/analytics",
             icon: BarChart3,
           },
+          {
+            label: "Forecast Intelligence",
+            href: "/dashboard/officer#forecast-intelligence",
+            icon: Sparkles,
+          },
+          {
+            label: "Recent Solicitations",
+            href: "/dashboard/officer#recent-solicitations",
+            icon: ListOrdered,
+          },
         ],
       },
       {
-        title: "SETTINGS",
+        title: "ADMINISTRATION",
         items: [
           {
-            label: "Settings",
-            href: "/dashboard/officer/settings",
-            icon: Settings,
+            label: "Supplier Profiles",
+            href: "/dashboard/supplier-profiles",
+            icon: Users,
           },
         ],
       },
