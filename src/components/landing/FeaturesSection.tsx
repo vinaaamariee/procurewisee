@@ -1,71 +1,71 @@
 "use client";
 
-import { FileText, Layers, FileCheck, Search, BarChart3, ShieldCheck } from "lucide-react";
+import { FileText, Layers, Users, FileCheck, Search, BarChart3 } from "lucide-react";
 
 export default function FeaturesSection() {
   const features = [
     {
       title: "Digital Purchase Requests",
       badge: "Appendix 60 PR",
-      description: "Official BSC digital Purchase Request form supporting Excel/CSV line item uploads, budget validation, Responsibility Center Codes, and digital signatures.",
+      description: "Digital Purchase Request generation with Excel/CSV line item uploads, budget validation, Responsibility Center Codes, and digital approval signatures.",
       icon: FileText,
     },
     {
       title: "Official RFQ Generation",
-      badge: "One-Click Conversion",
-      description: "Automated PR-to-RFQ conversion that builds official Request for Quotation documents, auto-populating specifications, line items, and quantities without re-encoding.",
+      badge: "PR-to-RFQ",
+      description: "Automated PR-to-RFQ conversion that creates official Request for Quotation documents, populating specifications and items without data re-encoding.",
       icon: Layers,
     },
     {
-      title: "Supplier Quotation Management",
+      title: "Supplier Management",
       badge: "Sealed Bidding",
-      description: "Secure supplier quote submission, price entry, and automatic generation of the Abstract of Quotations (AOQ) for BAC evaluation.",
-      icon: ShieldCheck,
+      description: "Supplier quote submission, sealed bid entry, supplier performance scorecards, and automated Abstract of Quotation (AOQ) generation for BAC evaluation.",
+      icon: Users,
     },
     {
-      title: "Purchase Order Generation",
+      title: "Purchase Order Processing",
       badge: "Appendix 61 PO",
-      description: "Official Philippine Government Appendix 61 Purchase Order document generation with compliant print preview, line item editing, and delivery terms.",
+      description: "Official Philippine Government Appendix 61 Purchase Order document generation with compliant print layout, delivery terms, and item editing.",
       icon: FileCheck,
     },
     {
       title: "Procurement Tracking",
       badge: "Real-Time Tracking",
-      description: "End-to-end requisition tracking with unique tracking numbers, status indicators, and tamper-evident audit logs across every workflow stage.",
+      description: "End-to-end requisition tracking with unique tracking codes, status timelines, and tamper-evident audit logs across every procurement stage.",
       icon: Search,
     },
     {
       title: "Reports & Analytics",
       badge: "Executive Insights",
-      description: "Comprehensive procurement analytics, department budget utilization dashboards, supplier performance evaluation scorecards, and price trends.",
+      description: "Comprehensive procurement analytics, department budget utilization dashboards, supplier reliability ratings, and price trend monitoring.",
       icon: BarChart3,
     },
   ];
 
   return (
-    <section id="features" className="py-16 lg:py-24 bg-base-200/50 border-b border-base-200">
+    <section id="features" className="py-14 lg:py-20 bg-base-100 border-b border-base-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 space-y-2">
+        <div className="text-center max-w-3xl mx-auto mb-10 space-y-2">
           <div className="badge badge-outline border-[#A6761D] text-[#A6761D] font-bold uppercase tracking-wider text-xs py-2 px-3">
             System Modules
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#7B1E1E] tracking-tight">
-            Institutional Procurement Modules
+            Core Institutional Features
           </h2>
           <p className="text-sm sm:text-base text-base-content/70">
-            Tailored specifically for State Universities and Colleges (SUCs) to meet Philippine government procurement standards.
+            Tailored specifically for State Universities and Colleges to enforce Republic Act No. 9184 standards.
           </p>
         </div>
 
-        {/* Feature Cards Grid using daisyUI */}
+        {/* Feature Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((item) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.title}
-                className="card bg-base-100 shadow-md border border-base-200 hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden"
+                className="card bg-base-100 shadow-sm border border-base-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-2xl overflow-hidden"
               >
                 <div className="card-body p-6 space-y-3">
                   <div className="flex items-center justify-between">
@@ -77,7 +77,7 @@ export default function FeaturesSection() {
                     </span>
                   </div>
 
-                  <h3 className="card-title text-lg font-extrabold text-[#7B1E1E] pt-2">
+                  <h3 className="card-title text-lg font-extrabold text-[#7B1E1E] pt-1">
                     {item.title}
                   </h3>
 

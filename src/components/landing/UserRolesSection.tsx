@@ -9,11 +9,12 @@ export default function UserRolesSection() {
       subtitle: "Faculty, Department Heads & Offices",
       badge: "Requisition Originator",
       icon: UserCheck,
+      description: "College faculty, office heads, and administrative units originating procurement requests via official Appendix 60 PR digital forms.",
       responsibilities: [
-        "Create & submit Appendix 60 Purchase Requests",
-        "Upload PR line items via CSV/Excel templates",
-        "Track requisition status & delivery progress",
-        "Submit supplier evaluation feedback scorecards",
+        "Create & submit Purchase Requests",
+        "Upload PR items via Excel/CSV templates",
+        "Track requisition status & delivery",
+        "Submit supplier evaluation scorecards",
       ],
     },
     {
@@ -21,11 +22,12 @@ export default function UserRolesSection() {
       subtitle: "Procurement Office Personnel",
       badge: "Procurement Manager",
       icon: ShieldAlert,
+      description: "Procurement Office personnel responsible for reviewing PRs, publishing RFQs, managing supplier biddings, and issuing PO awards.",
       responsibilities: [
-        "Review PR specifications & PPMP budget compliance",
-        "Generate & publish official Requests for Quotation (RFQ)",
-        "Encode supplier biddings & generate Appendix 61 POs",
-        "Monitor market price trends & supplier reliability",
+        "Review PR specs & PPMP budget compliance",
+        "Generate & publish Requests for Quotation",
+        "Encode supplier biddings & Appendix 61 POs",
+        "Monitor market prices & supplier reliability",
       ],
     },
     {
@@ -33,11 +35,12 @@ export default function UserRolesSection() {
       subtitle: "Bids and Awards Committee",
       badge: "Bidding Oversight",
       icon: Award,
+      description: "Bids and Awards Committee members overseeing competitive bidding, reviewing Abstract of Quotations, and approving awards.",
       responsibilities: [
-        "Oversee competitive bidding & canvassing activities",
-        "Generate & verify Abstract of Quotations (AOQ)",
-        "Review MCDM best-value recommendation rankings",
-        "Ensure compliance with RA 9184 procurement rules",
+        "Oversee competitive bidding & canvassing",
+        "Verify Abstract of Quotations (AOQ)",
+        "Review MCDM best-value recommendations",
+        "Ensure RA 9184 compliance",
       ],
     },
     {
@@ -45,20 +48,21 @@ export default function UserRolesSection() {
       subtitle: "System Administrators & IT Staff",
       badge: "System Governance",
       icon: Wrench,
+      description: "IT Administrators managing system user accounts, institutional catalog master lists, role permissions, and audit log trails.",
       responsibilities: [
-        "Manage user role permissions & account provisioning",
-        "Maintain institutional item & price catalog master lists",
+        "Provision user accounts & role access",
+        "Maintain item & price catalog master lists",
         "Monitor system performance & database health",
-        "Audit system transaction logs & audit trails",
+        "Audit transaction logs & security trails",
       ],
     },
   ];
 
   return (
-    <section id="roles" className="py-16 lg:py-24 bg-base-100 border-b border-base-200">
+    <section id="roles" className="py-14 lg:py-20 bg-base-200/40 border-b border-base-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12 space-y-2">
+        <div className="text-center max-w-3xl mx-auto mb-10 space-y-2">
           <div className="badge badge-outline border-[#7B1E1E] text-[#7B1E1E] font-bold uppercase tracking-wider text-xs py-2 px-3">
             Governance & Access
           </div>
@@ -66,7 +70,7 @@ export default function UserRolesSection() {
             Institutional User Roles
           </h2>
           <p className="text-sm sm:text-base text-base-content/70">
-            Strictly role-based access controls mapped to Batanes State College operational hierarchy.
+            Strictly role-based permissions aligned with Batanes State College organizational structure.
           </p>
         </div>
 
@@ -77,7 +81,7 @@ export default function UserRolesSection() {
             return (
               <div
                 key={role.title}
-                className="card bg-base-100 shadow-md border border-base-200 hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden flex flex-col justify-between"
+                className="card bg-base-100 shadow-sm border border-base-200 hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col justify-between"
               >
                 <div className="card-body p-6 space-y-3">
                   <div className="flex items-center justify-between">
@@ -98,11 +102,15 @@ export default function UserRolesSection() {
                     </p>
                   </div>
 
+                  <p className="text-xs text-base-content/70 leading-normal">
+                    {role.description}
+                  </p>
+
                   <div className="divider my-1"></div>
 
-                  <ul className="space-y-2 text-xs text-base-content/80">
+                  <ul className="space-y-1.5 text-xs text-base-content/80">
                     {role.responsibilities.map((resp, i) => (
-                      <li key={i} className="flex items-start gap-2">
+                      <li key={i} className="flex items-start gap-1.5">
                         <span className="text-[#7B1E1E] font-bold">•</span>
                         <span>{resp}</span>
                       </li>

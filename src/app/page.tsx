@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 
 import Header from "@/components/landing/Header";
 import HeroSection from "@/components/landing/HeroSection";
-import WorkflowSection from "@/components/landing/WorkflowSection";
+import StatsSection from "@/components/landing/StatsSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
 import UserRolesSection from "@/components/landing/UserRolesSection";
+import CatalogPreviewSection from "@/components/landing/CatalogPreviewSection";
 import Footer from "@/components/landing/Footer";
 
 export const metadata: Metadata = {
@@ -34,17 +35,20 @@ export default function LandingPage() {
 
       {/* Main Content Area */}
       <main className="flex-1">
-        {/* Hero Section */}
+        {/* Two-Column Institutional Hero Section with Vertical Workflow Steps */}
         <HeroSection />
 
-        {/* 7-Step Procurement Workflow Lifecycle (daisyUI Steps) */}
-        <WorkflowSection />
+        {/* Institutional Stats Section (daisyUI Stats) */}
+        <StatsSection />
 
-        {/* Core Institutional Features (daisyUI Cards) */}
+        {/* Core System Features (6 daisyUI Cards) */}
         <FeaturesSection />
 
-        {/* System User Roles & Access Control */}
+        {/* User Roles & Access Control Section */}
         <UserRolesSection />
+
+        {/* Public Catalog Preview Section */}
+        <CatalogPreviewSection />
       </main>
 
       {/* Institutional Footer */}

@@ -11,7 +11,7 @@ export default function Footer() {
     <footer className="bg-neutral text-neutral-content border-t border-neutral-content/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Institutional Branding */}
+          {/* Column 1: Institutional Branding */}
           <div className="space-y-4 lg:col-span-2">
             <div className="flex items-center gap-3">
               <div className="relative h-12 w-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-white p-1 shadow-sm">
@@ -37,8 +37,9 @@ export default function Footer() {
             </div>
 
             <p className="text-xs sm:text-sm text-neutral-content/70 leading-relaxed max-w-md">
-              An enterprise government procurement analytics and canvassing system with best-value decision support,
-              modernizing procurement workflows for Batanes State College in accordance with Republic Act No. 9184.
+              The official digital portal for managing institutional purchase requests, procurement activities,
+              supplier quotations, price monitoring, and purchase orders for Batanes State College in compliance
+              with Republic Act No. 9184.
             </p>
 
             <div className="inline-flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5 text-xs text-neutral-content/80 font-medium">
@@ -47,10 +48,10 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Quick Portal Navigation */}
+          {/* Column 2: Navigation & Policies */}
           <div className="space-y-3">
             <h3 className="text-xs font-extrabold uppercase tracking-widest text-[#A6761D]">
-              Public Portal
+              Public Portal & Policies
             </h3>
             <ul className="space-y-2 text-xs font-semibold">
               <li>
@@ -75,13 +76,18 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/about" className="hover:text-white transition-colors">
-                  About System & Governance
+                  Privacy Policy & Governance
+                </Link>
+              </li>
+              <li>
+                <Link href="/about" className="hover:text-white transition-colors">
+                  Terms of Use
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* College Contact Info */}
+          {/* Column 3: Contact Information */}
           <div className="space-y-3">
             <h3 className="text-xs font-extrabold uppercase tracking-widest text-[#A6761D]">
               Contact Information
@@ -111,7 +117,7 @@ export default function Footer() {
             © {currentYear} Batanes State College. All rights reserved.
           </div>
           <div>
-            Procurement Management Information System (ProcureWise v1.0)
+            Procurement Management Information System (Powered by ProcureWise)
           </div>
         </div>
       </div>
