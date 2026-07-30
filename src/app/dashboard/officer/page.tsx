@@ -1,44 +1,42 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { prisma } from '@/lib/prisma';
-import { Suspense } from 'react';
-import ForecastIntelligenceSection from './ForecastIntelligenceSection';
-import ForecastSkeleton from './ForecastSkeleton';
 import { startTimer } from '@/lib/performance-logger';
-import ActivityTimeline from '@/components/dashboard/ActivityTimeline';
-import BSCInfoCenter from '@/components/dashboard/BSCInfoCenter';
-import HeroSection from '@/components/dashboard/HeroSection';
 import DashboardHeader from '@/components/dashboard/DashboardHeader';
 import DashboardShell from '@/components/dashboard/DashboardShell';
-import Footer from '@/components/dashboard/Footer';
 import StatCard from '@/components/dashboard/StatCard';
 import RecentRFQTable from '@/components/dashboard/RecentRFQTable';
 import TodayTasks, { DashboardTask } from '@/components/dashboard/TodayTasks';
 import {
+  FileText,
   ClipboardList,
-  CircleDot,
-  Building2,
-  Sparkles,
-  TrendingUp,
+  ShoppingCart,
+  Users,
 } from "lucide-react";
 
 export const metadata = { title: 'Officer Dashboard — ProcureWise' };
 
 async function getOfficerStats() {
   const timer = startTimer('getOfficerStats');
-  const [totalRfqs, openRfqs, totalSuppliers] = await Promise.all([
-    prisma.requestForQuote.count(),
-    prisma.requestForQuote.count({ where: { status: 'Published' } }),
+  const [pendingPrs, openRfqs, pendingPos, activeSuppliers] = await Promise.all([
+    prisma.purchaseRequest.count({
+      where: { status: { in: ['Submitted', 'UnderReview'] } }
+    }),
+    prisma.requestForQuote.count({
+      where: { status: 'Published' }
+    }),
+    prisma.purchaseOrder.count({
+      where: { status: { in: ['Draft', 'PendingApproval', 'Approved'] } }
+    }),
     prisma.supplier.count(),
   ]);
   timer.end();
   return {
-    totalRfqs,
+    pendingPrs,
     openRfqs,
-    totalSuppliers,
+    pendingPos,
+    activeSuppliers,
   };
 }
-
-
 
 async function getOfficerTasks(): Promise<DashboardTask[]> {
   const timer = startTimer('getOfficerTasks');
@@ -164,55 +162,46 @@ export default async function OfficerDashboard() {
 
   const statCards = [
     {
-      label: "Total RFQs",
-      value: stats.totalRfqs,
-      desc: "All solicitations issued",
-      href: "#recent-solicitations",
+      label: "Pending Purchase Requests",
+      value: stats.pendingPrs,
+      desc: "Awaiting review & RFQ conversion",
+      href: "/dashboard/officer/pr",
+      icon: FileText,
+      accentClass: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
+    },
+    {
+      label: "Open RFQs",
+      value: stats.openRfqs,
+      desc: "Active solicitations on portal",
+      href: "/dashboard/officer/rfq",
       icon: ClipboardList,
       accentClass: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
     },
     {
-      label: "Open / Active",
-      value: stats.openRfqs,
-      desc: "Awaiting supplier quotes",
-      href: "#recent-solicitations",
-      icon: CircleDot,
+      label: "Pending Purchase Orders",
+      value: stats.pendingPos,
+      desc: "POs awaiting approval & dispatch",
+      href: "/dashboard/officer/po",
+      icon: ShoppingCart,
       accentClass: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
     },
     {
-      label: "Registered Suppliers",
-      value: stats.totalSuppliers,
-      desc: "Verified vendor registry",
+      label: "Active Suppliers",
+      value: stats.activeSuppliers,
+      desc: "Registered vendor directory",
       href: "/dashboard/supplier-profiles",
-      icon: Building2,
+      icon: Users,
       accentClass: "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/20 dark:text-indigo-300",
     },
   ];
 
-
-
-  const formattedToday = new Intl.DateTimeFormat("en-PH", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }).format(new Date());
-
   return (
     <DashboardShell>
+      {/* Page Header (replaces oversized Hero Banner) */}
+      <DashboardHeader profile={profile} />
 
-      {/* ── Page Header ─────────────────────────────────────── */}
-      <DashboardHeader />
-
-      {/* ── Hero Banner ─────────────────────────────────────── */}
-      <Suspense fallback={
-        <div className="h-40 rounded-3xl animate-pulse" style={{ background: "var(--surface)" }} />
-      }>
-        <HeroSection />
-      </Suspense>
-
-      {/* ── KPI Cards ───────────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      {/* 4-Card Operational KPI Section */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => (
           <StatCard
             key={card.label}
@@ -226,82 +215,15 @@ export default async function OfficerDashboard() {
         ))}
       </div>
 
-      {/* ── Tasks + Activity ────────────────────────────────── */}
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-5">
-
-        {/* Today's Tasks */}
-        <div className="xl:col-span-3">
-          <TodayTasks tasks={tasks} />
-        </div>
-
-        {/* BSC Info Center */}
-        <div className="xl:col-span-2">
-          <BSCInfoCenter activeRfqs={stats.openRfqs} />
-        </div>
+      {/* Primary Section: Today's Tasks */}
+      <div className="w-full">
+        <TodayTasks tasks={tasks} />
       </div>
 
-      {/* ── Activity Timeline ───────────────────────────────── */}
-      <ActivityTimeline limit={10} />
-
-      {/* ── Forecast Intelligence ────────────────────────────── */}
-      <div
-        id="forecast-intelligence"
-        className="scroll-mt-24 overflow-hidden rounded-3xl border"
-        style={{
-          background: "var(--surface)",
-          borderColor: "var(--border)",
-          boxShadow: "var(--shadow-card)",
-        }}
-      >
-        {/* Forecast header */}
-        <div
-          className="flex flex-wrap items-center justify-between gap-4 border-b px-6 py-5"
-          style={{ borderColor: "var(--border)" }}
-        >
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl"
-              style={{ background: "rgba(166,118,29,0.1)", color: "var(--secondary)" }}
-            >
-              <Sparkles className="h-4.5 w-4.5" />
-            </div>
-            <div>
-              <h2 className="text-base font-bold" style={{ color: "var(--text-primary)" }}>
-                Forecast Intelligence
-              </h2>
-              <p className="text-xs" style={{ color: "var(--text-muted)" }}>
-                ARIMA-powered price prediction for smarter procurement timing
-              </p>
-            </div>
-          </div>
-          <div
-            className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold"
-            style={{
-              background: "rgba(166,118,29,0.1)",
-              color: "var(--secondary)",
-              border: "1px solid rgba(166,118,29,0.2)",
-            }}
-          >
-            <TrendingUp className="h-3 w-3" />
-            AI-Powered
-          </div>
-        </div>
-
-        <div className="p-6">
-          <Suspense fallback={<ForecastSkeleton />}>
-            <ForecastIntelligenceSection />
-          </Suspense>
-        </div>
-      </div>
-
-      {/* ── Recent Solicitations Table ───────────────────────── */}
+      {/* Tabular Data: Recent Solicitations Table */}
       <div id="recent-solicitations" className="scroll-mt-24">
         <RecentRFQTable rfqs={rfqs} />
       </div>
-
-      {/* ── Footer ──────────────────────────────────────────── */}
-      <Footer />
-
     </DashboardShell>
   );
 }

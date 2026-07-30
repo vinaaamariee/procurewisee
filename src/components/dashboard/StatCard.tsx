@@ -26,18 +26,12 @@ export default function StatCard({
   return (
     <Link href={href} className="block group font-sans">
       <div
-        className="flex flex-col justify-between h-full p-6 rounded-2xl border transition-all duration-200 hover:-translate-y-1 hover:shadow-lg font-sans"
-        style={{
-          background: "var(--surface)",
-          borderColor: "var(--border)",
-          boxShadow: "var(--shadow-card)",
-        }}
+        className="flex flex-col justify-between h-full p-5 rounded-xl border border-base-200 bg-base-100 transition-colors duration-150 hover:border-base-300"
       >
         {/* 1. Title at top-left + Icon/Trend on top-right */}
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center justify-between gap-3 text-left">
           <p
-            className="text-xs font-bold uppercase tracking-wider transition-colors duration-200 group-hover:text-[var(--accent)] font-sans"
-            style={{ color: "var(--text-secondary)", fontFamily: "var(--font-body)" }}
+            className="text-xs font-bold uppercase tracking-wider text-base-content/60 font-sans"
           >
             {label}
           </p>
@@ -60,20 +54,18 @@ export default function StatCard({
         </div>
 
         {/* 2. Large Number in the middle (mt-4) */}
-        <div className="mt-2">
+        <div className="mt-2 text-left">
           <p
-            className="text-4xl font-bold tracking-tight transition-colors duration-200 group-hover:text-[var(--accent)] font-sans"
-            style={{ color: "var(--text-primary)", fontFamily: "var(--font-body)" }}
+            className="text-3xl sm:text-4xl font-black text-base-content tracking-tight"
           >
             {value}
           </p>
         </div>
 
         {/* 3. Subtitle at the bottom */}
-        <div className="mt-1">
+        <div className="mt-1 text-left">
           <p
-            className="text-xs font-normal font-sans"
-            style={{ color: "var(--text-muted)", fontFamily: "var(--font-body)" }}
+            className="text-xs text-base-content/60 font-semibold"
           >
             {desc}
           </p>

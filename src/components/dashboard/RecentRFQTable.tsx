@@ -22,54 +22,32 @@ export default function RecentRFQTable({ rfqs }: RecentRFQTableProps) {
     return (
         <section
             id="recent-solicitations"
-            className="overflow-hidden rounded-3xl border scroll-mt-24"
-            style={{
-                background: "var(--surface)",
-                borderColor: "var(--border)",
-                boxShadow: "var(--shadow-card)",
-            }}
+            className="overflow-hidden rounded-xl border border-base-200 scroll-mt-24 bg-base-100"
         >
             {/* Table Header */}
-            <div
-                className="flex flex-wrap items-center justify-between gap-4 border-b px-6 py-5"
-                style={{ borderColor: "var(--border)" }}
-            >
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-base-200 px-6 py-4">
                 <div className="flex items-center gap-3">
-                    <div
-                        className="flex h-9 w-9 items-center justify-center rounded-xl"
-                        style={{ background: "var(--accent-glass)", color: "var(--accent)" }}
-                    >
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-base-200 text-base-content/75">
                         <ClipboardList className="h-4.5 w-4.5" />
                     </div>
-                    <div>
-                        <h2 className="text-base font-extrabold font-sans" style={{ color: "var(--text-primary)" }}>
+                    <div className="text-left">
+                        <h2 className="text-sm font-black text-base-content tracking-tight">
                             Recent Solicitations
                         </h2>
-                        <p className="text-xs" style={{ color: "var(--text-muted)" }}>
+                        <p className="text-xs text-base-content/60">
                             Latest Requests for Quotation
                         </p>
                     </div>
                 </div>
                 <div className="flex items-center gap-3">
-                    <span
-                        className="rounded-full px-3 py-1 text-xs font-semibold"
-                        style={{
-                            background: "var(--bg-dark)",
-                            color: "var(--text-muted)",
-                        }}
-                    >
+                    <span className="badge badge-sm bg-base-200 text-base-content/70 font-semibold border-none rounded">
                         Last {rfqs.length} records
                     </span>
                     <Link
                         href="/dashboard/officer/rfq"
-                        className="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-bold transition-all duration-200 hover:-translate-y-0.5"
-                        style={{
-                            background: "var(--accent-glass)",
-                            color: "var(--accent)",
-                            border: "1px solid var(--border-accent)",
-                        }}
+                        className="btn btn-xs btn-outline font-bold border-base-300 rounded-md flex items-center gap-1"
                     >
-                        View All
+                        <span>View All</span>
                         <ArrowRight className="h-3 w-3" />
                     </Link>
                 </div>

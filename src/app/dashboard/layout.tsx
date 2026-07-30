@@ -71,7 +71,6 @@ export default async function DashboardLayout({
             </Link>
 
             <div className="flex items-center gap-4">
-              <GlobalSearch />
               <NotificationBell currentUser={profile} />
               <ThemeToggle />
 
@@ -128,7 +127,7 @@ export default async function DashboardLayout({
             color: "var(--text-muted)",
           }}
         >
-          ProcureWise · Batanes State College · Procurement Management System
+          ProcureWise v1.0 | © 2026 Batanes State College
         </footer>
       </div>
     </div>
