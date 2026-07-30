@@ -30,6 +30,48 @@ export function getConfidenceLabel(percentage: number): "High" | "Medium" | "Low
 }
 
 /**
+ * Dynamically computes a supplier evaluation's overall rating by averaging
+ * all available non-null numeric evaluation criteria defined in the schema.
+ */
+export function computeSupplierEvaluationRating(ev: {
+  productQuality?: number | null;
+  deliveryCompliance?: number | null;
+  accuracy?: number | null;
+  responsiveness?: number | null;
+  communication?: number | null;
+  clearCommunication?: number | null;
+  costEffectiveness?: number | null;
+  valueForMoney?: number | null;
+  wouldRecommend?: number | null;
+  rfqResponsiveness?: number | null;
+  competitivePricing?: number | null;
+  specificationCompliance?: number | null;
+  documentCompliance?: number | null;
+  deliveryPerformance?: number | null;
+}): number | null {
+  const scores = [
+    ev.productQuality,
+    ev.deliveryCompliance,
+    ev.accuracy,
+    ev.responsiveness,
+    ev.communication,
+    ev.clearCommunication,
+    ev.costEffectiveness,
+    ev.valueForMoney,
+    ev.wouldRecommend,
+    ev.rfqResponsiveness,
+    ev.competitivePricing,
+    ev.specificationCompliance,
+    ev.documentCompliance,
+    ev.deliveryPerformance,
+  ].filter((v): v is number => v != null && v !== undefined);
+
+  return scores.length > 0
+    ? scores.reduce((sum, score) => sum + score, 0) / scores.length
+    : null;
+}
+
+/**
  * Executes the Multi-Criteria Decision-Making (MCDM) scoring engine for a given catalog product.
  * Fetches data from active supplier prices or falls back to historical records.
  */
@@ -70,7 +112,32 @@ export async function recommendBestSupplierInternal(productId: number): Promise<
     include: {
       supplier: {
         include: {
-          evaluations: true,
+          evaluations: {
+            select: {
+              id: true,
+              supplierId: true,
+              evaluationType: true,
+              evaluatorName: true,
+              evaluationDate: true,
+              productQuality: true,
+              deliveryCompliance: true,
+              accuracy: true,
+              responsiveness: true,
+              communication: true,
+              clearCommunication: true,
+              costEffectiveness: true,
+              valueForMoney: true,
+              wouldRecommend: true,
+              rfqResponsiveness: true,
+              competitivePricing: true,
+              specificationCompliance: true,
+              documentCompliance: true,
+              deliveryPerformance: true,
+              comments: true,
+              recommendation: true,
+              createdAt: true,
+            },
+          },
           purchaseOrders: {
             select: { id: true, status: true },
           },
@@ -110,7 +177,32 @@ export async function recommendBestSupplierInternal(productId: number): Promise<
     const suppliers = await prisma.supplier.findMany({
       where: { id: { in: uniqueSupplierIds } },
       include: {
-        evaluations: true,
+        evaluations: {
+          select: {
+            id: true,
+            supplierId: true,
+            evaluationType: true,
+            evaluatorName: true,
+            evaluationDate: true,
+            productQuality: true,
+            deliveryCompliance: true,
+            accuracy: true,
+            responsiveness: true,
+            communication: true,
+            clearCommunication: true,
+            costEffectiveness: true,
+            valueForMoney: true,
+            wouldRecommend: true,
+            rfqResponsiveness: true,
+            competitivePricing: true,
+            specificationCompliance: true,
+            documentCompliance: true,
+            deliveryPerformance: true,
+            comments: true,
+            recommendation: true,
+            createdAt: true,
+          },
+        },
         purchaseOrders: {
           select: { id: true, status: true },
         },
@@ -306,8 +398,10 @@ async function computeMCDMScores({
       ev.accuracy,
       ev.responsiveness,
       ev.communication,
+      ev.clearCommunication,
       ev.costEffectiveness,
-      ev.overallSatisfaction,
+      ev.valueForMoney,
+      ev.wouldRecommend,
       ev.rfqResponsiveness,
       ev.competitivePricing,
       ev.specificationCompliance,
@@ -493,7 +587,32 @@ export async function scoreRfqQuotesInternal(
     include: {
       supplier: {
         include: {
-          evaluations: true,
+          evaluations: {
+            select: {
+              id: true,
+              supplierId: true,
+              evaluationType: true,
+              evaluatorName: true,
+              evaluationDate: true,
+              productQuality: true,
+              deliveryCompliance: true,
+              accuracy: true,
+              responsiveness: true,
+              communication: true,
+              clearCommunication: true,
+              costEffectiveness: true,
+              valueForMoney: true,
+              wouldRecommend: true,
+              rfqResponsiveness: true,
+              competitivePricing: true,
+              specificationCompliance: true,
+              documentCompliance: true,
+              deliveryPerformance: true,
+              comments: true,
+              recommendation: true,
+              createdAt: true,
+            },
+          },
           purchaseOrders: {
             select: { id: true, status: true },
           },
@@ -597,8 +716,10 @@ export async function scoreRfqQuotesInternal(
         ev.accuracy,
         ev.responsiveness,
         ev.communication,
+        ev.clearCommunication,
         ev.costEffectiveness,
-        ev.overallSatisfaction,
+        ev.valueForMoney,
+        ev.wouldRecommend,
         ev.rfqResponsiveness,
         ev.competitivePricing,
         ev.specificationCompliance,

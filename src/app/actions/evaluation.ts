@@ -259,7 +259,7 @@ export async function getSupplierScorecard(supplierId: number) {
       return count > 0 ? (sum / count) : 0;
     };
 
-    const avgEndUser = getAvg(endUserEvals, ["productQuality", "deliveryCompliance", "accuracy", "responsiveness", "communication", "costEffectiveness", "overallSatisfaction"]);
+    const avgEndUser = getAvg(endUserEvals, ["productQuality", "deliveryCompliance", "accuracy", "responsiveness", "communication", "clearCommunication", "costEffectiveness", "valueForMoney", "wouldRecommend"]);
     const avgOffice = getAvg(officeEvals, ["rfqResponsiveness", "competitivePricing", "specificationCompliance", "documentCompliance", "deliveryPerformance"]);
 
     return {
