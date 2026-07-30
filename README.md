@@ -13,6 +13,7 @@
 - **Tailwind CSS 4 & daisyUI 5**: Integrated `@import "tailwindcss";` and `@plugin "daisyui";` with custom `bsc` theme (`#7B1E1E` maroon, `#A6761D` gold, white, light gray) in [globals.css](file:///c:/Users/merin/Documents/GitHub/procurewisee/src/app/globals.css) and [App.css](file:///c:/Users/merin/Documents/GitHub/procurewisee/src/App.css).
 - **BSC Institutional Login Portal (`/login`)**: Responsive two-column layout featuring Batanes State College logo, institutional procurement description, 6-step vertical workflow (`steps-vertical`), centered daisyUI authentication card, and supported role badges (`End User`, `Procurement Officer`, `BAC Secretariat`, `Administrator`).
 - **pnpm Workspace**: Configured `onlyBuiltDependencies` in [pnpm-workspace.yaml](file:///c:/Users/merin/Documents/GitHub/procurewisee/pnpm-workspace.yaml) to ensure seamless build script approvals (`core-js`, `daisyui`, `prisma`).
+- **Prisma Schema Audit & RFQ Model Alignment**: Performed a comprehensive codebase audit to ensure all Prisma queries (`RequestForQuote`, `PurchaseOrder`, `PurchaseRequest`, `SupplierEvaluation`, `SupplierQuote`) strictly conform to `prisma/schema.prisma` without referencing unmapped fields (e.g. `category` removed from `RequestForQuote.create`, `evaluatedAt`/`overallRating` dynamically computed from standard criteria). Full project build verified clean.
 
 
 
