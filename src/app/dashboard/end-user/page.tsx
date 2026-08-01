@@ -1,9 +1,8 @@
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import EmptyState from "@/components/ui/EmptyState";
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
-import { AlertTriangle, CheckCircle2, Clock, FileText, PlusCircle, Calendar, ArrowRight, CornerUpLeft } from "lucide-react";
+import { AlertTriangle, CheckCircle2, FileText, PlusCircle, Calendar, CornerUpLeft } from "lucide-react";
 
 export const metadata = { title: "End User Dashboard — ProcureWise" };
 
@@ -30,6 +29,30 @@ function getStageLabel(status: string) {
       return "Closed";
     default:
       return status;
+  }
+}
+
+function getProgressStep(status: string) {
+  switch (status) {
+    case "Draft":
+      return 1;
+    case "PendingProcurementReview":
+    case "Pending Procurement Review":
+    case "Submitted":
+    case "UnderReview":
+    case "Under Review":
+      return 2;
+    case "Returned":
+    case "ReturnedForRevision":
+    case "Returned for Revision":
+      return 1;
+    case "Approved":
+      return 3;
+    case "ConvertedToRfq":
+    case "Converted to RFQ":
+      return 4;
+    default:
+      return 1;
   }
 }
 
@@ -135,7 +158,7 @@ export default async function EndUserDashboard() {
               </div>
 
               <Link
-                href="/dashboard/end-user/pr"
+                href={`/dashboard/end-user/pr?id=${returnedPr.id}`}
                 className="btn btn-error btn-sm rounded-xl text-white font-bold px-4 shrink-0"
               >
                 <CornerUpLeft className="h-4 w-4 mr-1" />
@@ -169,13 +192,13 @@ export default async function EndUserDashboard() {
               <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-extrabold text-xs uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Purchase Request Approved</h3>
+                  <h3 className="font-extrabold text-xs uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Approved Purchase Requests</h3>
                   <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-200 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
                     {approvedPr.prNumber}
                   </span>
                 </div>
-                <p className="text-xs text-emerald-900 dark:text-emerald-200">
-                  This Purchase Request has successfully passed Procurement Office validation and is now eligible for Request for Quotation (RFQ) generation.
+                <p className="text-xs text-emerald-900 dark:text-emerald-200 font-medium">
+                  Ready for Request for Quotation (RFQ)
                 </p>
               </div>
             </div>
@@ -190,7 +213,7 @@ export default async function EndUserDashboard() {
       {/* Purchase Request Stage Summary Bar */}
       <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-xs space-y-3">
         <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Purchase Requests Overview</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <div className={`grid grid-cols-2 ${rfqCount > 0 ? "sm:grid-cols-5" : "sm:grid-cols-4"} gap-3`}>
           <div className="p-3 rounded-xl bg-[var(--surface-hover)] border border-[var(--border)] text-center space-y-1">
             <span className="text-2xl font-black text-[var(--text-primary)]">{draftCount}</span>
             <span className="block text-[11px] font-bold text-[var(--text-secondary)]">Draft</span>
@@ -207,26 +230,28 @@ export default async function EndUserDashboard() {
             <span className="text-2xl font-black text-emerald-700 dark:text-emerald-400">{approvedCount}</span>
             <span className="block text-[11px] font-bold text-emerald-800 dark:text-emerald-300">Approved</span>
           </div>
-          <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 text-center space-y-1 col-span-2 sm:col-span-1">
-            <span className="text-2xl font-black text-blue-700 dark:text-blue-400">{rfqCount}</span>
-            <span className="block text-[11px] font-bold text-blue-800 dark:text-blue-300">RFQ</span>
-          </div>
+          {rfqCount > 0 && (
+            <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 text-center space-y-1">
+              <span className="text-2xl font-black text-blue-700 dark:text-blue-400">{rfqCount}</span>
+              <span className="block text-[11px] font-bold text-blue-800 dark:text-blue-300">RFQ</span>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Main Content Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        {/* Purchase Request Tracker Table */}
+        {/* My Purchase Requests Table */}
         <div className="lg:col-span-2 space-y-4">
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-xs overflow-hidden">
             <div className="p-5 border-b border-[var(--border)] flex items-center justify-between">
               <div>
-                <h2 className="text-base font-bold text-[var(--text-primary)]">Purchase Request Tracker</h2>
+                <h2 className="text-base font-bold text-[var(--text-primary)]">My Purchase Requests</h2>
                 <p className="text-xs text-[var(--text-muted)]">Track status and lifecycle stage across all your institutional requisitions.</p>
               </div>
               <Link href="/dashboard/end-user/pr" className="text-xs font-bold text-[var(--accent)] hover:underline">
-                View All Tracker &rarr;
+                View All &rarr;
               </Link>
             </div>
 
@@ -267,20 +292,35 @@ export default async function EndUserDashboard() {
                     {prs.map((pr) => {
                       const badge = getStatusBadge(pr.status);
                       const stageLabel = getStageLabel(pr.status);
+                      const step = getProgressStep(pr.status);
                       const isReturnedItem = ["Returned", "ReturnedForRevision", "Returned for Revision"].includes(pr.status);
                       const isDraftItem = pr.status === "Draft";
 
                       return (
                         <tr key={pr.id} className="hover:bg-[var(--surface-hover)]/30 transition-colors">
-                          <td className="py-3.5 px-4 font-extrabold text-[var(--accent)]">{pr.prNumber}</td>
-                          <td className="py-3.5 px-4 font-medium text-[var(--text-primary)] max-w-[180px] truncate">
+                          <td className="py-3.5 px-4 font-extrabold text-[var(--accent)]">
+                            <Link href={`/dashboard/end-user/pr?id=${pr.id}`} className="hover:underline">
+                              {pr.prNumber}
+                            </Link>
+                          </td>
+                          <td className="py-3.5 px-4 font-medium text-[var(--text-primary)] max-w-[160px] truncate">
                             {pr.purpose}
                           </td>
                           <td className="py-3.5 px-4 text-[var(--text-muted)] font-medium">
                             {pr.submittedAt ? new Date(pr.submittedAt).toLocaleDateString("en-PH", { dateStyle: "short" }) : "—"}
                           </td>
-                          <td className="py-3.5 px-4 font-bold text-[var(--text-secondary)]">
-                            {stageLabel}
+                          <td className="py-3.5 px-4 space-y-1">
+                            <div className="font-bold text-[var(--text-secondary)]">{stageLabel}</div>
+                            {/* Visual Progress Steps */}
+                            <div className="flex items-center gap-1 text-[9px]">
+                              <span className={step >= 1 ? "text-emerald-600 font-bold" : "opacity-30"}>Draft</span>
+                              <span className="opacity-30">&bull;</span>
+                              <span className={step >= 2 ? "text-amber-600 font-bold" : "opacity-30"}>Review</span>
+                              <span className="opacity-30">&bull;</span>
+                              <span className={step >= 3 ? "text-emerald-600 font-bold" : "opacity-30"}>Approved</span>
+                              <span className="opacity-30">&bull;</span>
+                              <span className={step >= 4 ? "text-blue-600 font-bold" : "opacity-30"}>RFQ</span>
+                            </div>
                           </td>
                           <td className="py-3.5 px-4 text-center">
                             <span className={`badge ${badge.cls} text-[10px] font-bold`}>
@@ -293,21 +333,21 @@ export default async function EndUserDashboard() {
                           <td className="py-3.5 px-4 text-right">
                             {isDraftItem ? (
                               <Link
-                                href="/dashboard/end-user/pr"
+                                href={`/dashboard/end-user/pr?id=${pr.id}`}
                                 className="text-xs font-bold text-amber-700 hover:underline"
                               >
                                 Continue Editing
                               </Link>
                             ) : isReturnedItem ? (
                               <Link
-                                href="/dashboard/end-user/pr"
+                                href={`/dashboard/end-user/pr?id=${pr.id}`}
                                 className="text-xs font-bold text-red-600 hover:underline"
                               >
                                 Edit &amp; Resubmit
                               </Link>
                             ) : (
                               <Link
-                                href="/dashboard/end-user/pr"
+                                href={`/dashboard/end-user/pr?id=${pr.id}`}
                                 className="text-xs font-bold text-[var(--accent)] hover:underline"
                               >
                                 View Details
@@ -372,7 +412,7 @@ export default async function EndUserDashboard() {
                     {returnedPr.remarks || "Purchase Request returned by Procurement Office for revision."}
                   </p>
                   <Link
-                    href="/dashboard/end-user/pr"
+                    href={`/dashboard/end-user/pr?id=${returnedPr.id}`}
                     className="inline-flex items-center gap-1 text-[11px] font-bold text-red-700 hover:underline pt-1"
                   >
                     Edit &amp; Resubmit &rarr;
@@ -388,7 +428,7 @@ export default async function EndUserDashboard() {
                     Draft PR is awaiting completion and submission.
                   </p>
                   <Link
-                    href="/dashboard/end-user/pr"
+                    href={`/dashboard/end-user/pr?id=${draftPr.id}`}
                     className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-700 hover:underline pt-1"
                   >
                     Continue Editing &rarr;
@@ -401,10 +441,10 @@ export default async function EndUserDashboard() {
                     <span className="badge badge-success text-[10px] font-bold text-white">{approvedPr.prNumber}</span>
                   </div>
                   <p className="text-[11px] text-emerald-900 dark:text-emerald-200">
-                    Eligible for RFQ generation by Procurement Office.
+                    Ready for Request for Quotation (RFQ).
                   </p>
                   <Link
-                    href="/dashboard/end-user/pr"
+                    href={`/dashboard/end-user/pr?id=${approvedPr.id}`}
                     className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 hover:underline pt-1"
                   >
                     View Details &rarr;
