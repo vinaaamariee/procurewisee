@@ -46,6 +46,8 @@ export async function login(formData: FormData) {
     appRole = 'Procurement Officer';
   } else if (appRole === 'AdministrativeApprover') {
     appRole = 'Administrative Approver';
+  } else if (appRole === 'EndUser') {
+    appRole = 'End User';
   }
 
   if (appRole === 'Supplier') {
