@@ -535,6 +535,7 @@ model PurchaseRequestItem {
   estimatedCost     Decimal         @default(0.00) @db.Decimal(12, 2)
   specification     String?
   brand             String?         @db.VarChar(100)
+  officeSection     String?         @map("office_section") @db.VarChar(100)
   productId         Int?
   unitId            Int?
   pr                PurchaseRequest @relation(fields: [prId], references: [id], onDelete: Cascade)

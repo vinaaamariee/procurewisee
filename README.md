@@ -1014,7 +1014,7 @@ OfficerDashboard (/dashboard/officer)
 
 Updated `prisma/schema.prisma` and database models for government procurement standards:
 - **`PurchaseRequest` Model**: Added `prDate` (DateTime), `entityName` (String, default: "Batanes State College"), `fundCluster` (String, default: "01101101"), `createdById` (FK to `UserProfile`), and `updatedById` (FK to `UserProfile`).
-- **`PurchaseRequestItem` Model**: Added `itemNo` (Int), `stockNo` (String?), `unit` (String), and `unitCost` (Decimal). Maintained 1-to-many relationship (`prId` -> `PurchaseRequest`) and optional `unitId` relation (`UnitOfMeasure`).
+- **`PurchaseRequestItem` Model**: Added `itemNo` (Int), `stockNo` (String?), `unit` (String), `unitCost` (Decimal), and `officeSection` (String? `@map("office_section")`). Maintained 1-to-many relationship (`prId` -> `PurchaseRequest`) and optional `unitId` relation (`UnitOfMeasure`).
 - **Database Synchronization**: Successfully synced database schema using `npx prisma db push` and regenerated Prisma Client v6.1.0.
 
 
