@@ -203,19 +203,25 @@ export default function LoginForm({ errorParam, successParam, onClearParams }: L
         </form>
 
         {/* Need an Account? */}
-        <div className="border-t border-base-200 pt-4 space-y-1.5 text-center">
-          <p className="text-xs font-bold text-base-content/50 uppercase tracking-wider">
-            Need an Account?
+        <div className="border-t border-base-200 pt-4 space-y-2 text-center">
+          <div className="bg-[#A6761D]/10 border border-[#A6761D]/25 rounded-2xl p-3 text-center space-y-1">
+            <p className="text-xs font-bold text-[#7B1E1E]">
+              Department Requisitioner?
+            </p>
+            <p className="text-[11px] text-base-content/70 leading-tight">
+              Department End Users can register their own account directly.
+            </p>
+            <Link
+              href="/end-user/login?tab=register"
+              className="btn btn-xs rounded-xl bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-extrabold mt-1 inline-flex items-center gap-1"
+            >
+              Create End User Account →
+            </Link>
+          </div>
+
+          <p className="text-[11px] text-base-content/50 leading-relaxed pt-1">
+            Procurement & Admin accounts are provisioned by the ICT/Procurement Unit.
           </p>
-          <p className="text-[11px] text-base-content/60 leading-relaxed">
-            Accounts are provisioned by the System Administrator. Contact the Procurement Office or ICT Office to request access.
-          </p>
-          <a
-            href="mailto:procurement@bsc.edu.ph"
-            className="btn btn-outline btn-xs rounded-lg border-[#7B1E1E]/40 text-[#7B1E1E] hover:bg-[#7B1E1E] hover:text-white hover:border-[#7B1E1E] font-bold mt-1"
-          >
-            Request Account Access
-          </a>
         </div>
 
       </div>

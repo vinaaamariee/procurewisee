@@ -1017,4 +1017,11 @@ Updated `prisma/schema.prisma` and database models for government procurement st
 - **`PurchaseRequestItem` Model**: Added `itemNo` (Int), `stockNo` (String?), `unit` (String), `unitCost` (Decimal), and `officeSection` (String? `@map("office_section")`). Maintained 1-to-many relationship (`prId` -> `PurchaseRequest`) and optional `unitId` relation (`UnitOfMeasure`).
 - **Database Synchronization**: Successfully synced database schema using `npx prisma db push` and regenerated Prisma Client v6.1.0.
 
+### End User Login & Self-Registration Portal
+
+Added self-registration capability specifically for Department End Users:
+- **Dedicated Route**: `/end-user/login` (featuring tabbed navigation for Sign In vs Create End User Account).
+- **Self-Registration Action**: `registerEndUser(formData)` in `src/app/actions/auth.ts` provisions Supabase Auth credentials and creates `user_profiles` with role `EndUser`.
+- **UI Components**: Created `EndUserRegisterForm.tsx` and updated standard `LoginForm.tsx` with callout links to the End User Portal.
+
 
