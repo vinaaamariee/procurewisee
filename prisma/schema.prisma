@@ -472,16 +472,16 @@ model PpmpItem {
 model PurchaseRequest {
   id                 Int                            @id @default(autoincrement()) @map("pr_id")
   prNumber           String                         @unique @db.VarChar(50)
-  prDate             DateTime                       @default(now())
-  entityName         String                         @default("Batanes State College") @db.VarChar(150)
-  fundCluster        String                         @default("01101101") @db.VarChar(50)
+  prDate             DateTime                       @default(now()) @map("pr_date")
+  entityName         String                         @default("Batanes State College") @map("entity_name") @db.VarChar(150)
+  fundCluster        String                         @default("01101101") @map("fund_cluster") @db.VarChar(50)
   trackingNumber     String?                        @unique @db.VarChar(50)
   requestDate        DateTime                       @default(now())
   department         String                         @db.VarChar(100)
   office             String                         @db.VarChar(100)
   requestedById      String?
-  createdById        String?
-  updatedById        String?
+  createdById        String?                        @map("created_by_id")
+  updatedById        String?                        @map("updated_by_id")
   purpose            String
   fundingSource      String                         @db.VarChar(100)
   ppmpId             Int?
@@ -525,12 +525,12 @@ model PurchaseRequest {
 model PurchaseRequestItem {
   id                Int             @id @default(autoincrement()) @map("pr_item_id")
   prId              Int
-  itemNo            Int             @default(1)
-  stockNo           String?         @db.VarChar(50)
-  unitText          String?         @db.VarChar(50)
+  itemNo            Int             @default(1) @map("item_no")
+  stockNo           String?         @map("stock_no") @db.VarChar(50)
+  unitText          String?         @map("unit_text") @db.VarChar(50)
   description       String
   quantity          Int
-  unitCost          Decimal         @default(0.00) @db.Decimal(12, 2)
+  unitCost          Decimal         @default(0.00) @map("unit_cost") @db.Decimal(12, 2)
   estimatedUnitCost Decimal         @default(0.00) @db.Decimal(12, 2)
   estimatedCost     Decimal         @default(0.00) @db.Decimal(12, 2)
   specification     String?

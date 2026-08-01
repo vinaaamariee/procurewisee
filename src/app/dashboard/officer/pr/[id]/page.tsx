@@ -52,7 +52,7 @@ export default async function PrDetailPage({ params }: PageProps) {
     return notFound();
   }
 
-  const budgets = budgetsList.reduce((acc, b) => {
+  const budgets = budgetsList.reduce((acc: Record<string, { allocatedBudget: number; spentBudget: number }>, b: { department: string; allocatedBudget: any; spentBudget: any }) => {
     acc[b.department] = {
       allocatedBudget: Number(b.allocatedBudget),
       spentBudget: Number(b.spentBudget)
@@ -65,7 +65,7 @@ export default async function PrDetailPage({ params }: PageProps) {
     ...pr,
     estimatedBudget: pr.estimatedBudget ? Number(pr.estimatedBudget) : null,
     totalCost: pr.totalCost ? Number(pr.totalCost) : 0,
-    items: pr.items.map(item => ({
+    items: pr.items.map((item: any) => ({
       ...item,
       estimatedUnitCost: Number(item.estimatedUnitCost),
       estimatedCost: Number(item.estimatedCost),
@@ -74,7 +74,7 @@ export default async function PrDetailPage({ params }: PageProps) {
     requestDate: pr.requestDate.toISOString(),
     createdAt: pr.createdAt.toISOString(),
     updatedAt: pr.updatedAt.toISOString(),
-    statusHistory: pr.statusHistory?.map(sh => ({
+    statusHistory: pr.statusHistory?.map((sh: any) => ({
       ...sh,
       createdAt: sh.createdAt.toISOString()
     }))
