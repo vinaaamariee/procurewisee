@@ -28,8 +28,8 @@ End User Revises & Resubmits → Status: Pending Procurement Review
 - **Status Lifecycle**: `Draft` $\rightarrow$ `Pending Procurement Review` $\rightarrow$ `Returned` $\rightarrow$ `Approved` $\rightarrow$ `Converted to RFQ`.
 - **5-Point Compliance Checklist (`PrValidationChecklist.tsx`)**: Interactive audit checks (PPMP verification, required fields, item specifications, budget availability, quantities & unit costs) required before enabling approval.
 - **Unified Review Modal (`ReviewPrModal.tsx`)**: Reusable DaisyUI modal supporting single-click Approve and Return actions (enforcing mandatory reason comment).
-- **Workflow History Timeline (`PrWorkflowTimeline.tsx`)**: Visual step timeline preserving dates, actors, actions, and historical officer return comments without overwriting history.
-- **Audit Logging**: Structured forensic logs for `CREATE_PR`, `SUBMIT_PR`, `RETURN_PR`, `RESUBMIT_PR`, and `APPROVE_PR`.
+- **Budget Accounting Integrity**: Approving a Purchase Request authorizes eligibility for RFQ generation without prematurely marking department funds as "spent" (expenditures take place upon PO execution / payment).
+- **Audit-Driven Timeline (`PrWorkflowTimeline.tsx`)**: Renders step timeline and return reason comments from `remarks` and structured `AuditTrail` entries (`CREATE_PR`, `SUBMIT_PR`, `RETURN_PR`, `RESUBMIT_PR`, `APPROVE_PR`).
 - **Post-Approval Safeguards**: Approved PRs display `Approved — This Purchase Request has passed Procurement Office validation and is now eligible for RFQ generation.` and are locked from further editing.
 
 ---

@@ -156,15 +156,6 @@ export async function submitPrAction(id: number) {
         },
       });
 
-      await tx.purchaseRequestStatusHistory.create({
-        data: {
-          purchaseRequestId: id,
-          status: targetStatus,
-          remarks: "Submitted for Procurement Office review and validation.",
-          changedById: profile.id,
-        },
-      });
-
       await logAuditTrail({
         actionType: "SUBMIT_PR",
         tableAffected: "purchase_requests",
@@ -205,31 +196,6 @@ export async function approvePrByOfficerAction(id: number) {
           assignedOfficerId: profile.id,
           ...({ reviewedById: profile.id } as any),
         },
-      });
-
-      // Update Department Budget allocation
-      const deptBudget = await tx.departmentBudget.findUnique({
-        where: { department: old.department }
-      });
-      if (deptBudget) {
-        await tx.departmentBudget.update({
-          where: { department: old.department },
-          data: {
-            spentBudget: {
-              increment: old.totalCost
-            }
-          }
-        });
-      }
-
-      // Record in status history table
-      await tx.purchaseRequestStatusHistory.create({
-        data: {
-          purchaseRequestId: id,
-          status: PrStatus.Approved,
-          remarks: "Approved by Procurement Office after compliance validation check.",
-          changedById: profile.id
-        }
       });
 
       await logAuditTrail({
@@ -278,16 +244,6 @@ export async function returnPrByOfficerAction(id: number, remarks: string) {
           assignedOfficerId: profile.id,
           ...({ reviewedById: profile.id } as any),
         },
-      });
-
-      // Record in status history table with officer comment
-      await tx.purchaseRequestStatusHistory.create({
-        data: {
-          purchaseRequestId: id,
-          status: targetStatus,
-          remarks: remarks.trim(),
-          changedById: profile.id
-        }
       });
 
       await logAuditTrail({
@@ -740,16 +696,6 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
               unit: true
             }
           }
-        }
-      });
-
-      // 5. Create Status History entry for resubmission
-      await tx.purchaseRequestStatusHistory.create({
-        data: {
-          purchaseRequestId: id,
-          status: targetStatus,
-          remarks: "Resubmitted by End User for Procurement Office review after corrections.",
-          changedById: profile.id
         }
       });
 
