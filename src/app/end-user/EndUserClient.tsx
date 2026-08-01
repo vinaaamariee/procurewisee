@@ -187,7 +187,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-4">
             <div>
               <h2 className="text-2xl font-extrabold text-[#7e191b]">Office Supplies Catalog</h2>
-              <p className="text-sm text-gray-500">Request supplies for your department. No login required.</p>
+              <p className="text-sm text-gray-500">Request supplies for your department.</p>
             </div>
 
             {/* Filter Bar */}

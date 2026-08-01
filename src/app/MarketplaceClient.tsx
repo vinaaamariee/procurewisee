@@ -776,7 +776,7 @@ function CheckoutModal({
             <p className="text-xs text-gray-400 mt-1">
               {userProfile
                 ? "Submit your cart items for formal procurement processing."
-                : "No login required — fill in your details to submit a requisition."}
+                : "Fill in your details to submit a requisition."}
             </p>
           </div>
           <button
