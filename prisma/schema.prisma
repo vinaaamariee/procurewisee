@@ -24,6 +24,7 @@ model UserProfile {
   prsAssigned             PurchaseRequest[]              @relation("PrAssignedOfficer")
   prsCreated              PurchaseRequest[]              @relation("PrCreatedBy")
   prsRequested            PurchaseRequest[]              @relation("PrRequestedBy")
+  prsReviewed             PurchaseRequest[]              @relation("PrReviewedBy")
   prsUpdated              PurchaseRequest[]              @relation("PrUpdatedBy")
   recommendationsReviewed Recommendation[]               @relation("RecommendationReviewedBy")
   rfqsCreated             RequestForQuote[]              @relation("RfqCreatedBy")
@@ -482,6 +483,7 @@ model PurchaseRequest {
   requestedById      String?
   createdById        String?                        @map("created_by_id")
   updatedById        String?                        @map("updated_by_id")
+  reviewedById       String?                        @map("reviewed_by_id")
   purpose            String
   fundingSource      String                         @db.VarChar(100)
   ppmpId             Int?
@@ -509,11 +511,13 @@ model PurchaseRequest {
   createdBy          UserProfile?                   @relation("PrCreatedBy", fields: [createdById], references: [id])
   ppmp               Ppmp?                          @relation(fields: [ppmpId], references: [id])
   requestedBy        UserProfile?                   @relation("PrRequestedBy", fields: [requestedById], references: [id])
+  reviewedBy         UserProfile?                   @relation("PrReviewedBy", fields: [reviewedById], references: [id])
   updatedBy          UserProfile?                   @relation("PrUpdatedBy", fields: [updatedById], references: [id])
 
   @@index([requestedById])
   @@index([createdById])
   @@index([updatedById])
+  @@index([reviewedById])
   @@index([ppmpId])
   @@index([assignedOfficerId])
   @@index([status])
@@ -800,10 +804,12 @@ enum PpmpStatus {
 enum PrStatus {
   Draft
   Submitted
-  UnderReview            @map("Under Review")
-  ReturnedForRevision    @map("Returned for Revision")
+  PendingProcurementReview @map("Pending Procurement Review")
+  UnderReview              @map("Under Review")
+  Returned
+  ReturnedForRevision      @map("Returned for Revision")
   Approved
-  ConvertedToRfq         @map("Converted to RFQ")
+  ConvertedToRfq           @map("Converted to RFQ")
   Received
   Rejected
   Cancelled

@@ -4,7 +4,7 @@ import PrAuditClient from "./PrAuditClient";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = {
-  title: "Purchase Request Auditing — ProcureWise",
+  title: "Purchase Request Approval and Validation Hub — ProcureWise",
 };
 
 export default async function PrAuditingPage() {
@@ -13,34 +13,53 @@ export default async function PrAuditingPage() {
   const prs = await prisma.purchaseRequest.findMany({
     where: {
       status: {
-        in: ["Submitted", "UnderReview", "Approved", "Received"],
+        in: [
+          "PendingProcurementReview",
+          "Pending Procurement Review",
+          "Submitted",
+          "UnderReview",
+          "Returned",
+          "ReturnedForRevision",
+          "Approved",
+        ] as any[],
       },
     },
     select: {
       id: true,
       prNumber: true,
       department: true,
+      office: true,
       requestDate: true,
+      submittedAt: true,
       totalCost: true,
       status: true,
       purpose: true,
+      requestedBy: {
+        select: {
+          fullName: true,
+          email: true,
+        },
+      },
+      requesterName: true,
     },
     orderBy: {
       updatedAt: "desc",
     },
   });
 
-  const serializedPrs = prs.map(pr => ({
+  const serializedPrs = prs.map((pr) => ({
     ...pr,
     totalCost: Number(pr.totalCost),
     requestDate: pr.requestDate.toISOString(),
+    submittedAt: pr.submittedAt ? pr.submittedAt.toISOString() : pr.requestDate.toISOString(),
+    requestorName: pr.requestedBy?.fullName || pr.requesterName || "End User",
   }));
 
   return (
     <div className="space-y-8">
       <SectionHeader
-        title="Requisitions Auditing Hub"
-        subtitle="Verify requisitions, validate product specifications and quantities, modify units of measure, and approve workflow transitions."
+        title="Purchase Request Approval and Validation Hub"
+        subtitle="Validate department requisitions, perform 5-point compliance verification, and authorize eligible Purchase Requests for RFQ generation."
       />
 
       <PrAuditClient initialPrs={(serializedPrs as any)} />

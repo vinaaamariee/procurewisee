@@ -145,17 +145,22 @@ export async function submitPrAction(id: number) {
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
 
+    const targetStatus = (PrStatus as any).PendingProcurementReview || PrStatus.Submitted;
+
     const updated = await prisma.$transaction(async (tx) => {
       const pr = await tx.purchaseRequest.update({
         where: { id },
-        data: { status: PrStatus.Submitted },
+        data: { 
+          status: targetStatus,
+          submittedAt: new Date(),
+        },
       });
 
       await tx.purchaseRequestStatusHistory.create({
         data: {
           purchaseRequestId: id,
-          status: PrStatus.Submitted,
-          remarks: "Submitted for review.",
+          status: targetStatus,
+          remarks: "Submitted for Procurement Office review and validation.",
           changedById: profile.id,
         },
       });
@@ -180,7 +185,7 @@ export async function submitPrAction(id: number) {
   }
 }
 
-export async function reviewPrAction(id: number, status: PrStatus, remarks?: string, officerId?: string) {
+export async function approvePrByOfficerAction(id: number) {
   try {
     const { profile } = await getAuthenticatedUser();
     if (profile.role !== "Procurement Officer" && profile.role !== "Administrative Approver") {
@@ -190,69 +195,145 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
 
-    // Source-state guard: only allow valid forward transitions
-    const VALID_TRANSITIONS: Record<PrStatus, PrStatus[]> = {
-      Draft: ["Submitted"],
-      Submitted: ["Received", "UnderReview", "ReturnedForRevision", "Rejected"],
-      Received: ["UnderReview", "ReturnedForRevision", "Rejected", "Approved"],
-      UnderReview: ["Approved", "ReturnedForRevision", "Rejected"],
-      ReturnedForRevision: ["Submitted"],
-      Approved: ["ConvertedToRfq"],
-      ConvertedToRfq: [],
-      Rejected: [],
-      Cancelled: [],
-    };
-    const allowed = VALID_TRANSITIONS[old.status] || [];
-    if (!allowed.includes(status)) {
-      return { success: false, error: `Cannot transition from ${old.status} to ${status}.` };
+    const updated = await prisma.$transaction(async (tx) => {
+      const pr = await tx.purchaseRequest.update({
+        where: { id },
+        data: { 
+          status: PrStatus.Approved,
+          approvedAt: new Date(),
+          reviewedAt: new Date(),
+          reviewedById: profile.id,
+          assignedOfficerId: profile.id,
+        },
+      });
+
+      // Update Department Budget allocation
+      const deptBudget = await tx.departmentBudget.findUnique({
+        where: { department: old.department }
+      });
+      if (deptBudget) {
+        await tx.departmentBudget.update({
+          where: { department: old.department },
+          data: {
+            spentBudget: {
+              increment: old.totalCost
+            }
+          }
+        });
+      }
+
+      // Record in status history table
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: id,
+          status: PrStatus.Approved,
+          remarks: "Approved by Procurement Office after compliance validation check.",
+          changedById: profile.id
+        }
+      });
+
+      await logAuditTrail({
+        actionType: "APPROVE_PR",
+        tableAffected: "purchase_requests",
+        recordId: id,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
+
+      return pr;
+    });
+
+    revalidatePath("/", "layout");
+    return { success: true, pr: updated };
+  } catch (error: any) {
+    console.error("Error approving PR:", error);
+    return { success: false, error: error.message || "Failed to approve Purchase Request." };
+  }
+}
+
+export async function returnPrByOfficerAction(id: number, remarks: string) {
+  try {
+    const { profile } = await getAuthenticatedUser();
+    if (profile.role !== "Procurement Officer" && profile.role !== "Administrative Approver") {
+      return { success: false, error: "Unauthorized role for this action." };
     }
+
+    if (!remarks || !remarks.trim()) {
+      return { success: false, error: "A reason comment is required when returning a Purchase Request." };
+    }
+
+    const old = await prisma.purchaseRequest.findUnique({ where: { id } });
+    if (!old) return { success: false, error: "PR not found." };
+
+    const targetStatus = (PrStatus as any).Returned || PrStatus.ReturnedForRevision;
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const pr = await tx.purchaseRequest.update({
+        where: { id },
+        data: { 
+          status: targetStatus,
+          remarks: remarks.trim(),
+          reviewedAt: new Date(),
+          reviewedById: profile.id,
+          assignedOfficerId: profile.id,
+        },
+      });
+
+      // Record in status history table with officer comment
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: id,
+          status: targetStatus,
+          remarks: remarks.trim(),
+          changedById: profile.id
+        }
+      });
+
+      await logAuditTrail({
+        actionType: "RETURN_PR",
+        tableAffected: "purchase_requests",
+        recordId: id,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
+
+      return pr;
+    });
+
+    revalidatePath("/", "layout");
+    return { success: true, pr: updated };
+  } catch (error: any) {
+    console.error("Error returning PR:", error);
+    return { success: false, error: error.message || "Failed to return Purchase Request." };
+  }
+}
+
+export async function reviewPrAction(id: number, status: PrStatus, remarks?: string, officerId?: string) {
+  if (status === PrStatus.Approved) {
+    return approvePrByOfficerAction(id);
+  }
+  if (status === (PrStatus as any).Returned || status === PrStatus.ReturnedForRevision) {
+    return returnPrByOfficerAction(id, remarks || "");
+  }
+  try {
+    const { profile } = await getAuthenticatedUser();
+    const old = await prisma.purchaseRequest.findUnique({ where: { id } });
+    if (!old) return { success: false, error: "PR not found." };
 
     const updated = await prisma.$transaction(async (tx) => {
       const pr = await tx.purchaseRequest.update({
         where: { id },
         data: { 
           status,
-          remarks: remarks ? `${old.remarks || ""}\n[Review]: ${remarks}` : old.remarks,
+          remarks: remarks ? remarks : old.remarks,
           assignedOfficerId: officerId || old.assignedOfficerId,
+          reviewedAt: new Date(),
+          reviewedById: profile.id,
         },
       });
 
-      // Budget is committed ONLY on transition to Approved (not Received).
-      // Received is an intake state, not an approved state.
-      const isNewApproved = status === PrStatus.Approved;
-      const isOldApproved = old.status === PrStatus.Approved;
-
-      if (isNewApproved && !isOldApproved) {
-        const deptBudget = await tx.departmentBudget.findUnique({
-          where: { department: old.department }
-        });
-        if (deptBudget) {
-          await tx.departmentBudget.update({
-            where: { department: old.department },
-            data: {
-              spentBudget: {
-                increment: old.totalCost
-              }
-            }
-          });
-        }
-      } else if (!isNewApproved && isOldApproved) {
-        const deptBudget = await tx.departmentBudget.findUnique({
-          where: { department: old.department }
-        });
-        if (deptBudget) {
-          await tx.departmentBudget.update({
-            where: { department: old.department },
-            data: {
-              spentBudget: {
-                decrement: old.totalCost
-              }
-            }
-          });
-        }
-      }
-
-      // Record in status history table
       await tx.purchaseRequestStatusHistory.create({
         data: {
           purchaseRequestId: id,
@@ -262,7 +343,6 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
         }
       });
 
-      // Audit log inside the transaction so it commits atomically with the PR change
       await logAuditTrail({
         actionType: "REVIEW_PR",
         tableAffected: "purchase_requests",
@@ -594,10 +674,12 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
       return { success: false, error: "Purchase Request not found." };
     }
 
-    if (old.status !== PrStatus.ReturnedForRevision) {
+    const isReturnedState = old.status === (PrStatus as any).Returned || old.status === PrStatus.ReturnedForRevision;
+    if (!isReturnedState) {
       return { success: false, error: `Only requests that are Returned for Revision can be resubmitted.` };
     }
 
+    const targetStatus = (PrStatus as any).PendingProcurementReview || PrStatus.Submitted;
     const newTotalCost = updatedItems.reduce((sum, item) => sum + (item.quantity * item.estimatedUnitCost), 0);
 
     const result = await prisma.$transaction(async (tx) => {
@@ -646,7 +728,8 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
       const pr = await tx.purchaseRequest.update({
         where: { id },
         data: {
-          status: PrStatus.Submitted,
+          status: targetStatus,
+          submittedAt: new Date(),
           totalCost: new Prisma.Decimal(newTotalCost),
           estimatedBudget: new Prisma.Decimal(newTotalCost)
         },
@@ -660,12 +743,12 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
         }
       });
 
-      // 5. Create Status History
+      // 5. Create Status History entry for resubmission
       await tx.purchaseRequestStatusHistory.create({
         data: {
           purchaseRequestId: id,
-          status: PrStatus.Submitted,
-          remarks: "Resubmitted for review.",
+          status: targetStatus,
+          remarks: "Resubmitted by End User for Procurement Office review after corrections.",
           changedById: profile.id
         }
       });
