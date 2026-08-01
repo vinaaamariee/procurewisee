@@ -358,7 +358,7 @@ export async function getPurchaseRequests(filters?: { department?: string; statu
     return await prisma.purchaseRequest.findMany({
       where,
       include: {
-        items: { include: { product: true, unit: true } },
+        items: { include: { product: true, unitRelation: true } },
         ppmp: true,
         requestedBy: true,
         assignedOfficer: true,
@@ -463,7 +463,7 @@ export async function getPreCanvassingData(prId: number) {
       include: {
         items: {
           include: {
-            unit: true,
+            unitRelation: true,
             product: {
               include: {
                 supplierPrices: {
@@ -556,7 +556,7 @@ export async function getPreCanvassingData(prId: number) {
         description: item.description,
         specification: item.specification,
         quantity: item.quantity,
-        unit: item.unit.abbreviation,
+        unit: item.unitRelation?.abbreviation || item.unit || "unit",
         estimatedUnitCost: Number(item.estimatedUnitCost),
         catalogPrice,
         historicalQuotes,
@@ -654,7 +654,7 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
           items: {
             include: {
               product: true,
-              unit: true
+              unitRelation: true
             }
           }
         }
@@ -730,7 +730,7 @@ export async function convertPrToRfqAction(prId: number) {
 
     const pr = await prisma.purchaseRequest.findUnique({
       where: { id: prId },
-      include: { items: { include: { unit: true } } },
+      include: { items: { include: { unitRelation: true } } },
     });
 
     if (!pr) return { success: false, error: "Purchase Request not found." };
@@ -763,13 +763,24 @@ export async function convertPrToRfqAction(prId: number) {
       // 2. Populate RFQ Items from PR items (no re-encoding needed)
       for (let i = 0; i < pr.items.length; i++) {
         const item = pr.items[i];
+        let targetUnitId = item.unitId;
+        if (!targetUnitId) {
+          const itemUnitName = item.unit || "unit";
+          const u = await tx.unitOfMeasure.upsert({
+            where: { name: itemUnitName.trim() },
+            update: {},
+            create: { name: itemUnitName.trim(), abbreviation: itemUnitName.trim().slice(0, 15) }
+          });
+          targetUnitId = u.id;
+        }
+
         await tx.rfqItem.create({
           data: {
             rfqId: newRfq.id,
             itemNumber: String(i + 1),
             particulars: item.description + (item.specification ? ` (${item.specification})` : ""),
             quantity: item.quantity,
-            unitId: item.unitId,
+            unitId: targetUnitId,
             productId: item.productId || null,
           },
         });

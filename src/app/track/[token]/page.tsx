@@ -59,7 +59,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
       include: {
         items: {
           include: {
-            unit: true
+            unitRelation: true
           }
         },
         statusHistory: {

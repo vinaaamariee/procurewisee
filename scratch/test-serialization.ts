@@ -14,7 +14,7 @@ async function test() {
         items: {
           include: {
             product: true,
-            unit: true
+            unitRelation: true
           }
         },
         ppmp: true,
@@ -44,7 +44,7 @@ async function test() {
         ...item,
         estimatedUnitCost: Number(item.estimatedUnitCost),
         estimatedCost: Number(item.estimatedCost),
-        unit: item.unit?.abbreviation || 'pcs'
+        unit: item.unitRelation?.abbreviation || item.unit || 'pcs'
       })),
       requestDate: pr.requestDate.toISOString(),
       createdAt: pr.createdAt.toISOString(),

@@ -652,22 +652,26 @@ async function main() {
       items: {
         create: [
           {
-            product: { connect: { id: seededProducts[3].id } },
+            productId: seededProducts[3].id,
             description: seededProducts[3].name,
             brand: seededProducts[3].brand?.name,
             quantity: 2,
-            unit: { connect: { id: seededProducts[3].unitId } },
+            unitId: seededProducts[3].unitId,
+            unit: "unit",
             estimatedUnitCost: seededProducts[3].estimatedUnitCost,
+            unitCost: seededProducts[3].estimatedUnitCost,
             estimatedCost: 110000.00,
             specification: catalogProductsData[3].technicalSpecifications,
           },
           {
-            product: { connect: { id: seededProducts[4].id } },
+            productId: seededProducts[4].id,
             description: seededProducts[4].name,
             brand: seededProducts[4].brand?.name,
             quantity: 1,
-            unit: { connect: { id: seededProducts[4].unitId } },
+            unitId: seededProducts[4].unitId,
+            unit: "unit",
             estimatedUnitCost: seededProducts[4].estimatedUnitCost,
+            unitCost: seededProducts[4].estimatedUnitCost,
             estimatedCost: 9600.00,
             specification: catalogProductsData[4].technicalSpecifications,
           }
@@ -691,12 +695,14 @@ async function main() {
       items: {
         create: [
           {
-            product: { connect: { id: seededProducts[0].id } },
+            productId: seededProducts[0].id,
             description: seededProducts[0].name,
             brand: seededProducts[0].brand?.name,
             quantity: 100,
-            unit: { connect: { id: seededProducts[0].unitId } },
+            unitId: seededProducts[0].unitId,
+            unit: "ream",
             estimatedUnitCost: seededProducts[0].estimatedUnitCost,
+            unitCost: seededProducts[0].estimatedUnitCost,
             estimatedCost: 22000.00,
             specification: catalogProductsData[0].technicalSpecifications,
           }

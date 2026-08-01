@@ -25,7 +25,7 @@ export default async function PrReviewPage({ params }: PageProps) {
       items: {
         include: {
           product: true,
-          unit: true
+          unitRelation: true
         }
       },
       requestedBy: true,
@@ -78,7 +78,7 @@ export default async function PrReviewPage({ params }: PageProps) {
       description: item.description,
       brand: item.brand || "N/A",
       quantity: item.quantity,
-      unit: item.unit.abbreviation,
+      unit: item.unitRelation?.abbreviation || item.unit || "unit",
       estimatedUnitCost: Number(item.estimatedUnitCost),
       estimatedCost: Number(item.estimatedCost),
       specification: item.specification || "None"
