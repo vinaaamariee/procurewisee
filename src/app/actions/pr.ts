@@ -358,7 +358,7 @@ export async function getPurchaseRequests(filters?: { department?: string; statu
     return await prisma.purchaseRequest.findMany({
       where,
       include: {
-        items: { include: { product: true, unitRelation: true } },
+        items: { include: { product: true, unit: true } },
         ppmp: true,
         requestedBy: true,
         assignedOfficer: true,
@@ -463,7 +463,7 @@ export async function getPreCanvassingData(prId: number) {
       include: {
         items: {
           include: {
-            unitRelation: true,
+            unit: true,
             product: {
               include: {
                 supplierPrices: {
@@ -556,7 +556,7 @@ export async function getPreCanvassingData(prId: number) {
         description: item.description,
         specification: item.specification,
         quantity: item.quantity,
-        unit: item.unitRelation?.abbreviation || item.unit || "unit",
+        unit: item.unit?.abbreviation || item.unitText || "unit",
         estimatedUnitCost: Number(item.estimatedUnitCost),
         catalogPrice,
         historicalQuotes,
@@ -654,7 +654,7 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
           items: {
             include: {
               product: true,
-              unitRelation: true
+              unit: true
             }
           }
         }
@@ -730,7 +730,7 @@ export async function convertPrToRfqAction(prId: number) {
 
     const pr = await prisma.purchaseRequest.findUnique({
       where: { id: prId },
-      include: { items: { include: { unitRelation: true } } },
+      include: { items: { include: { unit: true } } },
     });
 
     if (!pr) return { success: false, error: "Purchase Request not found." };
@@ -765,7 +765,7 @@ export async function convertPrToRfqAction(prId: number) {
         const item = pr.items[i];
         let targetUnitId = item.unitId;
         if (!targetUnitId) {
-          const itemUnitName = item.unit || "unit";
+          const itemUnitName = item.unit?.name || item.unitText || "unit";
           const u = await tx.unitOfMeasure.upsert({
             where: { name: itemUnitName.trim() },
             update: {},

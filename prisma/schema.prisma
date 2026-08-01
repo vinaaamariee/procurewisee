@@ -527,7 +527,7 @@ model PurchaseRequestItem {
   prId              Int
   itemNo            Int             @default(1)
   stockNo           String?         @db.VarChar(50)
-  unit              String          @default("pc") @db.VarChar(50)
+  unitText          String?         @db.VarChar(50)
   description       String
   quantity          Int
   unitCost          Decimal         @default(0.00) @db.Decimal(12, 2)
@@ -540,7 +540,7 @@ model PurchaseRequestItem {
   unitId            Int?
   pr                PurchaseRequest @relation(fields: [prId], references: [id], onDelete: Cascade)
   product           CatalogProduct? @relation(fields: [productId], references: [id])
-  unitRelation      UnitOfMeasure?  @relation(fields: [unitId], references: [id])
+  unit              UnitOfMeasure?  @relation(fields: [unitId], references: [id])
 
   @@index([prId])
   @@index([productId])

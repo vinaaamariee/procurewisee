@@ -1014,9 +1014,9 @@ OfficerDashboard (/dashboard/officer)
 
 Updated `prisma/schema.prisma` and database models for government procurement standards:
 - **`PurchaseRequest` Model**: Added `prDate` (DateTime), `entityName` (String, default: "Batanes State College"), `fundCluster` (String, default: "01101101"), `createdById` (FK to `UserProfile`), and `updatedById` (FK to `UserProfile`).
-- **`PurchaseRequestItem` Model**: Added `itemNo` (Int), `stockNo` (String?), `unit` (String), `unitCost` (Decimal), and `officeSection` (String? `@map("office_section")`). Maintained 1-to-many relationship (`prId` -> `PurchaseRequest`) and optional `unitId` relation (`unitRelation: UnitOfMeasure?`).
-- **Seeder & Conversion Fix**: Updated `prisma/seed.ts` and `src/app/actions/pr.ts` (`convertPrToRfqAction`) to dynamically upsert `UnitOfMeasure` records when `unitId` is missing, ensuring strict non-null foreign key compatibility when generating RFQ line items.
-- **Database Synchronization**: Successfully synced database schema using `npx prisma db push` and regenerated Prisma Client v6.1.0.
+- **`PurchaseRequestItem` Model**: Added `itemNo` (Int), `stockNo` (String?), `unitCost` (Decimal), `unitText` (String?), and `officeSection` (String? `@map("office_section")`). Preserved relation `unit` (`UnitOfMeasure?`) for 100% backward compatibility with all Prisma include queries.
+- **Seeder & Conversion Fix**: Updated `prisma/seed.ts` and `src/app/actions/pr.ts` (`convertPrToRfqAction`) to dynamically upsert `UnitOfMeasure` records when `unitId` is missing, ensuring strict foreign key compatibility when generating RFQ line items.
+- **Database Synchronization**: Successfully synced database schema using `npx prisma db push` and regenerated Prisma Client v7.8.0.
 
 ### End User Login & Self-Registration Portal
 

@@ -28,7 +28,7 @@ export default async function PrDetailPage({ params }: PageProps) {
         items: {
           include: {
             product: true,
-            unitRelation: true
+            unit: true
           }
         },
         ppmp: true,
@@ -69,7 +69,7 @@ export default async function PrDetailPage({ params }: PageProps) {
       ...item,
       estimatedUnitCost: Number(item.estimatedUnitCost),
       estimatedCost: Number(item.estimatedCost),
-      unit: item.unitRelation?.abbreviation || item.unit || "pcs"
+      unit: item.unit?.abbreviation || item.unitText || "pcs"
     })),
     requestDate: pr.requestDate.toISOString(),
     createdAt: pr.createdAt.toISOString(),
