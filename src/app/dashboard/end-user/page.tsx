@@ -1,3 +1,4 @@
+import { PrStatus } from "@prisma/client";
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
@@ -36,7 +37,7 @@ export default async function EndUserDashboard() {
     prisma.purchaseRequest.findMany({
       where: {
         requestedById: profile.id,
-        status: { in: ["Draft", "ReturnedForRevision", "Returned"] as any[] }
+        status: { in: [PrStatus.Draft, PrStatus.ReturnedForRevision, (PrStatus as any).Returned || "ReturnedForRevision"] as any[] }
       },
       select: { id: true, prNumber: true, status: true, purpose: true },
       take: 5

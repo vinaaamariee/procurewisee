@@ -1,3 +1,4 @@
+import { PrStatus } from "@prisma/client";
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import PrAuditClient from "./PrAuditClient";
@@ -14,13 +15,12 @@ export default async function PrAuditingPage() {
     where: {
       status: {
         in: [
-          "PendingProcurementReview",
-          "Pending Procurement Review",
-          "Submitted",
-          "UnderReview",
-          "Returned",
-          "ReturnedForRevision",
-          "Approved",
+          (PrStatus as any).PendingProcurementReview || "Submitted",
+          PrStatus.Submitted,
+          PrStatus.UnderReview,
+          (PrStatus as any).Returned || "ReturnedForRevision",
+          PrStatus.ReturnedForRevision,
+          PrStatus.Approved,
         ] as any[],
       },
     },
