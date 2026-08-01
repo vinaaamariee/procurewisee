@@ -30,6 +30,12 @@ export default async function PrAuditingPage() {
     },
   });
 
+  const serializedPrs = prs.map(pr => ({
+    ...pr,
+    totalCost: Number(pr.totalCost),
+    requestDate: pr.requestDate.toISOString(),
+  }));
+
   return (
     <div className="space-y-8">
       <SectionHeader
@@ -37,7 +43,7 @@ export default async function PrAuditingPage() {
         subtitle="Verify requisitions, validate product specifications and quantities, modify units of measure, and approve workflow transitions."
       />
 
-      <PrAuditClient initialPrs={(prs as any)} />
+      <PrAuditClient initialPrs={(serializedPrs as any)} />
     </div>
   );
 }

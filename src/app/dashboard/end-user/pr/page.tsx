@@ -35,6 +35,31 @@ export default async function PrTrackerPage() {
     }
   });
 
+  const serializedPrs = prs.map(pr => ({
+    ...pr,
+    estimatedBudget: pr.estimatedBudget ? Number(pr.estimatedBudget) : null,
+    totalCost: pr.totalCost ? Number(pr.totalCost) : 0,
+    requestDate: pr.requestDate.toISOString(),
+    prDate: pr.prDate ? pr.prDate.toISOString() : pr.requestDate.toISOString(),
+    createdAt: pr.createdAt.toISOString(),
+    updatedAt: pr.updatedAt.toISOString(),
+    submittedAt: pr.submittedAt ? pr.submittedAt.toISOString() : null,
+    items: pr.items.map(item => ({
+      ...item,
+      unitCost: item.unitCost ? Number(item.unitCost) : 0,
+      estimatedUnitCost: item.estimatedUnitCost ? Number(item.estimatedUnitCost) : 0,
+      estimatedCost: item.estimatedCost ? Number(item.estimatedCost) : 0,
+      product: item.product ? {
+        ...item.product,
+        estimatedUnitCost: Number(item.product.estimatedUnitCost),
+      } : null,
+    })),
+    statusHistory: pr.statusHistory?.map(sh => ({
+      ...sh,
+      createdAt: sh.createdAt.toISOString(),
+    })),
+  }));
+
   return (
     <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
       <div>
@@ -46,7 +71,7 @@ export default async function PrTrackerPage() {
         </p>
       </div>
 
-      <PrTrackerClient initialPrs={(prs as any)} />
+      <PrTrackerClient initialPrs={(serializedPrs as any)} />
     </div>
   );
 }
