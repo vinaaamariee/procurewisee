@@ -202,8 +202,8 @@ export async function approvePrByOfficerAction(id: number) {
           status: PrStatus.Approved,
           approvedAt: new Date(),
           reviewedAt: new Date(),
-          reviewedById: profile.id,
           assignedOfficerId: profile.id,
+          ...({ reviewedById: profile.id } as any),
         },
       });
 
@@ -275,8 +275,8 @@ export async function returnPrByOfficerAction(id: number, remarks: string) {
           status: targetStatus,
           remarks: remarks.trim(),
           reviewedAt: new Date(),
-          reviewedById: profile.id,
           assignedOfficerId: profile.id,
+          ...({ reviewedById: profile.id } as any),
         },
       });
 
@@ -330,7 +330,7 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
           remarks: remarks ? remarks : old.remarks,
           assignedOfficerId: officerId || old.assignedOfficerId,
           reviewedAt: new Date(),
-          reviewedById: profile.id,
+          ...({ reviewedById: profile.id } as any),
         },
       });
 
