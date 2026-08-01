@@ -73,7 +73,7 @@ export default async function PrReviewPage({ params }: PageProps) {
     requesterName: pr.requestedBy?.fullName || pr.requesterName || "Requisitioner",
     requesterEmail: pr.requestedBy?.email || pr.requesterEmail || "N/A",
     officerName: pr.assignedOfficer?.fullName || "Not Assigned",
-    items: pr.items.map(item => ({
+    items: pr.items.map((item: any) => ({
       id: item.id,
       description: item.description,
       brand: item.brand || "N/A",
@@ -83,7 +83,7 @@ export default async function PrReviewPage({ params }: PageProps) {
       estimatedCost: Number(item.estimatedCost),
       specification: item.specification || "None"
     })),
-    statusHistory: pr.statusHistory.map(history => ({
+    statusHistory: pr.statusHistory.map((history: any) => ({
       id: history.id,
       status: history.status,
       remarks: history.remarks || "No remarks provided.",

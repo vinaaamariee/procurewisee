@@ -84,10 +84,10 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
         requesterEmail: pr.requesterEmail || "N/A",
         department: `${pr.department} (${pr.office})`,
         status: pr.status as any,
-        rejectionCount: pr.statusHistory.filter(h => h.status === 'Rejected').length,
+        rejectionCount: pr.statusHistory.filter((h: any) => h.status === 'Rejected').length,
         createdAt: pr.createdAt,
         updatedAt: pr.updatedAt,
-        items: pr.items.map(item => ({
+        items: pr.items.map((item: any) => ({
           id: item.id,
           requisitionId: pr.id,
           productName: item.description,
@@ -96,7 +96,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
           brandPreference: item.brand || "N/A",
           specification: item.specification
         })) as any,
-        statusHistory: pr.statusHistory.map(h => ({
+        statusHistory: pr.statusHistory.map((h: any) => ({
           id: h.id,
           requisitionId: pr.id,
           status: h.status as any,
@@ -118,7 +118,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
   }
 
   const itemsTotal = requisition.items.reduce(
-    (sum, item) => sum + (Number(item.estimatedUnitPrice) * item.quantity), 0
+    (sum: number, item: any) => sum + (Number(item.estimatedUnitPrice) * item.quantity), 0
   );
 
   const getStatusConfig = (status: string) => {
@@ -210,7 +210,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
           <h3 className="text-lg font-bold text-[#7e191b] border-b pb-3 mb-6">Status Log & Remarks History</h3>
 
           <div className="relative border-l-2 border-gray-200 pl-6 ml-3 space-y-6">
-            {requisition.statusHistory.map((historyItem, idx) => {
+            {requisition.statusHistory.map((historyItem: any, idx: number) => {
               const itemConfig = getStatusConfig(historyItem.status);
               const isNegative = ['Rejected', 'ReturnedForRevision', 'Returned for Revision'].includes(historyItem.status);
               return (
@@ -271,7 +271,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {requisition.items.map((item) => (
+              {requisition.items.map((item: any) => (
                 <tr key={item.id} className="hover:bg-gray-50">
                   <td className="p-4">
                     <p className="font-bold text-gray-900">{item.productName}</p>

@@ -1,6 +1,12 @@
 import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
-import { QuoteStatus, RfqStatus, PpmpStatus, PrStatus, PoStatus, DeliveryStatus, EvaluationType } from "@prisma/client";
+const QuoteStatus = { Draft: "Draft", Submitted: "Submitted", UnderReview: "UnderReview", Accepted: "Accepted", Rejected: "Rejected" } as const;
+const RfqStatus = { Draft: "Draft", Published: "Published", Closed: "Closed", Cancelled: "Cancelled", Evaluated: "Evaluated" } as const;
+const PpmpStatus = { Draft: "Draft", Submitted: "Submitted", Approved: "Approved", Returned: "Returned" } as const;
+const PrStatus = { Draft: "Draft", Submitted: "Submitted", UnderReview: "UnderReview", Approved: "Approved", Received: "Received", ReturnedForRevision: "ReturnedForRevision", Rejected: "Rejected" } as const;
+const PoStatus = { Draft: "Draft", Approved: "Approved", Issued: "Issued", Received: "Received", Cancelled: "Cancelled" } as const;
+const DeliveryStatus = { Pending: "Pending", PartiallyDelivered: "PartiallyDelivered", Delivered: "Delivered", Failed: "Failed", CompleteDelivery: "CompleteDelivery" } as const;
+const EvaluationType = { Performance: "Performance", Quality: "Quality", Delivery: "Delivery", EndUser: "EndUser", ProcurementOffice: "ProcurementOffice" } as const;
 import { officeItems } from "../src/lib/mock-price-data";
 
 
