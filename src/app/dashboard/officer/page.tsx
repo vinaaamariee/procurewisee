@@ -19,7 +19,7 @@ async function getOfficerStats() {
   const timer = startTimer('getOfficerStats');
   const [pendingPrs, openRfqs, pendingPos, activeSuppliers] = await Promise.all([
     prisma.purchaseRequest.count({
-      where: { status: { in: ['Submitted', 'UnderReview'] } }
+      where: { status: { in: ['PendingProcurementReview', 'Pending Procurement Review', 'Submitted', 'UnderReview'] as any[] } }
     }),
     prisma.requestForQuote.count({
       where: { status: 'Published' }
@@ -43,10 +43,10 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
   
   const [prs, rfqs, pos, quotes] = await Promise.all([
     prisma.purchaseRequest.findMany({
-      where: { status: { in: ['Submitted', 'UnderReview'] } },
+      where: { status: { in: ['PendingProcurementReview', 'Pending Procurement Review', 'Submitted', 'UnderReview'] as any[] } },
       select: { id: true, prNumber: true, purpose: true, requestDate: true, department: true, office: true, estimatedBudget: true },
       orderBy: { requestDate: 'asc' },
-      take: 2
+      take: 5
     }),
     prisma.requestForQuote.findMany({
       where: { status: 'Published' },
