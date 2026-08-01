@@ -35,7 +35,7 @@ export default async function PrTrackerPage() {
     }
   });
 
-  const serializedPrs = prs.map(pr => ({
+  const serializedPrs = prs.map((pr: any) => ({
     ...pr,
     estimatedBudget: pr.estimatedBudget ? Number(pr.estimatedBudget) : null,
     totalCost: pr.totalCost ? Number(pr.totalCost) : 0,
@@ -44,7 +44,7 @@ export default async function PrTrackerPage() {
     createdAt: pr.createdAt.toISOString(),
     updatedAt: pr.updatedAt.toISOString(),
     submittedAt: pr.submittedAt ? pr.submittedAt.toISOString() : null,
-    items: pr.items.map(item => ({
+    items: pr.items.map((item: any) => ({
       ...item,
       unitCost: item.unitCost ? Number(item.unitCost) : 0,
       estimatedUnitCost: item.estimatedUnitCost ? Number(item.estimatedUnitCost) : 0,
