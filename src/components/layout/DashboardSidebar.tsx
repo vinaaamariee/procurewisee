@@ -228,11 +228,11 @@ export default function DashboardSidebar({ role }: { role: string }) {
       </div>
 
       {/* Navigation */}
-      <nav className="relative flex-1 overflow-y-auto px-5 py-6 space-y-6">
-        {sections.map((section) => (
-          <div key={section.title}>
+      <nav className="relative flex-1 overflow-y-auto px-5 py-6 space-y-5">
+        {sections.map((section, idx) => (
+          <div key={section.title} className={idx > 0 ? "pt-5 border-t border-white/5" : ""}>
             <div
-              className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.2em]"
+              className="mb-3 px-3 text-[10px] font-bold uppercase tracking-[0.2em]"
               style={{
                 color: "rgba(255,255,255,.35)",
               }}

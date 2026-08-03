@@ -8,7 +8,7 @@
 @import "tailwindcss";
 @plugin "daisyui";
 @plugin "daisyui/theme" {
-  name: "bsc";
+  name: "light";
   default: true;
   prefersdark: false;
   color-scheme: light;
@@ -40,6 +40,52 @@
   --color-warning-content: #ffffff;
 
   --color-error: #991b1b;
+  --color-error-content: #ffffff;
+
+  --radius-selector: 0.75rem;
+  --radius-field: 0.75rem;
+  --radius-box: 1rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: dark;
+
+  --color-base-100: #1f2937;
+  --color-base-200: #111827;
+  --color-base-300: #374151;
+  --color-base-content: #f9fafb;
+
+  --color-primary: #7b1e1e;
+  --color-primary-content: #ffffff;
+
+  --color-secondary: #a6761d;
+  --color-secondary-content: #ffffff;
+
+  --color-accent: #0b2d5c;
+  --color-accent-content: #ffffff;
+
+  --color-neutral: #111827;
+  --color-neutral-content: #f9fafb;
+
+  --color-info: #3b82f6;
+  --color-info-content: #ffffff;
+
+  --color-success: #22c55e;
+  --color-success-content: #ffffff;
+
+  --color-warning: #f59e0b;
+  --color-warning-content: #ffffff;
+
+  --color-error: #ef4444;
   --color-error-content: #ffffff;
 
   --radius-selector: 0.75rem;
@@ -154,7 +200,7 @@
   /* 48px — top-level page margins (rare) */
 }
 
-.dark {
+.dark, [data-theme="dark"] {
   /* Dark Mode — same official palette, inverted ground */
   --accent: #6C93CC;
   /* Navy, lifted for contrast on dark */

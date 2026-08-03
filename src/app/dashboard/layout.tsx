@@ -17,12 +17,12 @@ export default async function DashboardLayout({
   const dashboardHome = ROLE_HOME[profile.role];
 
   return (
-    <div className="flex min-h-screen" style={{ background: "var(--bg-deep)" }}>
+    <div className="flex min-h-screen bg-base-200">
       <DashboardSidebar role={profile.role} />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header
-          className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/80 dark:bg-[#0E1420]/80 backdrop-blur-md shadow-sm transition-all duration-200"
+          className="sticky top-0 z-50 border-b border-base-300/40 bg-base-100/80 backdrop-blur-md shadow-sm transition-all duration-200"
         >
           <div className="flex min-h-20 items-center justify-between gap-4 px-5 py-3 sm:px-8">
             <Link
@@ -30,11 +30,7 @@ export default async function DashboardLayout({
               className="flex min-w-0 items-center gap-3 no-underline group active:scale-[0.98] transition-transform duration-150"
             >
               <div
-                className="flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-200 group-hover:shadow-sm"
-                style={{
-                  background: "white",
-                  borderColor: "var(--border-accent)",
-                }}
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-base-300 bg-base-100 transition-all duration-200 group-hover:shadow-sm"
               >
                 <span
                   className="text-lg font-black tracking-tight"
@@ -70,11 +66,7 @@ export default async function DashboardLayout({
               <ThemeToggle />
 
               <div
-                className="flex items-center gap-3 rounded-full border px-3 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
-                style={{
-                  background: "var(--surface)",
-                  borderColor: "var(--border)",
-                }}
+                className="flex items-center gap-3 rounded-full border border-base-300 bg-base-100 px-3 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
               >
                 <div
                   className="flex h-8 w-8 items-center justify-center rounded-full font-bold text-white text-xs border border-white/20 shadow-sm"
