@@ -233,11 +233,10 @@ export default async function ApproverDashboard() {
       </div>
     );
   };
-
   const statCards = [
     { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: FileText, color: 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-100 dark:border-blue-900/30', desc: 'Bid opening records', href: '#pending-reviews' },
-    { label: 'Pending Review',   value: stats.pendingReview, icon: Clock, color: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-100 dark:border-amber-900/30', desc: 'Awaiting approval', href: '/dashboard/approver/history?tab=pending' },
-    { label: 'Approved',         value: stats.approvedCount, icon: CheckSquare, color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-100 dark:border-emerald-900/30', desc: 'Accepted recommendations', href: '/dashboard/approver/history?tab=approved' },
+    { label: 'Pending Verification', value: stats.pendingReview, icon: Clock, color: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-100 dark:border-amber-900/30', desc: 'Awaiting verification', href: '/dashboard/approver/history?tab=pending' },
+    { label: 'Verified',         value: stats.approvedCount, icon: CheckSquare, color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-100 dark:border-emerald-900/30', desc: 'Verified Purchase Requests', href: '/dashboard/approver/history?tab=approved' },
     { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: ShieldCheck, color: 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border-indigo-100 dark:border-indigo-900/30', desc: 'Recent trail entries', href: '#audit-trail' },
   ];
 
@@ -246,8 +245,8 @@ export default async function ApproverDashboard() {
 
       {/* ── Page Header ── */}
       <SectionHeader 
-        title="Administrative Approver Portal"
-        subtitle="Review MCDM recommendations, approve canvas abstracts, and monitor audit trails."
+        title="Procurement Officer II Dashboard"
+        subtitle="Verify Purchase Requests, review MCDM recommendations, and monitor procurement trails."
       />
 
       {/* ── Decision-Making Focus Area ── */}

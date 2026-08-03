@@ -37,13 +37,13 @@ export default function PrWorkflowTimeline({
       case "UnderReview":
       case "Under Review":
       case "Submitted":
-        return { label: "Pending Procurement Review", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300", icon: Clock };
+        return { label: "Pending Procurement Verification", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300", icon: Clock };
       case "Returned":
       case "ReturnedForRevision":
       case "Returned for Revision":
-        return { label: "Returned for Revision", cls: "bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-300", icon: AlertTriangle };
+        return { label: "Returned", cls: "bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-300", icon: AlertTriangle };
       case "Approved":
-        return { label: "Approved", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300", icon: CheckCircle2 };
+        return { label: "Verified", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300", icon: CheckCircle2 };
       case "ConvertedToRfq":
       case "Converted to RFQ":
         return { label: "Converted to RFQ", cls: "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border-blue-300", icon: CheckCircle2 };
@@ -96,7 +96,7 @@ export default function PrWorkflowTimeline({
                 {entry.actorName && (
                   <p className="text-xs text-[var(--text-muted)]">
                     <span className="font-semibold text-[var(--text-primary)]">{entry.actorName}</span>
-                    {entry.actorRole && ` (${entry.actorRole})`}
+                    {entry.actorRole && ` (${entry.actorRole === "Administrative Approver" ? "Procurement Officer II" : entry.actorRole})`}
                   </p>
                 )}
 

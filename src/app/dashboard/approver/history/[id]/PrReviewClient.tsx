@@ -4,6 +4,7 @@ import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { startPrReview, approvePr, returnPr, rejectPr } from '@/app/actions/pr-approval';
 import DocumentLayout from '@/components/documents/DocumentLayout';
+import PrWorkflowTimelineStepper from '@/components/pr/PrWorkflowTimelineStepper';
 
 interface PrItem {
   id: number;
@@ -99,8 +100,8 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
             {
               id: Date.now(),
               status: 'UnderReview',
-              remarks: 'Approver started audit review.',
-              changedByName: 'Administrative Approver',
+              remarks: 'Procurement Officer II started audit review.',
+              changedByName: 'Procurement Officer II',
               createdAt: new Date().toISOString(),
             },
           ],
@@ -154,8 +155,8 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
             {
               id: Date.now(),
               status: res.pr.status,
-              remarks: finalRemarks || (modalType === 'approve' ? 'Approved for procurement.' : ''),
-              changedByName: 'Administrative Approver',
+              remarks: finalRemarks || (modalType === 'approve' ? 'Verified for procurement.' : ''),
+              changedByName: 'Procurement Officer II',
               createdAt: new Date().toISOString(),
             },
           ],
@@ -262,7 +263,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                   boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)'
                 }}
               >
-                ✅ Approve
+                ✅ Verify Purchase Request
               </button>
               <button
                 onClick={() => openActionModal('return')}
@@ -343,7 +344,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                 </span>
               </div>
               <div style={{ fontSize: '0.75rem', color: theme.textSecondary }}>
-                Reviewed by: {pr.statusHistory?.[0]?.changedByName || "Administrative Approver"} on {pr.statusHistory?.[0]?.createdAt ? new Date(pr.statusHistory[0].createdAt).toLocaleString() : "Date N/A"}
+                Reviewed by: {pr.statusHistory?.[0]?.changedByName || "Procurement Officer II"} on {pr.statusHistory?.[0]?.createdAt ? new Date(pr.statusHistory[0].createdAt).toLocaleString() : "Date N/A"}
               </div>
             </div>
           )}
@@ -374,6 +375,9 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                 <span style={{ display: 'block', fontSize: '0.7rem', color: theme.textSecondary, textTransform: 'uppercase', fontWeight: 700 }}>Purpose / Justification</span>
                 <span style={{ fontSize: '0.85rem', color: theme.textPrimary, lineHeight: 1.5 }}>{pr.purpose}</span>
               </div>
+            </div>
+            <div style={{ marginTop: '1rem' }}>
+              <PrWorkflowTimelineStepper currentStatus={pr.status} />
             </div>
           </div>
 
@@ -532,13 +536,13 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
             animation: 'zoomIn 0.2s ease-out'
           }}>
             <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: theme.textPrimary, margin: 0 }}>
-              {modalType === 'approve' ? 'Approve Purchase Request' : 
+              {modalType === 'approve' ? 'Verify Purchase Request' : 
                modalType === 'return' ? 'Return Purchase Request for Revision' : 'Reject Purchase Request'}
             </h3>
 
             <p style={{ fontSize: '0.85rem', color: theme.textSecondary, margin: 0, lineHeight: 1.5 }}>
               {modalType === 'approve' 
-                ? 'Are you sure you want to approve this purchase request? Optional remarks will be logged for the department requisitioner.'
+                ? 'Are you sure you want to verify this purchase request? Optional remarks will be logged for the department requisitioner.'
                 : 'Please specify the exact reasons for this action. Remarks are mandatory and will be visible in the requester tracking feed.'
               }
             </p>
@@ -584,7 +588,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                   color: '#fff', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer'
                 }}
               >
-                {modalType === 'approve' ? 'Approve PR' :
+                {modalType === 'approve' ? 'Verify PR' :
                  modalType === 'return' ? 'Return PR' : 'Reject PR'}
               </button>
             </div>

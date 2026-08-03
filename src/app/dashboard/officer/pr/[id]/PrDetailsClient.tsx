@@ -7,6 +7,7 @@ import DocumentLayout from "@/components/documents/DocumentLayout";
 import ReviewPrModal from "@/components/pr/ReviewPrModal";
 import PrValidationChecklist, { ValidationItem } from "@/components/pr/PrValidationChecklist";
 import PrWorkflowTimeline, { TimelineEntry } from "@/components/pr/PrWorkflowTimeline";
+import PrWorkflowTimelineStepper from "@/components/pr/PrWorkflowTimelineStepper";
 import { ShieldCheck, Lock, ArrowLeft, Printer, FileText, CheckCircle2, AlertTriangle } from "lucide-react";
 
 interface Product {
@@ -175,7 +176,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
             status: "Approved",
             approvedAt: new Date().toISOString(),
           }));
-          setSuccessMsg("Purchase Request approved! It is now eligible for RFQ generation.");
+          setSuccessMsg("Purchase Request verified! It is now ready for recording to the Procurement Monitoring Register.");
           setModalState({ isOpen: false, mode: "approve" });
         } else {
           setErrorMsg(res.error || "Failed to approve Purchase Request.");
@@ -269,13 +270,13 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
       case "Submitted":
       case "UnderReview":
       case "Under Review":
-        return { label: "Pending Procurement Review", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300" };
+        return { label: "Pending Procurement Verification", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300" };
       case "Returned":
       case "ReturnedForRevision":
       case "Returned for Revision":
         return { label: "Returned", cls: "bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-300" };
       case "Approved":
-        return { label: "Approved | Eligible for RFQ", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300" };
+        return { label: "Verified", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-350" };
       default:
         return { label: status, cls: "bg-gray-100 text-gray-700 border-gray-300" };
     }
@@ -291,10 +292,10 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
           <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-5 dark:border-emerald-900/60 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 space-y-2 shadow-xs">
             <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-bold text-base">
               <CheckCircle2 className="h-5 w-5 shrink-0" />
-              <span>Approved</span>
+              <span>Verified</span>
             </div>
             <p className="text-xs text-emerald-800 dark:text-emerald-300 leading-relaxed font-medium">
-              This Purchase Request has passed Procurement Office validation and is now eligible for RFQ generation.
+              This Purchase Request has successfully passed Procurement Verification and is now ready for recording to the Procurement Monitoring Register.
             </p>
           </div>
         )}
@@ -373,6 +374,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
               <span className="font-medium text-[var(--text-primary)] leading-relaxed">{pr.purpose}</span>
             </div>
           </div>
+          <PrWorkflowTimelineStepper currentStatus={pr.status} />
         </div>
 
         {/* 5-Point Validation Checklist */}
@@ -460,7 +462,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
                 className="w-full btn btn-success btn-md rounded-xl text-white font-bold flex items-center justify-center gap-2 shadow-xs disabled:opacity-50"
               >
                 <CheckCircle2 className="h-4 w-4" />
-                <span>Approve Purchase Request</span>
+                <span>Verify Purchase Request</span>
               </button>
 
               <button

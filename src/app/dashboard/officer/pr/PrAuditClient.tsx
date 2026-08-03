@@ -35,13 +35,13 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
       case "Submitted":
       case "UnderReview":
       case "Under Review":
-        return { label: "Pending Procurement Review", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300" };
+        return { label: "Pending Procurement Verification", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300" };
       case "Returned":
       case "ReturnedForRevision":
       case "Returned for Revision":
         return { label: "Returned", cls: "bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-300" };
       case "Approved":
-        return { label: "Approved | Eligible for RFQ", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300" };
+        return { label: "Verified", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300" };
       default:
         return { label: status, cls: "bg-gray-100 text-gray-700 border-gray-300" };
     }
@@ -90,9 +90,9 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
               className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)] text-[var(--text-primary)] font-medium"
             >
               <option value="all">All Statuses</option>
-              <option value="pending">Pending Procurement Review</option>
+              <option value="pending">Pending Procurement Verification</option>
               <option value="returned">Returned</option>
-              <option value="approved">Approved</option>
+              <option value="approved">Verified</option>
             </select>
           </div>
         </div>

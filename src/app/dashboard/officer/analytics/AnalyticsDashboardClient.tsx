@@ -428,7 +428,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
               <div style={{ fontSize: "10px", fontWeight: "bold", color: "#1f2937", textTransform: "uppercase" }}>Approved By:</div>
               <div style={{ height: "40px" }}></div>
               <div style={{ borderTop: "1.5px solid #1f2937", width: "200px", fontSize: "10px", fontWeight: "bold", paddingTop: "4px" }}>
-                ADMINISTRATIVE APPROVER
+                PROCUREMENT OFFICER II
               </div>
               <div style={{ fontSize: "9px", color: "#6b7280" }}>Batanes State College</div>
             </div>

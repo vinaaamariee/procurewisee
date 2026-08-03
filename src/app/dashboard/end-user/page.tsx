@@ -9,22 +9,23 @@ export const metadata = { title: "End User Dashboard — ProcureWise" };
 function getStageLabel(status: string) {
   switch (status) {
     case "Draft":
-      return "Drafting";
+      return "Draft";
+    case "Submitted":
+      return "Submitted";
     case "PendingProcurementReview":
     case "Pending Procurement Review":
-    case "Submitted":
     case "UnderReview":
     case "Under Review":
-      return "Procurement Review";
+      return "Pending Procurement Verification";
     case "Returned":
     case "ReturnedForRevision":
     case "Returned for Revision":
-      return "For Revision";
+      return "Returned";
     case "Approved":
-      return "Ready for RFQ";
+      return "Verified";
     case "ConvertedToRfq":
     case "Converted to RFQ":
-      return "RFQ Processing";
+      return "Converted to RFQ";
     case "Cancelled":
       return "Closed";
     default:
@@ -36,21 +37,22 @@ function getProgressStep(status: string) {
   switch (status) {
     case "Draft":
       return 1;
+    case "Submitted":
+      return 2;
     case "PendingProcurementReview":
     case "Pending Procurement Review":
-    case "Submitted":
     case "UnderReview":
     case "Under Review":
-      return 2;
+      return 3;
     case "Returned":
     case "ReturnedForRevision":
     case "Returned for Revision":
       return 1;
     case "Approved":
-      return 3;
+      return 4;
     case "ConvertedToRfq":
     case "Converted to RFQ":
-      return 4;
+      return 7;
     default:
       return 1;
   }
@@ -60,18 +62,19 @@ function getStatusBadge(status: string) {
   switch (status) {
     case "Draft":
       return { label: "Draft", cls: "badge-neutral" };
+    case "Submitted":
+      return { label: "Submitted", cls: "badge-primary" };
     case "PendingProcurementReview":
     case "Pending Procurement Review":
-    case "Submitted":
     case "UnderReview":
     case "Under Review":
-      return { label: "Pending Procurement Review", cls: "badge-warning" };
+      return { label: "Pending Procurement Verification", cls: "badge-warning" };
     case "Returned":
     case "ReturnedForRevision":
     case "Returned for Revision":
       return { label: "Returned", cls: "badge-error" };
     case "Approved":
-      return { label: "Approved", cls: "badge-success" };
+      return { label: "Verified", cls: "badge-success" };
     case "ConvertedToRfq":
     case "Converted to RFQ":
       return { label: "Converted to RFQ", cls: "badge-info" };
@@ -130,9 +133,9 @@ export default async function EndUserDashboard() {
         {/* Live Summary Bullets */}
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 text-xs font-semibold text-[var(--text-secondary)]">
           <span>&bull; <strong className="text-[var(--text-primary)]">{draftCount}</strong> Draft Purchase Requests</span>
-          <span>&bull; <strong className="text-amber-600 dark:text-amber-400">{pendingCount}</strong> Pending Procurement Review</span>
+          <span>&bull; <strong className="text-amber-600 dark:text-amber-400">{pendingCount}</strong> Pending Procurement Verification</span>
           <span>&bull; <strong className="text-red-600 dark:text-red-400">{returnedCount}</strong> Returned</span>
-          <span>&bull; <strong className="text-emerald-600 dark:text-emerald-400">{approvedCount}</strong> Approved</span>
+          <span>&bull; <strong className="text-emerald-600 dark:text-emerald-400">{approvedCount}</strong> Verified</span>
         </div>
       </div>
 
@@ -152,7 +155,7 @@ export default async function EndUserDashboard() {
                     </span>
                   </div>
                   <p className="text-xs font-medium text-red-900 dark:text-red-200">
-                    Your Purchase Request has been returned by the Procurement Office.
+                    Your Purchase Request has been returned by Procurement Officer II.
                   </p>
                 </div>
               </div>
@@ -173,7 +176,7 @@ export default async function EndUserDashboard() {
               </div>
               <div>
                 <span className="font-bold text-[10px] uppercase text-red-700 dark:text-red-400 block">Returned By</span>
-                <span className="font-semibold">{returnedPr.assignedOfficer?.fullName || "Procurement Officer"}</span>
+                <span className="font-semibold">Procurement Officer II</span>
               </div>
               <div className="sm:col-span-3 pt-1">
                 <span className="font-bold text-[10px] uppercase text-red-700 dark:text-red-400 block">Reason</span>
@@ -192,19 +195,19 @@ export default async function EndUserDashboard() {
               <CheckCircle2 className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
               <div className="space-y-0.5">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-extrabold text-xs uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Approved Purchase Requests</h3>
+                  <h3 className="font-extrabold text-xs uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Purchase Request Verified</h3>
                   <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-200 dark:bg-emerald-900 text-emerald-800 dark:text-emerald-200">
                     {approvedPr.prNumber}
                   </span>
                 </div>
                 <p className="text-xs text-emerald-900 dark:text-emerald-200 font-medium">
-                  Ready for Request for Quotation (RFQ)
+                  Your Purchase Request has successfully passed Procurement Verification and is now ready for recording to the Procurement Monitoring Register.
                 </p>
               </div>
             </div>
 
             <span className="badge badge-success text-xs font-bold text-white px-3 py-2 shrink-0">
-              Approved
+              Verified
             </span>
           </div>
         )}
@@ -228,7 +231,7 @@ export default async function EndUserDashboard() {
           </div>
           <div className="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-900/50 text-center space-y-1">
             <span className="text-2xl font-black text-emerald-700 dark:text-emerald-400">{approvedCount}</span>
-            <span className="block text-[11px] font-bold text-emerald-800 dark:text-emerald-300">Approved</span>
+            <span className="block text-[11px] font-bold text-emerald-800 dark:text-emerald-300">Verified</span>
           </div>
           {rfqCount > 0 && (
             <div className="p-3 rounded-xl bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-900/50 text-center space-y-1">

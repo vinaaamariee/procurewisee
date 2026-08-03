@@ -5,6 +5,7 @@ import { submitPrAction, resubmitPrAction, deletePrDraftAction } from "@/app/act
 import DocumentLayout from "@/components/documents/DocumentLayout";
 import EmptyState from "@/components/ui/EmptyState";
 import PrWorkflowTimeline, { TimelineEntry } from "@/components/pr/PrWorkflowTimeline";
+import PrWorkflowTimelineStepper from "@/components/pr/PrWorkflowTimelineStepper";
 import { AlertTriangle, Lock, FileEdit, CheckCircle2, Send, Trash2, ArrowRight } from "lucide-react";
 
 interface Product {
@@ -203,13 +204,13 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
       case "Submitted":
       case "UnderReview":
       case "Under Review":
-        return { label: "Pending Procurement Review", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300" };
+        return { label: "Pending Procurement Verification", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300" };
       case "Returned":
       case "ReturnedForRevision":
       case "Returned for Revision":
         return { label: "Returned", cls: "bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-300" };
       case "Approved":
-        return { label: "Approved | Eligible for RFQ", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300" };
+        return { label: "Verified", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300" };
       default:
         return { label: status, cls: "bg-gray-100 text-gray-700 border-gray-300" };
     }
@@ -430,6 +431,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                   <span className="font-medium text-[var(--text-primary)] leading-relaxed">{selectedPr.purpose}</span>
                 </div>
               </div>
+              <PrWorkflowTimelineStepper currentStatus={selectedPr.status} />
             </div>
 
             {/* Editing Form for Returned PR */}

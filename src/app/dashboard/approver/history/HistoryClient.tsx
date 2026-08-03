@@ -58,7 +58,7 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
     },
     {
       key: 'approved',
-      label: 'Approved',
+      label: 'Verified',
       count: prs.filter(pr => pr.status === 'Approved' || pr.status === 'Received').length,
       color: '#047857',
       bg: 'rgba(4, 120, 87, 0.08)',

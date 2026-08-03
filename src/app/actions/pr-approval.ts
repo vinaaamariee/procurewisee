@@ -123,16 +123,16 @@ export async function approvePr(prId: number, remarks?: string) {
     // Notify Requisitioner (End User)
     if (old.requestedById) {
       await createNotificationHelper({
-        title: 'Purchase Request Approved',
-        description: `Your Purchase Request ${old.prNumber} has been approved by the Administrative Approver.`,
+        title: 'Purchase Request Verified',
+        description: `Your Purchase Request ${old.prNumber} has successfully passed Procurement Verification.`,
         icon: '✅',
         userId: old.requestedById
       });
     }
     // Notify Procurement Officers
     await createNotificationHelper({
-      title: 'PR Approved (Awaiting RFQ)',
-      description: `Purchase Request ${old.prNumber} has been approved and is ready for RFQ drafting.`,
+      title: 'PR Verified (Awaiting PMR)',
+      description: `Purchase Request ${old.prNumber} has successfully passed Procurement Verification.`,
       icon: '📋',
       role: 'Procurement Officer'
     });
@@ -198,7 +198,7 @@ export async function returnPr(prId: number, remarks: string) {
     if (old.requestedById) {
       await createNotificationHelper({
         title: 'Purchase Request Returned',
-        description: `Your Purchase Request ${old.prNumber} has been returned for revision. Remarks: "${remarks}"`,
+        description: `Your Purchase Request ${old.prNumber} has been returned by Procurement Officer II. Remarks: "${remarks}"`,
         icon: '↩️',
         userId: old.requestedById
       });

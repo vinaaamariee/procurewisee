@@ -65,7 +65,7 @@ export default function AddStaffForm() {
             <label style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-secondary)' }}>System Role</label>
             <select name="role" required style={{ padding: '0.5rem 0.75rem', borderRadius: 8, background: 'var(--bg-deep)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontSize: '0.85rem', outline: 'none', appearance: 'none' }}>
               <option value="Procurement Officer" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>Procurement Officer</option>
-              <option value="Administrative Approver" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>Administrative Approver</option>
+              <option value="Administrative Approver" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>Procurement Officer II</option>
             </select>
           </div>
           <button type="submit" disabled={isPending} style={{

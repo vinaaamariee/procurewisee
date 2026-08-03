@@ -9,10 +9,12 @@ const styles: Record<string, string> = {
   Submitted: "bg-blue-50/80 text-blue-700 border-blue-250/50 dark:bg-blue-950/30 dark:text-blue-400 dark:border-blue-900/50",
   UnderReview: "bg-indigo-50/80 text-indigo-700 border-indigo-250/50 dark:bg-indigo-950/30 dark:text-indigo-400 dark:border-indigo-900/50",
   Approved: "bg-emerald-50/80 text-emerald-700 border-emerald-250/50 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50",
+  Verified: "bg-emerald-50/80 text-emerald-700 border-emerald-250/50 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-900/50",
   Returned: "bg-rose-50/80 text-rose-700 border-rose-250/50 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/50",
   ReturnedForRevision: "bg-rose-50/80 text-rose-700 border-rose-250/50 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-900/50",
   "Converted to RFQ": "bg-teal-50/80 text-teal-700 border-teal-250/50 dark:bg-teal-950/30 dark:text-teal-400 dark:border-teal-900/50",
   "Pending Procurement Review": "bg-amber-50/80 text-amber-700 border-amber-250/50 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/50",
+  "Pending Procurement Verification": "bg-amber-50/80 text-amber-700 border-amber-250/50 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/50",
   
   // PO Lifecycles
   PendingApproval: "bg-amber-50/80 text-amber-700 border-amber-250/50 dark:bg-amber-950/30 dark:text-amber-400 dark:border-amber-900/50",
