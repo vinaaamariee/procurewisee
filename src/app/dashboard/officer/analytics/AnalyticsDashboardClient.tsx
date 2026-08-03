@@ -302,97 +302,135 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
       
       {/* High-Fidelity Printable PDF Layout (Section 10) */}
       <DocumentLayout title="EXECUTIVE PROCUREMENT ANALYTICS REPORT" printAreaId="printArea">
-        <div id="printArea" className="hidden">
-          {/* Header block - hidden during print to prioritize official graphic header */}
-          <div className="print:hidden" style={{ textAlign: "center", marginBottom: "2rem", borderBottom: "2px solid #7e191b", paddingBottom: "1.5rem" }}>
-            <h1 style={{ fontSize: "1.75rem", fontWeight: 900, color: "#7e191b", textTransform: "uppercase" }}>Batanes State College</h1>
-            <p style={{ fontSize: "0.85rem", color: "#6b7280", margin: "0.2rem 0" }}>Bids and Awards Committee (BAC)</p>
-            <h2 style={{ fontSize: "1.2rem", fontWeight: 800, marginTop: "1rem" }}>EXECUTIVE PROCUREMENT ANALYTICS REPORT</h2>
-            <span style={{ fontSize: "0.75rem", color: "#6b7280" }}>Generated: {generationTime}</span>
+        <div id="printArea" className="hidden print:block font-sans" style={{ padding: "0 10px", color: "#1f2937", backgroundColor: "#ffffff" }}>
+          {/* Metadata Sub-Header */}
+          <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1.5px solid #7b1e1e", paddingBottom: "8px", marginBottom: "15px" }}>
+            <div style={{ fontSize: "10px", color: "#4b5563" }}>
+              <strong>Date:</strong> {generationTime}<br />
+              <strong>Entity:</strong> Batanes State College
+            </div>
+            <div style={{ fontSize: "10px", color: "#4b5563", textAlign: "right" }}>
+              <strong>Prepared By:</strong> BAC Secretariat<br />
+              <strong>Classification:</strong> Public Procurement Report
+            </div>
           </div>
 
-          <h3 style={{ fontSize: "1rem", color: "#7e191b", borderBottom: "1px solid #d1d5db", paddingBottom: "0.4rem", marginBottom: "1rem" }}>I. EXECUTIVE SUMMARY KEY METRICS</h3>
-          <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "2rem", fontSize: "0.85rem" }}>
-            <tbody>
-              <tr>
-                <td style={{ padding: "0.5rem", fontWeight: "bold" }}>Total Annual Spend:</td>
-                <td style={{ padding: "0.5rem", textAlign: "right" }}>{formatCurrency(filteredData.totalSpent)}</td>
-                <td style={{ padding: "0.5rem", fontWeight: "bold" }}>Budget Utilization:</td>
-                <td style={{ padding: "0.5rem", textAlign: "right" }}>{filteredData.utilizationRate.toFixed(1)}% ({filteredData.budgetHealth})</td>
-              </tr>
-              <tr>
-                <td style={{ padding: "0.5rem", fontWeight: "bold" }}>Cost Savings (vs Avg):</td>
-                <td style={{ padding: "0.5rem", textAlign: "right", color: "green" }}>{formatCurrency(filteredData.totalSavings)}</td>
-                <td style={{ padding: "0.5rem", fontWeight: "bold" }}>Procurement Cycle:</td>
-                <td style={{ padding: "0.5rem", textAlign: "right" }}>{initialData.kpis.avgCycleDays} Days</td>
-              </tr>
-              <tr>
-                <td style={{ padding: "0.5rem", fontWeight: "bold" }}>Inflation Warning Total:</td>
-                <td style={{ padding: "0.5rem", textAlign: "right" }}>{formatCurrency(initialData.kpis.forecastedIncreaseNextMonth)}</td>
-                <td style={{ padding: "0.5rem", fontWeight: "bold" }}>Top Supplier:</td>
-                <td style={{ padding: "0.5rem", textAlign: "right" }}>{initialData.kpis.topSupplierName}</td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h3 style={{ fontSize: "1rem", color: "#7e191b", borderBottom: "1px solid #d1d5db", paddingBottom: "0.4rem", marginBottom: "1rem" }}>II. SUPPLIER INTELLIGENCE RANKINGS</h3>
-          <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "2rem", fontSize: "0.8rem" }}>
-            <thead>
-              <tr style={{ backgroundColor: "#f3f4f6", borderBottom: "1px solid #d1d5db" }}>
-                <th style={{ padding: "0.5rem", textAlign: "left", border: "1px solid #d1d5db" }}>Supplier</th>
-                <th style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>Awarded POs</th>
-                <th style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>On-Time Delivery</th>
-                <th style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>MCDM Index</th>
-                <th style={{ padding: "0.5rem", textAlign: "center", border: "1px solid #d1d5db" }}>Risk Class</th>
-              </tr>
-            </thead>
-            <tbody>
-              {initialData.suppliers.topAwarded.map((s) => (
-                <tr key={s.name} style={{ borderBottom: "1px solid #e5e7eb" }}>
-                  <td style={{ padding: "0.5rem", border: "1px solid #d1d5db", fontWeight: "bold" }}>{s.name}</td>
-                  <td style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>{s.awardCount} POs</td>
-                  <td style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>{s.onTimeRate}%</td>
-                  <td style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>{(s.reliability * 20).toFixed(0)}/100</td>
-                  <td style={{ padding: "0.5rem", textAlign: "center", border: "1px solid #d1d5db" }}>{s.riskGroup}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <h3 style={{ fontSize: "1rem", color: "#7e191b", borderBottom: "1px solid #d1d5db", paddingBottom: "0.4rem", marginBottom: "1rem" }}>III. ARIMA PRICE FORECASTS</h3>
-          <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "2rem", fontSize: "0.8rem" }}>
-            <thead>
-              <tr style={{ backgroundColor: "#f3f4f6", borderBottom: "1px solid #d1d5db" }}>
-                <th style={{ padding: "0.5rem", textAlign: "left", border: "1px solid #d1d5db" }}>Product</th>
-                <th style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>Current Price</th>
-                <th style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>Predicted Price</th>
-                <th style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>Expected % Change</th>
-                <th style={{ padding: "0.5rem", textAlign: "center", border: "1px solid #d1d5db" }}>Confidence</th>
-              </tr>
-            </thead>
-            <tbody>
-              {initialData.forecast.map((f) => (
-                <tr key={f.productName} style={{ borderBottom: "1px solid #e5e7eb" }}>
-                  <td style={{ padding: "0.5rem", border: "1px solid #d1d5db" }}>{f.productName}</td>
-                  <td style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(f.currentPrice)}</td>
-                  <td style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(f.forecastPrice)}</td>
-                  <td style={{ padding: "0.5rem", textAlign: "right", border: "1px solid #d1d5db" }}>{f.changeLabel}</td>
-                  <td style={{ padding: "0.5rem", textAlign: "center", border: "1px solid #d1d5db" }}>{f.confidenceLabel} ({f.confidence}%)</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          <div style={{ marginTop: "3rem", display: "flex", justifyContent: "space-between" }}>
-            <div>
-              <div style={{ borderTop: "1px solid #000", width: "200px", textAlign: "center", paddingTop: "0.5rem", fontSize: "0.85rem" }}>
-                Prepared By: BAC secretariat
+          {/* Section I: Executive Summary Key Metrics */}
+          <div style={{ pageBreakInside: "avoid", marginBottom: "20px" }}>
+            <h3 style={{ fontSize: "12px", fontWeight: "bold", color: "#7b1e1e", borderBottom: "1px solid #e5e7eb", paddingBottom: "3px", marginBottom: "10px", textTransform: "uppercase" }}>
+              I. Executive Summary Key Metrics
+            </h3>
+            
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px", margin: "10px 0" }}>
+              {/* Card 1 */}
+              <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
+                <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Total Annual Spend</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#7b1e1e", marginTop: "3px" }}>{formatCurrency(filteredData.totalSpent)}</div>
+              </div>
+              {/* Card 2 */}
+              <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
+                <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Cost Savings (vs Avg)</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#166534", marginTop: "3px" }}>{formatCurrency(filteredData.totalSavings)}</div>
+              </div>
+              {/* Card 3 */}
+              <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
+                <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Budget Utilization</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#0b2d5c", marginTop: "3px" }}>{filteredData.utilizationRate.toFixed(1)}%</div>
+              </div>
+              {/* Card 4 */}
+              <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
+                <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Procurement Cycle</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#1f2937", marginTop: "3px" }}>{initialData.kpis.avgCycleDays} Days</div>
+              </div>
+              {/* Card 5 */}
+              <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
+                <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Inflation Forecast</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#b7202e", marginTop: "3px" }}>{formatCurrency(initialData.kpis.forecastedIncreaseNextMonth)}</div>
+              </div>
+              {/* Card 6 */}
+              <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
+                <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Top Supplier Partner</div>
+                <div style={{ fontSize: "12px", fontWeight: "bold", color: "#1f2937", marginTop: "5px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{initialData.kpis.topSupplierName}</div>
               </div>
             </div>
-            <div>
-              <div style={{ borderTop: "1px solid #000", width: "200px", textAlign: "center", paddingTop: "0.5rem", fontSize: "0.85rem" }}>
-                Attested By: Administrative Approver
+          </div>
+
+          {/* Section II: Supplier Intelligence Rankings */}
+          <div style={{ pageBreakInside: "avoid", marginBottom: "20px" }}>
+            <h3 style={{ fontSize: "12px", fontWeight: "bold", color: "#7b1e1e", borderBottom: "1px solid #e5e7eb", paddingBottom: "3px", marginBottom: "10px", textTransform: "uppercase" }}>
+              II. Supplier Intelligence & Rankings
+            </h3>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "10px" }}>
+              <thead>
+                <tr style={{ backgroundColor: "#7b1e1e", color: "#ffffff" }}>
+                  <th style={{ padding: "6px 10px", textAlign: "left", fontWeight: "bold", border: "1px solid #d1d5db" }}>Supplier Company Name</th>
+                  <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>Awarded POs</th>
+                  <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>On-Time Delivery</th>
+                  <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>MCDM Index</th>
+                  <th style={{ padding: "6px 10px", textAlign: "center", fontWeight: "bold", border: "1px solid #d1d5db" }}>Risk Class</th>
+                </tr>
+              </thead>
+              <tbody>
+                {initialData.suppliers.topAwarded.map((s, idx) => (
+                  <tr key={s.name} style={{ backgroundColor: idx % 2 === 0 ? "#ffffff" : "#f9fafb" }}>
+                    <td style={{ padding: "6px 10px", border: "1px solid #d1d5db", fontWeight: "bold", color: "#1f2937" }}>{s.name}</td>
+                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{s.awardCount} POs</td>
+                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{s.onTimeRate}%</td>
+                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{(s.reliability * 20).toFixed(0)}/100</td>
+                    <td style={{ padding: "6px 10px", textAlign: "center", border: "1px solid #d1d5db", fontWeight: "bold", color: s.riskGroup === "LOW" ? "#166534" : "#991b1b" }}>{s.riskGroup}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Section III: ARIMA Market Price Forecasts */}
+          <div style={{ pageBreakInside: "avoid", marginBottom: "25px" }}>
+            <h3 style={{ fontSize: "12px", fontWeight: "bold", color: "#7b1e1e", borderBottom: "1px solid #e5e7eb", paddingBottom: "3px", marginBottom: "10px", textTransform: "uppercase" }}>
+              III. ARIMA Market Price Trend Forecasts
+            </h3>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "10px" }}>
+              <thead>
+                <tr style={{ backgroundColor: "#7b1e1e", color: "#ffffff" }}>
+                  <th style={{ padding: "6px 10px", textAlign: "left", fontWeight: "bold", border: "1px solid #d1d5db" }}>Product Description</th>
+                  <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>Current Price</th>
+                  <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>Predicted Price</th>
+                  <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>Expected % Change</th>
+                  <th style={{ padding: "6px 10px", textAlign: "center", fontWeight: "bold", border: "1px solid #d1d5db" }}>Confidence Level</th>
+                </tr>
+              </thead>
+              <tbody>
+                {initialData.forecast.map((f, idx) => (
+                  <tr key={f.productName} style={{ backgroundColor: idx % 2 === 0 ? "#ffffff" : "#f9fafb" }}>
+                    <td style={{ padding: "6px 10px", border: "1px solid #d1d5db", color: "#1f2937" }}>{f.productName}</td>
+                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(f.currentPrice)}</td>
+                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(f.forecastPrice)}</td>
+                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db", fontWeight: "semibold", color: f.changeLabel.includes("+") ? "#991b1b" : "#166534" }}>{f.changeLabel}</td>
+                    <td style={{ padding: "6px 10px", textAlign: "center", border: "1px solid #d1d5db" }}>{f.confidenceLabel} ({f.confidence}%)</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Section IV: Verification & Signatures */}
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "35px", pageBreakInside: "avoid" }}>
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "10px", fontWeight: "bold", color: "#1f2937", textTransform: "uppercase" }}>Prepared By:</div>
+              <div style={{ height: "40px" }}></div>
+              <div style={{ borderTop: "1.5px solid #1f2937", width: "200px", fontSize: "10px", fontWeight: "bold", paddingTop: "4px" }}>
+                BAC SECRETARIAT
               </div>
+              <div style={{ fontSize: "9px", color: "#6b7280" }}>Bids and Awards Committee</div>
+            </div>
+            
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "10px", fontWeight: "bold", color: "#1f2937", textTransform: "uppercase" }}>Approved By:</div>
+              <div style={{ height: "40px" }}></div>
+              <div style={{ borderTop: "1.5px solid #1f2937", width: "200px", fontSize: "10px", fontWeight: "bold", paddingTop: "4px" }}>
+                ADMINISTRATIVE APPROVER
+              </div>
+              <div style={{ fontSize: "9px", color: "#6b7280" }}>Batanes State College</div>
             </div>
           </div>
         </div>
