@@ -1629,10 +1629,16 @@ body {
 /* Cards elevation & style */
 .card, .summary-card, .stat-card {
   border-radius: var(--radius-lg) !important; /* 16px */
-  border: 1px solid var(--border) !important;
-  background-color: var(--surface) !important;
   box-shadow: var(--shadow-card) !important;
   transition: all 200ms cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+.card:not([class*="bg-"]), .summary-card:not([class*="bg-"]), .stat-card:not([class*="bg-"]) {
+  background-color: var(--surface) !important;
+}
+
+.card:not([class*="border-"]), .summary-card:not([class*="border-"]), .stat-card:not([class*="border-"]) {
+  border: 1px solid var(--border) !important;
 }
 
 .card:hover, .summary-card:hover {
