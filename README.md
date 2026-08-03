@@ -47,6 +47,21 @@ Successfully completed a full visual redesign of the ProcureWise user interface 
 
 ---
 
+## 📋 Request for Quotation (RFQ) Generation Workflow (Phase 2)
+
+**Date**: August 2026
+
+Successfully implemented the formal Request for Quotation (RFQ) Generation Workflow for the Batanes State College Procurement Office. Standalone RFQ creations have been removed, making every RFQ originate from an Approved Purchase Request to guarantee audit trail traceability.
+
+### Workflow Sequence
+- **PR Verification & Selection**: Procurement Officers view a list of eligible Purchase Requests with `status = 'Approved'` in the selector table. Choosing a PR passes its ID to the creation page.
+- **Auto-Population**: The RFQ Document Editor retrieves and auto-populates all PR header info and copies the item list (Description, Quantity, Unit, Estimated Budget) into the solicitation grid.
+- **Procurement Specific Inputs**: Officers only supply RFQ-specific terms (RFQ Number, Deadline, Mode of Procurement, Delivery Location, and PhilGEPS reference).
+- **Draft & Publish States**: Drafts can be saved for review. When published, the originating PR's status is automatically updated to `Converted to RFQ` in a secure database transaction, preventing duplicate solicitations.
+- **Dynamic Board & Timeline**: Overhauled the dashboard recent RFQ list into an interactive tabbed control (Drafts, Published, Closing Soon, Closed) and added a visual status progression timeline inside the details/evaluation view.
+
+---
+
 ## 🏛️ Purchase Request Approval and Validation Workflow
 
 **Date**: August 2026

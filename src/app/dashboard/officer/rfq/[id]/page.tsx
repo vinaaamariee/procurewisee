@@ -28,6 +28,7 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
     prisma.requestForQuote.findUnique({
       where: { id: rfqId },
       include: {
+        pr: true,
         items: {
           include: {
             product: true

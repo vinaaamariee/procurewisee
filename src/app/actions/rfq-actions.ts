@@ -11,6 +11,7 @@ interface RfqItemInput {
   quantity: number;
   unit: string;
   appItemId?: number | null;
+  productId?: number | null;
 }
 
 export async function createRfqAction({
@@ -22,6 +23,7 @@ export async function createRfqAction({
   items,
   overrideReason,
   originalRfqNumber,
+  prId,
 }: {
   rfqNumber: string;
   title: string;
@@ -31,6 +33,7 @@ export async function createRfqAction({
   items: RfqItemInput[];
   overrideReason?: string;
   originalRfqNumber?: string;
+  prId?: number | null;
 }) {
   try {
     // 1. Enforce Procurement Officer role and retrieve profile
@@ -87,6 +90,7 @@ export async function createRfqAction({
           deadlineDate: new Date(deadlineDate),
           status,
           createdById: profile.id,
+          prId: prId || null,
           items: {
             create: items.map(item => ({
               itemNumber: item.itemNumber.trim(),
@@ -99,10 +103,37 @@ export async function createRfqAction({
                 }
               },
               appItemId: item.appItemId || null,
+              productId: item.productId || null,
             })),
           },
         },
       });
+
+      // If prId is provided, update PR status to ConvertedToRfq and add to status history
+      if (prId) {
+        const prCheck = await tx.purchaseRequest.findUnique({
+          where: { id: prId },
+          select: { status: true, prNumber: true },
+        });
+
+        if (prCheck?.status === 'ConvertedToRfq') {
+          throw new Error(`Purchase Request ${prCheck.prNumber} is already converted to an RFQ.`);
+        }
+
+        await tx.purchaseRequest.update({
+          where: { id: prId },
+          data: { status: 'ConvertedToRfq' },
+        });
+
+        await tx.purchaseRequestStatusHistory.create({
+          data: {
+            purchaseRequestId: prId,
+            status: 'ConvertedToRfq',
+            remarks: `Converted to RFQ #${rfqNumber.trim()} by Procurement Officer`,
+            changedById: profile.id,
+          },
+        });
+      }
 
       return newRfq;
     });

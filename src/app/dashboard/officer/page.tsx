@@ -140,9 +140,64 @@ async function getOfficerTasks(): Promise<DashboardTask[]> {
   return taskList;
 }
 
-async function getRecentRfqs() {
-  const timer = startTimer('getRecentRfqs');
-  const data = await prisma.requestForQuote.findMany({
+async function getDashboardRfqs() {
+  const timer = startTimer('getDashboardRfqs');
+  
+  const [draft, published, closed] = await Promise.all([
+    prisma.requestForQuote.findMany({
+      where: { status: 'Draft' },
+      select: {
+        id: true,
+        rfqNumber: true,
+        title: true,
+        status: true,
+        deadlineDate: true,
+        approvedBudgetContract: true,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    }),
+    prisma.requestForQuote.findMany({
+      where: { status: 'Published' },
+      select: {
+        id: true,
+        rfqNumber: true,
+        title: true,
+        status: true,
+        deadlineDate: true,
+        approvedBudgetContract: true,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    }),
+    prisma.requestForQuote.findMany({
+      where: { status: { in: ['Closed', 'Evaluated'] } },
+      select: {
+        id: true,
+        rfqNumber: true,
+        title: true,
+        status: true,
+        deadlineDate: true,
+        approvedBudgetContract: true,
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10,
+    }),
+  ]);
+  
+  // Closing Soon: Published RFQs with deadline expiring in <= 5 days
+  const now = new Date();
+  const fiveDaysFromNow = new Date();
+  fiveDaysFromNow.setDate(fiveDaysFromNow.getDate() + 5);
+  
+  const closingSoon = await prisma.requestForQuote.findMany({
+    where: {
+      status: 'Published',
+      deadlineDate: {
+        gte: now,
+        lte: fiveDaysFromNow,
+      },
+    },
     select: {
       id: true,
       rfqNumber: true,
@@ -151,21 +206,26 @@ async function getRecentRfqs() {
       deadlineDate: true,
       approvedBudgetContract: true,
     },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    take: 5,
+    orderBy: { deadlineDate: 'asc' },
+    take: 10,
   });
+
   timer.end();
-  return data;
+
+  return {
+    draft,
+    published,
+    closingSoon,
+    closed,
+  };
 }
 
 export default async function OfficerDashboard() {
   const pageTimer = startTimer('OfficerDashboardPage');
   const { profile } = await requireRole('Procurement Officer');
-  const [stats, rfqs, tasks] = await Promise.all([
+  const [stats, rfqData, tasks] = await Promise.all([
     getOfficerStats(),
-    getRecentRfqs(),
+    getDashboardRfqs(),
     getOfficerTasks(),
   ]);
   pageTimer.end();
@@ -232,7 +292,12 @@ export default async function OfficerDashboard() {
 
       {/* Recent Solicitations Table */}
       <div id="recent-solicitations" className="scroll-mt-24">
-        <RecentRFQTable rfqs={rfqs} />
+        <RecentRFQTable
+          published={rfqData.published}
+          draft={rfqData.draft}
+          closingSoon={rfqData.closingSoon}
+          closed={rfqData.closed}
+        />
       </div>
     </DashboardShell>
   );

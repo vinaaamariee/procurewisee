@@ -32,6 +32,7 @@ interface RFQDocumentProps {
   appItems?: AppItem[];
   catalogProducts?: CatalogProduct[];
   nextRfqNumber?: string;
+  prId?: number | null;
   onSave?: (data: RFQDocumentData, status: 'Draft' | 'Published') => Promise<{ success: boolean; error?: string }>;
 }
 
@@ -41,6 +42,7 @@ export default function RFQDocument({
   appItems = [],
   catalogProducts = [],
   nextRfqNumber = '',
+  prId = null,
   onSave,
 }: RFQDocumentProps) {
   const router = useRouter();
@@ -61,6 +63,9 @@ export default function RFQDocument({
   const [approvedBudget, setApprovedBudget] = useState<number | ''>(initialData.approvedBudgetContract ?? '');
   const [deadlineDate, setDeadlineDate] = useState(initialData.deadlineDate || getDefaultDeadlineDate());
   const [deliveryPeriod, setDeliveryPeriod] = useState(initialData.deliveryPeriod || 'Thirty (30) calendar days.');
+  const [deliveryLocation, setDeliveryLocation] = useState('Batanes State College Main Campus, Basco, Batanes');
+  const [modeOfProcurement, setModeOfProcurement] = useState('Negotiated Procurement - Small Value Procurement (Sec. 53.9)');
+  const [philgepsPosting, setPhilgepsPosting] = useState('N/A');
   const [title, setTitle] = useState(initialData.title || 'Procurement of Goods & Infrastructure Services');
 
   // Items State
@@ -158,6 +163,7 @@ export default function RFQDocument({
           approvedBudgetContract: Number(approvedBudget),
           deadlineDate,
           status: submitStatus,
+          prId: prId || null,
           items: activeItems.map((item) => ({
             itemNumber: item.itemNumber,
             particulars: item.particulars,
@@ -230,6 +236,12 @@ export default function RFQDocument({
               setApprovedBudget={setApprovedBudget}
               deliveryPeriod={deliveryPeriod}
               setDeliveryPeriod={setDeliveryPeriod}
+              deliveryLocation={deliveryLocation}
+              setDeliveryLocation={setDeliveryLocation}
+              modeOfProcurement={modeOfProcurement}
+              setModeOfProcurement={setModeOfProcurement}
+              philgepsPosting={philgepsPosting}
+              setPhilgepsPosting={setPhilgepsPosting}
               isReadOnly={isReadOnly}
             />
 

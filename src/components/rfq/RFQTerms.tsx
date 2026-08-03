@@ -7,6 +7,12 @@ interface RFQTermsProps {
   setApprovedBudget?: (val: number | '') => void;
   deliveryPeriod?: string;
   setDeliveryPeriod?: (val: string) => void;
+  deliveryLocation?: string;
+  setDeliveryLocation?: (val: string) => void;
+  modeOfProcurement?: string;
+  setModeOfProcurement?: (val: string) => void;
+  philgepsPosting?: string;
+  setPhilgepsPosting?: (val: string) => void;
   isReadOnly?: boolean;
 }
 
@@ -15,6 +21,12 @@ export default function RFQTerms({
   setApprovedBudget,
   deliveryPeriod = 'Thirty (30) calendar days.',
   setDeliveryPeriod,
+  deliveryLocation = 'Batanes State College Main Campus, Basco, Batanes',
+  setDeliveryLocation,
+  modeOfProcurement = 'Negotiated Procurement - Small Value Procurement (Sec. 53.9)',
+  setModeOfProcurement,
+  philgepsPosting = 'N/A',
+  setPhilgepsPosting,
   isReadOnly = false,
 }: RFQTermsProps) {
   return (
@@ -36,7 +48,52 @@ export default function RFQTerms({
             type="text"
             value={deliveryPeriod}
             onChange={(e) => setDeliveryPeriod?.(e.target.value)}
-            className="border-b border-black text-[10.5px] bg-transparent focus:outline-none px-1 text-black font-semibold"
+            className="border-b border-black text-[10.5px] bg-transparent focus:outline-none px-1 text-black font-semibold w-1/2"
+          />
+        )}
+      </div>
+
+      <div className="flex items-baseline gap-1 pl-6">
+        <span className="font-bold shrink-0">2.1.</span>
+        <span>DELIVERY LOCATION:</span>
+        {isReadOnly ? (
+          <span className="border-b border-black font-semibold px-1">{deliveryLocation}</span>
+        ) : (
+          <input
+            type="text"
+            value={deliveryLocation}
+            onChange={(e) => setDeliveryLocation?.(e.target.value)}
+            className="border-b border-black text-[10.5px] bg-transparent focus:outline-none px-1 text-black font-semibold w-1/2"
+          />
+        )}
+      </div>
+
+      <div className="flex items-baseline gap-1 pl-6">
+        <span className="font-bold shrink-0">2.2.</span>
+        <span>MODE OF PROCUREMENT:</span>
+        {isReadOnly ? (
+          <span className="border-b border-black font-semibold px-1">{modeOfProcurement}</span>
+        ) : (
+          <input
+            type="text"
+            value={modeOfProcurement}
+            onChange={(e) => setModeOfProcurement?.(e.target.value)}
+            className="border-b border-black text-[10.5px] bg-transparent focus:outline-none px-1 text-black font-semibold w-1/2"
+          />
+        )}
+      </div>
+
+      <div className="flex items-baseline gap-1 pl-6">
+        <span className="font-bold shrink-0">2.3.</span>
+        <span>PHILGEPS POSTING REFERENCE:</span>
+        {isReadOnly ? (
+          <span className="border-b border-black font-semibold px-1">{philgepsPosting}</span>
+        ) : (
+          <input
+            type="text"
+            value={philgepsPosting}
+            onChange={(e) => setPhilgepsPosting?.(e.target.value)}
+            className="border-b border-black text-[10.5px] bg-transparent focus:outline-none px-1 text-black font-semibold w-1/2"
           />
         )}
       </div>
