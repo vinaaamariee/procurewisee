@@ -22,32 +22,28 @@ export default async function DashboardLayout({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header
-          className="sticky top-0 z-50 border-b shadow-sm"
-          style={{
-            background: "var(--bg-header)",
-            borderColor: "var(--border)",
-          }}
+          className="sticky top-0 z-50 border-b border-[var(--border)] bg-white/80 dark:bg-[#0E1420]/80 backdrop-blur-md shadow-sm transition-all duration-200"
         >
           <div className="flex min-h-20 items-center justify-between gap-4 px-5 py-3 sm:px-8">
             <Link
               href={dashboardHome}
-              className="flex min-w-0 items-center gap-3 no-underline"
+              className="flex min-w-0 items-center gap-3 no-underline group active:scale-[0.98] transition-transform duration-150"
             >
               <div
-                className="flex h-11 w-11 items-center justify-center rounded-md border"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-200 group-hover:shadow-sm"
                 style={{
                   background: "white",
                   borderColor: "var(--border-accent)",
                 }}
               >
                 <span
-                  className="text-lg font-black"
+                  className="text-lg font-black tracking-tight"
                   style={{ color: "var(--accent)", fontFamily: "var(--font-display)" }}
                 >
                   P
                 </span>
                 <span
-                  className="text-lg font-black"
+                  className="text-lg font-black tracking-tight"
                   style={{ color: "var(--secondary)", fontFamily: "var(--font-display)" }}
                 >
                   W
@@ -56,14 +52,13 @@ export default async function DashboardLayout({
 
               <div className="min-w-0">
                 <h1
-                  className="truncate text-lg font-bold"
+                  className="truncate text-lg font-bold tracking-tight transition-colors duration-200 group-hover:text-[var(--accent-light)]"
                   style={{ color: "var(--text-primary)", fontFamily: "var(--font-display)" }}
                 >
                   ProcureWise
                 </h1>
                 <p
-                  className="hidden text-xs uppercase tracking-[0.12em] sm:block"
-                  style={{ color: "var(--text-secondary)" }}
+                  className="hidden text-[10px] font-semibold uppercase tracking-[0.16em] sm:block text-[var(--text-secondary)]"
                 >
                   Batanes State College
                 </p>
@@ -75,14 +70,14 @@ export default async function DashboardLayout({
               <ThemeToggle />
 
               <div
-                className="flex items-center gap-3 rounded-xl border px-3 py-1.5"
+                className="flex items-center gap-3 rounded-full border px-3 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
                 style={{
                   background: "var(--surface)",
                   borderColor: "var(--border)",
                 }}
               >
                 <div
-                  className="flex h-8 w-8 items-center justify-center rounded-full font-bold text-white text-xs"
+                  className="flex h-8 w-8 items-center justify-center rounded-full font-bold text-white text-xs border border-white/20 shadow-sm"
                   style={{ background: "var(--accent)" }}
                 >
                   {profile.fullName?.[0]?.toUpperCase() ?? "U"}
@@ -96,7 +91,7 @@ export default async function DashboardLayout({
                     {profile.fullName}
                   </div>
                   <div
-                    className="text-[10px]"
+                    className="text-[10px] font-semibold tracking-wide"
                     style={{ color: "var(--text-muted)" }}
                   >
                     {profile.role}
@@ -107,7 +102,7 @@ export default async function DashboardLayout({
               <form action={signout}>
                 <button
                   type="submit"
-                  className="rounded-xl border border-red-500/30 px-3.5 py-1.5 text-xs font-bold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="rounded-xl border border-red-500/20 hover:border-red-500/30 px-3.5 py-1.5 text-xs font-bold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-950/20 active:scale-[0.97]"
                 >
                   <span className="hidden sm:inline">Sign Out</span><span className="sm:hidden">Out</span>
                 </button>

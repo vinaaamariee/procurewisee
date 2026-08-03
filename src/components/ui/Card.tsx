@@ -14,7 +14,7 @@ export default function Card({ children, className, ...props }: CardProps) {
     <section
       {...props}
       className={clsx(
-"overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)]",
+        "overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[var(--shadow-card)]",
         className,
       )}
     >

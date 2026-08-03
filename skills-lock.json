@@ -7,6 +7,18 @@
       "skillPath": "skills/daisyui/SKILL.md",
       "computedHash": "2c1857b181a033f75c656fc30dbc70767e102ab8e4364c3863aa5bedf32d001e"
     },
+    "emil-design-eng": {
+      "source": "emilkowalski/skill",
+      "sourceType": "github",
+      "skillPath": "skills/emil-design-eng/SKILL.md",
+      "computedHash": "87067d79205fdedc6d682891027dd9c7335486c4b4dc2e785638941a9d2e6061"
+    },
+    "hallmark": {
+      "source": "nutlope/hallmark",
+      "sourceType": "github",
+      "skillPath": "skills/hallmark/SKILL.md",
+      "computedHash": "d3a20aae61e43793d74932c92b63bcad5882e73ec1c8545b858910fd95b25136"
+    },
     "supabase": {
       "source": "supabase/agent-skills",
       "sourceType": "github",

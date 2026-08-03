@@ -229,11 +229,11 @@ export default function DashboardSidebar({ role }: { role: string }) {
       </div>
 
       {/* Navigation */}
-      <nav className="relative flex-1 overflow-y-auto px-5 py-7 space-y-8">
+      <nav className="relative flex-1 overflow-y-auto px-5 py-6 space-y-6">
         {sections.map((section) => (
           <div key={section.title}>
             <div
-              className="mb-3 px-3 text-[10px] font-semibold tracking-[0.18em]"
+              className="mb-2 px-3 text-[10px] font-bold uppercase tracking-[0.2em]"
               style={{
                 color: "rgba(255,255,255,.35)",
               }}
@@ -241,7 +241,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
               {section.title}
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-1">
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isOverview = item.label === "Dashboard";
@@ -261,7 +261,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
                         e.preventDefault();
                       }
                     }}
-                    className={`group relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 ${
+                    className={`group relative flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-all duration-150 ease-out active:scale-[0.98] ${
                       isDisabled
                         ? "opacity-40 cursor-not-allowed select-none"
                         : "hover:translate-x-1 hover:bg-white/5"
@@ -278,7 +278,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
                   >
                     {isActive && (
                       <span
-                        className="absolute left-0 top-2 bottom-2 w-[4px] rounded-r-full"
+                        className="absolute left-0 top-2.5 bottom-2.5 w-[4px] rounded-r-full"
                         style={{
                           background: "#D4A017",
                         }}

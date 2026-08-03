@@ -10,18 +10,18 @@ export default function SectionHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4">
-      <div>
-        <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-[var(--text-primary)]">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2">
+      <div className="space-y-1">
+        <h2 className="font-[family-name:var(--font-display)] text-2xl font-bold tracking-tight text-[var(--text-primary)]">
           {title}
         </h2>
         {subtitle && (
-          <p className="mt-1 text-sm text-[var(--text-secondary)]">
+          <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
             {subtitle}
           </p>
         )}
       </div>
-      {action && <div>{action}</div>}
+      {action && <div className="flex items-center gap-2 self-start sm:self-auto">{action}</div>}
     </div>
   );
 }
