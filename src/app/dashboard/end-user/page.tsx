@@ -367,7 +367,7 @@ export default async function EndUserDashboard() {
         {/* Sidebar Controls */}
         <div className="space-y-6">
           
-          {/* Quick Actions (3 buttons only) */}
+          {/* Quick Actions (2 buttons only) */}
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-xs space-y-4">
             <h2 className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)]">Quick Actions</h2>
             <div className="space-y-2.5">
@@ -385,14 +385,6 @@ export default async function EndUserDashboard() {
               >
                 <FileText className="h-4 w-4" />
                 My Purchase Requests
-              </Link>
-
-              <Link
-                href="/dashboard/end-user/ppmp"
-                className="w-full btn btn-outline rounded-xl font-bold text-xs flex items-center justify-center gap-2 py-2.5 border-[var(--border)] text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
-              >
-                <Calendar className="h-4 w-4" />
-                PPMP Planning
               </Link>
             </div>
           </div>

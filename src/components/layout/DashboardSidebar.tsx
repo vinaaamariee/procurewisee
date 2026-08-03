@@ -145,7 +145,6 @@ export default function DashboardSidebar({ role }: { role: string }) {
       {
         title: "My Planning",
         items: [
-          { label: "PPMP Planning", href: "/dashboard/end-user/ppmp", icon: CalendarDays },
           { label: "Purchase Requests", href: "/dashboard/end-user/pr", icon: FileText },
           { label: "Supplier Evaluation", href: "/dashboard/end-user/evaluation", icon: Star },
         ],
