@@ -34,6 +34,24 @@ export async function createPrFromCartAction(input: CreatePrInput) {
   try {
     const totalCost = input.items.reduce((sum, item) => sum + (item.quantity * item.estimatedUnitCost), 0);
 
+    // Retrieve authenticated user info if not explicitly passed
+    let reqId = input.requestedById;
+    let reqName = input.requesterName;
+    let reqEmail = input.requesterEmail;
+
+    if (!reqId) {
+      try {
+        const auth = await getAuthenticatedUser();
+        if (auth && auth.profile) {
+          reqId = auth.profile.id;
+          reqName = auth.profile.fullName || reqName;
+          reqEmail = auth.profile.email || reqEmail;
+        }
+      } catch (err) {
+        console.warn("No authenticated user session found:", err);
+      }
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       // 1. Verify PPMP status and budget allocation if linked
       if (input.ppmpId) {
@@ -80,9 +98,9 @@ export async function createPrFromCartAction(input: CreatePrInput) {
           estimatedBudget: new Prisma.Decimal(totalCost),
           totalCost: new Prisma.Decimal(totalCost),
           status: PrStatus.Submitted,
-          requestedById: input.requestedById || null,
-          requesterName: input.requesterName || null,
-          requesterEmail: input.requesterEmail || null,
+          requestedById: reqId || null,
+          requesterName: reqName || null,
+          requesterEmail: reqEmail || null,
         }
       });
 
