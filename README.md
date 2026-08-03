@@ -1111,4 +1111,22 @@ Added self-registration capability specifically for Department End Users:
 - **Self-Registration Action**: `registerEndUser(formData)` in `src/app/actions/auth.ts` provisions Supabase Auth credentials and creates `user_profiles` with role `EndUser`.
 - **UI Components**: Created `EndUserRegisterForm.tsx` and updated standard `LoginForm.tsx` with callout links to the End User Portal.
 
+---
+
+## 🔑 Operational Demo Credentials
+
+For testing and verification of the official Batanes State College procurement roles, use the following demo accounts (password: `password123` for all):
+
+1. **Procurement Officer II** (Administrative Approver / Verifier):
+   - **Email**: `approver@bsc.edu.ph`
+   - **Role**: Review requisitions, execute 5.1 Procurement Verification, and sign documents.
+
+2. **Procurement Officer**:
+   - **Email**: `officer@bsc.edu.ph`
+   - **Role**: Manage product catalog, review & check purchase requests, and prepare RFQs.
+
+3. **End User** (Department Requisitioner):
+   - **Email**: `enduser@bsc.edu.ph`
+   - **Role**: Submit purchase requests, prepare PPMPs, and track requisitions.
+
 
