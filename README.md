@@ -5,6 +5,21 @@
 **Capstone Project for Batanes State College**
 
 
+## 🎨 UI/UX Pro Max AI Skill & Sub-skills Installed
+
+**Date**: August 2026
+
+Installed the official **UI/UX Pro Max** AI design intelligence skill and its 6 specialized sibling sub-skills to the workspace customization root (`.agents/skills/`) to aid in systematic frontend design, brand consistency, presentations, and UI styling:
+- **`ui-ux-pro-max`**: Core design intelligence orchestrator supporting 84 UI styles, 192 product types, color palettes, and typography pairings.
+- **`ui-styling`**: Guidelines and configurations for Tailwind CSS, daisyUI, and component styling.
+- **`design-system`**: CSS variables, semantic tokens, spacing, typography scales, and slide generation.
+- **`brand`**: Brand voice, visual identity, messaging frameworks, and asset rules.
+- **`design`**: Corporate identity program, icon design, logo generator, and social photos.
+- **`banner-design`**: Ad banner, website hero, and display graphic art direction.
+- **`slides`**: HTML presentation design rules with Chart.js integration.
+
+---
+
 ## 🏛️ Purchase Request Approval and Validation Workflow
 
 **Date**: August 2026
