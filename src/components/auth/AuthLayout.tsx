@@ -23,6 +23,7 @@ export default function AuthLayout({
     <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center p-4 selection:bg-primary/20">
       {/* ── Card ──────────────────────────────────────────────────────── */}
       <div
+        data-theme="light"
         className="bg-base-100 border border-base-300 flex flex-col overflow-hidden"
         style={{
           width: "min(980px, 95vw)",

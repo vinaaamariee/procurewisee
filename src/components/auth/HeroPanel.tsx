@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from "react";
 import Image from "next/image";
@@ -30,8 +30,8 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
   return (
     <div className="relative w-full h-full flex flex-col justify-center items-center text-white select-none overflow-hidden">
 
-      {/* Layer 1 - solid maroon background */}
-      <div className="absolute inset-0 bg-primary" />
+      {/* Layer 1 - solid maroon background — hardcoded to bypass next-themes/DaisyUI specificity conflict */}
+      <div className="absolute inset-0" style={{ backgroundColor: '#7B1E1E' }} />
 
       {/* Layer 2 - BSC logo watermark */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
