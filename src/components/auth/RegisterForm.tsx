@@ -219,7 +219,7 @@ export default function RegisterForm({
         <button
           type="button"
           onClick={() => onToggleTab?.("login")}
-          className="text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
+          className="font-bold hover:underline bg-transparent border-none p-0 cursor-pointer" style={{ color: '#7B1E1E' }}
         >
           Sign In
         </button>

@@ -143,7 +143,7 @@ export default function LoginForm({
           <button
             type="button"
             onClick={handleForgotPasswordClick}
-            className="text-xs text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
+            className="text-xs font-bold hover:underline bg-transparent border-none p-0 cursor-pointer" style={{ color: '#7B1E1E' }}
           >
             Forgot Password?
           </button>
@@ -179,7 +179,7 @@ export default function LoginForm({
         <button
           type="button"
           onClick={() => onToggleTab?.("register")}
-          className="text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
+          className="font-bold hover:underline bg-transparent border-none p-0 cursor-pointer" style={{ color: '#7B1E1E' }}
         >
           Create End User Account
         </button>

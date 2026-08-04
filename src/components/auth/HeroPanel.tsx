@@ -77,7 +77,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
         <button
           type="button"
           onClick={() => onToggle(content.btnTarget)}
-          className="btn btn-outline border-white text-white hover:bg-white hover:text-primary hover:border-white active:translate-y-px transition-all duration-200 px-8 rounded-[6px]"
+          className="btn btn-outline border-white text-white hover:bg-white hover:text-[#7B1E1E] hover:border-white active:translate-y-px transition-all duration-200 px-8 rounded-[6px]"
         >
           {content.btnLabel}
         </button>
