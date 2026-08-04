@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { ShieldAlert, ShieldCheck, X } from 'lucide-react';
-import styles from '@/app/login/login.module.css';
 
 interface LoginAlertProps {
   type: 'error' | 'success';
@@ -12,25 +11,31 @@ interface LoginAlertProps {
 
 export default function LoginAlert({ type, message, onClose }: LoginAlertProps) {
   const isError = type === 'error';
-  const alertClass = isError 
-    ? `${styles.alert} ${styles.alertError}`
-    : `${styles.alert} ${styles.alertSuccess}`;
 
   return (
-    <div className={alertClass} role="alert">
+    <div
+      className="relative flex flex-col items-start gap-3 rounded-lg border p-4 text-sm leading-relaxed"
+      role="alert"
+      style={{
+        borderColor: isError ? 'rgba(183, 32, 46, 0.2)' : 'rgba(37, 108, 62, 0.2)',
+        backgroundColor: isError ? 'rgba(183, 32, 46, 0.03)' : 'rgba(37, 108, 62, 0.03)',
+        color: isError ? '#991b1b' : '#166534',
+      }}
+    >
       {isError ? (
-        <ShieldAlert className={styles.alertIcon} />
+        <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5" />
       ) : (
-        <ShieldCheck className={styles.alertIcon} />
+        <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5" />
       )}
       <span className="pr-6 font-semibold leading-relaxed">{message}</span>
-      <button 
-        onClick={onClose} 
-        className={styles.alertClose}
+      <button
+        onClick={onClose}
+        className="absolute right-3 top-3 bg-transparent border-none cursor-pointer"
         aria-label="Close alert"
         type="button"
+        style={{ color: 'inherit', opacity: 0.6 }}
       >
-        <X className="h-4.5 w-4.5" />
+        <X className="h-4 w-4" />
       </button>
     </div>
   );

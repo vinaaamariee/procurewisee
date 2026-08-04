@@ -13,92 +13,66 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
 
   return (
     <div
-      className="absolute inset-y-0 text-white flex flex-col justify-center items-center p-12 text-center select-none transition-all duration-500 ease-in-out z-20 hidden md:flex"
+      className="relative inset-y-0 right-0 text-white flex flex-col justify-center items-center p-12 text-center select-none transition-all duration-200 ease-in-out z-20 hidden md:flex"
       style={{
-        width: isLogin ? "55%" : "45%",
-        left: isLogin ? "45%" : "0%",
-        backgroundImage: 'linear-gradient(rgba(123, 30, 30, 0.90), rgba(94, 20, 20, 0.92)), url("/images/Header-Frame.png")',
+        width: "52%",
+        backgroundImage: 'url("/images/Header-Frame.png")',
         backgroundPosition: "center bottom",
-        backgroundSize: "90%",
+        backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Top right dot pattern (M365/SAP dashboard inspired) */}
-      <div className="absolute top-6 right-8 font-mono text-[16px] tracking-[0.3em] opacity-10 select-none leading-tight text-white">
-        ••••••••
-        <br />
-        ••••••••
-      </div>
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(rgba(123,30,30,.88), rgba(110,20,20,.90))",
+        }}
+      />
 
-      {/* Large College Seal Watermark (top-right side alignment) */}
-      <div className="pointer-events-none absolute -right-[80px] top-[80px] opacity-[0.06] select-none shrink-0 w-[500px] h-[500px]">
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.03) 50%, transparent 60%)",
+          opacity: 0.08,
+        }}
+      />
+
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.06] select-none">
         <Image
           src="/images/bsc-logo.png"
           alt=""
-          width={500}
-          height={500}
-          className="object-contain w-full h-full"
+          width={480}
+          height={480}
+          className="object-contain w-[480px] h-[480px]"
         />
       </div>
 
-      {/* Hero content area */}
-      <div className="relative z-10 w-full max-w-sm flex flex-col items-center justify-center h-full space-y-6">
-        
-        {/* Register Hero prompt (visible when activeTab is login, covering right 55%) */}
-        <div
-          className={`absolute transition-all duration-500 flex flex-col items-center space-y-6 ${
-            isLogin ? "opacity-100 scale-100 relative" : "opacity-0 scale-95 pointer-events-none absolute"
-          }`}
-        >
-          <div className="space-y-1">
-            <h2 className="text-xl font-bold tracking-wider uppercase text-white">
-              WELCOME TO PROCUREWISE
-            </h2>
-            <div className="text-xs font-semibold text-[#C89B3C] uppercase tracking-widest">
-              Batanes State College
-            </div>
+      <div className="relative z-10 w-full max-w-[420px] flex flex-col items-center justify-center space-y-6">
+        <div className="space-y-1">
+          <h2 className="text-[48px] font-[800] tracking-[-0.02em] uppercase text-white leading-none">
+            WELCOME TO PROCUREWISE
+          </h2>
+          <div className="flex items-center justify-center gap-3 pt-1">
+            <span className="h-[1px] flex-1 max-w-[60px] bg-[#C89B3C]"></span>
+            <span className="text-xs font-bold text-[#C89B3C]">◆</span>
+            <span className="h-[1px] flex-1 max-w-[60px] bg-[#C89B3C]"></span>
           </div>
-          
-          <p className="text-xs text-white/80 leading-relaxed font-medium">
-            Create an institutional account to submit Purchase Requests, track procurement activities, and monitor procurement status.
-          </p>
-
-          <button
-            type="button"
-            onClick={() => onToggle("register")}
-            className="btn bg-white border-none hover:bg-neutral-100 text-[#7B1E1E] text-xs font-bold h-[52px] px-8 rounded-[10px] transition-colors"
-          >
-            Create Account
-          </button>
         </div>
 
-        {/* Login Hero prompt (visible when activeTab is register, covering left 45%) */}
-        <div
-          className={`absolute transition-all duration-500 flex flex-col items-center space-y-6 ${
-            !isLogin ? "opacity-100 scale-100 relative" : "opacity-0 scale-95 pointer-events-none absolute"
-          }`}
-        >
-          <div className="space-y-1">
-            <h2 className="text-xl font-bold tracking-wider uppercase text-white">
-              WELCOME BACK
-            </h2>
-            <div className="text-xs font-semibold text-[#C89B3C] uppercase tracking-widest">
-              Batanes State College
-            </div>
-          </div>
-          
-          <p className="text-xs text-white/80 leading-relaxed font-medium">
-            Sign in using your registered institutional account to access ProcureWise.
-          </p>
+        <p className="text-xs text-white/80 leading-relaxed font-medium text-center">
+          Create an institutional account to submit Purchase Requests, monitor
+          procurement activities, and access institutional procurement services.
+        </p>
 
-          <button
-            type="button"
-            onClick={() => onToggle("login")}
-            className="btn bg-white border-none hover:bg-neutral-100 text-[#7B1E1E] text-xs font-bold h-[52px] px-8 rounded-[10px] transition-colors"
-          >
-            Sign In
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => onToggle("register")}
+          className="h-[54px] px-9 rounded-[10px] bg-white text-[#7B1E1E] font-bold text-xs border-none cursor-pointer transition-all duration-200 hover:bg-[#FFF6EB]"
+        >
+          Create Account
+        </button>
       </div>
     </div>
   );

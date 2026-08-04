@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700;8..60,800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Public+Sans:wght@400;500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700;8..60,800&display=swap');
 
 /* ============================================================
    ProcureWise — Price Comparison Dashboard Styles
@@ -109,16 +109,16 @@
   --spacing-13:   3.25rem;    /* h-13,  w-13   */
 
   /* ── Font families ── */
-  --font-family-sans:    'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
-  --font-family-display: 'Source Serif 4', Georgia, 'Times New Roman', serif;
-  --font-family-mono:    var(--font-geist-mono, ui-monospace, monospace);
+--font-family-sans: 'Inter', var(--font-geist-sans, Arial), sans-serif;
+  --font-family-display: 'Inter', var(--font-geist-sans, Arial), sans-serif;
+  --font-family-mono: var(--font-geist-mono, ui-monospace, monospace);
 }
 
 /* ---------- CSS Variables ---------- */
 :root {
   /* Default: Light Mode — Official Government Portal Theme */
-  --font-display: 'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
-  --font-body: 'Public Sans', var(--font-geist-sans, Inter), Arial, sans-serif;
+  --font-display: 'Inter', var(--font-geist-sans, Arial), sans-serif;
+  --font-body: 'Inter', var(--font-geist-sans, Arial), sans-serif;
 
   --accent: #7B1E1E;
   /* Institutional Maroon */

@@ -32,31 +32,18 @@ export default function RegisterForm({
   };
 
   return (
-    <div className="w-full flex flex-col justify-center h-full p-6 sm:p-10 md:p-[56px] space-y-6">
-      {/* Back to Login Link */}
-      <button
-        type="button"
-        onClick={() => onToggleTab?.("login")}
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-[#7B1E1E] transition-colors group w-fit bg-transparent border-none p-0 cursor-pointer text-left"
-      >
-        <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
-        <span>Back to Sign In</span>
-      </button>
-
-      {/* College Identity Header */}
+    <div className="w-full flex flex-col justify-center h-full space-y-6">
       <AuthHeader />
 
-      {/* Title & Desc */}
       <div className="space-y-2 text-left">
-        <h2 className="text-xl font-bold tracking-tight text-slate-800 dark:text-white">
+        <h2 className="text-[40px] font-[700] tracking-tight text-[#1F2937]">
           Create Account
         </h2>
-        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
-          Create an End User account to submit Purchase Requests and access institutional services.
+        <p className="text-[14px] text-[#6B7280] leading-relaxed font-medium">
+          Create an institutional account to access the Procurement Management Information System.
         </p>
       </div>
 
-      {/* Alerts */}
       {errorParam && (
         <LoginAlert type="error" message={errorParam} onClose={onClearParams} />
       )}
@@ -64,11 +51,9 @@ export default function RegisterForm({
         <LoginAlert type="success" message={successParam} onClose={onClearParams} />
       )}
 
-      {/* Form */}
       <form onSubmit={handleFormSubmit} className="space-y-4">
-        {/* Full Name */}
         <div className="space-y-1.5 text-left">
-          <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">
+          <label className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider block">
             Full Name
           </label>
           <div className="relative">
@@ -78,16 +63,15 @@ export default function RegisterForm({
               required
               placeholder="Juan Dela Cruz"
               aria-label="Full Name"
-              className="w-full input pl-9 text-sm rounded-md bg-white border-[#E5E7EB] text-[#1E293B] focus:border-[#7B1E1E]"
+              className="w-full h-[56px] px-4 pl-10 text-sm rounded-lg bg-white border border-[#D6DCE5] text-[#1E293B] focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/20 transition-colors outline-none"
               disabled={isPending}
             />
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
           </div>
         </div>
 
-        {/* Institutional Email */}
         <div className="space-y-1.5 text-left">
-          <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">
+          <label className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider block">
             Institutional Email
           </label>
           <div className="relative">
@@ -98,16 +82,15 @@ export default function RegisterForm({
               autoComplete="email"
               placeholder="username@bsc.edu.ph"
               aria-label="Institutional Email"
-              className="w-full input pl-9 text-sm rounded-md bg-white border-[#E5E7EB] text-[#1E293B] focus:border-[#7B1E1E]"
+              className="w-full h-[56px] px-4 pl-10 text-sm rounded-lg bg-white border border-[#D6DCE5] text-[#1E293B] focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/20 transition-colors outline-none"
               disabled={isPending}
             />
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
           </div>
         </div>
 
-        {/* Department */}
         <div className="space-y-1.5 text-left">
-          <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">
+          <label className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider block">
             Department
           </label>
           <div className="relative">
@@ -117,18 +100,16 @@ export default function RegisterForm({
               required
               placeholder="E.g., ICT Department, General Services"
               aria-label="Department"
-              className="w-full input pl-9 text-sm rounded-md bg-white border-[#E5E7EB] text-[#1E293B] focus:border-[#7B1E1E]"
+              className="w-full h-[56px] px-4 pl-10 text-sm rounded-lg bg-white border border-[#D6DCE5] text-[#1E293B] focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/20 transition-colors outline-none"
               disabled={isPending}
             />
-            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
           </div>
         </div>
 
-        {/* Password & Confirm Password Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {/* Password */}
           <div className="space-y-1.5 text-left">
-            <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">
+            <label className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider block">
               Password
             </label>
             <div className="relative">
@@ -140,14 +121,14 @@ export default function RegisterForm({
                 autoComplete="new-password"
                 placeholder="••••••••"
                 aria-label="Password"
-                className="w-full input pl-9 pr-9 text-sm rounded-md bg-white border-[#E5E7EB] text-[#1E293B] focus:border-[#7B1E1E]"
+                className="w-full h-[56px] px-4 pl-10 pr-10 text-sm rounded-lg bg-white border border-[#D6DCE5] text-[#1E293B] focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/20 transition-colors outline-none"
                 disabled={isPending}
               />
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1F2937] focus:outline-none"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -155,9 +136,8 @@ export default function RegisterForm({
             </div>
           </div>
 
-          {/* Confirm Password */}
           <div className="space-y-1.5 text-left">
-            <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">
+            <label className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider block">
               Confirm Password
             </label>
             <div className="relative">
@@ -169,14 +149,14 @@ export default function RegisterForm({
                 autoComplete="new-password"
                 placeholder="••••••••"
                 aria-label="Confirm Password"
-                className="w-full input pl-9 pr-9 text-sm rounded-md bg-white border-[#E5E7EB] text-[#1E293B] focus:border-[#7B1E1E]"
+                className="w-full h-[56px] px-4 pl-10 pr-10 text-sm rounded-lg bg-white border border-[#D6DCE5] text-[#1E293B] focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/20 transition-colors outline-none"
                 disabled={isPending}
               />
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1F2937] focus:outline-none"
                 aria-label={showConfirmPassword ? "Hide password" : "Show password"}
               >
                 {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -187,15 +167,14 @@ export default function RegisterForm({
 
         <div className="flex items-start gap-2 pt-1 text-left">
           <CheckCircle2 className="w-4 h-4 text-success flex-shrink-0 mt-0.5" />
-          <p className="text-[10px] text-slate-500 font-semibold leading-tight select-none">
+          <p className="text-[10px] text-[#6B7280] font-semibold leading-tight select-none">
             By creating an account, you confirm that you are an authorized requisitioner representing your department.
           </p>
         </div>
 
-        {/* Action Button (Create Account) */}
         <button
           type="submit"
-          className="w-full h-[52px] min-h-[52px] rounded-md text-white font-bold bg-[#7B1E1E] hover:bg-[#651517] border-none flex items-center justify-center gap-1.5 transition-colors shadow-none mt-2"
+          className="w-full h-[56px] min-h-[56px] rounded-lg text-white font-bold bg-[#7B1E1E] hover:bg-[#651517] border-none flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm mt-2"
           disabled={isPending}
         >
           {isPending ? (
@@ -211,9 +190,16 @@ export default function RegisterForm({
         </button>
       </form>
 
-      {/* Switch trigger back to sign in */}
-      <div className="text-center pt-2">
-        <p className="text-xs text-slate-500 font-semibold">
+      <div className="border-t border-[#D6DCE5] my-2">
+        <div className="flex items-center justify-center gap-4 -mt-2">
+          <span className="h-[1px] flex-1 bg-[#D6DCE5]"></span>
+          <span className="text-xs text-[#6B7280] font-medium px-2">OR</span>
+          <span className="h-[1px] flex-1 bg-[#D6DCE5]"></span>
+        </div>
+      </div>
+
+      <div className="text-center pt-1">
+        <p className="text-xs text-[#6B7280] font-semibold">
           Already registered?{" "}
           <button
             type="button"
