@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useTransition } from "react";
-import Link from "next/link";
 import { registerEndUser } from "@/app/actions/auth";
 import { Eye, EyeOff, ArrowRight, Mail, Lock, User, Building2, ArrowLeft, CheckCircle2 } from "lucide-react";
 import LoginAlert from "./LoginAlert";
@@ -33,12 +32,12 @@ export default function RegisterForm({
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto flex flex-col justify-center h-full p-4 sm:p-6 space-y-6">
+    <div className="w-full max-w-sm mx-auto flex flex-col justify-center h-full p-6 space-y-5">
       {/* Back to Login Link */}
       <button
         type="button"
         onClick={() => onToggleTab?.("login")}
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-base-content/40 hover:text-primary transition-colors group w-fit bg-transparent border-none p-0 cursor-pointer"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-base-content/40 hover:text-primary transition-colors group w-fit bg-transparent border-none p-0 cursor-pointer text-left"
       >
         <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
         <span>Back to Sign In</span>
@@ -48,12 +47,12 @@ export default function RegisterForm({
       <AuthHeader />
 
       {/* Title & Desc */}
-      <div className="space-y-1 text-left border-t border-base-300 pt-4">
-        <h2 className="text-xl font-bold tracking-tight text-primary">
+      <div className="space-y-1 text-left border-t border-base-300 pt-3">
+        <h2 className="text-lg font-bold tracking-tight text-primary uppercase">
           Create Account
         </h2>
-        <p className="text-xs text-base-content/60 leading-relaxed font-medium">
-          Create an End User account to submit Purchase Requests, monitor procurement activities, and access institutional services.
+        <p className="text-[11px] text-base-content/60 leading-relaxed font-medium">
+          Create an End User account to submit Purchase Requests, track procurement, and access services.
         </p>
       </div>
 
@@ -68,8 +67,8 @@ export default function RegisterForm({
       {/* Form */}
       <form onSubmit={handleFormSubmit} className="space-y-4">
         {/* Full Name */}
-        <div className="space-y-1.5 text-left">
-          <label className="text-xs font-bold text-base-content/75 block">
+        <div className="space-y-1 text-left">
+          <label className="text-[11px] font-bold text-base-content/75 block">
             Full Name
           </label>
           <div className="relative">
@@ -87,8 +86,8 @@ export default function RegisterForm({
         </div>
 
         {/* Institutional Email */}
-        <div className="space-y-1.5 text-left">
-          <label className="text-xs font-bold text-base-content/75 block">
+        <div className="space-y-1 text-left">
+          <label className="text-[11px] font-bold text-base-content/75 block">
             Institutional Email
           </label>
           <div className="relative">
@@ -107,8 +106,8 @@ export default function RegisterForm({
         </div>
 
         {/* Department */}
-        <div className="space-y-1.5 text-left">
-          <label className="text-xs font-bold text-base-content/75 block">
+        <div className="space-y-1 text-left">
+          <label className="text-[11px] font-bold text-base-content/75 block">
             Department
           </label>
           <div className="relative">
@@ -128,8 +127,8 @@ export default function RegisterForm({
         {/* Password & Confirm Password Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* Password */}
-          <div className="space-y-1.5 text-left">
-            <label className="text-xs font-bold text-base-content/75 block">
+          <div className="space-y-1 text-left">
+            <label className="text-[11px] font-bold text-base-content/75 block">
               Password
             </label>
             <div className="relative">
@@ -157,8 +156,8 @@ export default function RegisterForm({
           </div>
 
           {/* Confirm Password */}
-          <div className="space-y-1.5 text-left">
-            <label className="text-xs font-bold text-base-content/75 block">
+          <div className="space-y-1 text-left">
+            <label className="text-[11px] font-bold text-base-content/75 block">
               Confirm Password
             </label>
             <div className="relative">
@@ -193,10 +192,10 @@ export default function RegisterForm({
           </p>
         </div>
 
-        {/* Action Button */}
+        {/* Full-width 52px Action Button */}
         <button
           type="submit"
-          className="btn btn-primary w-full rounded-md text-white font-bold"
+          className="btn btn-primary w-full h-[52px] min-h-[52px] rounded-md text-white font-bold"
           disabled={isPending}
         >
           {isPending ? (
@@ -213,8 +212,8 @@ export default function RegisterForm({
         </button>
       </form>
 
-      {/* Already registered? (Switch trigger for Mobile view or sliding click) */}
-      <div className="text-center pt-2">
+      {/* Already registered? */}
+      <div className="text-center pt-1">
         <p className="text-xs text-base-content/60 font-semibold">
           Already registered?{" "}
           <button

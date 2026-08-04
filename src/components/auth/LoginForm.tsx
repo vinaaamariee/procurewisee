@@ -43,7 +43,7 @@ export default function LoginForm({
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto flex flex-col justify-center h-full p-4 sm:p-6 space-y-6">
+    <div className="w-full max-w-sm mx-auto flex flex-col justify-center h-full p-6 space-y-5">
       {/* Back to Home Link */}
       <Link
         href="/"
@@ -57,12 +57,12 @@ export default function LoginForm({
       <AuthHeader />
 
       {/* Title & Desc */}
-      <div className="space-y-1 text-left border-t border-base-300 pt-4">
-        <h2 className="text-xl font-bold tracking-tight text-primary">
+      <div className="space-y-1 text-left border-t border-base-300 pt-3">
+        <h2 className="text-lg font-bold tracking-tight text-primary uppercase">
           Sign In
         </h2>
-        <p className="text-xs text-base-content/60 leading-relaxed font-medium">
-          Welcome back. Sign in using your institutional account to access the Procurement Management Information System.
+        <p className="text-[11px] text-base-content/60 leading-relaxed font-medium">
+          Sign in using your institutional account to access the Procurement Management Information System.
         </p>
       </div>
 
@@ -86,8 +86,8 @@ export default function LoginForm({
         <input type="hidden" name="next" value={searchParams.get("next") || ""} />
 
         {/* Institutional Email */}
-        <div className="space-y-1.5 text-left">
-          <label className="text-xs font-bold text-base-content/75 block">
+        <div className="space-y-1 text-left">
+          <label className="text-[11px] font-bold text-base-content/75 block">
             Institutional Email
           </label>
           <div className="relative">
@@ -106,8 +106,8 @@ export default function LoginForm({
         </div>
 
         {/* Password */}
-        <div className="space-y-1.5 text-left">
-          <label className="text-xs font-bold text-base-content/75 block">
+        <div className="space-y-1 text-left">
+          <label className="text-[11px] font-bold text-base-content/75 block">
             Password
           </label>
           <div className="relative">
@@ -140,7 +140,7 @@ export default function LoginForm({
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="checkbox checkbox-primary checkbox-xs"
+              className="checkbox checkbox-primary checkbox-xs rounded-sm"
             />
             <span className="label-text text-xs text-base-content/70 font-semibold select-none">
               Remember Me
@@ -156,10 +156,10 @@ export default function LoginForm({
           </button>
         </div>
 
-        {/* Action Button */}
+        {/* Full-width 52px Action Button */}
         <button
           type="submit"
-          className="btn btn-primary w-full rounded-md text-white font-bold"
+          className="btn btn-primary w-full h-[52px] min-h-[52px] rounded-md text-white font-bold"
           disabled={isPending}
         >
           {isPending ? (
@@ -176,8 +176,8 @@ export default function LoginForm({
         </button>
       </form>
 
-      {/* Need an account? (Switch trigger for Mobile view or sliding click) */}
-      <div className="text-center pt-2">
+      {/* Need an account? */}
+      <div className="text-center pt-1">
         <p className="text-xs text-base-content/60 font-semibold">
           Need an account?{" "}
           <button

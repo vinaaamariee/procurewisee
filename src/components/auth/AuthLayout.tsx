@@ -3,7 +3,6 @@
 import React from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import HeroPanel from "./HeroPanel";
-import AuthFooter from "./AuthFooter";
 
 interface AuthLayoutProps {
   activeTab: "login" | "register";
@@ -34,14 +33,14 @@ export default function AuthLayout({
         <ThemeToggle />
       </div>
 
-      {/* Auth Card Container */}
-      <div className="relative z-10 w-full max-w-[980px] min-h-[620px] bg-base-100 rounded-md border border-base-300 shadow-none flex flex-col overflow-hidden">
+      {/* Large Auth Card Container */}
+      <div className="relative z-10 w-full max-w-[1200px] w-[min(1200px,95vw)] min-h-[720px] bg-base-100 rounded-md border border-base-300 shadow-none flex flex-col overflow-hidden">
         
         {/* Desktop Split Sliding Layout */}
-        <div className="relative flex-1 hidden md:flex min-h-[620px]">
-          {/* Left panel slot (always Sign In) */}
+        <div className="relative flex-1 hidden md:flex min-h-[660px]">
+          {/* Left panel slot (always Sign In - occupying 42% width) */}
           <div
-            className={`w-1/2 flex items-center justify-center transition-all duration-500 ${
+            className={`absolute left-0 top-0 bottom-0 w-[42%] flex items-center justify-center transition-all duration-500 ${
               activeTab === "login"
                 ? "opacity-100 scale-100"
                 : "opacity-0 scale-95 pointer-events-none"
@@ -51,9 +50,9 @@ export default function AuthLayout({
             {loginForm}
           </div>
 
-          {/* Right panel slot (always Create Account) */}
+          {/* Right panel slot (always Create Account - occupying 42% width) */}
           <div
-            className={`w-1/2 flex items-center justify-center transition-all duration-500 ${
+            className={`absolute right-0 top-0 bottom-0 w-[42%] flex items-center justify-center transition-all duration-500 ${
               activeTab === "register"
                 ? "opacity-100 scale-100"
                 : "opacity-0 scale-95 pointer-events-none"
@@ -63,7 +62,7 @@ export default function AuthLayout({
             {registerForm}
           </div>
 
-          {/* Sliding Cover Overlay Banner */}
+          {/* Sliding Cover Overlay Banner (occupying 58% width) */}
           <HeroPanel activeTab={activeTab} onToggle={onToggleTab} />
         </div>
 
@@ -73,11 +72,17 @@ export default function AuthLayout({
             {activeTab === "login" ? loginForm : registerForm}
           </div>
         </div>
-      </div>
 
-      {/* Global minimal footer */}
-      <div className="relative z-10 w-full max-w-sm sm:max-w-md mt-6">
-        <AuthFooter />
+        {/* Bottom Information Anchor Bar (mockup alignment) */}
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 py-4 border-t border-base-300 text-[10px] font-bold text-base-content/40 uppercase tracking-widest bg-base-100 select-none">
+          <span>Secure Access</span>
+          <span className="text-[#B8860B]">◆</span>
+          <span>Protected Data</span>
+          <span className="text-[#B8860B]">◆</span>
+          <span>Help Desk</span>
+          <span className="text-[#B8860B]">◆</span>
+          <span>Batanes State College</span>
+        </div>
       </div>
     </div>
   );
