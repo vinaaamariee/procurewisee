@@ -34,11 +34,11 @@ const taskIcon = {
 
 export default function TodayTasks({ tasks }: TodayTasksProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-base-300 bg-base-100 shadow-sm text-left">
+    <div className="overflow-hidden rounded-md border border-base-300 bg-base-100 shadow-none text-left">
       {/* Card Header */}
-      <div className="flex items-center justify-between gap-4 border-b border-base-200 px-6 py-4 bg-base-50/50">
+      <div className="flex items-center justify-between gap-4 border-b border-base-200 px-5 py-3.5 bg-base-50/50">
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-base-200 text-base-content/80">
+          <div className="flex h-8 w-8 items-center justify-center rounded bg-base-200 border border-base-300 text-primary">
             <Target className="h-4.5 w-4.5" />
           </div>
           <div>
@@ -72,10 +72,10 @@ export default function TodayTasks({ tasks }: TodayTasksProps) {
             return (
               <div
                 key={task.id}
-                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-5 hover:bg-base-50/30 transition-colors"
+                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 hover:bg-base-200/40 transition-colors"
               >
                 <div className="flex items-start gap-4 min-w-0">
-                  <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-base-100 border border-base-200 text-base-content/70">
+                  <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded bg-base-200 border border-base-300 text-base-content/70">
                     <Icon className="h-4 w-4" />
                   </div>
                   <div className="min-w-0">
@@ -89,7 +89,7 @@ export default function TodayTasks({ tasks }: TodayTasksProps) {
                     </h3>
                     {/* Document Metadata Row */}
                     <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-base-content/60">
-                      <span className="font-semibold text-base-content/80">
+                      <span className="font-semibold text-base-content/85">
                         {task.badge}
                       </span>
                       <span className="h-1 w-1 rounded-full bg-base-300"></span>
@@ -107,17 +107,17 @@ export default function TodayTasks({ tasks }: TodayTasksProps) {
                   {task.link === "#" ? (
                     <button
                       disabled
-                      className="btn btn-xs btn-outline border-base-200 text-base-content/40 cursor-not-allowed font-bold rounded-lg flex items-center gap-1 w-full sm:w-auto"
+                      className="btn btn-xs btn-outline border-base-300 text-base-content/40 cursor-not-allowed font-bold rounded-md w-full sm:w-auto"
                     >
                       <span>Unavailable</span>
                     </button>
                   ) : (
                     <Link
                       href={task.link}
-                      className="btn btn-xs btn-outline border-base-300 hover:border-[#7B1E1E] hover:bg-[#7B1E1E]/5 hover:text-[#7B1E1E] text-base-content font-bold rounded-lg flex items-center gap-1 w-full sm:w-auto"
+                      className="btn btn-xs btn-outline border-base-300 hover:bg-base-200 text-base-content font-bold rounded-md flex items-center gap-1 w-full sm:w-auto"
                     >
                       <span>{task.btnLabel}</span>
-                      <ArrowRight className="h-3 w-3" />
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                   )}
                 </div>
@@ -125,8 +125,8 @@ export default function TodayTasks({ tasks }: TodayTasksProps) {
             );
           })
         ) : (
-          <div className="flex flex-col items-center gap-2 px-6 py-12 text-center bg-base-50/10">
-            <PartyPopper className="h-8 w-8 text-[#A6761D]" />
+          <div className="flex flex-col items-center gap-2 px-6 py-12 text-center bg-base-100">
+            <PartyPopper className="h-8 w-8 text-secondary" />
             <div>
               <p className="text-sm font-bold text-base-content">
                 No active tasks

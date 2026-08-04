@@ -219,10 +219,10 @@ export default async function ApproverDashboard() {
                   <td className="px-5 py-4 text-center whitespace-nowrap">
                     <Link
                       href={`/dashboard/approver/history/${pr.id}`}
-                      className="inline-flex items-center justify-center gap-1 rounded-xl bg-gradient-to-r from-[var(--accent)] to-[var(--accent-light)] px-4 py-2 text-xs font-bold text-white shadow-sm transition hover:opacity-90"
+                      className="btn btn-xs btn-outline border-base-300 hover:bg-base-200 text-base-content font-bold rounded-md inline-flex items-center gap-1"
                     >
                       Review PR
-                      <ArrowRight className="h-3 w-3" />
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                   </td>
                 </tr>
@@ -379,12 +379,12 @@ export default async function ApproverDashboard() {
               return (
                 <div
                   key={rec.id}
-                  className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden flex flex-col shadow-sm hover:border-[var(--border-accent)] transition-colors duration-200"
+                  className="rounded-md border border-base-300 bg-base-100 overflow-hidden flex flex-col shadow-none hover:bg-base-200/40 transition-colors duration-100"
                 >
                   {/* Card Header Banner */}
                   <div className="flex items-center justify-between px-6 py-4 bg-[var(--bg-dark)] border-b border-[var(--border)] flex-wrap gap-4">
                     <div className="flex items-center gap-3">
-                      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-r from-[var(--accent)] to-[var(--accent-light)] text-xs font-black text-white shadow-sm">
+                      <span className="flex h-7 w-7 items-center justify-center rounded bg-primary text-white text-xs font-black shadow-none">
                         #{rec.rank}
                       </span>
                       <div>
@@ -423,57 +423,57 @@ export default async function ApproverDashboard() {
                       </h4>
                       
                       {/* Price */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span>Price Score ({priceLimit}%)</span>
                           <span className="font-bold">{priceCont} / {priceLimit}</span>
                         </div>
-                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                          <div className="h-full bg-[var(--accent)] rounded-full transition-all duration-300" style={{ width: `${rec.priceScore}%` }} />
+                        <div className="h-2 w-full rounded bg-base-200 overflow-hidden">
+                          <div className="h-full bg-primary rounded transition-all duration-300" style={{ width: `${rec.priceScore}%` }} />
                         </div>
                       </div>
 
                       {/* Delivery */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span className="inline-flex items-center gap-1.5"><Truck className="h-3.5 w-3.5" /> Delivery</span>
                           <span className="font-bold">{deliveryCont} / {deliveryLimit}</span>
                         </div>
-                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                          <div className="h-full bg-[var(--accent-light)] rounded-full transition-all duration-300" style={{ width: `${rec.deliveryScore}%` }} />
+                        <div className="h-2 w-full rounded bg-base-200 overflow-hidden">
+                          <div className="h-full bg-secondary rounded transition-all duration-300" style={{ width: `${rec.deliveryScore}%` }} />
                         </div>
                       </div>
 
                       {/* Reliability */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> Reliability</span>
                           <span className="font-bold">{reliabilityCont} / {reliabilityLimit}</span>
                         </div>
-                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                          <div className="h-full bg-emerald-500 rounded-full transition-all duration-300" style={{ width: `${rec.reliabilityScore}%` }} />
+                        <div className="h-2 w-full rounded bg-base-200 overflow-hidden">
+                          <div className="h-full bg-success rounded transition-all duration-300" style={{ width: `${rec.reliabilityScore}%` }} />
                         </div>
                       </div>
 
                       {/* Compliance */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span className="inline-flex items-center gap-1.5"><FileText className="h-3.5 w-3.5" /> Compliance</span>
                           <span className="font-bold">{complianceCont} / {complianceLimit}</span>
                         </div>
-                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                          <div className="h-full bg-blue-500 rounded-full transition-all duration-300" style={{ width: `${snapshot.complianceScore}%` }} />
+                        <div className="h-2 w-full rounded bg-base-200 overflow-hidden">
+                          <div className="h-full bg-info rounded transition-all duration-300" style={{ width: `${snapshot.complianceScore}%` }} />
                         </div>
                       </div>
 
                       {/* Historical */}
-                      <div className="space-y-1.5">
-                        <div className="flex justify-between text-xs font-semibold text-[var(--text-primary)]">
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span>Historical performance</span>
                           <span className="font-bold">{historicalCont} / {historicalLimit}</span>
                         </div>
-                        <div className="h-2 w-full rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden">
-                          <div className="h-full bg-purple-500 rounded-full transition-all duration-300" style={{ width: `${snapshot.historicalPerformanceScore}%` }} />
+                        <div className="h-2 w-full rounded bg-base-200 overflow-hidden">
+                          <div className="h-full bg-accent rounded transition-all duration-300" style={{ width: `${snapshot.historicalPerformanceScore}%` }} />
                         </div>
                       </div>
                     </div>
@@ -497,8 +497,8 @@ export default async function ApproverDashboard() {
                       </div>
 
                       {/* Historical Prices & ARIMA Forecasting */}
-                      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-dark)] p-4 space-y-3">
-                        <h5 className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-1.5">
+                      <div className="rounded-md border border-base-300 bg-base-200 p-4 space-y-3">
+                        <h5 className="text-[10px] font-bold uppercase tracking-wider text-base-content/75 flex items-center gap-1.5">
                           <TrendingUpDown className="h-4 w-4 text-[var(--accent)]" /> 
                           Historical Price Intelligence
                         </h5>
@@ -524,7 +524,7 @@ export default async function ApproverDashboard() {
                       <div className="flex items-center justify-between border-t border-[var(--border)] pt-4 flex-wrap gap-3 mt-auto">
                         <div className="text-xs">
                           <span className="text-[var(--text-muted)]">Confidence: </span>
-                          <span className={`inline-flex items-center rounded-lg border px-2.5 py-1 text-xs font-bold uppercase ${confidenceColorClass}`}>
+                          <span className={`inline-flex items-center rounded border px-2 py-0.5 text-xs font-bold uppercase ${confidenceColorClass}`}>
                             {snapshot.confidenceLabel} ({snapshot.confidence}%)
                           </span>
                         </div>
@@ -546,23 +546,23 @@ export default async function ApproverDashboard() {
           const Icon = card.icon;
           return (
             <Link key={card.label} href={card.href} className="group">
-              <Card className="p-6 h-full transition hover:-translate-y-0.5 hover:shadow-md border-[var(--border)] bg-[var(--surface)]">
+              <Card className="p-5 h-full transition-colors duration-100 hover:bg-base-200/50 border-base-300 bg-base-100 shadow-none">
                 <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] block">
+                  <div className="space-y-1 text-left">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-base-content/65 block">
                       {card.label}
                     </span>
-                    <span className="text-3xl font-black tracking-tight text-[var(--text-primary)] block">
+                    <span className="text-2xl font-bold tracking-tight text-base-content font-display block">
                       {card.value}
                     </span>
                   </div>
-                  <div className={`rounded-xl border p-2.5 shrink-0 ${card.color}`}>
-                    <Icon className="h-5 w-5" />
+                  <div className={`rounded border p-1.5 shrink-0 ${card.color}`}>
+                    <Icon className="h-4.5 w-4.5 shrink-0" />
                   </div>
                 </div>
-                <div className="mt-4 flex items-center justify-between text-xs">
-                  <span className="text-[var(--text-muted)]">{card.desc}</span>
-                  <span className="font-extrabold text-[var(--accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-250">
+                <div className="mt-3 flex items-center justify-between text-[11px] text-base-content/50">
+                  <span>{card.desc}</span>
+                  <span className="font-bold text-primary">
                     Manage &rarr;
                   </span>
                 </div>

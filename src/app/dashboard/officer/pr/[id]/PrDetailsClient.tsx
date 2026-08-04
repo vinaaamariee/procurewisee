@@ -9,6 +9,7 @@ import PrValidationChecklist, { ValidationItem } from "@/components/pr/PrValidat
 import PrWorkflowTimeline, { TimelineEntry } from "@/components/pr/PrWorkflowTimeline";
 import PrWorkflowTimelineStepper from "@/components/pr/PrWorkflowTimelineStepper";
 import { ShieldCheck, Lock, ArrowLeft, Printer, FileText, CheckCircle2, AlertTriangle } from "lucide-react";
+import StatusBadge from "@/components/ui/StatusBadge";
 
 interface Product {
   id: number;
@@ -289,20 +290,20 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
         
         {/* Status & Banner Alerts */}
         {isApproved && (
-          <div className="rounded-2xl border border-emerald-300 bg-emerald-50 p-5 dark:border-emerald-900/60 dark:bg-emerald-950/40 text-emerald-900 dark:text-emerald-200 space-y-2 shadow-xs">
-            <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300 font-bold text-base">
+          <div className="rounded-md border border-success/30 bg-success/5 p-4 text-base-content space-y-2 shadow-none">
+            <div className="flex items-center gap-2 text-success font-bold text-base">
               <CheckCircle2 className="h-5 w-5 shrink-0" />
               <span>Verified</span>
             </div>
-            <p className="text-xs text-emerald-800 dark:text-emerald-300 leading-relaxed font-medium">
+            <p className="text-xs text-base-content/80 leading-relaxed font-medium">
               This Purchase Request has successfully passed Procurement Verification and is now ready for recording to the Procurement Monitoring Register.
             </p>
           </div>
         )}
 
         {isLocked && (
-          <div className="rounded-2xl border border-slate-300 bg-slate-100 p-4 dark:border-slate-800 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300 flex items-start gap-3 text-xs">
-            <Lock className="h-4 w-4 text-slate-500 shrink-0 mt-0.5" />
+          <div className="rounded-md border border-base-300 bg-base-200 p-4 text-base-content flex items-start gap-3 text-xs shadow-none">
+            <Lock className="h-4 w-4 text-base-content/50 shrink-0 mt-0.5" />
             <span>
               This Purchase Request has already been approved. Further modifications are no longer permitted. If changes are required, contact the Procurement Office.
             </span>
@@ -310,19 +311,17 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
         )}
 
         {/* PR Master Details Card */}
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
+        <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-base-200 pb-4 text-left">
             <div>
               <div className="flex items-center gap-3">
-                <h2 className="text-xl font-extrabold text-[var(--accent)]">
+                <h2 className="text-xl font-bold text-primary font-display">
                   {pr.prNumber}
                 </h2>
-                <span className={`px-3 py-0.5 text-xs font-bold rounded-full border ${getStatusBadge(pr.status).cls}`}>
-                  {getStatusBadge(pr.status).label}
-                </span>
+                <StatusBadge status={pr.status} />
               </div>
-              <p className="text-xs text-[var(--text-muted)] mt-1 font-medium">
-                Requisitioned by: <span className="font-bold text-[var(--text-primary)]">{pr.requestedBy?.fullName || pr.requesterName || "BSC Requisitioner"}</span> ({pr.requestedBy?.email || pr.requesterEmail || "department@bsc.edu.ph"})
+              <p className="text-xs text-base-content/60 mt-1 font-medium">
+                Requisitioned by: <span className="font-bold text-base-content">{pr.requestedBy?.fullName || pr.requesterName || "BSC Requisitioner"}</span> ({pr.requestedBy?.email || pr.requesterEmail || "department@bsc.edu.ph"})
               </p>
             </div>
 
@@ -330,7 +329,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
               <button
                 type="button"
                 onClick={() => window.print()}
-                className="btn btn-ghost btn-sm rounded-xl text-xs font-bold border border-[var(--border)] text-[var(--text-primary)]"
+                className="btn btn-ghost btn-sm rounded-md text-xs font-bold border border-base-300 text-base-content"
               >
                 <Printer className="h-4 w-4 mr-1" />
                 Print PR
@@ -339,7 +338,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
                 type="button"
                 onClick={handleOpenPreCanvass}
                 disabled={preCanvassLoading}
-                className="btn btn-outline btn-sm rounded-xl text-xs font-bold border-[var(--accent)] text-[var(--accent)] hover:bg-[var(--accent)] hover:text-white"
+                className="btn btn-outline btn-sm rounded-md text-xs font-bold border-primary text-primary hover:bg-primary/5"
               >
                 <FileText className="h-4 w-4 mr-1" />
                 {preCanvassLoading ? "Analyzing..." : "Pre-Canvassing"}
@@ -360,18 +359,18 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
           )}
 
           {/* Department, Office, Purpose metadata */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-left">
             <div>
-              <span className="block font-bold uppercase tracking-wider text-[var(--text-muted)] text-[10px]">Department / Office</span>
-              <span className="font-bold text-[var(--text-primary)] text-sm">{pr.department} ({pr.office})</span>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Department / Office</span>
+              <span className="font-bold text-base-content text-sm">{pr.department} ({pr.office})</span>
             </div>
             <div>
-              <span className="block font-bold uppercase tracking-wider text-[var(--text-muted)] text-[10px]">Funding Source</span>
-              <span className="font-bold text-[var(--text-primary)] text-sm">{pr.fundingSource}</span>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Funding Source</span>
+              <span className="font-bold text-base-content text-sm">{pr.fundingSource}</span>
             </div>
             <div className="sm:col-span-2">
-              <span className="block font-bold uppercase tracking-wider text-[var(--text-muted)] text-[10px]">Purpose / Justification</span>
-              <span className="font-medium text-[var(--text-primary)] leading-relaxed">{pr.purpose}</span>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Purpose / Justification</span>
+              <span className="font-medium text-base-content leading-relaxed">{pr.purpose}</span>
             </div>
           </div>
           <PrWorkflowTimelineStepper currentStatus={pr.status} />
@@ -385,13 +384,13 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
         />
 
         {/* Line Items Table */}
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-sm space-y-4">
-          <div className="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-4">
+          <div className="flex items-center justify-between border-b border-base-200 pb-3 text-left">
             <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)]">Appendix 60 Requisition Items</span>
-              <h3 className="text-base font-bold text-[var(--text-primary)]">Itemized Specifications</h3>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-base-content/50">Appendix 60 Requisition Items</span>
+              <h3 className="text-base font-bold text-base-content">Itemized Specifications</h3>
             </div>
-            <span className="px-3 py-1 text-xs font-extrabold rounded-full bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)]">
+            <span className="px-3 py-0.5 text-xs font-bold rounded bg-primary/10 border border-primary/20 text-primary">
               Total ABC: ₱{Number(pr.totalCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
             </span>
           </div>
@@ -399,7 +398,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-[var(--border)] text-[var(--text-muted)] uppercase text-[10px] font-bold">
+                <tr className="border-b border-base-300 bg-base-200 text-base-content/85 uppercase text-[10px] font-bold">
                   <th className="py-2.5 px-3">Item Details</th>
                   <th className="py-2.5 px-3 text-center">Brand</th>
                   <th className="py-2.5 px-3 text-center">Qty / Unit</th>
@@ -407,25 +406,25 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
                   <th className="py-2.5 px-3 text-right">Total Cost</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[var(--border)]">
+              <tbody className="divide-y divide-base-200 text-left">
                 {pr.items.map((item) => (
-                  <tr key={item.id}>
+                  <tr key={item.id} className="hover:bg-base-200/30">
                     <td className="py-3 px-3">
-                      <div className="font-bold text-[var(--text-primary)]">{item.description}</div>
+                      <div className="font-bold text-base-content">{item.description}</div>
                       {item.specification && (
-                        <div className="text-[11px] text-[var(--text-muted)] mt-0.5">{item.specification}</div>
+                        <div className="text-[11px] text-base-content/60 mt-0.5">{item.specification}</div>
                       )}
                     </td>
-                    <td className="py-3 px-3 text-center text-[var(--text-muted)] font-medium">
+                    <td className="py-3 px-3 text-center text-base-content/70 font-medium">
                       {item.brand || "—"}
                     </td>
-                    <td className="py-3 px-3 text-center font-bold text-[var(--text-primary)]">
+                    <td className="py-3 px-3 text-center font-bold text-base-content">
                       {item.quantity} {item.unit}
                     </td>
-                    <td className="py-3 px-3 text-right text-[var(--text-muted)] font-medium">
+                    <td className="py-3 px-3 text-right text-base-content/70 font-medium">
                       ₱{Number(item.estimatedUnitCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
                     </td>
-                    <td className="py-3 px-3 text-right font-extrabold text-[var(--text-primary)]">
+                    <td className="py-3 px-3 text-right font-bold text-base-content">
                       ₱{Number(item.estimatedCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
                     </td>
                   </tr>
@@ -442,26 +441,26 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
         
         {/* Officer Review Actions */}
         {!isLocked && (
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm space-y-4">
-            <div className="flex items-center gap-2 border-b border-[var(--border)] pb-3">
-              <ShieldCheck className="h-5 w-5 text-[var(--accent)]" />
-              <h3 className="text-sm font-bold text-[var(--text-primary)] uppercase tracking-wider">
+          <div className="rounded-md border border-base-300 bg-base-100 p-4 shadow-none space-y-4">
+            <div className="flex items-center gap-2 border-b border-base-200 pb-3 text-left">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">
                 Officer Action Control
               </h3>
             </div>
 
-            <p className="text-xs text-[var(--text-muted)] leading-relaxed">
+            <p className="text-xs text-base-content/60 leading-relaxed text-left">
               Validate compliance, then select an action to authorize or return this Purchase Request.
             </p>
 
-            <div className="space-y-3 pt-1">
+            <div className="space-y-2 pt-1">
               <button
                 type="button"
                 onClick={() => handleOpenModal("approve")}
                 disabled={isProcessing || !isAllChecklistPassed}
-                className="w-full btn btn-success btn-md rounded-xl text-white font-bold flex items-center justify-center gap-2 shadow-xs disabled:opacity-50"
+                className="w-full btn btn-success text-white font-bold flex items-center justify-center gap-2 rounded-md shadow-none disabled:opacity-50"
               >
-                <CheckCircle2 className="h-4 w-4" />
+                <CheckCircle2 className="h-4.5 w-4.5" />
                 <span>Verify Purchase Request</span>
               </button>
 
@@ -469,9 +468,9 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
                 type="button"
                 onClick={() => handleOpenModal("return")}
                 disabled={isProcessing}
-                className="w-full btn btn-error btn-outline btn-md rounded-xl font-bold flex items-center justify-center gap-2"
+                className="w-full btn btn-error btn-outline rounded-md font-bold flex items-center justify-center gap-2"
               >
-                <AlertTriangle className="h-4 w-4" />
+                <AlertTriangle className="h-4.5 w-4.5" />
                 <span>Return with Comment</span>
               </button>
             </div>
@@ -488,10 +487,10 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
 
         {/* Linked PPMP Card if available */}
         {pr.ppmp && (
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-sm space-y-2">
-            <span className="text-[10px] font-extrabold uppercase text-[var(--text-muted)] tracking-wider">Linked Planning Reference</span>
-            <h4 className="text-xs font-bold text-[var(--text-primary)]">📁 {pr.ppmp.projectTitle}</h4>
-            <div className="text-xs text-[var(--text-muted)]">PPMP Reference No: <span className="font-semibold text-[var(--text-primary)]">{pr.ppmp.ppmpNumber}</span></div>
+          <div className="rounded-md border border-base-300 bg-base-100 p-4 shadow-none space-y-2 text-left">
+            <span className="text-[10px] font-extrabold uppercase text-base-content/50 tracking-wider">Linked Planning Reference</span>
+            <h4 className="text-xs font-bold text-base-content">📁 {pr.ppmp.projectTitle}</h4>
+            <div className="text-xs text-base-content/60">PPMP Reference No: <span className="font-semibold text-base-content">{pr.ppmp.ppmpNumber}</span></div>
           </div>
         )}
 

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import PrDetailsClient from "./PrDetailsClient";
 import { startTimer } from "@/lib/performance-logger";
+import { Link } from "lucide-react";
 
 export const metadata = { title: "Purchase Request Details — ProcureWise" };
 
@@ -81,30 +82,20 @@ export default async function PrDetailPage({ params }: PageProps) {
   };
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
+    <div className="mx-auto max-w-7xl px-4 py-6 space-y-6">
       {/* Breadcrumb Navigation & Back Link */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.8rem", color: "var(--text-muted)", fontWeight: 600 }}>
-          <Link href="/dashboard" style={{ color: "var(--text-muted)", textDecoration: "none" }} className="hover:underline">Dashboard</Link>
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2 text-xs font-semibold text-base-content/50">
+          <Link href="/dashboard" className="hover:text-base-content transition-colors">Dashboard</Link>
           <span>&gt;</span>
-          <Link href="/dashboard/officer/pr" style={{ color: "var(--text-muted)", textDecoration: "none" }} className="hover:underline">Purchase Requests</Link>
+          <Link href="/dashboard/officer/pr" className="hover:text-base-content transition-colors">Purchase Requests</Link>
           <span>&gt;</span>
-          <span style={{ color: "var(--accent)" }}>{pr.prNumber}</span>
+          <span className="text-primary">{pr.prNumber}</span>
         </div>
 
         <Link
           href="/dashboard/officer/pr"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "6px",
-            fontSize: "0.85rem",
-            fontWeight: 700,
-            color: "var(--accent)",
-            textDecoration: "none",
-            width: "fit-content"
-          }}
-          className="hover:underline"
+          className="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:underline w-fit"
         >
           ← Back to Purchase Requests
         </Link>
@@ -114,6 +105,3 @@ export default async function PrDetailPage({ params }: PageProps) {
     </div>
   );
 }
-
-// Inline Next Link to avoid additional imports on the server component
-import Link from "next/link";

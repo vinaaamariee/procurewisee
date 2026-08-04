@@ -22,7 +22,7 @@ export default async function DashboardLayout({
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header
-          className="sticky top-0 z-50 border-b border-base-300/40 bg-base-100/80 backdrop-blur-md shadow-sm transition-all duration-200"
+          className="sticky top-0 z-50 border-b border-base-300 bg-base-100 transition-all duration-200 shadow-none"
         >
           <div className="flex min-h-20 items-center justify-between gap-4 px-5 py-3 sm:px-8">
             <Link
@@ -66,7 +66,7 @@ export default async function DashboardLayout({
               <ThemeToggle />
 
               <div
-                className="flex items-center gap-3 rounded-full border border-base-300 bg-base-100 px-3 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.02)]"
+                className="flex items-center gap-3 rounded-md border border-base-300 bg-base-100 px-3 py-1.5 shadow-none"
               >
                 <div
                   className="flex h-8 w-8 items-center justify-center rounded-full font-bold text-white text-xs border border-white/20 shadow-sm"
@@ -103,7 +103,7 @@ export default async function DashboardLayout({
           </div>
         </header>
 
-        <main className="flex-1 p-5 sm:p-8" style={{ background: "var(--bg-deep)" }}>
+        <main className="flex-1 p-5 sm:p-8 bg-base-200">
           <div className="mx-auto max-w-7xl space-y-8">{children}</div>
         </main>
 

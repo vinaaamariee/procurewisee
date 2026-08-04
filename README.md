@@ -5,6 +5,30 @@
 **Capstone Project for Batanes State College**
 
 
+## 🏛️ Modern Flat Enterprise UI Redesign (M365 & SAP Fiori Inspired)
+
+**Date**: August 2026
+
+Successfully redesigned the entire ProcureWise user interface to utilize a clean, highly legible, high-density Modern Flat Enterprise UI design system. All dropshadows, neumorphic card elevations, heavy gradients, and rounded-xl containers have been stripped and replaced with flat visual surfaces, thin borders, and structured administrative tables.
+
+### Key Redesign Specifications
+- **Design Tokens (`globals.css`)**:
+  - Forced border-radius to a standard 4px (`rounded-md` / `--radius-md: 4px`) across all cards, buttons, tables, and inputs.
+  - Eliminated all dynamic elevation shadows (`shadow-none`) and hover transformations (no translates/lifts).
+  - Restructured base colors to match professional Enterprise grey bases (`#f6f8fa` light / `#161b22` dark) with institutional Maroon (`#7B1E1E` light / `#E53E3E` dark) as the primary highlight.
+  - Fully compatible with `next-themes` Light/Dark mode switching using semantic CSS variables.
+- **Design System Layer Primitives (`src/components/ui/design-system/`)**:
+  - Implemented 10 reusable UI layout building blocks (`PageContainer`, `PageHeader`, `SectionHeader`, `DataTable`, `AppCard`, `SummaryCard`, `ActionButton`, `EmptyState`, `FormSection`, `InfoRow`).
+- **Sidebar & Shell Restructuring**:
+  - Cleaned up `DashboardSidebar.tsx` to follow a strict list hierarchy (MAIN, PROCUREMENT, SUPPLIERS, REPORTS, SETTINGS) without duplication or gradients.
+  - Flattened navigation layout header, user avatars, and background canvases to `bg-base-200` to support dark mode cleanly.
+- **State Indicator Standard (`StatusBadge.tsx`)**:
+  - Unified all badges to map consistently (Draft $\rightarrow$ Gray, Pending $\rightarrow$ Amber, Returned $\rightarrow$ Red, Approved $\rightarrow$ Green, RFQ $\rightarrow$ Blue, Completed $\rightarrow$ Green, Cancelled $\rightarrow$ Slate).
+- **Universal Print Layout (`PrintableDocumentLayout.tsx`)**:
+  - Reusable A4-compliant document print utility with Batanes State College branding headers, margins, and page-breaks.
+
+---
+
 ## 🎨 UI/UX Pro Max AI Skill & Sub-skills Installed
 
 **Date**: August 2026

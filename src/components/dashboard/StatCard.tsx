@@ -13,30 +13,36 @@ interface StatCardProps {
 export default function StatCard({
   label,
   value,
+  desc,
   href,
   Icon,
-  accentClass = "bg-blue-50 text-blue-700",
+  accentClass = "bg-base-200 text-base-content/80",
 }: StatCardProps) {
   return (
-    <Link href={href} className="block group font-sans">
+    <Link href={href} className="block group">
       <div
-        className="flex flex-col justify-between h-full p-5 rounded-xl border border-base-300 bg-base-100 shadow-sm transition-all duration-150 hover:border-base-400 hover:shadow"
+        className="flex flex-col justify-between h-full p-4 rounded-md border border-base-300 bg-base-100 shadow-none transition-colors duration-100 hover:bg-base-200/50"
       >
-        {/* 1. Title at top-left + Icon on top-right */}
+        {/* Title & Icon */}
         <div className="flex items-center justify-between gap-3 text-left">
-          <p className="text-xs font-bold uppercase tracking-wider text-base-content/70">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-base-content/65">
             {label}
-          </p>
-          <div className={`p-2 rounded-lg ${accentClass} shrink-0`}>
-            <Icon className="h-4.5 w-4.5" />
+          </span>
+          <div className={`p-1.5 rounded bg-base-200 text-base-content/75 shrink-0 ${accentClass}`}>
+            <Icon className="h-4.5 w-4.5 shrink-0" /> {/* 18px */}
           </div>
         </div>
 
-        {/* 2. Large Number in the middle */}
-        <div className="mt-4 text-left">
-          <p className="text-3xl font-black text-base-content tracking-tight">
+        {/* Value */}
+        <div className="mt-3 text-left">
+          <span className="text-2xl font-bold tracking-tight text-base-content font-display">
             {value}
-          </p>
+          </span>
+          {desc && (
+            <p className="text-[10px] text-base-content/50 mt-0.5 leading-snug">
+              {desc}
+            </p>
+          )}
         </div>
       </div>
     </Link>

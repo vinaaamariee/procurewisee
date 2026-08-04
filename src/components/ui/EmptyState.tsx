@@ -334,8 +334,8 @@ export default function EmptyState({
         gap: compact ? '0.75rem' : '1.25rem',
         background: 'var(--surface)',
         border: '1px solid var(--border)',
-        borderRadius: '1.25rem',
-        boxShadow: 'var(--shadow-card)',
+        borderRadius: 'var(--radius-md)',
+        boxShadow: 'none',
       }}
     >
       {/* Illustration */}
@@ -390,16 +390,16 @@ export default function EmptyState({
               alignItems: 'center',
               gap: '0.4rem',
               padding: '0.55rem 1.4rem',
-              borderRadius: '0.65rem',
-              background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%)',
+              borderRadius: 'var(--radius-md)',
+              background: 'var(--accent)',
               color: '#fff',
               fontWeight: 700,
               fontSize: '0.8rem',
               textDecoration: 'none',
-              boxShadow: '0 4px 14px rgba(126,25,27,0.25)',
-              transition: 'all 0.2s ease',
+              boxShadow: 'none',
+              transition: 'all 0.15s ease',
             }}
-            className="hover:opacity-90 hover:-translate-y-px"
+            className="hover:bg-opacity-90"
           >
             {action.label}
           </a>
@@ -411,17 +411,17 @@ export default function EmptyState({
               alignItems: 'center',
               gap: '0.4rem',
               padding: '0.55rem 1.4rem',
-              borderRadius: '0.65rem',
+              borderRadius: 'var(--radius-md)',
               border: 'none',
-              background: 'linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%)',
+              background: 'var(--accent)',
               color: '#fff',
               fontWeight: 700,
               fontSize: '0.8rem',
               cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(126,25,27,0.25)',
-              transition: 'all 0.2s ease',
+              boxShadow: 'none',
+              transition: 'all 0.15s ease',
             }}
-            className="hover:opacity-90 hover:-translate-y-px"
+            className="hover:bg-opacity-90"
           >
             {action.label}
           </button>

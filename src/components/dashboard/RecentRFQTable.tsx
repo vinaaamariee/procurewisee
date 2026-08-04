@@ -61,12 +61,12 @@ export default function RecentRFQTable({
   return (
     <section
       id="recent-solicitations"
-      className="overflow-hidden rounded-2xl border border-[var(--border)] scroll-mt-24 bg-[var(--surface)] shadow-[var(--shadow-card)]"
+      className="overflow-hidden rounded-md border border-base-300 scroll-mt-24 bg-base-100 shadow-none"
     >
       {/* Table Header with Tabs */}
       <div className="flex flex-col gap-4 border-b border-[var(--border)] px-6 py-5 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-900 border border-[var(--border)] text-[var(--accent)]">
+          <div className="flex h-10 w-10 items-center justify-center rounded-md bg-base-200 border border-base-300 text-primary">
             <ClipboardList className="h-5 w-5" />
           </div>
           <div className="text-left">
@@ -80,7 +80,7 @@ export default function RecentRFQTable({
         </div>
 
         {/* Tab Buttons */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1 rounded-xl bg-slate-100/80 dark:bg-slate-900/60 border border-slate-200/50 dark:border-slate-800/50 w-fit">
+        <div className="flex flex-wrap items-center gap-1 p-1 rounded-md bg-base-200 border border-base-300 w-fit">
           {tabsConfig.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -88,19 +88,19 @@ export default function RecentRFQTable({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as TabType)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-lg transition-all duration-150 active:scale-[0.97] ${
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-md transition-colors duration-100 ${
                   isActive
-                    ? 'bg-white dark:bg-slate-800 text-[var(--accent)] shadow-sm border border-slate-200/40 dark:border-slate-700/40'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'bg-base-100 text-primary border border-base-300'
+                    : 'text-base-content/70 hover:text-base-content'
                 }`}
               >
                 <Icon className="h-3.5 w-3.5" />
                 <span>{tab.label}</span>
                 <span
-                  className={`ml-0.5 rounded-full px-1.5 py-0.25 text-[10px] font-extrabold ${
+                  className={`ml-1 rounded px-1.5 py-0.25 text-[10px] font-extrabold ${
                     isActive
-                      ? 'bg-[var(--accent)] text-white'
-                      : 'bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400'
+                      ? 'bg-primary text-white'
+                      : 'bg-base-300 text-base-content/60'
                   }`}
                 >
                   {tab.count}
@@ -115,11 +115,11 @@ export default function RecentRFQTable({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[720px] border-collapse text-sm">
           <thead>
-            <tr className="border-b border-[var(--border)] bg-[var(--bg-dark)]">
+            <tr className="border-b border-base-300 bg-base-200">
               {['RFQ No.', 'Title', 'Budget (₱)', 'Deadline', 'Status'].map((h) => (
                 <th
                   key={h}
-                  className="px-6 py-3.5 text-left text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]"
+                  className="px-6 py-3 text-left text-xs font-bold uppercase tracking-wide text-base-content/80"
                 >
                   {h}
                 </th>
@@ -163,20 +163,20 @@ export default function RecentRFQTable({
               return (
                 <tr
                   key={rfq.id}
-                  className="group border-b border-[var(--border)] transition-colors duration-150 hover:bg-[var(--surface-hover)]"
+                  className="group border-b border-base-200 transition-colors duration-100 hover:bg-base-200/50"
                 >
-                  <td className="px-6 py-4 font-bold whitespace-nowrap">
+                  <td className="px-6 py-3 font-bold whitespace-nowrap">
                     <Link
                       href={`/dashboard/officer/rfq/${rfq.id}`}
-                      className="font-bold text-[var(--accent)] hover:underline active:scale-[0.98] transition-transform duration-100"
+                      className="font-bold text-primary hover:underline"
                     >
                       {rfqNum}
                     </Link>
                   </td>
-                  <td className="max-w-[280px] px-6 py-4 font-medium text-[var(--text-primary)]">
+                  <td className="max-w-[280px] px-6 py-3 font-medium text-base-content">
                     <span className="line-clamp-1">{rfq.title}</span>
                   </td>
-                  <td className="px-6 py-4 font-semibold whitespace-nowrap text-[var(--text-secondary)]">
+                  <td className="px-6 py-3 font-semibold whitespace-nowrap text-base-content/80">
                     {budgetVal != null ? (
                       `₱${budgetVal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
                     ) : rfq.supplierCount != null ? (
@@ -185,25 +185,25 @@ export default function RecentRFQTable({
                       '—'
                     )}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-3 whitespace-nowrap">
                     {deadline && !isNaN(deadline.getTime()) ? (
                       <div className="flex flex-col gap-0.5">
-                        <span className="font-semibold text-[var(--text-secondary)]">
+                        <span className="font-semibold text-base-content/85">
                           {deadline.toLocaleDateString('en-PH', {
                             month: 'short',
                             day: 'numeric',
                             year: 'numeric',
                           })}
                         </span>
-                        <span className={`text-xs font-bold ${remainingClass}`}>
+                        <span className={`text-[10px] font-bold ${remainingClass}`}>
                           {remainingLabel}
                         </span>
                       </div>
                     ) : (
-                      <span className="text-[var(--text-muted)]">—</span>
+                      <span className="text-base-content/40">—</span>
                     )}
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-3">
                     <StatusBadge status={rfq.status} />
                   </td>
                 </tr>
@@ -227,13 +227,13 @@ export default function RecentRFQTable({
       </div>
 
       {/* Widget Footer */}
-      <div className="flex items-center justify-between border-t border-[var(--border)] px-6 py-3.5 bg-slate-50/50 dark:bg-slate-900/10">
-        <span className="text-xs text-[var(--text-muted)] font-medium">
+      <div className="flex items-center justify-between border-t border-base-200 px-6 py-3.5 bg-base-200/50">
+        <span className="text-xs text-base-content/60 font-medium">
           Showing {activeList.length} solicitation record{activeList.length === 1 ? '' : 's'}
         </span>
         <Link
           href="/dashboard/officer/rfq"
-          className="inline-flex items-center gap-1 text-xs font-bold text-[var(--accent)] hover:underline active:scale-[0.98] transition-transform duration-100"
+          className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
         >
           <span>Open Full Solicitations Panel</span>
           <ArrowRight className="h-3 w-3" />

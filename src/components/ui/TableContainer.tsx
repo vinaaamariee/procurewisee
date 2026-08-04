@@ -1,3 +1,4 @@
+
 import React from "react";
 
 interface TableContainerProps
@@ -13,7 +14,7 @@ export default function TableContainer({
   return (
     <div
       {...rest}
-className={`overflow-hidden rounded-2xl border border-base-300/40 bg-base-100 text-base-content shadow-[var(--shadow-card)] ${className}`}
+      className={`overflow-hidden rounded-md border border-base-300 bg-base-100 text-base-content shadow-none ${className}`}
     >
       {children}
     </div>
