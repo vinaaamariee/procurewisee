@@ -42,18 +42,27 @@ export default function LoginForm({
   };
 
   return (
-    <div className="w-full flex flex-col justify-center h-full space-y-6">
+    <div className="w-full flex flex-col justify-center h-full space-y-4">
+      {/* Logo + Identity Block */}
       <AuthHeader />
 
-      <div className="space-y-2 text-left">
-        <h2 className="text-[40px] font-[700] tracking-tight text-[#1F2937]">
+      {/* Sign In heading */}
+      <div className="space-y-1 text-left">
+        <h2
+          style={{ fontSize: "48px", fontWeight: 800 }}
+          className="tracking-tight text-[#1F2937] leading-none"
+        >
           Sign In
         </h2>
-        <p className="text-[14px] text-[#6B7280] leading-relaxed font-medium">
-          Sign in using your institutional account to access the Procurement Management Information System.
+        <p className="text-[13px] text-[#6B7280] leading-relaxed font-medium">
+          Welcome back.{" "}
+          <span className="text-[#1F2937] font-semibold">
+            Sign in using your institutional account.
+          </span>
         </p>
       </div>
 
+      {/* Alerts */}
       {errorParam && (
         <LoginAlert type="error" message={errorParam} onClose={onClearParams} />
       )}
@@ -68,9 +77,11 @@ export default function LoginForm({
         />
       )}
 
-      <form onSubmit={handleFormSubmit} className="space-y-4">
+      {/* Form */}
+      <form onSubmit={handleFormSubmit} className="space-y-3">
         <input type="hidden" name="next" value={searchParams.get("next") || ""} />
 
+        {/* Email */}
         <div className="space-y-1.5 text-left">
           <label className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider block">
             Institutional Email
@@ -83,13 +94,28 @@ export default function LoginForm({
               autoComplete="email"
               placeholder="username@bsc.edu.ph"
               aria-label="Institutional Email"
-              className="w-full h-[56px] px-4 pl-10 text-sm rounded-lg bg-white border border-[#D6DCE5] text-[#1E293B] focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/20 transition-colors outline-none"
+              className="w-full px-4 pl-11 text-sm text-[#1E293B] outline-none transition-all"
+              style={{
+                height: "58px",
+                borderRadius: "10px",
+                border: "1px solid #d7dce3",
+                background: "white",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.border = "1px solid #7B1E1E";
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(123,30,30,.15)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.border = "1px solid #d7dce3";
+                e.currentTarget.style.boxShadow = "none";
+              }}
               disabled={isPending}
             />
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
           </div>
         </div>
 
+        {/* Password */}
         <div className="space-y-1.5 text-left">
           <label className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider block">
             Password
@@ -102,14 +128,28 @@ export default function LoginForm({
               autoComplete="current-password"
               placeholder="••••••••"
               aria-label="Password"
-              className="w-full h-[56px] px-4 pl-10 pr-10 text-sm rounded-lg bg-white border border-[#D6DCE5] text-[#1E293B] focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/20 transition-colors outline-none"
+              className="w-full px-4 pl-11 pr-12 text-sm text-[#1E293B] outline-none transition-all"
+              style={{
+                height: "58px",
+                borderRadius: "10px",
+                border: "1px solid #d7dce3",
+                background: "white",
+              }}
+              onFocus={(e) => {
+                e.currentTarget.style.border = "1px solid #7B1E1E";
+                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(123,30,30,.15)";
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.border = "1px solid #d7dce3";
+                e.currentTarget.style.boxShadow = "none";
+              }}
               disabled={isPending}
             />
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1F2937] focus:outline-none"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1F2937] focus:outline-none"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -117,6 +157,7 @@ export default function LoginForm({
           </div>
         </div>
 
+        {/* Remember me + Forgot password */}
         <div className="flex items-center justify-between">
           <label className="label cursor-pointer flex items-center gap-1.5 p-0">
             <input
@@ -139,9 +180,29 @@ export default function LoginForm({
           </button>
         </div>
 
+        {/* Login Button */}
         <button
           type="submit"
-          className="w-full h-[56px] min-h-[56px] rounded-lg text-white font-bold bg-[#7B1E1E] hover:bg-[#651517] border-none flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm"
+          className="w-full text-white font-bold border-none flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm cursor-pointer"
+          style={{
+            height: "58px",
+            borderRadius: "10px",
+            background: "#7B1E1E",
+          }}
+          onMouseEnter={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = "#651517";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.background = isPending
+              ? "#651517"
+              : "#7B1E1E";
+          }}
+          onMouseDown={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.transform = "translateY(1px)";
+          }}
+          onMouseUp={(e) => {
+            (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
+          }}
           disabled={isPending}
         >
           {isPending ? (
@@ -157,15 +218,15 @@ export default function LoginForm({
         </button>
       </form>
 
-      <div className="border-t border-[#D6DCE5] my-2">
-        <div className="flex items-center justify-center gap-4 -mt-2">
-          <span className="h-[1px] flex-1 bg-[#D6DCE5]"></span>
-          <span className="text-xs text-[#6B7280] font-medium px-2">OR</span>
-          <span className="h-[1px] flex-1 bg-[#D6DCE5]"></span>
-        </div>
+      {/* OR divider */}
+      <div className="flex items-center justify-center gap-4 py-1">
+        <span className="h-[1px] flex-1 bg-[#D6DCE5]" />
+        <span className="text-xs text-[#6B7280] font-medium px-2">OR</span>
+        <span className="h-[1px] flex-1 bg-[#D6DCE5]" />
       </div>
 
-      <div className="text-center pt-1">
+      {/* Register link */}
+      <div className="text-center">
         <p className="text-xs text-[#6B7280] font-semibold">
           Need an account?{" "}
           <button
@@ -173,7 +234,7 @@ export default function LoginForm({
             onClick={() => onToggleTab?.("register")}
             className="text-[#7B1E1E] font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
           >
-            Create Account
+            Create End User Account
           </button>
         </p>
       </div>
