@@ -3,6 +3,7 @@
 import React from "react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import HeroPanel from "./HeroPanel";
+import { ShieldCheck, Lock, Headset } from "lucide-react";
 
 interface AuthLayoutProps {
   activeTab: "login" | "register";
@@ -20,27 +21,21 @@ export default function AuthLayout({
   return (
     <div
       data-theme="bsc"
-      className="min-h-screen bg-base-200 text-base-content flex flex-col items-center justify-center p-4 sm:p-6 relative selection:bg-primary/20"
+      className="min-h-screen bg-[#F6F7F9] dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex flex-col items-center justify-center p-4 sm:p-6 relative selection:bg-[#7B1E1E]/20"
     >
-      {/* Subtle background accents */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden select-none">
-        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-primary/5 blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[#A6761D]/5 blur-3xl" />
-      </div>
-
-      {/* Theme Toggle */}
+      {/* Theme Toggle (positioned top-right) */}
       <div className="absolute top-4 right-4 z-30">
         <ThemeToggle />
       </div>
 
-      {/* Large Auth Card Container */}
-      <div className="relative z-10 w-full max-w-[1200px] w-[min(1200px,95vw)] min-h-[720px] bg-base-100 rounded-md border border-base-300 shadow-none flex flex-col overflow-hidden">
+      {/* Main Authentication Card */}
+      <div className="relative z-10 w-full max-w-[1280px] w-[95%] min-h-[760px] bg-white dark:bg-slate-950 rounded-[24px] border border-slate-200 dark:border-slate-800 shadow-[0_20px_60px_rgba(0,0,0,0.12)] flex flex-col overflow-hidden">
         
-        {/* Desktop Split Sliding Layout */}
-        <div className="relative flex-1 hidden md:flex min-h-[660px]">
-          {/* Left panel slot (always Sign In - occupying 42% width) */}
+        {/* Desktop Split Panel (visible md and up) */}
+        <div className="relative flex-1 hidden md:flex min-h-[704px]">
+          {/* Left panel slot (occupies 45% width, always LoginForm background white) */}
           <div
-            className={`absolute left-0 top-0 bottom-0 w-[42%] flex items-center justify-center transition-all duration-500 ${
+            className={`absolute left-0 top-0 bottom-0 w-[45%] flex items-center justify-center bg-white dark:bg-slate-950 transition-all duration-500 ${
               activeTab === "login"
                 ? "opacity-100 scale-100"
                 : "opacity-0 scale-95 pointer-events-none"
@@ -50,9 +45,9 @@ export default function AuthLayout({
             {loginForm}
           </div>
 
-          {/* Right panel slot (always Create Account - occupying 42% width) */}
+          {/* Right panel slot (occupies 55% width, always RegisterForm background white) */}
           <div
-            className={`absolute right-0 top-0 bottom-0 w-[42%] flex items-center justify-center transition-all duration-500 ${
+            className={`absolute right-0 top-0 bottom-0 w-[55%] flex items-center justify-center bg-white dark:bg-slate-950 transition-all duration-500 ${
               activeTab === "register"
                 ? "opacity-100 scale-100"
                 : "opacity-0 scale-95 pointer-events-none"
@@ -62,27 +57,38 @@ export default function AuthLayout({
             {registerForm}
           </div>
 
-          {/* Sliding Cover Overlay Banner (occupying 58% width) */}
+          {/* Sliding Morphing Overlay (Dynamic 55% / 45% cover panel) */}
           <HeroPanel activeTab={activeTab} onToggle={onToggleTab} />
         </div>
 
-        {/* Mobile Layout (No slide, clean switcher card) */}
+        {/* Mobile Stacked Layout */}
         <div className="flex-1 flex flex-col justify-center py-8 px-4 sm:px-6 md:hidden">
           <div className="transition-all duration-300">
             {activeTab === "login" ? loginForm : registerForm}
           </div>
         </div>
 
-        {/* Bottom Information Anchor Bar (mockup alignment) */}
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-1.5 py-4 border-t border-base-300 text-[10px] font-bold text-base-content/40 uppercase tracking-widest bg-base-100 select-none">
-          <span>Secure Access</span>
-          <span className="text-[#B8860B]">◆</span>
-          <span>Protected Data</span>
-          <span className="text-[#B8860B]">◆</span>
-          <span>Help Desk</span>
-          <span className="text-[#B8860B]">◆</span>
-          <span>Batanes State College</span>
+        {/* Institutional 56px footer bar */}
+        <div className="h-[56px] min-h-[56px] bg-[#7B1E1E] text-white flex items-center justify-between px-6 sm:px-8 text-xs font-semibold select-none border-t border-red-950/20 z-30">
+          <div className="hidden sm:flex items-center gap-6">
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-[#C89B3C]" />
+              <span>Shield Secure Access</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Lock className="w-4 h-4 text-[#C89B3C]" />
+              <span>Lock Protected Data</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Headset className="w-4 h-4 text-[#C89B3C]" />
+              <span>IT Help Desk</span>
+            </div>
+          </div>
+          <div className="w-full sm:w-auto text-center sm:text-right">
+            <span>© 2026 Batanes State College</span>
+          </div>
         </div>
+
       </div>
     </div>
   );

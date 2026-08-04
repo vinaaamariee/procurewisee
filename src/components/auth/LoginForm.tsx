@@ -43,26 +43,26 @@ export default function LoginForm({
   };
 
   return (
-    <div className="w-full max-w-sm mx-auto flex flex-col justify-center h-full p-6 space-y-5">
+    <div className="w-full flex flex-col justify-center h-full p-6 sm:p-10 md:p-[56px] space-y-6">
       {/* Back to Home Link */}
       <Link
         href="/"
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-base-content/40 hover:text-primary transition-colors group w-fit"
+        className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-[#7B1E1E] transition-colors group w-fit"
       >
         <ArrowLeft className="h-3.5 w-3.5 group-hover:-translate-x-0.5 transition-transform" />
         <span>Back to Home</span>
       </Link>
 
-      {/* College Identity Header */}
+      {/* BSC Logo Banner & Gold Separator */}
       <AuthHeader />
 
-      {/* Title & Desc */}
-      <div className="space-y-1 text-left border-t border-base-300 pt-3">
-        <h2 className="text-lg font-bold tracking-tight text-primary uppercase">
+      {/* Title & Subtitle */}
+      <div className="space-y-2 text-left">
+        <h2 className="text-xl font-bold tracking-tight text-slate-800 dark:text-white">
           Sign In
         </h2>
-        <p className="text-[11px] text-base-content/60 leading-relaxed font-medium">
-          Sign in using your institutional account to access the Procurement Management Information System.
+        <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed font-medium">
+          Sign in using your institutional account to access ProcureWise.
         </p>
       </div>
 
@@ -81,13 +81,13 @@ export default function LoginForm({
         />
       )}
 
-      {/* Form */}
+      {/* Login Inputs Form */}
       <form onSubmit={handleFormSubmit} className="space-y-4">
         <input type="hidden" name="next" value={searchParams.get("next") || ""} />
 
         {/* Institutional Email */}
-        <div className="space-y-1 text-left">
-          <label className="text-[11px] font-bold text-base-content/75 block">
+        <div className="space-y-1.5 text-left">
+          <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">
             Institutional Email
           </label>
           <div className="relative">
@@ -98,16 +98,16 @@ export default function LoginForm({
               autoComplete="email"
               placeholder="username@bsc.edu.ph"
               aria-label="Institutional Email"
-              className="w-full input pl-9 text-sm rounded-md"
+              className="w-full input pl-9 text-sm rounded-md bg-white border-[#E5E7EB] text-[#1E293B] focus:border-[#7B1E1E]"
               disabled={isPending}
             />
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/30" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
           </div>
         </div>
 
         {/* Password */}
-        <div className="space-y-1 text-left">
-          <label className="text-[11px] font-bold text-base-content/75 block">
+        <div className="space-y-1.5 text-left">
+          <label className="text-[11px] font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider block">
             Password
           </label>
           <div className="relative">
@@ -118,14 +118,14 @@ export default function LoginForm({
               autoComplete="current-password"
               placeholder="••••••••"
               aria-label="Password"
-              className="w-full input pl-9 pr-9 text-sm rounded-md"
+              className="w-full input pl-9 pr-9 text-sm rounded-md bg-white border-[#E5E7EB] text-[#1E293B] focus:border-[#7B1E1E]"
               disabled={isPending}
             />
-            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/30" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content focus:outline-none"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -133,16 +133,16 @@ export default function LoginForm({
           </div>
         </div>
 
-        {/* Remember Me & Forgot Password */}
+        {/* Remember Me / Forgot Password option row */}
         <div className="flex items-center justify-between">
           <label className="label cursor-pointer flex items-center gap-1.5 p-0">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="checkbox checkbox-primary checkbox-xs rounded-sm"
+              className="checkbox checkbox-xs rounded-sm border-slate-300 [--chkbg:#7B1E1E] [--chkfg:white] checked:border-[#7B1E1E]"
             />
-            <span className="label-text text-xs text-base-content/70 font-semibold select-none">
+            <span className="label-text text-xs text-slate-600 dark:text-slate-300 font-semibold select-none">
               Remember Me
             </span>
           </label>
@@ -150,40 +150,39 @@ export default function LoginForm({
           <button
             type="button"
             onClick={handleForgotPasswordClick}
-            className="text-xs text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
+            className="text-xs text-[#7B1E1E] font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
           >
             Forgot Password?
           </button>
         </div>
 
-        {/* Full-width 52px Action Button */}
+        {/* Primary Action Button (Sign In →) */}
         <button
           type="submit"
-          className="btn btn-primary w-full h-[52px] min-h-[52px] rounded-md text-white font-bold"
+          className="w-full h-[52px] min-h-[52px] rounded-md text-white font-bold bg-[#7B1E1E] hover:bg-[#651517] border-none flex items-center justify-center gap-1.5 transition-colors shadow-none"
           disabled={isPending}
         >
           {isPending ? (
             <span className="flex items-center gap-2">
-              <span className="loading loading-spinner loading-xs"></span>
+              <span className="loading loading-spinner loading-xs text-white"></span>
               Signing In...
             </span>
           ) : (
-            <span className="flex items-center justify-center gap-1.5">
-              Sign In
-              <ArrowRight className="w-4 h-4" />
+            <span className="flex items-center justify-center gap-1">
+              Sign In →
             </span>
           )}
         </button>
       </form>
 
-      {/* Need an account? */}
-      <div className="text-center pt-1">
-        <p className="text-xs text-base-content/60 font-semibold">
-          Need an account?{" "}
+      {/* Switch trigger account creation */}
+      <div className="text-center pt-2">
+        <p className="text-xs text-slate-500 font-semibold">
+          Don't have an account?{" "}
           <button
             type="button"
             onClick={() => onToggleTab?.("register")}
-            className="text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
+            className="text-[#7B1E1E] font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
           >
             Create Account
           </button>
