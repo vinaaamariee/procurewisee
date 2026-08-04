@@ -26,6 +26,8 @@ Successfully redesigned the entire ProcureWise user interface to utilize a clean
   - Unified all badges to map consistently (Draft $\rightarrow$ Gray, Pending $\rightarrow$ Amber, Returned $\rightarrow$ Red, Approved $\rightarrow$ Green, RFQ $\rightarrow$ Blue, Completed $\rightarrow$ Green, Cancelled $\rightarrow$ Slate).
 - **Universal Print Layout (`PrintableDocumentLayout.tsx`)**:
   - Reusable A4-compliant document print utility with Batanes State College branding headers, margins, and page-breaks.
+- **Sliding Split Authentication Layout (`AuthLayout.tsx`, `HeroPanel.tsx`)**:
+  - Replaced current auth screens with a split sliding layout (Login ↔ Register). Fits onto a standard 6px flat card frame with zero heavy shadows, conforming to Light and Dark mode using daisyUI semantic variables. It hides overlays and falls back to a clean stacked layout on mobile devices.
 
 ---
 
