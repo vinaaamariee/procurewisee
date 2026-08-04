@@ -26,8 +26,17 @@ Successfully redesigned the entire ProcureWise user interface to utilize a clean
   - Unified all badges to map consistently (Draft $\rightarrow$ Gray, Pending $\rightarrow$ Amber, Returned $\rightarrow$ Red, Approved $\rightarrow$ Green, RFQ $\rightarrow$ Blue, Completed $\rightarrow$ Green, Cancelled $\rightarrow$ Slate).
 - **Universal Print Layout (`PrintableDocumentLayout.tsx`)**:
   - Reusable A4-compliant document print utility with Batanes State College branding headers, margins, and page-breaks.
-- **Sliding Split Authentication Layout (`AuthLayout.tsx`, `HeroPanel.tsx`)**:
-  - Replaced current auth screens with a split sliding layout (Login ↔ Register). Fits onto a standard 6px flat card frame with zero heavy shadows, conforming to Light and Dark mode using daisyUI semantic variables. It hides overlays and falls back to a clean stacked layout on mobile devices.
+- **Sliding Split Authentication Layout (`AuthLayout.tsx`, `HeroPanel.tsx`, `login-sliding.module.css`)**:
+  - Fully redesigned as a Login4-style animated split-panel (`min(980px,95vw)`, `border-radius:6px`, flat `box-shadow:none`).
+  - Hero panel slides left/right via `transform:translateX()` with `cubic-bezier(0.65,0,0.35,1)` easing on Login ↔ Register toggle.
+  - Hero has 4 visual layers: campus photo with `grayscale(15%) contrast(105%)` filter, maroon gradient overlay, BSC logo watermark (`opacity:.05`), and a Microsoft-style 40px grid (`opacity:.045`).
+  - Dual hero content states: Login shows "Welcome Back" with a Create Account CTA; Register shows "New to ProcureWise?" with a Sign In CTA.
+  - All components fully converted to DaisyUI semantic tokens (`bg-primary`, `text-base-content`, `input-primary`, `btn-primary`, `bg-secondary/40` etc.) — zero hardcoded hex colors in form/layout components. Light and Dark themes work automatically.
+  - `AuthHeader` shows government identity block (Republic of the Philippines / Batanes State College / ProcureWise / Version 2.0) with Header-Frame.png at 280px.
+  - `LoginForm` and `RegisterForm` use DaisyUI `fieldset`/`fieldset-legend` wrappers, `input input-bordered input-primary`, and `btn btn-primary btn-block`.
+  - Mobile: hero collapses, forms stack full-width.
+  - `tsc --noEmit`: 0 errors. `npm run build`: 31/31 pages OK.
+
 
 ---
 
