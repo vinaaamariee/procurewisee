@@ -3,6 +3,7 @@
 import React from "react";
 import HeroPanel from "./HeroPanel";
 import { ShieldCheck, Lock, Headset } from "lucide-react";
+import styles from "@/app/login/login-sliding.module.css";
 
 interface AuthLayoutProps {
   activeTab: "login" | "register";
@@ -17,45 +18,72 @@ export default function AuthLayout({
   loginForm,
   registerForm,
 }: AuthLayoutProps) {
+  const isLogin = activeTab === "login";
+
   return (
-    <div className="min-h-screen bg-[#F6F7F9] flex flex-col items-center justify-center p-4 selection:bg-[#7B1E1E]/20">
+    <div className="min-h-screen bg-base-200 flex flex-col items-center justify-center p-4 selection:bg-primary/20">
+      {/* ── Card ──────────────────────────────────────────────────────── */}
       <div
-        className="bg-white rounded-[22px] border border-slate-200 shadow-[0_20px_60px_rgba(0,0,0,0.12)] flex flex-col overflow-hidden"
+        className="bg-base-100 border border-base-300 flex flex-col overflow-hidden"
         style={{
-          width: "min(1600px, 96vw)",
-          minHeight: "min(900px, 92vh)",
+          width: "min(980px, 95vw)",
+          minHeight: "620px",
+          borderRadius: "6px",
+          boxShadow: "none",
         }}
       >
-        {/* Desktop two-column layout */}
-        <div className="relative flex-1 hidden md:flex" style={{ minHeight: "min(828px, calc(92vh - 72px))" }}>
-          {/* Left panel — 48% */}
-          <div className="w-[48%] bg-white flex flex-col justify-center overflow-y-auto">
-            <div className="px-[56px] py-[40px]">
-              {activeTab === "login" ? loginForm : registerForm}
-            </div>
+        {/* ── Desktop: sliding split panel ─────────────────────────── */}
+        <div className="relative flex-1 hidden md:block overflow-hidden" style={{ minHeight: "548px" }}>
 
-            {/* Bottom version bar */}
-            <div className="px-[56px] pb-4 flex items-center justify-between text-[10px] text-[#6B7280] font-medium select-none">
-              <span>ProcureWise v2.0</span>
-              <span>© 2026 Batanes State College</span>
-            </div>
+          {/* Login form — always left */}
+          <div
+            className={`${styles.formPanel} ${styles.formLeft} px-10 py-8 ${
+              isLogin ? styles.formVisible : styles.formHidden
+            }`}
+          >
+            {loginForm}
           </div>
 
-          {/* Right panel — 52% */}
-          <div className="w-[52%]">
+          {/* Register form — always right */}
+          <div
+            className={`${styles.formPanel} ${styles.formRight} px-10 py-8 ${
+              isLogin ? styles.formHidden : styles.formVisible
+            }`}
+          >
+            {registerForm}
+          </div>
+
+          {/* Hero panel — slides over whichever form is inactive */}
+          <div
+            className={`${styles.heroPanel} ${
+              isLogin ? styles.heroLogin : styles.heroRegister
+            }`}
+            style={{ width: "50%" }}
+          >
             <HeroPanel activeTab={activeTab} onToggle={onToggleTab} />
           </div>
         </div>
 
-        {/* Mobile single-column layout */}
-        <div className="flex-1 flex flex-col justify-center py-8 px-4 sm:px-6 md:hidden">
+        {/* ── Mobile: stacked ──────────────────────────────────────── */}
+        <div className="flex-1 flex flex-col justify-center px-6 py-8 md:hidden">
           <div className="transition-all duration-300">
-            {activeTab === "login" ? loginForm : registerForm}
+            {isLogin ? loginForm : registerForm}
           </div>
         </div>
 
-        {/* Footer */}
+        {/* ── Footer ───────────────────────────────────────────────── */}
         <AuthFooter />
+      </div>
+
+      {/* ── Version bar below card ────────────────────────────────── */}
+      <div className="flex items-center justify-between w-full mt-3 px-2"
+           style={{ maxWidth: "min(980px, 95vw)" }}>
+        <span className="text-[10px] font-medium text-base-content/40 select-none">
+          ProcureWise v2.0
+        </span>
+        <span className="text-[10px] font-medium text-base-content/40 select-none">
+          © 2026 Batanes State College
+        </span>
       </div>
     </div>
   );
@@ -64,20 +92,20 @@ export default function AuthLayout({
 function AuthFooter() {
   return (
     <div
-      className="bg-[#7B1E1E] text-white flex items-center justify-center px-6 border-t-[3px] border-[#C89B3C] z-30"
+      className="bg-primary text-primary-content flex items-center justify-center px-6 border-t-2 border-secondary"
       style={{ height: "72px", minHeight: "72px" }}
     >
-      <div className="flex items-center gap-10 text-xs font-semibold">
+      <div className="flex items-center gap-8 text-xs font-semibold">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="w-[18px] h-[18px] text-[#C89B3C]" />
+          <ShieldCheck className="w-[18px] h-[18px] text-secondary" />
           <span>Secure Access</span>
         </div>
         <div className="flex items-center gap-2">
-          <Lock className="w-[18px] h-[18px] text-[#C89B3C]" />
+          <Lock className="w-[18px] h-[18px] text-secondary" />
           <span>Protected Data</span>
         </div>
         <div className="flex items-center gap-2">
-          <Headset className="w-[18px] h-[18px] text-[#C89B3C]" />
+          <Headset className="w-[18px] h-[18px] text-secondary" />
           <span>Support</span>
         </div>
       </div>

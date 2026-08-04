@@ -1,0 +1,58 @@
+/* login-sliding.module.css
+   Sliding split-panel animation for the ProcureWise auth page.
+   Only the transform/transition that cannot be expressed with Tailwind alone. */
+
+/* ── Hero overlay panel ─────────────────────────────────────────────────── */
+.heroPanel {
+  position: absolute;
+  top: 0;
+  /* width is 50% of the card — set inline from JSX */
+  height: 100%;
+  transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1);
+  will-change: transform;
+  z-index: 10;
+}
+
+/* Login state: hero sits on the RIGHT half */
+.heroLogin {
+  right: 0;
+  transform: translateX(0);
+}
+
+/* Register state: hero slides to the LEFT half */
+.heroRegister {
+  right: 0;
+  transform: translateX(-100%);
+}
+
+/* ── Form panels (behind the hero) ─────────────────────────────────────── */
+.formPanel {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow-y: auto;
+  transition: opacity 0.35s ease;
+}
+
+.formLeft {
+  left: 0;
+}
+
+.formRight {
+  right: 0;
+}
+
+/* Fade inactive form out so it doesn't bleed through */
+.formHidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.formVisible {
+  opacity: 1;
+  pointer-events: auto;
+}

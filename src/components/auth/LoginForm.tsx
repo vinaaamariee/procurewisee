@@ -42,21 +42,18 @@ export default function LoginForm({
   };
 
   return (
-    <div className="w-full flex flex-col justify-center h-full space-y-4">
-      {/* Logo + Identity Block */}
+    <div className="w-full flex flex-col gap-4">
+      {/* Identity block */}
       <AuthHeader />
 
-      {/* Sign In heading */}
-      <div className="space-y-1 text-left">
-        <h2
-          style={{ fontSize: "48px", fontWeight: 800 }}
-          className="tracking-tight text-[#1F2937] leading-none"
-        >
+      {/* Heading */}
+      <div className="space-y-1">
+        <h2 className="text-3xl font-bold tracking-tight text-base-content">
           Sign In
         </h2>
-        <p className="text-[13px] text-[#6B7280] leading-relaxed font-medium">
+        <p className="text-sm text-base-content/60 leading-relaxed">
           Welcome back.{" "}
-          <span className="text-[#1F2937] font-semibold">
+          <span className="text-base-content/80 font-semibold">
             Sign in using your institutional account.
           </span>
         </p>
@@ -78,14 +75,14 @@ export default function LoginForm({
       )}
 
       {/* Form */}
-      <form onSubmit={handleFormSubmit} className="space-y-3">
+      <form onSubmit={handleFormSubmit} className="flex flex-col gap-3">
         <input type="hidden" name="next" value={searchParams.get("next") || ""} />
 
         {/* Email */}
-        <div className="space-y-1.5 text-left">
-          <label className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider block">
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend text-[11px] font-bold uppercase tracking-wider text-base-content/70">
             Institutional Email
-          </label>
+          </legend>
           <div className="relative">
             <input
               name="email"
@@ -94,32 +91,18 @@ export default function LoginForm({
               autoComplete="email"
               placeholder="username@bsc.edu.ph"
               aria-label="Institutional Email"
-              className="w-full px-4 pl-11 text-sm text-[#1E293B] outline-none transition-all"
-              style={{
-                height: "58px",
-                borderRadius: "10px",
-                border: "1px solid #d7dce3",
-                background: "white",
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.border = "1px solid #7B1E1E";
-                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(123,30,30,.15)";
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.border = "1px solid #d7dce3";
-                e.currentTarget.style.boxShadow = "none";
-              }}
+              className="input input-bordered input-primary w-full pl-10"
               disabled={isPending}
             />
-            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40 pointer-events-none" />
           </div>
-        </div>
+        </fieldset>
 
         {/* Password */}
-        <div className="space-y-1.5 text-left">
-          <label className="text-[11px] font-bold text-[#6B7280] uppercase tracking-wider block">
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend text-[11px] font-bold uppercase tracking-wider text-base-content/70">
             Password
-          </label>
+          </legend>
           <div className="relative">
             <input
               name="password"
@@ -128,45 +111,31 @@ export default function LoginForm({
               autoComplete="current-password"
               placeholder="••••••••"
               aria-label="Password"
-              className="w-full px-4 pl-11 pr-12 text-sm text-[#1E293B] outline-none transition-all"
-              style={{
-                height: "58px",
-                borderRadius: "10px",
-                border: "1px solid #d7dce3",
-                background: "white",
-              }}
-              onFocus={(e) => {
-                e.currentTarget.style.border = "1px solid #7B1E1E";
-                e.currentTarget.style.boxShadow = "0 0 0 3px rgba(123,30,30,.15)";
-              }}
-              onBlur={(e) => {
-                e.currentTarget.style.border = "1px solid #d7dce3";
-                e.currentTarget.style.boxShadow = "none";
-              }}
+              className="input input-bordered input-primary w-full pl-10 pr-10"
               disabled={isPending}
             />
-            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6B7280]" />
+            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40 pointer-events-none" />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#6B7280] hover:text-[#1F2937] focus:outline-none"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/40 hover:text-base-content focus:outline-none transition-colors"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
-        </div>
+        </fieldset>
 
         {/* Remember me + Forgot password */}
         <div className="flex items-center justify-between">
-          <label className="label cursor-pointer flex items-center gap-1.5 p-0">
+          <label className="flex items-center gap-2 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={rememberMe}
               onChange={(e) => setRememberMe(e.target.checked)}
-              className="checkbox checkbox-xs rounded-sm border-[#D6DCE5] [--chkbg:#7B1E1E] [--chkfg:white] checked:border-[#7B1E1E]"
+              className="checkbox checkbox-xs checkbox-primary rounded-sm"
             />
-            <span className="label-text text-xs text-[#6B7280] font-semibold select-none">
+            <span className="text-xs text-base-content/60 font-semibold">
               Remember Me
             </span>
           </label>
@@ -174,70 +143,47 @@ export default function LoginForm({
           <button
             type="button"
             onClick={handleForgotPasswordClick}
-            className="text-xs text-[#7B1E1E] font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
+            className="text-xs text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
           >
             Forgot Password?
           </button>
         </div>
 
-        {/* Login Button */}
+        {/* Submit */}
         <button
           type="submit"
-          className="w-full text-white font-bold border-none flex items-center justify-center gap-1.5 transition-all duration-200 shadow-sm cursor-pointer"
-          style={{
-            height: "58px",
-            borderRadius: "10px",
-            background: "#7B1E1E",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = "#651517";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.background = isPending
-              ? "#651517"
-              : "#7B1E1E";
-          }}
-          onMouseDown={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.transform = "translateY(1px)";
-          }}
-          onMouseUp={(e) => {
-            (e.currentTarget as HTMLButtonElement).style.transform = "translateY(0)";
-          }}
+          className="btn btn-primary btn-block mt-1"
           disabled={isPending}
         >
           {isPending ? (
-            <span className="flex items-center gap-2">
-              <span className="loading loading-spinner loading-xs text-white"></span>
+            <>
+              <span className="loading loading-spinner loading-xs" />
               Signing In...
-            </span>
+            </>
           ) : (
-            <span className="flex items-center justify-center gap-1">
-              Sign In →
-            </span>
+            "Sign In →"
           )}
         </button>
       </form>
 
-      {/* OR divider */}
-      <div className="flex items-center justify-center gap-4 py-1">
-        <span className="h-[1px] flex-1 bg-[#D6DCE5]" />
-        <span className="text-xs text-[#6B7280] font-medium px-2">OR</span>
-        <span className="h-[1px] flex-1 bg-[#D6DCE5]" />
+      {/* Divider */}
+      <div className="flex items-center gap-3">
+        <span className="h-px flex-1 bg-base-300" />
+        <span className="text-xs text-base-content/40 font-medium">OR</span>
+        <span className="h-px flex-1 bg-base-300" />
       </div>
 
       {/* Register link */}
-      <div className="text-center">
-        <p className="text-xs text-[#6B7280] font-semibold">
-          Need an account?{" "}
-          <button
-            type="button"
-            onClick={() => onToggleTab?.("register")}
-            className="text-[#7B1E1E] font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
-          >
-            Create End User Account
-          </button>
-        </p>
-      </div>
+      <p className="text-center text-xs text-base-content/60 font-semibold">
+        Need an account?{" "}
+        <button
+          type="button"
+          onClick={() => onToggleTab?.("register")}
+          className="text-primary font-bold hover:underline bg-transparent border-none p-0 cursor-pointer"
+        >
+          Create End User Account
+        </button>
+      </p>
     </div>
   );
 }
