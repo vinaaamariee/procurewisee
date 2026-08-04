@@ -2,7 +2,6 @@
 
 import React from "react";
 import HeroPanel from "./HeroPanel";
-import { ShieldCheck, Lock, Headset } from "lucide-react";
 import styles from "@/app/login/login-sliding.module.css";
 
 interface AuthLayoutProps {
@@ -33,7 +32,7 @@ export default function AuthLayout({
         }}
       >
         {/* ── Desktop: sliding split panel ─────────────────────────── */}
-        <div className="relative flex-1 hidden md:block overflow-hidden" style={{ minHeight: "548px" }}>
+        <div className="relative flex-1 hidden md:block overflow-hidden" style={{ minHeight: "620px" }}>
 
           {/* Login form — always left */}
           <div
@@ -70,44 +69,19 @@ export default function AuthLayout({
             {isLogin ? loginForm : registerForm}
           </div>
         </div>
-
-        {/* ── Footer ───────────────────────────────────────────────── */}
-        <AuthFooter />
       </div>
 
       {/* ── Version bar below card ────────────────────────────────── */}
-      <div className="flex items-center justify-between w-full mt-3 px-2"
-           style={{ maxWidth: "min(980px, 95vw)" }}>
+      <div
+        className="flex items-center justify-between w-full mt-3 px-2"
+        style={{ maxWidth: "min(980px, 95vw)" }}
+      >
         <span className="text-[10px] font-medium text-base-content/40 select-none">
           ProcureWise v2.0
         </span>
         <span className="text-[10px] font-medium text-base-content/40 select-none">
           © 2026 Batanes State College
         </span>
-      </div>
-    </div>
-  );
-}
-
-function AuthFooter() {
-  return (
-    <div
-      className="bg-primary text-primary-content flex items-center justify-center px-6 border-t-2 border-secondary"
-      style={{ height: "72px", minHeight: "72px" }}
-    >
-      <div className="flex items-center gap-8 text-xs font-semibold">
-        <div className="flex items-center gap-2">
-          <ShieldCheck className="w-[18px] h-[18px] text-secondary" />
-          <span>Secure Access</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Lock className="w-[18px] h-[18px] text-secondary" />
-          <span>Protected Data</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <Headset className="w-[18px] h-[18px] text-secondary" />
-          <span>Support</span>
-        </div>
       </div>
     </div>
   );

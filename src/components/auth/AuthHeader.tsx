@@ -5,18 +5,18 @@ import Image from "next/image";
 
 export default function AuthHeader() {
   return (
-    <div className="flex flex-col items-center text-center gap-3 select-none w-full">
+    <div className="flex flex-col items-center text-center gap-2 select-none w-full">
 
-      {/* BSC Header Frame — 280px */}
-      <div className="w-full flex justify-center">
+      {/* BSC Official Logo — 110px */}
+      <div className="flex justify-center">
         <Image
-          src="/images/Header-Frame.png"
+          src="/images/bsc-logo.png"
           alt="Batanes State College"
-          width={280}
-          height={126}
+          width={110}
+          height={110}
           priority
           className="object-contain"
-          style={{ width: "280px" }}
+          style={{ width: "110px", height: "110px" }}
         />
       </div>
 
@@ -38,14 +38,6 @@ export default function AuthHeader() {
         <p className="text-[11px] font-semibold text-base-content/60">
           Procurement Management Information System
         </p>
-        <p className="text-[10px] font-medium text-secondary">Version 2.0</p>
-      </div>
-
-      {/* Gold divider */}
-      <div className="flex items-center gap-2 w-full">
-        <span className="h-px flex-1 bg-secondary/40" />
-        <span className="text-[10px] font-bold text-secondary">◆</span>
-        <span className="h-px flex-1 bg-secondary/40" />
       </div>
     </div>
   );
