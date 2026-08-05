@@ -63,6 +63,8 @@ function nextLocalId() {
   return _nextLocalId--;
 }
 
+import { DEFAULT_FUND_SOURCE } from '@/lib/constants/fund-sources';
+
 export default function PODocument({ initialPo, isReadOnly = false, onSave }: PODocumentProps) {
   const [entityName, setEntityName] = useState(initialPo.entityName || 'Batanes State College');
   const [modeOfProcurement, setModeOfProcurement] = useState(initialPo.modeOfProcurement || 'Small Value Procurement');
@@ -70,7 +72,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
   const [dateOfDelivery, setDateOfDelivery] = useState(initialPo.dateOfDelivery || '');
   const [deliveryTerms, setDeliveryTerms] = useState(initialPo.deliveryTerms || 'FOB Destination');
   const [paymentTerms, setPaymentTerms] = useState(initialPo.paymentTerms || '15 days upon complete delivery');
-  const [fundCluster, setFundCluster] = useState(initialPo.fundCluster || '101 - General Fund');
+  const [fundCluster, setFundCluster] = useState(initialPo.fundCluster || DEFAULT_FUND_SOURCE);
   const [orsBursNumber, setOrsBursNumber] = useState(initialPo.orsBursNumber || '');
   const [fundsAvailable, setFundsAvailable] = useState<number | ''>(initialPo.fundsAvailable ?? '');
   const [dateOfOrsBurs, setDateOfOrsBurs] = useState(initialPo.dateOfOrsBurs || '');
@@ -582,14 +584,14 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                 <tbody>
                   <tr>
                     <td className="border border-black p-2 w-1/3">
-                      <div className="font-bold mb-1">Fund Cluster:</div>
+                      <div className="font-bold mb-1">Fund Source:</div>
                       <input
                         type="text"
                         value={fundCluster}
                         onChange={e => setFundCluster(e.target.value)}
                         readOnly={isReadOnly}
                         className="border-b border-slate-400 outline-none bg-transparent w-full"
-                        placeholder="e.g. 101 - General Fund"
+                        placeholder="e.g. GAA 2026 - Current Appropriation"
                       />
                     </td>
                     <td className="border border-black p-2 w-1/3">

@@ -7,6 +7,8 @@ import { logAuditTrail } from "@/lib/audit";
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { createNotificationHelper } from "./notifications";
 
+import { DEFAULT_FUND_SOURCE } from "@/lib/constants/fund-sources";
+
 // ---------------------------------------------------------------------------
 // Create PO from an approved recommendation / award
 // ---------------------------------------------------------------------------
@@ -56,7 +58,7 @@ export async function createPoFromAwardAction(recommendationId: number) {
           entityName: "Batanes State College",
           modeOfProcurement: "Small Value Procurement",
           placeOfDelivery: "BATANES STATE COLLEGE",
-          fundCluster: "101 - General Fund",
+          fundCluster: DEFAULT_FUND_SOURCE,
           status: PoStatus.Draft,
         },
       });

@@ -49,7 +49,7 @@ export default function PRDocument({
   // General Information State
   const [info, setInfo] = useState<PRGeneralInfo>({
     entityName: initialData.entityName || 'Batanes State College',
-    fundCluster: initialData.fundCluster || '101 - General Fund',
+    fundCluster: initialData.fundCluster || '',
     office: initialData.office || initialData.department || 'Procurement Unit',
     department: initialData.department || 'General Administration',
     prNumber: initialData.prNumber || '',
@@ -98,6 +98,11 @@ export default function PRDocument({
       return;
     }
 
+    if (!info.fundCluster) {
+      setErrorMsg('Please select a Fund Source.');
+      return;
+    }
+
     // Line item validations
     for (const item of items) {
       if (!item.description.trim()) {
@@ -124,7 +129,7 @@ export default function PRDocument({
         department: info.office || info.department || 'General Administration',
         office: info.office || 'Procurement Unit',
         purpose,
-        fundingSource: info.fundCluster || '101 - General Fund',
+        fundingSource: info.fundCluster || '',
         entityName: info.entityName,
         fundCluster: info.fundCluster,
         responsibilityCenterCode: info.responsibilityCenterCode,
@@ -155,7 +160,7 @@ export default function PRDocument({
           department: info.office || info.department || 'General Administration',
           office: info.office || 'Procurement Unit',
           purpose,
-          fundingSource: info.fundCluster || '101 - General Fund',
+          fundingSource: info.fundCluster || '',
           items: items.map((item) => ({
             productId: item.productId || undefined,
             description: item.description,

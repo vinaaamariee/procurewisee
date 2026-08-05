@@ -5,6 +5,25 @@
 **Capstone Project for Batanes State College**
 
 
+## 💰 Official BSC Fund Source Standardization
+
+**Date**: August 2026
+
+Standardized all Purchase Request (PR) and Purchase Order (PO) funding references to use the official BSC Cashier's Office Fund Sources.
+
+### Key Specifications:
+- **Constants Definition (`src/lib/constants/fund-sources.ts`)**:
+  - `FUND_SOURCES`: Defined official fund sources (`GAA 2026 - Current Appropriation`, `Internally Generated - Income`).
+  - `DEFAULT_FUND_SOURCE`: Configured default fund source (`GAA 2026 - Current Appropriation`).
+- **UI Labeling & Validation**:
+  - Renamed all user-facing `Fund Cluster` field labels across PR documents, PR general information, PO documents, and PR review views to **`Fund Source`**.
+  - Converted freeform text input for Fund Source in `PRGeneralInformation.tsx` to a controlled dropdown menu populated from `FUND_SOURCES`.
+  - Enforced required selection validation in `PRDocument.tsx` before PR submission.
+- **Purchase Order Integration**:
+  - Updated `PODocument.tsx` and `po.ts` server actions (`createPoFromAwardAction`) to use `DEFAULT_FUND_SOURCE` as fallback.
+
+---
+
 ## 🏛️ Modern Flat Enterprise UI Redesign (M365 & SAP Fiori Inspired)
 
 **Date**: August 2026

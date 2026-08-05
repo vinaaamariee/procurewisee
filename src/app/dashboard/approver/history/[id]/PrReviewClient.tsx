@@ -617,7 +617,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
             <div className="p-2 space-y-1">
               <div>PR No.: <span className="font-extrabold underline">{pr.prNumber}</span></div>
               <div>Date: <span className="underline">{new Date(pr.requestDate).toLocaleDateString()}</span></div>
-              <div>Fund Cluster: <span className="underline">{pr.fundingSource || "GAA"}</span></div>
+              <div>Fund Source: <span className="underline">{pr.fundingSource || "GAA"}</span></div>
             </div>
           </div>
 

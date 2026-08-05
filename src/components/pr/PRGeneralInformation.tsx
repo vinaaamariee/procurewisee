@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { FUND_SOURCES } from '@/lib/constants/fund-sources';
 
 export interface PRGeneralInfo {
   entityName?: string;
@@ -52,21 +53,28 @@ export default function PRGeneralInformation({
             )}
           </div>
 
-          {/* Fund Cluster */}
+          {/* Fund Source */}
           <div className="flex items-baseline gap-2">
-            <span className="font-bold text-slate-950 uppercase shrink-0">Fund Cluster:</span>
+            <span className="font-bold text-slate-950 uppercase shrink-0">Fund Source:</span>
             {isReadOnly ? (
               <span className="border-b border-dotted border-slate-400 grow min-h-[18px]">
-                {info.fundCluster || '101 - General Fund'}
+                {info.fundCluster || 'Not Selected'}
               </span>
             ) : (
-              <input
-                type="text"
-                value={info.fundCluster || '101 - General Fund'}
+              <select
+                value={info.fundCluster || ''}
                 onChange={(e) => handleChange('fundCluster', e.target.value)}
-                placeholder="e.g. 101 - General Fund / IGF"
-                className="grow border-b border-dotted border-slate-400 px-1 py-0.5 font-serif text-slate-900 bg-transparent focus:outline-none focus:border-slate-900"
-              />
+                required
+                aria-label="Fund Source"
+                className="grow border-b border-dotted border-slate-400 px-1 py-0.5 font-serif text-slate-900 bg-transparent focus:outline-none focus:border-slate-900 cursor-pointer"
+              >
+                <option value="">Select Fund Source</option>
+                {FUND_SOURCES.map((source) => (
+                  <option key={source} value={source}>
+                    {source}
+                  </option>
+                ))}
+              </select>
             )}
           </div>
 
