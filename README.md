@@ -20,6 +20,13 @@ Redesigned the Login and Create Account authentication pages with cleaner, more 
   - Improved Remember Me ↔ Forgot Password alignment; replaced hardcoded `#7B1E1E` inline colors with `text-primary` theme tokens.
 - **Right Hero Panel Polish (`HeroPanel.tsx`)**: Vertical alignment kept, CTA button styling aligned to the 4px design system (removed `rounded-[6px]`), more comfortable text spacing (`gap-7`), and BSC logo watermark opacity lowered to `0.05`.
 - **AuthLayout**: Card radius unified to the design-system 4px; mobile stacked layout uses more comfortable padding (logo centered, forms stacked full-width).
+- **Layout Rebalance (v2)**:
+  - Desktop split panel is now viewport-aware (`min(740px, calc(100vh - 60px))`) so both pages fit a standard 900–1080px desktop screen without page scrolling.
+  - Fixed the clipped logo: removed `justify-content: center` from the sliding panel CSS and use `my-auto` on each form so content self-centers when there is space but top-aligns (never clips) on overflow.
+  - Widen card to `min(1040px, 95vw)` for slightly wider forms; password/confirm fields go two-column only on `lg+` so tablet/mobile inputs stay wide.
+  - Login: `28px` extrabold heading, `h-12` inputs and `h-12` primary button, tighter vertical rhythm.
+  - Register: compacted spacing (root `gap-4`, form `gap-3`, `88px` logo) so the Create Account page fits without scrolling.
+  - Right hero panel: subtle maroon gradient (`#7B1E1E → #4A1010`), BSC watermark lowered to `0.04`, CTA `font-semibold` with theme-consistent 4px radius.
 - **Dead code removed**: `AuthHeader.tsx`, `LoginHero.tsx`, `LoginFooter.tsx`, `EndUserRegisterForm.tsx`, `AuthFooter.tsx` (unreferenced components).
 
 **Unchanged**: Authentication server actions (`src/app/actions/auth.ts`), form field names, validation, routing, and the sliding split-panel toggle behavior.

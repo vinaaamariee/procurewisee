@@ -31,7 +31,10 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
     <div className="relative w-full h-full flex flex-col justify-center items-center text-white select-none overflow-hidden">
 
       {/* Layer 1 - solid maroon background — hardcoded to bypass next-themes/DaisyUI specificity conflict */}
-      <div className="absolute inset-0" style={{ backgroundColor: '#7B1E1E' }} />
+      <div
+        className="absolute inset-0"
+        style={{ background: "linear-gradient(165deg, #7B1E1E 0%, #601717 45%, #4A1010 100%)" }}
+      />
 
       {/* Layer 2 - BSC logo watermark */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -41,7 +44,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
           width={420}
           height={420}
           className="object-contain grayscale"
-          style={{ opacity: 0.05, width: "420px", height: "420px" }}
+          style={{ opacity: 0.04, width: "420px", height: "420px" }}
         />
       </div>
 
@@ -69,7 +72,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
         </h2>
 
         {/* Body copy */}
-        <p className="text-[13px] text-white/80 leading-relaxed font-medium">
+        <p className="text-[13px] text-white/85 leading-relaxed font-medium">
           {content.body}
         </p>
 
@@ -77,7 +80,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
         <button
           type="button"
           onClick={() => onToggle(content.btnTarget)}
-          className="btn btn-outline border-white text-white hover:bg-white hover:text-primary hover:border-white active:translate-y-px transition-all duration-200 px-9"
+          className="btn btn-outline border-white text-white font-semibold hover:bg-white hover:text-primary hover:border-white active:translate-y-px transition-all duration-200 px-9"
         >
           {content.btnLabel}
         </button>

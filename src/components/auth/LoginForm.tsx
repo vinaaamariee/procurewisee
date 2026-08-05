@@ -42,13 +42,13 @@ export default function LoginForm({
   };
 
   return (
-    <div className="w-full flex flex-col gap-5">
+    <div className="w-full flex flex-col gap-5 my-auto">
       {/* Branding */}
       <AuthBranding />
 
       {/* Heading */}
       <div className="space-y-1.5 text-center">
-        <h2 className="text-[26px] font-bold tracking-tight text-base-content">
+        <h2 className="text-[28px] font-extrabold tracking-tight text-base-content">
           Sign In
         </h2>
         <p className="text-sm text-base-content/60 leading-relaxed">
@@ -91,7 +91,7 @@ export default function LoginForm({
               autoComplete="email"
               placeholder="username@bsc.edu.ph"
               aria-label="Institutional Email"
-              className="input input-bordered input-primary w-full pl-10"
+              className="input input-bordered input-primary w-full h-12 pl-10"
               disabled={isPending}
             />
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40 pointer-events-none" />
@@ -111,7 +111,7 @@ export default function LoginForm({
               autoComplete="current-password"
               placeholder="••••••••"
               aria-label="Password"
-              className="input input-bordered input-primary w-full pl-10 pr-10"
+              className="input input-bordered input-primary w-full h-12 pl-10 pr-10"
               disabled={isPending}
             />
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40 pointer-events-none" />

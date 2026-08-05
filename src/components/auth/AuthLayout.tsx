@@ -26,18 +26,20 @@ export default function AuthLayout({
         data-theme="light"
         className="bg-base-100 border border-base-300 flex flex-col overflow-hidden"
         style={{
-          width: "min(980px, 95vw)",
-          minHeight: "620px",
+          width: "min(1040px, 95vw)",
           borderRadius: "4px",
           boxShadow: "none",
         }}
       >
         {/* ── Desktop: sliding split panel ─────────────────────────── */}
-        <div className="relative flex-1 hidden md:block overflow-hidden" style={{ minHeight: "620px" }}>
+        <div
+          className="relative flex-1 hidden md:block overflow-hidden"
+          style={{ minHeight: "600px", height: "min(740px, calc(100vh - 60px))" }}
+        >
 
           {/* Login form — always left */}
           <div
-            className={`${styles.formPanel} ${styles.formLeft} px-10 py-8 ${
+            className={`${styles.formPanel} ${styles.formLeft} px-10 py-5 ${
               isLogin ? styles.formVisible : styles.formHidden
             }`}
           >
@@ -46,7 +48,7 @@ export default function AuthLayout({
 
           {/* Register form — always right */}
           <div
-            className={`${styles.formPanel} ${styles.formRight} px-10 py-8 ${
+            className={`${styles.formPanel} ${styles.formRight} px-10 py-5 ${
               isLogin ? styles.formHidden : styles.formVisible
             }`}
           >
@@ -65,7 +67,7 @@ export default function AuthLayout({
         </div>
 
         {/* ── Mobile: stacked ──────────────────────────────────────── */}
-        <div className="flex-1 flex flex-col justify-center px-6 py-10 md:hidden">
+        <div className="flex-1 flex flex-col justify-center px-6 py-8 md:hidden">
           <div className="transition-all duration-300">
             {isLogin ? loginForm : registerForm}
           </div>
@@ -75,7 +77,7 @@ export default function AuthLayout({
       {/* ── Version bar below card ────────────────────────────────── */}
       <div
         className="flex items-center justify-between w-full mt-3 px-2"
-        style={{ maxWidth: "min(980px, 95vw)" }}
+        style={{ maxWidth: "min(1040px, 95vw)" }}
       >
         <span className="text-[10px] font-medium text-base-content/40 select-none">
           ProcureWise v2.0

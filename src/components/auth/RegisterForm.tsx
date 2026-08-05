@@ -34,13 +34,13 @@ export default function RegisterForm({
   };
 
   return (
-    <div className="w-full flex flex-col gap-5">
+    <div className="w-full flex flex-col gap-4 my-auto">
       {/* Branding */}
-      <AuthBranding size={96} />
+      <AuthBranding size={88} />
 
       {/* Heading */}
-      <div className="space-y-1.5 text-center">
-        <h2 className="text-[26px] font-bold tracking-tight text-base-content">
+      <div className="space-y-1 text-center">
+        <h2 className="text-[28px] font-extrabold tracking-tight text-base-content">
           Create Account
         </h2>
         <p className="text-sm text-base-content/60 leading-relaxed">
@@ -60,7 +60,7 @@ export default function RegisterForm({
       )}
 
       {/* Form */}
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleFormSubmit} className="flex flex-col gap-3">
 
         {/* Full Name */}
         <fieldset className="fieldset">
@@ -121,7 +121,7 @@ export default function RegisterForm({
         </fieldset>
 
         {/* Password + Confirm Password (2-col) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
           {/* Password */}
           <fieldset className="fieldset">
             <legend className="fieldset-legend text-[11px] font-bold uppercase tracking-wider text-base-content/70">
