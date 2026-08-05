@@ -63,7 +63,7 @@ export default function OfficialDocumentLayout({
             top: 0 !important;
             left: 0 !important;
             right: 0 !important;
-            height: 120px !important;
+            height: 110px !important;
             display: block !important;
             z-index: 9999 !important;
             background: #fff !important;
@@ -74,7 +74,7 @@ export default function OfficialDocumentLayout({
             bottom: 0 !important;
             left: 0 !important;
             right: 0 !important;
-            height: 80px !important;
+            height: 75px !important;
             display: block !important;
             z-index: 9999 !important;
             background: #fff !important;
@@ -82,7 +82,7 @@ export default function OfficialDocumentLayout({
           
           /* Spacers inside print table groups */
           .print-header-spacer {
-            height: 120px !important;
+            height: 115px !important;
             display: block !important;
           }
           
@@ -106,6 +106,56 @@ export default function OfficialDocumentLayout({
           
           .no-print {
             display: none !important;
+          }
+
+          /* General spacing and print optimizations */
+          #${printAreaId} .my-4,
+          #${printAreaId} .mt-6,
+          #${printAreaId} .mb-6 {
+            margin-top: 8px !important;
+            margin-bottom: 8px !important;
+          }
+
+          #${printAreaId} .space-y-6 > * + * {
+            margin-top: 8px !important;
+          }
+          
+          #${printAreaId} .space-y-6 {
+            margin-top: 8px !important;
+            margin-bottom: 8px !important;
+          }
+
+          #${printAreaId} .p-3,
+          #${printAreaId} .p-3.5,
+          #${printAreaId} .p-4 {
+            padding: 6px 10px !important;
+          }
+
+          #${printAreaId} .p-8 {
+            padding: 10px !important;
+          }
+
+          #${printAreaId} .pt-6 {
+            padding-top: 12px !important;
+          }
+
+          #${printAreaId} .pb-4 {
+            padding-bottom: 8px !important;
+          }
+
+          /* Prevent signature block breaking */
+          #${printAreaId} [class*="PRSignatureSection"],
+          #${printAreaId} div[id="prPrintArea"] > div:last-child {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            margin-top: 12px !important;
+          }
+
+          #${printAreaId} textarea,
+          #${printAreaId} input,
+          #${printAreaId} select {
+            padding-top: 2px !important;
+            padding-bottom: 2px !important;
           }
         }
         
