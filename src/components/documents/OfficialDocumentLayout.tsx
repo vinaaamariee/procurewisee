@@ -36,10 +36,9 @@ export default function OfficialDocumentLayout({
           }
           
           #${printAreaId} {
-            position: absolute !important;
-            left: 0 !important;
-            top: 0 !important;
+            position: static !important;
             width: 100% !important;
+            max-width: 100% !important;
             padding: 0 !important;
             margin: 0 !important;
             border: none !important;
@@ -47,6 +46,14 @@ export default function OfficialDocumentLayout({
             display: block !important;
             background: #fff !important;
             color: #000 !important;
+          }
+          
+          #${printAreaId}-container {
+            display: block !important;
+            position: static !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
           }
           
           /* Official fixed header & footer */
