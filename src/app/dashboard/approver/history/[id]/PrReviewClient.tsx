@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { startPrReview, approvePr, returnPr, rejectPr } from '@/app/actions/pr-approval';
-import DocumentLayout from '@/components/documents/DocumentLayout';
+import OfficialDocumentLayout from '@/components/documents/OfficialDocumentLayout';
 import PrWorkflowTimelineStepper from '@/components/pr/PrWorkflowTimelineStepper';
 
 interface PrItem {
@@ -597,15 +597,19 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
       )}
 
       {/* Printable Government PR Layout Sheet (Appendix 60) */}
-      <DocumentLayout title="PURCHASE REQUEST" documentRef={pr.prNumber} printAreaId="prPrintArea">
-        <div id="prPrintArea" className="hidden bg-white border-2 border-slate-400 p-8 shadow-lg max-w-4xl mx-auto rounded-none font-mono text-slate-800 space-y-6" style={{ color: '#000', backgroundColor: '#fff' }}>
+      <OfficialDocumentLayout printAreaId="prPrintArea">
+        <div id="prPrintArea" className="hidden bg-white border border-black p-8 max-w-4xl mx-auto rounded-none font-serif text-black space-y-6" style={{ color: '#000', backgroundColor: '#fff' }}>
           
-          {/* Header Box - hidden during print to prioritize official graphic header */}
-          <div className="text-center space-y-1 pb-4 border-b-2 border-slate-800 print:hidden">
-            <h2 className="text-sm font-bold uppercase tracking-wider">Appendix 60</h2>
-            <h1 className="text-base font-extrabold uppercase">PURCHASE REQUEST</h1>
-            <h3 className="text-sm font-black">BATANES STATE COLLEGE</h3>
-            <p className="text-[10px] text-slate-500 font-bold">Basco, Batanes</p>
+          {/* Document Title & Reference Number */}
+          <div className="text-center mb-6">
+            <h1 className="text-xl font-bold uppercase tracking-wider text-black font-serif">
+              PURCHASE REQUEST
+            </h1>
+            {pr.prNumber && (
+              <p className="text-xs font-mono font-bold mt-1 text-slate-700">
+                Ref No: {pr.prNumber}
+              </p>
+            )}
           </div>
 
           {/* Agency Metadata Grid */}
@@ -684,7 +688,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
           </div>
 
         </div>
-      </DocumentLayout>
+      </OfficialDocumentLayout>
 
       {/* Basic Keyframe Animations injection */}
       <style jsx global>{`

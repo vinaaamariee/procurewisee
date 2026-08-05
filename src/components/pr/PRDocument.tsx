@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState, useTransition } from 'react';
-import PRHeader from './PRHeader';
 import PRGeneralInformation, { PRGeneralInfo } from './PRGeneralInformation';
 import PRItemsTable, { CatalogProductOption, PRItemRow } from './PRItemsTable';
 import PRPurposeSection from './PRPurposeSection';
 import PRSignatureSection from './PRSignatureSection';
 import PRItemUpload from './PRItemUpload';
 import PRToolbar from './PRToolbar';
-import DocumentLayout from '@/components/documents/DocumentLayout';
+import OfficialDocumentLayout from '@/components/documents/OfficialDocumentLayout';
 import { createPrFromCartAction } from '@/app/actions/pr';
 import { useRouter } from 'next/navigation';
 
@@ -202,19 +201,26 @@ export default function PRDocument({
         </div>
       )}
 
-      {/* Centered Digital PR Document — wrapped in DocumentLayout for BSC print header/footer */}
+      {/* Centered Digital PR Document — wrapped in OfficialDocumentLayout for BSC print header/footer */}
       <div id="pr-document-container" className="w-full flex justify-center">
         <div
           id="pr-document"
-          className="w-full max-w-[850px] min-h-[1056px] bg-white text-slate-950 shadow-2xl border border-slate-300 p-6 sm:p-10 md:p-12 font-serif text-xs leading-snug rounded-sm"
+          className="w-full max-w-[850px] min-h-[1056px] bg-white text-slate-950 border border-black p-6 sm:p-10 md:p-12 font-serif text-xs leading-snug"
         >
-          <DocumentLayout
-            title="PURCHASE REQUEST"
-            documentRef={info.prNumber}
+          <OfficialDocumentLayout
             printAreaId="pr-document"
           >
-            {/* 1. Official Header — on-screen branding */}
-            <PRHeader />
+            {/* Document Title & Reference Number */}
+            <div className="text-center mb-6">
+              <h1 className="text-xl font-bold uppercase tracking-wider text-slate-950 font-serif">
+                PURCHASE REQUEST
+              </h1>
+              {info.prNumber && (
+                <p className="text-xs font-mono font-bold mt-1 text-slate-700">
+                  Ref No: {info.prNumber}
+                </p>
+              )}
+            </div>
 
             {/* 2. General Information Block */}
             <PRGeneralInformation
@@ -259,7 +265,7 @@ export default function PRDocument({
               setApprovedByName={setApprovedByName}
               isReadOnly={isReadOnly}
             />
-          </DocumentLayout>
+          </OfficialDocumentLayout>
         </div>
       </div>
 

@@ -1001,13 +1001,14 @@ A comprehensive upgrade to the document output and budget tracking pipeline to m
 - **Chronological Logs**: Every state change (Draft, Submitted, UnderReview, ReturnedForRevision (mapped to `"Returned for Revision"`), Approved, Received, and Rejected) now records a corresponding status log inside `PurchaseRequestStatusHistory`, detailing the review comments, dates, and active actor names.
 
 ### 3. Unified Print Layout Engine
-- **Fixed Branding Headers/Footers**: Introduced a graphic layout wrapper (`DocumentLayout.tsx`) utilizing College branding assets (`bsc-header.png` and `bsc-footer.png`) which automatically repeat at the top and bottom of every printed page.
+- **Generic Document Branding Layout**: Added a generic, reusable branding shell (`OfficialDocumentLayout.tsx`) that wraps printable documents in Batanes State College letterhead (`bsc-header.png` at `/images/bsc-header.png`) and footer (`bsc-footer.png` at `/images/bsc-footer.png`). It utilizes an HTML table structure (`thead`/`tfoot`) to reserve header/footer spacing and cleanly repeat them on every printed page without overlapping content.
+- **Document Decoupling**: Decoupled document metadata (such as titles, references, and content) from the generic layout shell, making `OfficialDocumentLayout` fully modular and reusable for other documents (RFQ, PO, PMR, Abstract of Quotations, Analytics Reports, etc.).
 - **Overflow Prevention**: Defined strict CSS printing layout rules ensuring that content margins and print boundaries align beautifully without text page overlapping.
 - **Target Views Integration**: Integrated the branding layout into the following printable items, keeping them clean and dashboard-only on the screen view:
   - Purchase Orders (Appendix 61) (`PoDetailsClient.tsx`)
   - BAC Procurement Recommendation Report (`RfqEvaluationClient.tsx`)
   - Executive Procurement Analytics Reports (`AnalyticsDashboardClient.tsx`)
-  - Purchase Requests (Appendix 60) for End-Users, Officers, and Approvers (`PrTrackerClient.tsx`, `PrDetailsClient.tsx`, `PrReviewClient.tsx`)
+  - Purchase Requests (Appendix 60) for End-Users, Officers, and Approvers (`PrTrackerClient.tsx`, `PrDetailsClient.tsx`, `PrReviewClient.tsx` - now updated with `OfficialDocumentLayout` and local title handling)
 
 ### 4. Direct Action Controls & Approval cards
 - **Action buttons**: Added print action buttons to the Requisition tracker, Officer detail, and Approver history views.
