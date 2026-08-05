@@ -172,6 +172,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
   return (
     <div className="pr-print-root" style={{ display: 'flex', flexDirection: 'column', gap: '2rem', position: 'relative' }}>
       
+      <div className="no-print">
       {/* Toast Notification */}
       {toastMsg && (
         <div style={{
@@ -519,6 +520,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
 
         </div>
 
+      </div>
       </div>
 
       {/* Modal Overlay Dialog */}

@@ -19,18 +19,22 @@ Fixed the Purchase Request (PR) form printing on two A4 pages despite unused whi
 ### Root Cause (Phase 2 — Narrow Print Width)
 Print CSS only hid the dashboard with `visibility: hidden`, which still reserves layout space, and the printable areas were `position: static`. They therefore stayed inside the dashboard flex flow and inherited the narrow content column: A4 printable ~718px minus the 288px sidebar (`aside.w-72`), main padding, and page-wrapper padding collapsed the PR to ~318px (~44% of the page). Because the browser never enlarges narrow content, the sheet printed narrow with a large right margin — which is why spacing tweaks were invisible and the output never responded to width changes.
 
+### Root Cause (Phase 3 — Header/Footer Outside the Page Flow)
+The official BSC header/footer were `position: fixed` overlay bands detached from the document flow, so the printed sheet looked like a plain HTML page rather than an official A4 form. When printing from the approver's review page (`PrReviewClient.tsx`) the header/footer were not descendants of the visible print area (`#prPrintArea`) and were swallowed by the global `visibility: hidden`, producing a headerless, footless printout.
+
 ### Key Changes
-- **`src/components/documents/OfficialDocumentLayout.tsx`** (shared print stylesheet):
-  - `@page` margins reduced `15mm` → `10mm` (wider printable area, closer to full-bleed).
-  - Added `min-height: 0 !important` to the print area to cancel the screen `min-h-[1056px]` floor in print.
-  - Reduced reserved header/footer spacers `130px/90px` → `120px/80px` to match the fixed official header/footer heights (less dead space below the header).
-  - **Phase 2**: Print areas (`#pr-document`, `#prPrintArea`) are now `position: absolute; top/left/right: 0; width: 100%; max-width: 100%` so they anchor to the page and span the full printable width. Positioned ancestors are neutralized in print (`.pr-print-root` → `position: static`, sticky dashboard `header` → static, sidebar `aside` → `display: none`) so absolute positioning resolves against the page instead of the dashboard column. `#prPrintArea` gets equivalent top/bottom padding (`115px/80px`) because its spacers are siblings (outside the absolute area).
+- **`src/components/documents/OfficialDocumentLayout.tsx`** (reusable A4 print layout):
+  - **Phase 3 redesign**: The component now renders a true A4 sheet as a `<table>` whose `<thead>` holds the official `bsc-header.png`, `<tfoot>` holds `bsc-footer.png`, and `<tbody>` holds the document body. Because browsers repeat `<thead>`/`<tfoot>` on every printed page, the official header/footer are now part of the document flow AND repeat automatically on multi-page PRs — no fixed positioning, no spacer hacks.
+  - `.print-page` is the A4 sheet container (`width: 100%`, white). `.document-content` in the body has `min-height: 225mm` so the body expands to fill the remaining printable height and the footer always sits at the bottom of the page. Page geometry: A4 `@page { size: A4 portrait; margin: 10mm }` → 190mm × 277mm printable area; header/footer render at natural aspect (`1024×159`, `1024×118`) ≈ 29.5mm / 21.9mm tall.
+  - Print areas (`#pr-document`, `#prPrintArea`) are back in normal flow (`position: static`) and the dashboard chrome is fully collapsed in print (`aside`, `header`, `footer` → `display: none`; `main` and its wrappers → `padding: 0; max-width: none`; `.pr-print-root` → static). This keeps natural browser pagination (no absolute-position clipping risk) and full-width sheets.
+  - Header/footer images are forced visible in print for both consumers and use `width: 100%; height: auto; object-fit: contain` (no distortion, no borders, no extra margin). Next.js Image props corrected to the real dimensions (`1024×159` / `1024×118`) and both marked `priority` so they are eagerly loaded for print.
+  - `@page` margins reduced `15mm` → `10mm`; existing one-page spacing overrides (section margins, cell padding, signature `break-inside: avoid`) preserved.
+- **`src/app/dashboard/approver/history/[id]/PrReviewClient.tsx`**: The review UI (toast, page header, requisition cards, timeline grid) is wrapped in `.no-print` so it is fully removed from print flow and the official sheet starts at the top of the page.
 - **`src/components/pr/PRDocument.tsx`**: Root shell gets the `pr-print-root` class; document title block margin `mb-6` → `mb-3`.
 - **`src/components/pr/PRGeneralInformation.tsx`**: Section margin `my-4` → `my-2.5`, cell padding `p-3` → `p-2.5`.
 - **`src/components/pr/PRItemsTable.tsx`**: Section margin `my-4` → `my-2.5`, item cell padding `p-2` → `p-1.5`, total row `p-2.5` → `p-2` (table now spans the full printable width).
 - **`src/components/pr/PRPurposeSection.tsx`**: Section margin `my-4` → `my-2.5`, padding `p-3.5` → `p-3`.
 - **`src/components/pr/PRSignatureSection.tsx`**: Margin `mt-6` → `mt-3`, column padding `p-4` → `p-3`, internal spacing `space-y-6` → `space-y-3`, signature line offset `pt-4` → `pt-2`, signature line height `h-8` → `h-7`, plus `break-inside-avoid` so the signature block never splits across pages.
-- **`src/app/dashboard/approver/history/[id]/PrReviewClient.tsx`**: Root shell gets the `pr-print-root` class so the approver's printable `#prPrintArea` sheet inherits the same full-width print fix.
 
 **Unchanged**: Official BSC header/footer images, font sizes, auth logic, PR validation, API calls, routes, state, and user flow.
 

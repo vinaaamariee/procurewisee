@@ -13,13 +13,17 @@ export default function OfficialDocumentLayout({
   printAreaId = 'pr-document',
 }: OfficialDocumentLayoutProps) {
   return (
-    <div className="w-full text-black bg-white">
+    <div className="print-page w-full bg-white text-black">
       {/* Universal Print & Screen Stylesheet */}
       <style dangerouslySetInnerHTML={{ __html: `
         @media print {
           @page {
             size: A4 portrait;
             margin: 10mm 10mm 10mm 10mm;
+          }
+          
+          body {
+            background: #fff !important;
           }
           
           /* Hide all screen components */
@@ -30,16 +34,19 @@ export default function OfficialDocumentLayout({
             box-shadow: none !important;
           }
           
-          /* Only make the printable area visible */
+          /* Only make the printable area (and its official header/footer) visible */
           #${printAreaId}, #${printAreaId} * {
             visibility: visible !important;
           }
           
+          .official-print-header, .official-print-header *,
+          .official-print-footer, .official-print-footer * {
+            visibility: visible !important;
+          }
+          
           #${printAreaId} {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
+            display: block !important;
+            position: static !important;
             width: 100% !important;
             max-width: 100% !important;
             min-height: 0 !important;
@@ -47,7 +54,6 @@ export default function OfficialDocumentLayout({
             margin: 0 !important;
             border: none !important;
             box-shadow: none !important;
-            display: block !important;
             background: #fff !important;
             color: #000 !important;
           }
@@ -60,59 +66,36 @@ export default function OfficialDocumentLayout({
             padding: 0 !important;
           }
           
-          /* Neutralize positioned ancestors so the absolute print area anchors to the page */
+          /* Collapse the dashboard chrome so the document spans the printable area */
           .pr-print-root {
             position: static !important;
             padding-bottom: 0 !important;
           }
           
-          header {
-            position: static !important;
-          }
-          
-          aside {
+          aside,
+          header,
+          footer {
             display: none !important;
           }
           
-          #prPrintArea {
-            padding-top: 115px !important;
-            padding-bottom: 80px !important;
+          main {
+            padding: 0 !important;
           }
           
-          /* Official fixed header & footer */
-          .official-print-header {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            height: 110px !important;
-            display: block !important;
-            z-index: 9999 !important;
+          main > div,
+          main > div > div {
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          
+          /* A4 sheet container */
+          .print-page {
+            width: 100% !important;
             background: #fff !important;
           }
           
-          .official-print-footer {
-            position: fixed !important;
-            bottom: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            height: 75px !important;
-            display: block !important;
-            z-index: 9999 !important;
-            background: #fff !important;
-          }
-          
-          /* Spacers inside print table groups */
-          .print-header-spacer {
-            height: 115px !important;
-            display: block !important;
-          }
-          
-          .print-footer-spacer {
-            height: 80px !important;
-            display: block !important;
-          }
-          
+          /* Official header & footer repeat on every page via thead/tfoot */
           .official-layout-table {
             width: 100% !important;
             border: none !important;
@@ -124,12 +107,26 @@ export default function OfficialDocumentLayout({
           .official-layout-table td {
             border: none !important;
             padding: 0 !important;
+            vertical-align: top !important;
+          }
+          
+          .official-print-header img,
+          .official-print-footer img {
+            display: block !important;
+            width: 100% !important;
+            height: auto !important;
+            object-fit: contain !important;
+          }
+          
+          /* Body expands to fill the remaining page height above the footer */
+          .document-content {
+            min-height: 225mm !important;
           }
           
           .no-print {
             display: none !important;
           }
-
+          
           /* General spacing and print optimizations */
           #${printAreaId} .my-4,
           #${printAreaId} .mt-6,
@@ -137,7 +134,7 @@ export default function OfficialDocumentLayout({
             margin-top: 8px !important;
             margin-bottom: 8px !important;
           }
-
+          
           #${printAreaId} .space-y-6 > * + * {
             margin-top: 8px !important;
           }
@@ -146,33 +143,33 @@ export default function OfficialDocumentLayout({
             margin-top: 8px !important;
             margin-bottom: 8px !important;
           }
-
+          
           #${printAreaId} .p-3,
           #${printAreaId} .p-3.5,
           #${printAreaId} .p-4 {
             padding: 6px 10px !important;
           }
-
+          
           #${printAreaId} .p-8 {
             padding: 10px !important;
           }
-
+          
           #${printAreaId} .pt-6 {
             padding-top: 12px !important;
           }
-
+          
           #${printAreaId} .pb-4 {
             padding-bottom: 8px !important;
           }
-
+          
           /* Prevent signature block breaking */
           #${printAreaId} [class*="PRSignatureSection"],
-          #${printAreaId} div[id="prPrintArea"] > div:last-child {
+          #prPrintArea .space-y-6 > div:last-child {
             page-break-inside: avoid !important;
             break-inside: avoid !important;
             margin-top: 12px !important;
           }
-
+          
           #${printAreaId} textarea,
           #${printAreaId} input,
           #${printAreaId} select {
@@ -196,43 +193,34 @@ export default function OfficialDocumentLayout({
             padding-top: 1rem;
           }
           
-          .print-header-spacer,
-          .print-footer-spacer {
-            display: none;
-          }
-          
           .official-layout-table {
             width: 100%;
           }
         }
       ` }} />
 
-      {/* Repeating Fixed Header for Print & Block Header for Screen */}
-      <div className="official-print-header print:fixed print:top-0 print:left-0 print:right-0 w-full">
-        <Image
-          src="/images/bsc-header.png"
-          alt="Official Batanes State College Header"
-          width={1200}
-          height={180}
-          priority
-          className="w-full h-auto object-contain"
-        />
-      </div>
-
-      {/* Layout Table */}
+      {/* Official header — repeats on every printed page */}
       <table className="official-layout-table border-none border-collapse w-full">
         <thead>
           <tr>
             <td className="border-none p-0">
-              <div className="print-header-spacer w-full"></div>
+              <div className="official-print-header w-full">
+                <Image
+                  src="/images/bsc-header.png"
+                  alt="Official Batanes State College Header"
+                  width={1024}
+                  height={159}
+                  priority
+                  className="w-full h-auto object-contain"
+                />
+              </div>
             </td>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td className="border-none p-0">
-              {/* Document Content */}
-              <div className="w-full text-black">
+              <div className="document-content w-full text-black">
                 {children}
               </div>
             </td>
@@ -241,22 +229,20 @@ export default function OfficialDocumentLayout({
         <tfoot>
           <tr>
             <td className="border-none p-0">
-              <div className="print-footer-spacer w-full"></div>
+              <div className="official-print-footer w-full">
+                <Image
+                  src="/images/bsc-footer.png"
+                  alt="Official Batanes State College Footer"
+                  width={1024}
+                  height={118}
+                  priority
+                  className="w-full h-auto object-contain"
+                />
+              </div>
             </td>
           </tr>
         </tfoot>
       </table>
-
-      {/* Repeating Fixed Footer for Print & Block Footer for Screen */}
-      <div className="official-print-footer print:fixed print:bottom-0 print:left-0 print:right-0 w-full">
-        <Image
-          src="/images/bsc-footer.png"
-          alt="Official Batanes State College Footer"
-          width={1200}
-          height={120}
-          className="w-full h-auto object-contain"
-        />
-      </div>
     </div>
   );
 }
