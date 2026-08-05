@@ -31,11 +31,11 @@ export default function PRGeneralInformation({
   };
 
   return (
-    <div className="my-4 border border-slate-900 font-serif text-xs">
+    <div className="my-2.5 border border-slate-900 font-serif text-xs">
       <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-900">
         
         {/* Left Column: Entity, Office, Responsibility Center */}
-        <div className="p-3 space-y-2.5">
+        <div className="p-2.5 space-y-2.5">
           {/* Entity Name */}
           <div className="flex items-baseline gap-2">
             <span className="font-bold text-slate-950 uppercase shrink-0">Entity Name:</span>
@@ -98,7 +98,7 @@ export default function PRGeneralInformation({
         </div>
 
         {/* Right Column: PR No., Date, Responsibility Code */}
-        <div className="p-3 space-y-2.5 bg-slate-50/40">
+        <div className="p-2.5 space-y-2.5 bg-slate-50/40">
           {/* PR Number */}
           <div className="flex items-baseline gap-2">
             <span className="font-bold text-slate-950 uppercase shrink-0">PR No.:</span>

@@ -125,7 +125,7 @@ export default function PRItemsTable({
   const grandTotal = items.reduce((sum, item) => sum + (item.estimatedCost || (item.quantity * item.estimatedUnitCost)), 0);
 
   return (
-    <div className="my-4 font-serif space-y-2">
+    <div className="my-2.5 font-serif space-y-2">
       {/* Table Header Controls */}
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-sans">
@@ -147,21 +147,21 @@ export default function PRItemsTable({
         <table className="w-full border-collapse text-xs">
           <thead>
             <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px] font-sans">
-              <th className="border-r border-slate-900 p-2 text-center w-24">
+              <th className="border-r border-slate-900 p-1.5 text-center w-24">
                 Stock / Property No.
               </th>
-              <th className="border-r border-slate-900 p-2 text-center w-20">Unit</th>
-              <th className="border-r border-slate-900 p-2 text-left">
+              <th className="border-r border-slate-900 p-1.5 text-center w-20">Unit</th>
+              <th className="border-r border-slate-900 p-1.5 text-left">
                 Item Description / Technical Specifications
               </th>
-              <th className="border-r border-slate-900 p-2 text-center w-20">Quantity</th>
-              <th className="border-r border-slate-900 p-2 text-right w-28">
+              <th className="border-r border-slate-900 p-1.5 text-center w-20">Quantity</th>
+              <th className="border-r border-slate-900 p-1.5 text-right w-28">
                 Unit Cost (₱)
               </th>
-              <th className="border-r border-slate-900 p-2 text-right w-32">
+              <th className="border-r border-slate-900 p-1.5 text-right w-32">
                 Total Cost (₱)
               </th>
-              {!isReadOnly && <th className="p-2 text-center w-10 print:hidden">Action</th>}
+              {!isReadOnly && <th className="p-1.5 text-center w-10 print:hidden">Action</th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800">
@@ -171,7 +171,7 @@ export default function PRItemsTable({
               return (
                 <tr key={item.id || index} className="hover:bg-slate-50/50">
                   {/* Stock / Property No */}
-                  <td className="border-r border-slate-800 p-2 text-center font-semibold text-slate-900 align-top">
+                  <td className="border-r border-slate-800 p-1.5 text-center font-semibold text-slate-900 align-top">
                     {isReadOnly ? (
                       item.stockNo
                     ) : (
@@ -185,7 +185,7 @@ export default function PRItemsTable({
                   </td>
 
                   {/* Unit */}
-                  <td className="border-r border-slate-800 p-2 text-center align-top">
+                  <td className="border-r border-slate-800 p-1.5 text-center align-top">
                     {isReadOnly ? (
                       item.unit
                     ) : (
@@ -201,7 +201,7 @@ export default function PRItemsTable({
                   </td>
 
                   {/* Item Description */}
-                  <td className="border-r border-slate-800 p-2 align-top space-y-1.5">
+                  <td className="border-r border-slate-800 p-1.5 align-top space-y-1.5">
                     {!isReadOnly && catalogProducts.length > 0 && (
                       <select
                         value={item.productId || ''}
@@ -234,7 +234,7 @@ export default function PRItemsTable({
                   </td>
 
                   {/* Quantity */}
-                  <td className="border-r border-slate-800 p-2 text-center align-top">
+                  <td className="border-r border-slate-800 p-1.5 text-center align-top">
                     {isReadOnly ? (
                       item.quantity
                     ) : (
@@ -250,7 +250,7 @@ export default function PRItemsTable({
                   </td>
 
                   {/* Unit Cost */}
-                  <td className="border-r border-slate-800 p-2 text-right align-top">
+                  <td className="border-r border-slate-800 p-1.5 text-right align-top">
                     {isReadOnly ? (
                       `₱ ${item.estimatedUnitCost.toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
                     ) : (
@@ -268,13 +268,13 @@ export default function PRItemsTable({
                   </td>
 
                   {/* Total Cost (Read-Only) */}
-                  <td className="border-r border-slate-800 p-2 text-right font-bold text-slate-900 align-top">
+                  <td className="border-r border-slate-800 p-1.5 text-right font-bold text-slate-900 align-top">
                     ₱ {lineTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                   </td>
 
                   {/* Action Column */}
                   {!isReadOnly && (
-                    <td className="p-2 text-center align-top print:hidden">
+                    <td className="p-1.5 text-center align-top print:hidden">
                       <button
                         type="button"
                         onClick={() => handleDeleteItem(item.id)}
@@ -294,10 +294,10 @@ export default function PRItemsTable({
 
             {/* Grand Total Footer Row */}
             <tr className="bg-slate-100 border-t-2 border-slate-900 font-bold font-sans text-xs">
-              <td colSpan={5} className="border-r border-slate-900 p-2.5 text-right uppercase tracking-wider text-slate-950">
+              <td colSpan={5} className="border-r border-slate-900 p-2 text-right uppercase tracking-wider text-slate-950">
                 Grand Total / Estimated Total Cost:
               </td>
-              <td className="p-2.5 text-right text-[#7B1E1E] text-sm">
+              <td className="p-2 text-right text-[#7B1E1E] text-sm">
                 ₱ {grandTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </td>
               {!isReadOnly && <td className="print:hidden"></td>}

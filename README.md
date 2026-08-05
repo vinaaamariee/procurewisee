@@ -5,6 +5,33 @@
 **Capstone Project for Batanes State College**
 
 
+## 🖨️ Purchase Request One-Page Print Optimization
+
+**Date**: August 2026
+
+Fixed the Purchase Request (PR) form printing on two A4 pages despite unused whitespace. A standard one-page PR now fits on a single A4 sheet with no page scaling and no font-size reduction — only spacing/layout was optimized. Official BSC header/footer and all document functionality are unchanged.
+
+### Root Cause
+- The printable area (`#pr-document`) carried a screen `min-h-[1056px]` floor, which exceeded the ~1009px A4 printable height at 15mm margins — forcing a spill to page 2 even on nearly empty PRs.
+- The document preview was `max-w-[850px]` (~225mm), wider than the 180mm printable area, so browsers scaled it down and left white side margins.
+- 15mm `@page` margins plus 130px/90px header/footer spacers consumed the vertical budget.
+
+### Key Changes
+- **`src/components/documents/OfficialDocumentLayout.tsx`** (shared print stylesheet):
+  - `@page` margins reduced `15mm` → `10mm` (wider printable area, closer to full-bleed).
+  - Added `min-height: 0 !important` to the print area to cancel the screen `min-h-[1056px]` floor in print.
+  - Reduced reserved header/footer spacers `130px/90px` → `120px/80px` to match the fixed official header/footer heights (less dead space below the header).
+- **`src/components/pr/PRDocument.tsx`**: Document title block margin `mb-6` → `mb-3`.
+- **`src/components/pr/PRGeneralInformation.tsx`**: Section margin `my-4` → `my-2.5`, cell padding `p-3` → `p-2.5`.
+- **`src/components/pr/PRItemsTable.tsx`**: Section margin `my-4` → `my-2.5`, item cell padding `p-2` → `p-1.5`, total row `p-2.5` → `p-2` (table now spans the full printable width).
+- **`src/components/pr/PRPurposeSection.tsx`**: Section margin `my-4` → `my-2.5`, padding `p-3.5` → `p-3`.
+- **`src/components/pr/PRSignatureSection.tsx`**: Margin `mt-6` → `mt-3`, column padding `p-4` → `p-3`, internal spacing `space-y-6` → `space-y-3`, signature line offset `pt-4` → `pt-2`, signature line height `h-8` → `h-7`, plus `break-inside-avoid` so the signature block never splits across pages.
+
+**Unchanged**: Official BSC header/footer images, font sizes, auth logic, PR validation, API calls, routes, state, and user flow.
+
+**Note**: The approver's printable sheet (`src/app/dashboard/approver/history/[id]/PrReviewClient.tsx`) and the officer PR details page's raw `window.print()` were left as-is (out of scope for this pass).
+
+
 ## 🪪 Authentication Branding & UI Polish
 
 **Date**: August 2026

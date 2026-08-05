@@ -22,19 +22,19 @@ export default function PRSignatureSection({
   isReadOnly = false,
 }: PRSignatureSectionProps) {
   return (
-    <div className="mt-6 border border-slate-900 font-serif text-xs">
+    <div className="mt-3 border border-slate-900 font-serif text-xs break-inside-avoid">
       <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-900">
         
         {/* Requested By Block */}
-        <div className="p-4 space-y-6 flex flex-col justify-between">
+        <div className=" p-3 space-y-3 flex flex-col justify-between">
           <div className="flex justify-between items-center border-b border-slate-300 pb-1">
             <span className="font-bold text-slate-950 uppercase text-[11px] font-sans">
               Requested by:
             </span>
           </div>
 
-          <div className="space-y-1 text-center pt-4">
-            <div className="border-b border-slate-900 w-3/4 mx-auto h-8"></div>
+          <div className="space-y-1 text-center pt-2">
+            <div className="border-b border-slate-900 w-3/4 mx-auto h-7"></div>
             <div className="pt-1">
               <span className="font-bold text-slate-950 uppercase text-xs font-sans">
                 Signature over Printed Name
@@ -58,15 +58,15 @@ export default function PRSignatureSection({
         </div>
 
         {/* Approved By Block */}
-        <div className="p-4 space-y-6 flex flex-col justify-between bg-slate-50/40">
+        <div className=" p-3 space-y-3 flex flex-col justify-between bg-slate-50/40">
           <div className="flex justify-between items-center border-b border-slate-300 pb-1">
             <span className="font-bold text-slate-950 uppercase text-[11px] font-sans">
               Approved by:
             </span>
           </div>
 
-          <div className="space-y-1 text-center pt-4">
-            <div className="border-b border-slate-900 w-3/4 mx-auto h-8"></div>
+          <div className="space-y-1 text-center pt-2">
+            <div className="border-b border-slate-900 w-3/4 mx-auto h-7"></div>
             <div className="pt-1">
               <span className="font-bold text-slate-950 uppercase text-xs font-sans">
                 Signature over Printed Name

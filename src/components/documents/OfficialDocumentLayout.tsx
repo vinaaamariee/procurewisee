@@ -19,7 +19,7 @@ export default function OfficialDocumentLayout({
         @media print {
           @page {
             size: A4 portrait;
-            margin: 15mm 15mm 15mm 15mm;
+            margin: 10mm 10mm 10mm 10mm;
           }
           
           /* Hide all screen components */
@@ -39,6 +39,7 @@ export default function OfficialDocumentLayout({
             position: static !important;
             width: 100% !important;
             max-width: 100% !important;
+            min-height: 0 !important;
             padding: 0 !important;
             margin: 0 !important;
             border: none !important;
@@ -81,12 +82,12 @@ export default function OfficialDocumentLayout({
           
           /* Spacers inside print table groups */
           .print-header-spacer {
-            height: 130px !important;
+            height: 120px !important;
             display: block !important;
           }
           
           .print-footer-spacer {
-            height: 90px !important;
+            height: 80px !important;
             display: block !important;
           }
           

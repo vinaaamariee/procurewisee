@@ -211,7 +211,7 @@ export default function PRDocument({
             printAreaId="pr-document"
           >
             {/* Document Title & Reference Number */}
-            <div className="text-center mb-6">
+            <div className="text-center mb-3">
               <h1 className="text-xl font-bold uppercase tracking-wider text-slate-950 font-serif">
                 PURCHASE REQUEST
               </h1>
