@@ -185,7 +185,7 @@ export default function PRDocument({
 
 
   return (
-    <div className="relative pb-24">
+    <div className="pr-print-root relative pb-24">
       {/* Alert Banners */}
       {errorMsg && (
         <div className="max-w-[850px] mx-auto mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">

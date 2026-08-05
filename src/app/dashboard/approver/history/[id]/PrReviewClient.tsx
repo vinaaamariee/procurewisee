@@ -170,7 +170,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
   const remainingBudget = deptBudget ? deptBudget.allocated - deptBudget.spent : 0;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', position: 'relative' }}>
+    <div className="pr-print-root" style={{ display: 'flex', flexDirection: 'column', gap: '2rem', position: 'relative' }}>
       
       {/* Toast Notification */}
       {toastMsg && (

@@ -36,7 +36,10 @@ export default function OfficialDocumentLayout({
           }
           
           #${printAreaId} {
-            position: static !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
             width: 100% !important;
             max-width: 100% !important;
             min-height: 0 !important;
@@ -55,6 +58,25 @@ export default function OfficialDocumentLayout({
             width: 100% !important;
             margin: 0 !important;
             padding: 0 !important;
+          }
+          
+          /* Neutralize positioned ancestors so the absolute print area anchors to the page */
+          .pr-print-root {
+            position: static !important;
+            padding-bottom: 0 !important;
+          }
+          
+          header {
+            position: static !important;
+          }
+          
+          aside {
+            display: none !important;
+          }
+          
+          #prPrintArea {
+            padding-top: 115px !important;
+            padding-bottom: 80px !important;
           }
           
           /* Official fixed header & footer */
