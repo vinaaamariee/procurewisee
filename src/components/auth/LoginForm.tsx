@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { login } from "@/app/actions/auth";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import LoginAlert from "./LoginAlert";
-import AuthHeader from "./AuthHeader";
+import AuthBranding from "./AuthBranding";
 
 interface LoginFormProps {
   errorParam: string | null;
@@ -42,13 +42,13 @@ export default function LoginForm({
   };
 
   return (
-    <div className="w-full flex flex-col gap-4">
-      {/* Identity block */}
-      <AuthHeader />
+    <div className="w-full flex flex-col gap-5">
+      {/* Branding */}
+      <AuthBranding />
 
       {/* Heading */}
-      <div className="space-y-1">
-        <h2 className="text-3xl font-bold tracking-tight text-base-content">
+      <div className="space-y-1.5 text-center">
+        <h2 className="text-[26px] font-bold tracking-tight text-base-content">
           Sign In
         </h2>
         <p className="text-sm text-base-content/60 leading-relaxed">
@@ -75,7 +75,7 @@ export default function LoginForm({
       )}
 
       {/* Form */}
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-3">
+      <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
         <input type="hidden" name="next" value={searchParams.get("next") || ""} />
 
         {/* Email */}
@@ -127,8 +127,8 @@ export default function LoginForm({
         </fieldset>
 
         {/* Remember me + Forgot password */}
-        <div className="flex items-center justify-between">
-          <label className="flex items-center gap-2 cursor-pointer select-none">
+        <div className="flex items-center justify-between gap-2 pt-1">
+          <label className="flex items-center gap-2.5 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={rememberMe}
@@ -143,7 +143,7 @@ export default function LoginForm({
           <button
             type="button"
             onClick={handleForgotPasswordClick}
-            className="text-xs font-bold hover:underline bg-transparent border-none p-0 cursor-pointer" style={{ color: '#7B1E1E' }}
+            className="text-xs font-bold text-primary hover:text-primary-focus hover:underline bg-transparent border-none p-0 cursor-pointer"
           >
             Forgot Password?
           </button>
@@ -152,7 +152,7 @@ export default function LoginForm({
         {/* Submit */}
         <button
           type="submit"
-          className="btn btn-primary btn-block mt-1"
+          className="btn btn-primary btn-block h-12 min-h-12 mt-1"
           disabled={isPending}
         >
           {isPending ? (
@@ -179,7 +179,7 @@ export default function LoginForm({
         <button
           type="button"
           onClick={() => onToggleTab?.("register")}
-          className="font-bold hover:underline bg-transparent border-none p-0 cursor-pointer" style={{ color: '#7B1E1E' }}
+          className="font-bold text-primary hover:text-primary-focus hover:underline bg-transparent border-none p-0 cursor-pointer"
         >
           Create End User Account
         </button>

@@ -6,7 +6,7 @@ import {
   Eye, EyeOff, Mail, Lock, User, Building2, CheckCircle2,
 } from "lucide-react";
 import LoginAlert from "./LoginAlert";
-import AuthHeader from "./AuthHeader";
+import AuthBranding from "./AuthBranding";
 
 interface RegisterFormProps {
   errorParam: string | null;
@@ -34,13 +34,13 @@ export default function RegisterForm({
   };
 
   return (
-    <div className="w-full flex flex-col gap-4">
-      {/* Identity block */}
-      <AuthHeader />
+    <div className="w-full flex flex-col gap-5">
+      {/* Branding */}
+      <AuthBranding size={96} />
 
       {/* Heading */}
-      <div className="space-y-1">
-        <h2 className="text-3xl font-bold tracking-tight text-base-content">
+      <div className="space-y-1.5 text-center">
+        <h2 className="text-[26px] font-bold tracking-tight text-base-content">
           Create Account
         </h2>
         <p className="text-sm text-base-content/60 leading-relaxed">
@@ -60,7 +60,7 @@ export default function RegisterForm({
       )}
 
       {/* Form */}
-      <form onSubmit={handleFormSubmit} className="flex flex-col gap-3">
+      <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
 
         {/* Full Name */}
         <fieldset className="fieldset">
@@ -121,7 +121,7 @@ export default function RegisterForm({
         </fieldset>
 
         {/* Password + Confirm Password (2-col) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {/* Password */}
           <fieldset className="fieldset">
             <legend className="fieldset-legend text-[11px] font-bold uppercase tracking-wider text-base-content/70">
@@ -192,7 +192,7 @@ export default function RegisterForm({
         {/* Submit */}
         <button
           type="submit"
-          className="btn btn-primary btn-block mt-1"
+          className="btn btn-primary btn-block h-12 min-h-12 mt-1"
           disabled={isPending}
         >
           {isPending ? (
@@ -219,7 +219,7 @@ export default function RegisterForm({
         <button
           type="button"
           onClick={() => onToggleTab?.("login")}
-          className="font-bold hover:underline bg-transparent border-none p-0 cursor-pointer" style={{ color: '#7B1E1E' }}
+          className="font-bold text-primary hover:text-primary-focus hover:underline bg-transparent border-none p-0 cursor-pointer"
         >
           Sign In
         </button>

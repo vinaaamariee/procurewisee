@@ -41,7 +41,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
           width={420}
           height={420}
           className="object-contain grayscale"
-          style={{ opacity: 0.06, width: "420px", height: "420px" }}
+          style={{ opacity: 0.05, width: "420px", height: "420px" }}
         />
       </div>
 
@@ -58,7 +58,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
       />
 
       {/* Hero content */}
-      <div className="relative z-10 w-full max-w-[360px] px-8 flex flex-col items-center text-center gap-6">
+      <div className="relative z-10 w-full max-w-[360px] px-8 flex flex-col items-center text-center gap-7">
 
         {/* Title */}
         <h2
@@ -77,7 +77,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
         <button
           type="button"
           onClick={() => onToggle(content.btnTarget)}
-          className="btn btn-outline border-white text-white hover:bg-white hover:text-[#7B1E1E] hover:border-white active:translate-y-px transition-all duration-200 px-8 rounded-[6px]"
+          className="btn btn-outline border-white text-white hover:bg-white hover:text-primary hover:border-white active:translate-y-px transition-all duration-200 px-9"
         >
           {content.btnLabel}
         </button>

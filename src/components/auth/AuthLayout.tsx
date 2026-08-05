@@ -28,7 +28,7 @@ export default function AuthLayout({
         style={{
           width: "min(980px, 95vw)",
           minHeight: "620px",
-          borderRadius: "6px",
+          borderRadius: "4px",
           boxShadow: "none",
         }}
       >
@@ -65,7 +65,7 @@ export default function AuthLayout({
         </div>
 
         {/* ── Mobile: stacked ──────────────────────────────────────── */}
-        <div className="flex-1 flex flex-col justify-center px-6 py-8 md:hidden">
+        <div className="flex-1 flex flex-col justify-center px-6 py-10 md:hidden">
           <div className="transition-all duration-300">
             {isLogin ? loginForm : registerForm}
           </div>

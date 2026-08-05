@@ -5,6 +5,27 @@
 **Capstone Project for Batanes State College**
 
 
+## 🪪 Authentication Branding & UI Polish
+
+**Date**: August 2026
+
+Redesigned the Login and Create Account authentication pages with cleaner, more institutional Batanes State College branding while preserving all auth logic, validation, routing, and user flow. Applies to both `/login` and `/end-user/login`.
+
+### Key Changes
+- **Reusable Branding Component (`src/components/auth/AuthBranding.tsx`)**: New centered official BSC logo (90–120px) with an image-error fallback. Replaces the previous government identity block (Republic of the Philippines / Batanes State College / ProcureWise wordmark / PMIS subtitle). Used by both Login and Register forms so future auth pages (forgot/reset/verify) stay consistent.
+- **LoginForm / RegisterForm Polish**:
+  - New hierarchy: centered BSC logo → Sign In / Create Account heading → centered subtitle.
+  - Increased vertical spacing (`gap-5` sections, `gap-4` form fields) and refined `26px` heading typography.
+  - Larger Sign In / Create Account submit buttons (`h-12`, 4px design-system radius) with existing global hover/focus/active states.
+  - Improved Remember Me ↔ Forgot Password alignment; replaced hardcoded `#7B1E1E` inline colors with `text-primary` theme tokens.
+- **Right Hero Panel Polish (`HeroPanel.tsx`)**: Vertical alignment kept, CTA button styling aligned to the 4px design system (removed `rounded-[6px]`), more comfortable text spacing (`gap-7`), and BSC logo watermark opacity lowered to `0.05`.
+- **AuthLayout**: Card radius unified to the design-system 4px; mobile stacked layout uses more comfortable padding (logo centered, forms stacked full-width).
+- **Dead code removed**: `AuthHeader.tsx`, `LoginHero.tsx`, `LoginFooter.tsx`, `EndUserRegisterForm.tsx`, `AuthFooter.tsx` (unreferenced components).
+
+**Unchanged**: Authentication server actions (`src/app/actions/auth.ts`), form field names, validation, routing, and the sliding split-panel toggle behavior.
+
+---
+
 ## 💰 Official BSC Fund Source Standardization
 
 **Date**: August 2026
@@ -51,7 +72,7 @@ Successfully redesigned the entire ProcureWise user interface to utilize a clean
   - Hero has 4 visual layers: campus photo with `grayscale(15%) contrast(105%)` filter, maroon gradient overlay, BSC logo watermark (`opacity:.05`), and a Microsoft-style 40px grid (`opacity:.045`).
   - Dual hero content states: Login shows "Welcome Back" with a Create Account CTA; Register shows "New to ProcureWise?" with a Sign In CTA.
   - All components fully converted to DaisyUI semantic tokens (`bg-primary`, `text-base-content`, `input-primary`, `btn-primary`, `bg-secondary/40` etc.) — zero hardcoded hex colors in form/layout components. Light and Dark themes work automatically.
-  - `AuthHeader` shows government identity block (Republic of the Philippines / Batanes State College / ProcureWise / Version 2.0) with Header-Frame.png at 280px.
+  - `AuthBranding` shows the centered official BSC logo (104px) above the Sign In / Create Account headings.
   - `LoginForm` and `RegisterForm` use DaisyUI `fieldset`/`fieldset-legend` wrappers, `input input-bordered input-primary`, and `btn btn-primary btn-block`.
   - Mobile: hero collapses, forms stack full-width.
   - `tsc --noEmit`: 0 errors. `npm run build`: 31/31 pages OK.
