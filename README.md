@@ -5,6 +5,19 @@
 **Capstone Project for Batanes State College**
 
 
+## 🖨️ Officer PR Details Page — Official A4 Print (Appendix 60)
+
+**Date**: August 2026
+
+The Procurement Officer's PR details page (`/dashboard/officer/pr/[id]`) previously printed the raw dashboard because its `window.print()` had no print stylesheet. It now renders the official Appendix 60 Purchase Request form on A4 with the BSC letterhead, matching the end-user and approver views.
+
+### Key Changes
+- **`src/app/dashboard/officer/pr/[id]/PrDetailsClient.tsx`**:
+  - Replaced the unused `DocumentLayout` import with the reusable `OfficialDocumentLayout`.
+  - Added a hidden printable Appendix 60 document (`#prPrintArea`) containing the PURCHASE REQUEST title/ref no., agency metadata grid (Entity Name, Office/Section, PR No., Date, Fund Source), the itemized schedule with grand total, purpose, and Requested By / Approved By signature blocks.
+  - Wrapped the entire dashboard grid (master details, validation checklist, line items, review action panel, workflow timeline, modals) in `.no-print` so `window.print()` emits only the official A4 sheet.
+
+
 ## 🖨️ Purchase Request One-Page Print Optimization
 
 **Date**: August 2026
@@ -37,8 +50,6 @@ The official BSC header/footer were `position: fixed` overlay bands detached fro
 - **`src/components/pr/PRSignatureSection.tsx`**: Margin `mt-6` → `mt-3`, column padding `p-4` → `p-3`, internal spacing `space-y-6` → `space-y-3`, signature line offset `pt-4` → `pt-2`, signature line height `h-8` → `h-7`, plus `break-inside-avoid` so the signature block never splits across pages.
 
 **Unchanged**: Official BSC header/footer images, font sizes, auth logic, PR validation, API calls, routes, state, and user flow.
-
-**Note**: The officer PR details page's raw `window.print()` (no print stylesheet) remains out of scope for this pass.
 
 
 ## 🪪 Authentication Branding & UI Polish
