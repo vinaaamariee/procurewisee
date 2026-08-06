@@ -14,7 +14,7 @@ export default function PRPurposeSection({
   isReadOnly = false,
 }: PRPurposeSectionProps) {
   return (
-    <div className="my-2.5 border border-slate-900 p-3 bg-white font-serif text-xs space-y-1.5">
+    <div className="pr-purpose-section my-2.5 border border-slate-900 p-3 bg-white font-serif text-xs space-y-1.5 break-inside-avoid" style={{pageBreakInside: 'avoid'}}>
       <div className="font-bold text-slate-950 uppercase tracking-wider text-[11px] font-sans">
         Purpose / Justification of Request: <span className="text-red-500">*</span>
       </div>

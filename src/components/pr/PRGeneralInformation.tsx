@@ -31,8 +31,8 @@ export default function PRGeneralInformation({
   };
 
   return (
-    <div className="my-2.5 border border-slate-900 font-serif text-xs">
-      <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-900">
+    <div className="pr-metadata-section my-2.5 border border-slate-900 font-serif text-xs break-inside-avoid" style={{pageBreakInside: 'avoid'}}>
+      <div className="grid grid-cols-2 divide-x divide-slate-900">
         
         {/* Left Column: Entity, Office, Responsibility Center */}
         <div className="p-2.5 space-y-2.5">

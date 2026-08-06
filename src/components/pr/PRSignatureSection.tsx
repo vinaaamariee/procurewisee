@@ -22,8 +22,8 @@ export default function PRSignatureSection({
   isReadOnly = false,
 }: PRSignatureSectionProps) {
   return (
-    <div className="mt-3 border border-slate-900 font-serif text-xs break-inside-avoid">
-      <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-900">
+    <div className="pr-signature-section mt-3 border border-slate-900 font-serif text-xs break-inside-avoid" style={{pageBreakInside: 'avoid'}}>
+      <div className="grid grid-cols-2 divide-x divide-slate-900">
         
         {/* Requested By Block */}
         <div className=" p-3 space-y-3 flex flex-col justify-between">

@@ -186,26 +186,26 @@ export default function PRDocument({
 
   return (
     <div className="pr-print-root relative pb-24">
-      {/* Alert Banners */}
+      {/* Alert Banners — screen only */}
       {errorMsg && (
-        <div className="max-w-[850px] mx-auto mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
+        <div className="mx-auto mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
           <span>⚠️</span>
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="max-w-[850px] mx-auto mb-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
+        <div className="mx-auto mb-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
           <span>✅</span>
           <span>{successMsg}</span>
         </div>
       )}
 
-      {/* Centered Digital PR Document — wrapped in OfficialDocumentLayout for BSC print header/footer */}
-      <div id="pr-document-container" className="w-full flex justify-center">
+      {/* Full-width PR Document — OfficialDocumentLayout supplies BSC header/footer for print */}
+      <div id="pr-document-container" className="w-full">
         <div
           id="pr-document"
-          className="w-full max-w-[850px] min-h-[1056px] bg-white text-slate-950 border border-black p-6 sm:p-10 md:p-12 font-serif text-xs leading-snug"
+          className="w-full bg-white text-slate-950 border border-black p-4 sm:p-6 font-serif text-xs leading-snug"
         >
           <OfficialDocumentLayout
             printAreaId="pr-document"

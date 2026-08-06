@@ -125,7 +125,7 @@ export default function PRItemsTable({
   const grandTotal = items.reduce((sum, item) => sum + (item.estimatedCost || (item.quantity * item.estimatedUnitCost)), 0);
 
   return (
-    <div className="my-2.5 font-serif space-y-2">
+    <div className="pr-items-section my-2.5 font-serif space-y-2 break-inside-avoid" style={{pageBreakInside: 'avoid'}}>
       {/* Table Header Controls */}
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-sans">
@@ -144,24 +144,33 @@ export default function PRItemsTable({
 
       {/* Official Bordered Table */}
       <div className="overflow-x-auto border border-slate-900">
-        <table className="w-full border-collapse text-xs">
+        <table className="w-full border-collapse text-xs table-fixed">
+          <colgroup>
+            <col style={{width: '7%'}} />
+            <col style={{width: '8%'}} />
+            <col />
+            <col style={{width: '10%'}} />
+            <col style={{width: '12%'}} />
+            <col style={{width: '13%'}} />
+            {!isReadOnly && <col style={{width: '5%'}} />}
+          </colgroup>
           <thead>
             <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px] font-sans">
-              <th className="border-r border-slate-900 p-1.5 text-center w-24">
+              <th className="border-r border-slate-900 p-1.5 text-center">
                 Stock / Property No.
               </th>
-              <th className="border-r border-slate-900 p-1.5 text-center w-20">Unit</th>
+              <th className="border-r border-slate-900 p-1.5 text-center">Unit</th>
               <th className="border-r border-slate-900 p-1.5 text-left">
                 Item Description / Technical Specifications
               </th>
-              <th className="border-r border-slate-900 p-1.5 text-center w-20">Quantity</th>
-              <th className="border-r border-slate-900 p-1.5 text-right w-28">
+              <th className="border-r border-slate-900 p-1.5 text-center">Quantity</th>
+              <th className="border-r border-slate-900 p-1.5 text-right">
                 Unit Cost (₱)
               </th>
-              <th className="border-r border-slate-900 p-1.5 text-right w-32">
+              <th className="border-r border-slate-900 p-1.5 text-right">
                 Total Cost (₱)
               </th>
-              {!isReadOnly && <th className="p-1.5 text-center w-10 print:hidden">Action</th>}
+              {!isReadOnly && <th className="p-1.5 text-center print:hidden">Action</th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-800">
