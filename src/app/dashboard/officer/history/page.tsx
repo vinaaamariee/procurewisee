@@ -5,7 +5,7 @@ import VerificationHistoryClient from "./VerificationHistoryClient";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = {
-  title: "Verification History — Procurement Verification Officer — ProcureWise",
+  title: "Verification History — Procurement Officer — ProcureWise",
 };
 
 export default async function VerificationHistoryPage() {

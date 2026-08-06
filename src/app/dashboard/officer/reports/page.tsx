@@ -4,7 +4,7 @@ import ReportsClient from "./ReportsClient";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = {
-  title: "Operational Reports \u2014 Procurement Verification Officer \u2014 ProcureWise",
+  title: "Operational Reports \u2014 Procurement Officer \u2014 ProcureWise",
 };
 
 export default async function ReportsPage() {

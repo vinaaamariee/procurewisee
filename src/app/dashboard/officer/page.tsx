@@ -18,7 +18,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-export const metadata = { title: "Procurement Verification Officer Dashboard — ProcureWise" };
+export const metadata = { title: "Procurement Officer Dashboard — ProcureWise" };
 
 async function getOfficerStats() {
   const timer = startTimer("getOfficerStats");
@@ -195,7 +195,7 @@ export default async function OfficerDashboard() {
 
   return (
     <DashboardShell>
-      <DashboardHeader profile={profile} displayRole="Procurement Verification Officer" />
+      <DashboardHeader profile={profile} displayRole="Procurement Officer" />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-8">

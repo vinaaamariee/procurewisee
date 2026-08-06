@@ -5,7 +5,7 @@ import PrAuditClient from "./PrAuditClient";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = {
-  title: "Purchase Request Verification — Procurement Verification Officer — ProcureWise",
+  title: "Purchase Request Verification — Procurement Officer — ProcureWise",
 };
 
 export default async function PrAuditingPage() {
