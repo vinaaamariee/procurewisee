@@ -18,6 +18,25 @@ The Procurement Officer's PR details page (`/dashboard/officer/pr/[id]`) previou
   - Wrapped the entire dashboard grid (master details, validation checklist, line items, review action panel, workflow timeline, modals) in `.no-print` so `window.print()` emits only the official A4 sheet.
 
 
+## 🖨️ Dedicated Print Route — `/print/pr/[id]`
+
+**Date**: August 2026
+
+Printing no longer happens from the dashboard. Each role's "Print PR" button now opens a standalone print page that renders nothing but the official A4 Purchase Request document and auto-triggers the browser print dialog on load — the same pattern used by SAP, Oracle, Microsoft Dynamics, and government procurement systems. Because the browser only renders the document (no sidebar, navbar, dashboard, modals, or cards), print CSS issues like the footer splitting onto a second page are eliminated.
+
+### Key Changes
+- **`src/app/print/pr/[id]/page.tsx`** (new): Dedicated print route outside the `/dashboard` layout. It authenticates the user, fetches the PR with items, enforces access control (End Users may only print their own PRs), serializes the data, and renders `<PRPrintDocument />` plus `<AutoPrint />`.
+- **`src/components/pr/PRPrintDocument.tsx`** (new): Reusable read-only Appendix 60 print sheet (PURCHASE REQUEST title/ref no., agency metadata grid, itemized schedule with total, purpose, and signature blocks) wrapped in `OfficialDocumentLayout`. No React state, no modals, no dashboard chrome.
+- **`src/components/pr/AutoPrint.tsx`** (new): Client component that calls `window.print()` once the page is fully loaded (mirrors `window.onload = () => window.print()`), with a fallback timer.
+- **`src/components/documents/OfficialDocumentLayout.tsx`**: Added `min-height: 0 !important` to the `html, body` print rule so the root layout's `min-h-screen` body can no longer create a phantom second page.
+- **Print buttons rewired** (no more `window.print()` on the dashboard):
+  - `PrDetailsClient.tsx` (officer) — opens `/print/pr/[id]` in a new tab; removed the inline hidden print area and its `OfficialDocumentLayout` import.
+  - `PrReviewClient.tsx` (approver) — same; removed the inline hidden print area.
+  - `PrTrackerClient.tsx` (end-user) — same; also removed a dead `DocumentLayout` import.
+
+**Unchanged**: BSC header/footer assets, document contents, signatures, validation, API calls, and the create/edit PR form (which still prints its live editor via `PRToolbar`).
+
+
 ## 🖨️ Purchase Request Print Pagination Fix — Footer on the Same Page
 
 **Date**: August 2026

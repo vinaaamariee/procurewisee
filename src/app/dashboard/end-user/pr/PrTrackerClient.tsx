@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { submitPrAction, resubmitPrAction, deletePrDraftAction } from "@/app/actions/pr";
-import DocumentLayout from "@/components/documents/DocumentLayout";
 import EmptyState from "@/components/ui/EmptyState";
 import PrWorkflowTimeline, { TimelineEntry } from "@/components/pr/PrWorkflowTimeline";
 import PrWorkflowTimelineStepper from "@/components/pr/PrWorkflowTimelineStepper";
@@ -392,10 +391,10 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                     </>
                   )}
 
-                  {!isEditing && (
+                  {!isEditing && selectedPr && (
                     <button
                       type="button"
-                      onClick={() => window.print()}
+                      onClick={() => window.open(`/print/pr/${selectedPr.id}`, "_blank")}
                       className="btn btn-ghost btn-sm rounded-xl text-xs font-bold border border-[var(--border)]"
                     >
                       Print PR

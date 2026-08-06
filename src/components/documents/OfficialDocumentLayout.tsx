@@ -32,6 +32,7 @@ export default function OfficialDocumentLayout({
           body {
             margin: 0 !important;
             padding: 0 !important;
+            min-height: 0 !important;
             background: #fff !important;
           }
 
