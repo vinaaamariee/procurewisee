@@ -22,15 +22,29 @@ export default function UserRolesSection() {
     {
       title: "Procurement Staff",
       subtitle: "Procurement Office Personnel",
-      badge: "Procurement Manager",
+      badge: "Procurement Documentation",
       icon: ShieldAlert,
-      description: "Procurement Office staff responsible for reviewing purchase requests, publishing RFQs, managing supplier bids, issuing purchase orders, and monitoring the full procurement lifecycle.",
+      description: "Procurement Office staff responsible for recording verified requests into the Procurement Monitoring Register, publishing RFQs, issuing purchase orders, and maintaining procurement documentation.",
       access: [
-        "Review & process Purchase Requests",
+        "Record verified Purchase Requests into the PMR register",
         "Generate & publish Requests for Quotation",
-        "Manage supplier quotes and canvassing",
+        "Prepare BAC transmittals & Letters of Notice",
         "Issue Appendix 61 Purchase Orders",
         "Monitor procurement analytics & price trends",
+      ],
+    },
+    {
+      title: "Procurement Officer II",
+      subtitle: "Procurement Verification & Delivery",
+      badge: "Verification & Oversight",
+      icon: ShieldAlert,
+      description: "The Procurement Officer II verifies submitted Purchase Requests, monitors supplier deliveries and acknowledgement receipts, and keeps a complete verification history.",
+      access: [
+        "Verify & approve Purchase Requests",
+        "Return or reject non-compliant requests",
+        "Monitor deliveries & acknowledgement receipts",
+        "Maintain verification history",
+        "Review supplier award recommendations",
       ],
     },
     {
@@ -75,7 +89,7 @@ export default function UserRolesSection() {
         </div>
 
         {/* Roles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
           {roles.map((role) => {
             const Icon = role.icon;
             return (

@@ -5,6 +5,34 @@
 **Capstone Project for Batanes State College**
 
 
+## 🔄 Procurement Role Realignment (Official BSC Workflow)
+
+**Date**: August 2026
+
+Realigned each role's dashboard and sidebar navigation to match the official BSC procurement procedure. The naming standardization above was a label-only change; this step reorganized **which modules each role sees** to reflect the official responsibilities (End User → **Procurement Officer II** verifies → **Procurement Staff** documents → BAC/Supplier → Delivery), while preserving the end-to-end workflow, authz, and all business logic unchanged.
+
+### Role → Module Ownership (new)
+
+| Role | Dashboard modules |
+| --- | --- |
+| **Procurement Staff** (`Procurement Officer`) | Dashboard, Procurement Monitoring Record (PMR), RFQ Distribution, BAC Transmittals (placeholder), Letter of Notice (placeholder), Purchase Order, Reports |
+| **Procurement Officer II** (`Administrative Approver`) | Dashboard, Purchase Request Verification, Delivery Monitoring, Verification History, Reports |
+
+### Key Changes
+
+- **Procurement Officer II owns verification + delivery** (per BSC SOP §5.1/§5.15). New routes `/dashboard/approver/pr`, `/dashboard/approver/pr/[id]`, `/dashboard/approver/deliveries`, and a rewritten `/dashboard/approver/history` reuse the existing officer client components (`PrAuditClient`, `PrDetailsClient`, `DeliveriesClient`, `VerificationHistoryClient`) via a new `basePath` prop. The approver dashboard is now operational: verification/delivery KPIs, delivery summary, alerts, recent verification activity — with MCDM award recommendations, activity feed, and Add Staff retained as secondary content.
+- **Procurement Staff no longer verifies or monitors deliveries.** PR Verification, Delivery Monitoring, and Verification History were removed from the staff sidebar; the staff dashboard now focuses on PMR/RFQ/PO KPIs and recent work. `PrDetailsClient` gained a `canVerify` prop — the staff PR-detail route is read-only (verification action panel hidden), while the Officer II route passes `canVerify` + `verifierLabel="Procurement Officer II"`.
+- **Officer I duties merged into Procurement Staff** (no new DB role, per scope): RFQ distribution, PhilGEPS-style posting/notices, and PO release remain Staff responsibilities. New placeholder modules **BAC Transmittals** (`/dashboard/officer/transmittals`) and **Letter of Notice** (`/dashboard/officer/notices`) were added as nav entries with "coming soon" states.
+- **Staff Reports** dropped the Delivery/Receipts tabs (Staff must not see Delivery Monitoring); quick-links now point to PMR/RFQ/PO.
+- **Approver admin pages** (Workflows, Form Templates, Analytics) are hidden from the sidebar only; routes and business logic remain intact.
+- **Workflow preserved**: approving a PR still auto-creates the PMR (Officer II's approval action already allows both procurement roles), so verified requests flow automatically to Procurement Staff. RFQ creation, PO drafting, and all server-action role guards are unchanged.
+- **Landing page** (`WorkflowSection`, `UserRolesSection`) updated so the marketing copy reflects the new ownership (Officer II verifies; Staff records PMRs, publishes RFQs, issues POs; a Procurement Officer II role card was added).
+
+### Verification
+
+`npx tsc --noEmit` clean, `npx eslint .` clean (pre-existing warnings only), `next build` succeeds with the new routes (`/dashboard/approver/pr`, `/dashboard/approver/deliveries`, `/dashboard/officer/transmittals`, `/dashboard/officer/notices`) confirmed in the route table.
+
+
 ## 🏷️ Project-Wide Procurement Role Naming Standardization
 
 **Date**: August 2026

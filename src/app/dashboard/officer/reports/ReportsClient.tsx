@@ -185,25 +185,6 @@ export default function ReportsClient({ data }: { data: ReportsData }) {
       fmtMoney(p.totalCost),
     ]);
 
-    const poRows = data.pos.map((p) => [
-      p.poNumber,
-      p.supplierName,
-      p.prNumber || "—",
-      p.office || "—",
-      fmtDate(p.dateOfDelivery),
-      fmtMoney(p.totalCost),
-      p.status,
-    ]);
-
-    const receiptRows = data.receipts.map((r) => [
-      r.receiptNumber,
-      r.poNumber || "—",
-      r.supplierName,
-      fmtDate(r.dateReceived),
-      r.receivedBy,
-      r.deliveryStatus,
-    ]);
-
     return {
       summary: {
         title: "Status Summary Report",
@@ -230,16 +211,6 @@ export default function ReportsClient({ data }: { data: ReportsData }) {
         headers: ["PMR No.", "PR No.", "Office", "Fund Source", "Date Received", "Verification Date", "Verified By", "Stage", "Status", "Amount"],
         rows: pmrRows,
       },
-      delivery: {
-        title: "Delivery Monitoring Report",
-        headers: ["PO No.", "Supplier", "PR No.", "Office", "Expected Delivery", "Amount", "Status"],
-        rows: poRows,
-      },
-      receipts: {
-        title: "Acknowledgement Receipts Report",
-        headers: ["Receipt No.", "PO No.", "Supplier", "Date Received", "Received By", "Delivery Status"],
-        rows: receiptRows,
-      },
     };
   }, [data]);
 
@@ -249,8 +220,6 @@ export default function ReportsClient({ data }: { data: ReportsData }) {
     { key: "pending", label: "Pending" },
     { key: "returned", label: "Returned & Rejected" },
     { key: "pmr", label: "PMR Register" },
-    { key: "delivery", label: "Delivery" },
-    { key: "receipts", label: "Receipts" },
   ];
 
   const active = reports[tab];
@@ -350,10 +319,9 @@ export default function ReportsClient({ data }: { data: ReportsData }) {
       {/* Quick links */}
       <div className="flex flex-wrap gap-3">
         {[
-          { href: "/dashboard/officer/pr", label: "Purchase Request Verification" },
           { href: "/dashboard/officer/pmr", label: "Procurement Monitoring Record" },
-          { href: "/dashboard/officer/deliveries", label: "Delivery Monitoring" },
-          { href: "/dashboard/officer/history", label: "Verification History" },
+          { href: "/dashboard/officer/rfq", label: "RFQ Distribution" },
+          { href: "/dashboard/officer/po", label: "Purchase Order" },
         ].map((l) => (
           <Link key={l.href} href={l.href} className="btn btn-sm btn-ghost rounded-md text-xs font-bold border border-base-300">
             {l.label}

@@ -13,7 +13,7 @@ export default function WorkflowSection() {
     {
       title: "Review & Approval",
       subtitle: "Procurement Verification",
-      description: "Procurement Staff review specifications, PPMP alignment, & assign staff.",
+      description: "Procurement Officer II runs the 5-point compliance verification; approved requests flow to Procurement Staff for PMR recording.",
       icon: CheckSquare,
     },
     {

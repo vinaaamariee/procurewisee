@@ -1,71 +1,142 @@
-import { requireRole } from '@/lib/auth/get-user-profile';
-import { prisma } from '@/lib/prisma';
-import AddStaffForm from './add-staff-form';
-import ApproveButton from './approve-button';
-import { 
-  ShieldCheck, 
-  Truck, 
-  FileText, 
-  CheckCircle2, 
-  TrendingUpDown, 
-  AlertCircle, 
-  Clock, 
-  CheckSquare, 
-  Undo2, 
-  XOctagon, 
-  History, 
-  TrendingUp, 
-  Sparkles,
-  User,
-  ArrowRight
-} from 'lucide-react';
-import { startTimer } from '@/lib/performance-logger';
-import EmptyState from '@/components/ui/EmptyState';
-import ActivityFeed from '@/components/dashboard/ActivityFeed';
-import Card from '@/components/ui/Card';
-import SectionHeader from '@/components/ui/SectionHeader';
-import TableContainer from '@/components/ui/TableContainer';
-import StatusBadge from '@/components/ui/StatusBadge';
-import Link from 'next/link';
+import Link from "next/link";
+import { PrStatus } from "@prisma/client";
+import { requireRole } from "@/lib/auth/get-user-profile";
+import { prisma } from "@/lib/prisma";
+import { startTimer } from "@/lib/performance-logger";
+import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import DashboardShell from "@/components/dashboard/DashboardShell";
+import StatCard from "@/components/dashboard/StatCard";
+import EmptyState from "@/components/ui/EmptyState";
+import Card from "@/components/ui/Card";
+import ActivityFeed from "@/components/dashboard/ActivityFeed";
+import AddStaffForm from "./add-staff-form";
+import ApproveButton from "./approve-button";
+import {
+  FileCheck2,
+  Undo2,
+  CalendarCheck2,
+  Truck,
+  AlertTriangle,
+  ShieldCheck,
+  FileText,
+  CheckCircle2,
+  TrendingUpDown,
+} from "lucide-react";
 
-export const metadata = { title: 'Procurement Officer II Dashboard — ProcureWise' };
+export const metadata = { title: "Procurement Officer II Dashboard — ProcureWise" };
 
 async function getProcurementOfficerIIStats() {
-  const timer = startTimer('getProcurementOfficerIIStats');
-  const [totalCanvases, pendingReview, approvedCount, recentAuditLogs] = await Promise.all([
-    prisma.canvasAbstract.count(),
-    prisma.purchaseRequest.count({ where: { status: { in: ['Submitted', 'UnderReview'] } } }),
-    prisma.purchaseRequest.count({ where: { status: { in: ['Approved', 'Received'] } } }),
-    prisma.auditTrail.findMany({
-      select: {
-        id: true,
-        actionType: true,
-        timestamp: true,
-      },
-      orderBy: {
-        timestamp: 'desc',
-      },
-      take: 5,
-    }),
-  ]);
+  const timer = startTimer("getProcurementOfficerIIStats");
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const [pendingPrs, returnedPrs, verifiedToday, pendingDeliveries, partialDeliveries, deliveredCount] =
+    await Promise.all([
+      prisma.purchaseRequest.count({
+        where: {
+          status: { in: [PrStatus.Submitted, PrStatus.UnderReview, (PrStatus as any).PendingProcurementReview || "Submitted"] as any[] },
+        },
+      }),
+      prisma.purchaseRequest.count({
+        where: {
+          status: { in: [(PrStatus as any).Returned || "ReturnedForRevision", PrStatus.ReturnedForRevision] as any[] },
+        },
+      }),
+      prisma.purchaseRequest.count({
+        where: { status: PrStatus.Approved, approvedAt: { gte: startOfDay } },
+      }),
+      prisma.purchaseOrder.count({
+        where: { status: { in: ["Draft", "PendingApproval", "Approved", "SentToSupplier"] } },
+      }),
+      prisma.purchaseOrder.count({ where: { status: "PartiallyDelivered" } }),
+      prisma.purchaseOrder.count({ where: { status: { in: ["Delivered", "Completed"] } } }),
+    ]);
   timer.end();
 
   return {
-    totalCanvases,
-    pendingReview,
-    approvedCount,
-    recentAuditLogs: recentAuditLogs.map(log => ({
-      id: log.id,
-      action: log.actionType,
-      createdAt: log.timestamp,
-    })),
+    pendingPrs,
+    returnedPrs,
+    verifiedToday,
+    pendingDeliveries,
+    partialDeliveries,
+    deliveredCount,
   };
 }
 
+async function getProcurementAlerts() {
+  const timer = startTimer("getProcurementIIAlerts");
+
+  const threeDaysAgo = new Date();
+  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+  const stalePrs = await prisma.purchaseRequest.findMany({
+    where: {
+      status: { in: [PrStatus.Submitted, PrStatus.UnderReview, (PrStatus as any).PendingProcurementReview || "Submitted"] as any[] },
+      submittedAt: { lte: threeDaysAgo },
+    },
+    select: {
+      id: true,
+      prNumber: true,
+      department: true,
+      office: true,
+      purpose: true,
+      submittedAt: true,
+    },
+    orderBy: { submittedAt: "asc" },
+    take: 5,
+  });
+
+  const overdueDeliveries = await prisma.purchaseOrder.findMany({
+    where: {
+      status: { in: ["Approved", "SentToSupplier"] },
+      dateOfDelivery: { not: null, lte: threeDaysAgo },
+    },
+    select: {
+      id: true,
+      poNumber: true,
+      supplier: { select: { companyName: true } },
+      dateOfDelivery: true,
+      totalCost: true,
+    },
+    orderBy: { dateOfDelivery: "asc" },
+    take: 5,
+  });
+
+  const now = new Date();
+  const stalePrsWithAge = stalePrs.map((pr) => ({
+    ...pr,
+    daysPending: Math.ceil((now.getTime() - (pr.submittedAt ? pr.submittedAt.getTime() : now.getTime())) / (1000 * 60 * 60 * 24)),
+  }));
+
+  timer.end();
+  return { stalePrs: stalePrsWithAge, overdueDeliveries };
+}
+
+async function getRecentActivity() {
+  const timer = startTimer("getProcurementIIRecentActivity");
+
+  const recentlyVerified = await prisma.purchaseRequest.findMany({
+    where: { status: PrStatus.Approved },
+    select: {
+      id: true,
+      prNumber: true,
+      department: true,
+      office: true,
+      approvedAt: true,
+      reviewedBy: { select: { fullName: true } },
+    },
+    orderBy: { approvedAt: "desc" },
+    take: 5,
+  });
+
+  timer.end();
+  return { recentlyVerified };
+}
+
 async function getPendingRecommendations() {
-  const timer = startTimer('getPendingRecommendations');
+  const timer = startTimer("getPendingRecommendations");
   const data = await prisma.recommendation.findMany({
-    where: { approvalStatus: 'Pending Review' },
+    where: { approvalStatus: "Pending Review" },
     select: {
       id: true,
       compositeMcdmScore: true,
@@ -87,12 +158,12 @@ async function getPendingRecommendations() {
         },
       },
     },
-    orderBy: { rankPosition: 'asc' },
+    orderBy: { rankPosition: "asc" },
     take: 5,
   });
   timer.end();
 
-  return data.map(rec => ({
+  return data.map((rec) => ({
     id: rec.id,
     compositeScore: rec.compositeMcdmScore,
     priceScore: rec.priceScore,
@@ -102,235 +173,212 @@ async function getPendingRecommendations() {
     reasoning: rec.justificationLog,
     approvalStatus: rec.approvalStatus,
     supplier: rec.supplier,
-    quote: rec.supplierQuote ? {
-      rfqId: rec.supplierQuote.rfqId,
-      totalQuotedAmount: rec.supplierQuote.totalQuotedAmount,
-    } : null,
+    quote: rec.supplierQuote
+      ? {
+          rfqId: rec.supplierQuote.rfqId,
+          totalQuotedAmount: rec.supplierQuote.totalQuotedAmount,
+        }
+      : null,
   }));
 }
 
-async function getProcurementOfficerIIDashboardPRs() {
-  const timer = startTimer('getProcurementOfficerIIDashboardPRs');
-  
-  const startOfToday = new Date();
-  startOfToday.setHours(0, 0, 0, 0);
-
-  const [pending, approved, returned, rejected] = await Promise.all([
-    prisma.purchaseRequest.findMany({
-      where: { status: { in: ['Submitted', 'UnderReview'] } },
-      include: { requestedBy: true, assignedOfficer: true },
-      orderBy: { updatedAt: 'desc' }
-    }),
-    prisma.purchaseRequest.findMany({
-      where: {
-        status: { in: ['Approved', 'Received'] },
-        updatedAt: { gte: startOfToday }
-      },
-      include: { requestedBy: true, assignedOfficer: true },
-      orderBy: { updatedAt: 'desc' }
-    }),
-    prisma.purchaseRequest.findMany({
-      where: { status: 'ReturnedForRevision' },
-      include: { requestedBy: true, assignedOfficer: true },
-      orderBy: { updatedAt: 'desc' }
-    }),
-    prisma.purchaseRequest.findMany({
-      where: { status: 'Rejected' },
-      include: { requestedBy: true, assignedOfficer: true },
-      orderBy: { updatedAt: 'desc' }
-    })
-  ]);
-
-  timer.end();
-
-  const mapPr = (pr: any) => ({
-    id: pr.id,
-    prNumber: pr.prNumber,
-    department: pr.department,
-    office: pr.office,
-    requesterName: pr.requestedBy?.fullName || pr.requesterName || 'N/A',
-    assignedOfficerName: pr.assignedOfficer?.fullName || 'Not Assigned',
-    totalCost: Number(pr.totalCost),
-    status: pr.status,
-    createdAt: pr.createdAt,
-    updatedAt: pr.updatedAt
-  });
-
-  return {
-    pendingApprovals: pending.map(mapPr),
-    approvedToday: approved.map(mapPr),
-    returnedPrs: returned.map(mapPr),
-    rejectedPrs: rejected.map(mapPr)
-  };
+function formatCurrency(amount: number) {
+  return `₱${amount.toLocaleString("en-PH", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`;
 }
 
 export default async function ProcurementOfficerIIDashboard() {
-  await requireRole('Administrative Approver');
-  const [stats, recs, prData] = await Promise.all([
+  const { profile } = await requireRole("Administrative Approver");
+  const [stats, alerts, activity, recs] = await Promise.all([
     getProcurementOfficerIIStats(),
+    getProcurementAlerts(),
+    getRecentActivity(),
     getPendingRecommendations(),
-    getProcurementOfficerIIDashboardPRs()
   ]);
 
-  const renderPrTable = (prs: any[], emptyMessage: string) => {
-    return (
-      <div className="overflow-x-auto">
-        {prs.length === 0 ? (
-          <div className="p-6">
-            <EmptyState
-              preset="purchase-requests"
-              title="No Requests Here"
-              description={emptyMessage}
-              compact
-            />
-          </div>
-        ) : (
-          <table className="w-full min-w-[800px] border-collapse text-sm">
-            <thead>
-              <tr className="border-b border-[var(--border)] bg-[var(--bg-dark)]">
-                {['PR Number', 'Department / Office', 'Date Submitted', 'Assigned Procurement Staff', 'Status', 'Action'].map(h => (
-                  <th key={h} className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {prs.map((pr) => (
-                <tr key={pr.id} className="border-b border-[var(--border)] transition hover:bg-[var(--surface-hover)]">
-                  <td className="px-5 py-4 font-bold text-[var(--text-primary)]">
-                    {pr.prNumber}
-                  </td>
-                  <td className="px-5 py-4 font-medium text-[var(--text-primary)]">
-                    {pr.department} <span className="text-xs text-[var(--text-muted)]">({pr.office})</span>
-                  </td>
-                  <td className="px-5 py-4 text-[var(--text-secondary)] whitespace-nowrap">
-                    {new Date(pr.createdAt).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })}
-                  </td>
-                  <td className="px-5 py-4 text-[var(--text-primary)] font-semibold whitespace-nowrap">
-                    <span className="inline-flex items-center gap-1.5">
-                      <User className="h-4 w-4 text-[var(--text-muted)]" />
-                      {pr.assignedOfficerName}
-                    </span>
-                  </td>
-                  <td className="px-5 py-4 text-center whitespace-nowrap">
-                    <StatusBadge status={pr.status === 'ReturnedForRevision' ? 'Returned' : pr.status} />
-                  </td>
-                  <td className="px-5 py-4 text-center whitespace-nowrap">
-                    <Link
-                      href={`/dashboard/approver/history/${pr.id}`}
-                      className="btn btn-xs btn-outline border-base-300 hover:bg-base-200 text-base-content font-bold rounded-md inline-flex items-center gap-1"
-                    >
-                      Review PR
-                      <ArrowRight className="h-3.5 w-3.5" />
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-    );
-  };
   const statCards = [
-    { label: 'Canvas Abstracts', value: stats.totalCanvases, icon: FileText, color: 'bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border-blue-100 dark:border-blue-900/30', desc: 'Bid opening records', href: '#pending-reviews' },
-    { label: 'Pending Verification', value: stats.pendingReview, icon: Clock, color: 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border-amber-100 dark:border-amber-900/30', desc: 'Awaiting verification', href: '/dashboard/approver/history?tab=pending' },
-    { label: 'Verified',         value: stats.approvedCount, icon: CheckSquare, color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-100 dark:border-emerald-900/30', desc: 'Verified Purchase Requests', href: '/dashboard/approver/history?tab=approved' },
-    { label: 'Audit Logs',       value: stats.recentAuditLogs.length, icon: ShieldCheck, color: 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border-indigo-100 dark:border-indigo-900/30', desc: 'Recent trail entries', href: '#audit-trail' },
+    {
+      label: "Pending Verification",
+      value: stats.pendingPrs,
+      desc: "PRs awaiting compliance verification",
+      href: "/dashboard/approver/pr",
+      Icon: FileCheck2,
+      accentClass: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
+    },
+    {
+      label: "Returned for Compliance",
+      value: stats.returnedPrs,
+      desc: "Sent back to End Users for corrections",
+      href: "/dashboard/approver/pr",
+      Icon: Undo2,
+      accentClass: "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300",
+    },
+    {
+      label: "Verified Today",
+      value: stats.verifiedToday,
+      desc: "Approved and forwarded to Procurement Staff",
+      href: "/dashboard/approver/history",
+      Icon: CalendarCheck2,
+      accentClass: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
+    },
+    {
+      label: "Pending Deliveries",
+      value: stats.pendingDeliveries,
+      desc: "POs not yet delivered",
+      href: "/dashboard/approver/deliveries",
+      Icon: Truck,
+      accentClass: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
+    },
   ];
 
   return (
-    <div className="space-y-10">
+    <DashboardShell>
+      <DashboardHeader profile={profile} displayRole="Procurement Officer II" />
 
-      {/* ── Page Header ── */}
-      <SectionHeader 
-        title="Procurement Officer II Dashboard"
-        subtitle="Verify Purchase Requests, review MCDM recommendations, and monitor procurement trails."
-      />
-
-      {/* ── Decision-Making Focus Area ── */}
-      <div className="space-y-8">
-        
-        {/* Pending Approvals */}
-        <Card>
-          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
-            <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <Clock className="h-5 w-5 text-amber-500" />
-              Pending Approvals
-            </h2>
-            {prData.pendingApprovals.length > 0 && (
-              <span className="rounded-full bg-amber-500/10 border border-amber-500/20 px-3 py-1 text-xs font-bold text-amber-700 dark:text-amber-300">
-                {prData.pendingApprovals.length} awaiting approval
-              </span>
-            )}
-          </div>
-          {renderPrTable(prData.pendingApprovals, "No pending purchase requests awaiting approval.")}
-        </Card>
-
-        {/* Approved Today */}
-        <Card>
-          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
-            <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <CheckSquare className="h-5 w-5 text-emerald-500" />
-              Approved Today
-            </h2>
-            {prData.approvedToday.length > 0 && (
-              <span className="rounded-full bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-300">
-                {prData.approvedToday.length} approved today
-              </span>
-            )}
-          </div>
-          {renderPrTable(prData.approvedToday, "No purchase requests approved today.")}
-        </Card>
-
-        {/* Returned for Revision */}
-        <Card>
-          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
-            <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <Undo2 className="h-5 w-5 text-rose-500" />
-              Returned for Revision
-            </h2>
-            {prData.returnedPrs.length > 0 && (
-              <span className="rounded-full bg-rose-500/10 border border-rose-500/20 px-3 py-1 text-xs font-bold text-rose-700 dark:text-rose-300">
-                {prData.returnedPrs.length} returned for revision
-              </span>
-            )}
-          </div>
-          {renderPrTable(prData.returnedPrs, "No purchase requests currently in revision status.")}
-        </Card>
-
-        {/* Rejected Requests */}
-        <Card>
-          <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
-            <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
-              <XOctagon className="h-5 w-5 text-red-500" />
-              Rejected Requests
-            </h2>
-            {prData.rejectedPrs.length > 0 && (
-              <span className="rounded-full bg-red-500/10 border border-red-500/20 px-3 py-1 text-xs font-bold text-red-700 dark:text-red-300">
-                {prData.rejectedPrs.length} rejected requests
-              </span>
-            )}
-          </div>
-          {renderPrTable(prData.rejectedPrs, "No rejected purchase requests recorded.")}
-        </Card>
-
+      {/* KPI Cards */}
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-8">
+        {statCards.map((card) => (
+          <StatCard
+            key={card.label}
+            label={card.label}
+            value={card.value}
+            desc={card.desc}
+            href={card.href}
+            Icon={card.Icon}
+            accentClass={card.accentClass}
+          />
+        ))}
       </div>
 
-      {/* ── Pending MCDM Recommendations ── */}
+      {/* Delivery Monitoring Summary */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        {[
+          {
+            label: "Pending Delivery",
+            value: stats.pendingDeliveries,
+            desc: "POs not yet delivered",
+            accent: "border-amber-300/60 text-amber-700 dark:text-amber-300",
+          },
+          {
+            label: "Partial Deliveries",
+            value: stats.partialDeliveries,
+            desc: "POs with partial receipt",
+            accent: "border-blue-300/60 text-blue-700 dark:text-blue-300",
+          },
+          {
+            label: "Delivered",
+            value: stats.deliveredCount,
+            desc: "Completed deliveries",
+            accent: "border-emerald-300/60 text-emerald-700 dark:text-emerald-300",
+          },
+        ].map((d) => (
+          <Link
+            key={d.label}
+            href="/dashboard/approver/deliveries"
+            className="rounded-md border border-base-300 bg-base-100 p-4 flex items-center justify-between hover:bg-base-200/50 transition-colors"
+          >
+            <div className="text-left">
+              <div className="text-[11px] font-bold uppercase tracking-wider text-base-content/65">{d.label}</div>
+              <div className={`text-2xl font-bold font-display ${d.accent}`}>{d.value}</div>
+              <div className="text-[10px] text-base-content/50">{d.desc}</div>
+            </div>
+            <Truck className={`h-8 w-8 shrink-0 ${d.accent}`} />
+          </Link>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* Procurement Alerts */}
+        <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-4">
+          <div className="flex items-center justify-between border-b border-base-200 pb-3 text-left">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-600" />
+              <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Procurement Alerts</h3>
+            </div>
+            <Link href="/dashboard/approver/pr" className="text-xs font-bold text-primary hover:underline">
+              View Queue
+            </Link>
+          </div>
+
+          <div className="space-y-3">
+            {alerts.stalePrs.length === 0 && alerts.overdueDeliveries.length === 0 && (
+              <p className="text-xs text-base-content/60 py-4">No pending alerts. All verification and delivery targets are on track.</p>
+            )}
+            {alerts.stalePrs.map((pr) => (
+              <Link key={pr.id} href={`/dashboard/approver/pr/${pr.id}`} className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-primary">{pr.prNumber}</span>
+                  <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300">
+                    {pr.daysPending}d pending
+                  </span>
+                </div>
+                <p className="text-xs text-base-content/70 mt-1 line-clamp-1">{pr.purpose}</p>
+                <p className="text-[10px] text-base-content/50 mt-0.5">{pr.department} · {pr.office}</p>
+              </Link>
+            ))}
+            {alerts.overdueDeliveries.map((po) => (
+              <Link key={po.id} href="/dashboard/approver/deliveries" className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-primary">{po.poNumber}</span>
+                  <span className="text-[10px] font-bold text-red-700 dark:text-red-300">Overdue delivery</span>
+                </div>
+                <p className="text-xs text-base-content/70 mt-1">{po.supplier.companyName}</p>
+                <p className="text-[10px] text-base-content/50 mt-0.5">
+                  Due {po.dateOfDelivery ? new Date(po.dateOfDelivery).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" }) : "—"}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Verification Activity */}
+        <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-4">
+          <div className="flex items-center justify-between border-b border-base-200 pb-3 text-left">
+            <div className="flex items-center gap-2">
+              <CalendarCheck2 className="h-5 w-5 text-emerald-600" />
+              <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Recent Verification Activity</h3>
+            </div>
+            <Link href="/dashboard/approver/history" className="text-xs font-bold text-primary hover:underline">
+              View History
+            </Link>
+          </div>
+
+          <div className="space-y-3">
+            {activity.recentlyVerified.map((pr: any) => (
+              <Link key={pr.id} href={`/dashboard/approver/pr/${pr.id}`} className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-primary">{pr.prNumber}</span>
+                  <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                    {pr.approvedAt ? new Date(pr.approvedAt).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" }) : "—"}
+                  </span>
+                </div>
+                <p className="text-xs text-base-content/70 mt-1">{pr.department} · {pr.office}</p>
+                <p className="text-[10px] text-base-content/50 mt-0.5">Verified by {pr.reviewedBy?.fullName || "Procurement Officer II"}</p>
+              </Link>
+            ))}
+            {activity.recentlyVerified.length === 0 && (
+              <p className="text-xs text-base-content/60 py-4">No verified Purchase Requests yet this period.</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Supplier Award: Pending MCDM Recommendations ── */}
       <Card id="pending-reviews">
         <div className="flex items-center justify-between border-b border-[var(--border)] px-6 py-4 flex-wrap gap-2">
-          <h2 className="text-base font-bold text-[var(--text-primary)]">
+          <h2 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-primary" />
             Pending MCDM Recommendations
           </h2>
-          {stats.pendingReview > 0 && (
+          {recs.length > 0 && (
             <span className="rounded-full bg-[var(--bg-dark)] px-3 py-1 text-xs font-semibold text-[var(--text-muted)] border border-[var(--border)]">
-              {stats.pendingReview} awaiting review
+              {recs.length} awaiting review
             </span>
           )}
         </div>
-        
+
         <div className="divide-y divide-[var(--border)] p-6 space-y-8">
           {recs.length === 0 ? (
             <EmptyState
@@ -352,7 +400,7 @@ export default async function ProcurementOfficerIIDashboard() {
                   confidenceLabel: "Medium",
                   expectedChange: null,
                   forecastTrend: "unknown",
-                  weights: { price: 0.40, delivery: 0.20, reliability: 0.20, compliance: 0.10, historicalPerformance: 0.10 }
+                  weights: { price: 0.40, delivery: 0.20, reliability: 0.20, compliance: 0.10, historicalPerformance: 0.10 },
                 };
               }
 
@@ -389,10 +437,10 @@ export default async function ProcurementOfficerIIDashboard() {
                       </span>
                       <div>
                         <h3 className="text-sm font-bold text-[var(--text-primary)]">
-                          {(rec.supplier as any)?.companyName ?? 'Unknown Supplier'}
+                          {(rec.supplier as any)?.companyName ?? "Unknown Supplier"}
                         </h3>
                         <span className="text-xs text-[var(--text-muted)]">
-                          Submitted for RFQ Ref: {rec.quote?.rfqId ? `RFQ-${rec.quote.rfqId}` : 'N/A'}
+                          Submitted for RFQ Ref: {rec.quote?.rfqId ? `RFQ-${rec.quote.rfqId}` : "N/A"}
                         </span>
                       </div>
                     </div>
@@ -407,7 +455,7 @@ export default async function ProcurementOfficerIIDashboard() {
                       <div className="text-right">
                         <span className="text-[10px] uppercase font-bold text-[var(--text-muted)] tracking-wider block">Quoted Price</span>
                         <div className="text-lg font-bold text-[var(--text-primary)]">
-                          ₱{Number((rec.quote as any)?.totalQuotedAmount ?? 0).toLocaleString('en-PH')}
+                          ₱{Number((rec.quote as any)?.totalQuotedAmount ?? 0).toLocaleString("en-PH")}
                         </div>
                       </div>
                     </div>
@@ -415,14 +463,12 @@ export default async function ProcurementOfficerIIDashboard() {
 
                   {/* Details Grid */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-[var(--border)]">
-                    
                     {/* Left: Criteria score progress bars */}
                     <div className="p-6 space-y-4">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">
                         Explainable Criteria Breakdown (Normalized)
                       </h4>
-                      
-                      {/* Price */}
+
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span>Price Score ({priceLimit}%)</span>
@@ -433,7 +479,6 @@ export default async function ProcurementOfficerIIDashboard() {
                         </div>
                       </div>
 
-                      {/* Delivery */}
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span className="inline-flex items-center gap-1.5"><Truck className="h-3.5 w-3.5" /> Delivery</span>
@@ -444,7 +489,6 @@ export default async function ProcurementOfficerIIDashboard() {
                         </div>
                       </div>
 
-                      {/* Reliability */}
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span className="inline-flex items-center gap-1.5"><ShieldCheck className="h-3.5 w-3.5" /> Reliability</span>
@@ -455,7 +499,6 @@ export default async function ProcurementOfficerIIDashboard() {
                         </div>
                       </div>
 
-                      {/* Compliance */}
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span className="inline-flex items-center gap-1.5"><FileText className="h-3.5 w-3.5" /> Compliance</span>
@@ -466,7 +509,6 @@ export default async function ProcurementOfficerIIDashboard() {
                         </div>
                       </div>
 
-                      {/* Historical */}
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs font-semibold text-base-content">
                           <span>Historical performance</span>
@@ -480,8 +522,6 @@ export default async function ProcurementOfficerIIDashboard() {
 
                     {/* Right: Justifications & Forecast Analytics */}
                     <div className="p-6 flex flex-col gap-6 justify-between">
-                      
-                      {/* Explanations */}
                       <div className="space-y-3">
                         <h4 className="text-xs font-bold uppercase tracking-wider text-[var(--text-secondary)]">
                           Recommendation Justification
@@ -496,31 +536,29 @@ export default async function ProcurementOfficerIIDashboard() {
                         </div>
                       </div>
 
-                      {/* Historical Prices & ARIMA Forecasting */}
                       <div className="rounded-md border border-base-300 bg-base-200 p-4 space-y-3">
                         <h5 className="text-[10px] font-bold uppercase tracking-wider text-base-content/75 flex items-center gap-1.5">
-                          <TrendingUpDown className="h-4 w-4 text-[var(--accent)]" /> 
+                          <TrendingUpDown className="h-4 w-4 text-[var(--accent)]" />
                           Historical Price Intelligence
                         </h5>
                         <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div>Average: <strong className="text-[var(--text-primary)]">{snapshot.historicalAvgPrice ? formatCurrency(snapshot.historicalAvgPrice) : 'N/A'}</strong></div>
-                          <div>Lowest: <strong className="text-[var(--text-primary)]">{snapshot.historicalMinPrice ? formatCurrency(snapshot.historicalMinPrice) : 'N/A'}</strong></div>
-                          <div>Latest: <strong className="text-[var(--text-primary)]">{snapshot.historicalLatestPrice ? formatCurrency(snapshot.historicalLatestPrice) : 'N/A'}</strong></div>
-                          <div>Forecast: <strong className={snapshot.forecastTrend === 'increasing' ? 'text-[var(--accent)]' : 'text-emerald-600'}>
-                            {snapshot.forecastTrend ? snapshot.forecastTrend.toUpperCase() : 'UNKNOWN'}
+                          <div>Average: <strong className="text-[var(--text-primary)]">{snapshot.historicalAvgPrice ? formatCurrency(snapshot.historicalAvgPrice) : "N/A"}</strong></div>
+                          <div>Lowest: <strong className="text-[var(--text-primary)]">{snapshot.historicalMinPrice ? formatCurrency(snapshot.historicalMinPrice) : "N/A"}</strong></div>
+                          <div>Latest: <strong className="text-[var(--text-primary)]">{snapshot.historicalLatestPrice ? formatCurrency(snapshot.historicalLatestPrice) : "N/A"}</strong></div>
+                          <div>Forecast: <strong className={snapshot.forecastTrend === "increasing" ? "text-[var(--accent)]" : "text-emerald-600"}>
+                            {snapshot.forecastTrend ? snapshot.forecastTrend.toUpperCase() : "UNKNOWN"}
                           </strong></div>
                         </div>
                         {snapshot.expectedChange && (
                           <div className="flex items-center justify-between text-xs border-t border-[var(--border)] pt-2 mt-2">
                             <span className="text-[var(--text-muted)]">Expected Change:</span>
-                            <span className={`font-bold ${snapshot.expectedChange.startsWith('+') ? 'text-[var(--accent)]' : 'text-emerald-600'}`}>
+                            <span className={`font-bold ${snapshot.expectedChange.startsWith("+") ? "text-[var(--accent)]" : "text-emerald-600"}`}>
                               {snapshot.expectedChange}
                             </span>
                           </div>
                         )}
                       </div>
 
-                      {/* Confidence & Action Bar */}
                       <div className="flex items-center justify-between border-t border-[var(--border)] pt-4 flex-wrap gap-3 mt-auto">
                         <div className="text-xs">
                           <span className="text-[var(--text-muted)]">Confidence: </span>
@@ -530,7 +568,6 @@ export default async function ProcurementOfficerIIDashboard() {
                         </div>
                         <ApproveButton recommId={rec.id} />
                       </div>
-
                     </div>
                   </div>
                 </div>
@@ -539,38 +576,6 @@ export default async function ProcurementOfficerIIDashboard() {
           )}
         </div>
       </Card>
-
-      {/* ── Stat Cards Grid (Below Critical Actions) ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 no-print">
-        {statCards.map(card => {
-          const Icon = card.icon;
-          return (
-            <Link key={card.label} href={card.href} className="group">
-              <Card className="p-5 h-full transition-colors duration-100 hover:bg-base-200/50 border-base-300 bg-base-100 shadow-none">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1 text-left">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-base-content/65 block">
-                      {card.label}
-                    </span>
-                    <span className="text-2xl font-bold tracking-tight text-base-content font-display block">
-                      {card.value}
-                    </span>
-                  </div>
-                  <div className={`rounded border p-1.5 shrink-0 ${card.color}`}>
-                    <Icon className="h-4.5 w-4.5 shrink-0" />
-                  </div>
-                </div>
-                <div className="mt-3 flex items-center justify-between text-[11px] text-base-content/50">
-                  <span>{card.desc}</span>
-                  <span className="font-bold text-primary">
-                    Manage &rarr;
-                  </span>
-                </div>
-              </Card>
-            </Link>
-          );
-        })}
-      </div>
 
       {/* ── Secondary Activities ── */}
       <div className="grid grid-cols-1 gap-6">
@@ -581,14 +586,6 @@ export default async function ProcurementOfficerIIDashboard() {
       <Card className="p-6">
         <AddStaffForm />
       </Card>
-
-    </div>
+    </DashboardShell>
   );
-}
-
-function formatCurrency(amount: number) {
-  return `₱${amount.toLocaleString("en-PH", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }

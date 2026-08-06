@@ -14,11 +14,7 @@ import {
   ClipboardList,
   ShoppingCart,
   BarChart3,
-  Users,
-  Workflow,
-  ChartNoAxesCombined,
   Star,
-  Settings,
 } from "lucide-react";
 
 type NavItem = {
@@ -52,24 +48,29 @@ export default function DashboardSidebar({ role }: { role: string }) {
         title: "PROCUREMENT",
         items: [
           {
-            label: "Purchase Request Verification",
-            href: "/dashboard/officer/pr",
-            icon: FileCheck2,
-          },
-          {
             label: "Procurement Monitoring Record",
             href: "/dashboard/officer/pmr",
             icon: ClipboardCheck,
           },
           {
-            label: "Delivery Monitoring",
-            href: "/dashboard/officer/deliveries",
-            icon: Truck,
+            label: "RFQ Distribution",
+            href: "/dashboard/officer/rfq",
+            icon: FileText,
           },
           {
-            label: "Verification History",
-            href: "/dashboard/officer/history",
-            icon: History,
+            label: "BAC Transmittals",
+            href: "/dashboard/officer/transmittals",
+            icon: ClipboardList,
+          },
+          {
+            label: "Letter of Notice",
+            href: "/dashboard/officer/notices",
+            icon: ScrollText,
+          },
+          {
+            label: "Purchase Order",
+            href: "/dashboard/officer/po",
+            icon: ShoppingCart,
           },
         ],
       },
@@ -79,7 +80,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
           {
             label: "Reports",
             href: "/dashboard/officer/reports",
-            icon: ScrollText,
+            icon: BarChart3,
           },
         ],
       },
@@ -89,21 +90,27 @@ export default function DashboardSidebar({ role }: { role: string }) {
         title: "MAIN",
         items: [
           { label: "Dashboard", href: "/dashboard/approver", icon: LayoutDashboard },
-          { label: "Review History", href: "/dashboard/approver/history", icon: FileCheck2 },
-        ],
-      },
-      {
-        title: "PROCUREMENT",
-        items: [
-          { label: "Workflows", href: "/dashboard/approver/workflows", icon: Workflow },
-          { label: "Form Templates", href: "/dashboard/approver/forms", icon: ClipboardCheck },
+          {
+            label: "Purchase Request Verification",
+            href: "/dashboard/approver/pr",
+            icon: FileCheck2,
+          },
+          {
+            label: "Delivery Monitoring",
+            href: "/dashboard/approver/deliveries",
+            icon: Truck,
+          },
+          {
+            label: "Verification History",
+            href: "/dashboard/approver/history",
+            icon: History,
+          },
         ],
       },
       {
         title: "REPORTS",
         items: [
           { label: "Reports", href: "/dashboard/approver/reports", icon: ScrollText },
-          { label: "Analytics", href: "/dashboard/approver/analytics", icon: ChartNoAxesCombined },
         ],
       },
     ],

@@ -23,6 +23,7 @@ interface PurchaseRequest {
 
 interface PrAuditClientProps {
   initialPrs: PurchaseRequest[];
+  basePath?: string;
 }
 
 const fmtDate = (d: Date | string | undefined | null) =>
@@ -37,7 +38,7 @@ const fmtDate = (d: Date | string | undefined | null) =>
 const fmtMoney = (n: any) =>
   `₱${Number(n).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
 
-export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
+export default function PrAuditClient({ initialPrs, basePath = "/dashboard/officer" }: PrAuditClientProps) {
   const [prs] = useState<PurchaseRequest[]>(initialPrs);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -139,7 +140,7 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
                     {/* PR Number */}
                     <td className="py-3 px-3 whitespace-nowrap">
                       <Link
-                        href={`/dashboard/officer/pr/${pr.id}`}
+                        href={`${basePath}/pr/${pr.id}`}
                         className="font-bold text-primary hover:underline"
                       >
                         {pr.prNumber}
@@ -192,7 +193,7 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-1.5 justify-center">
                         <Link
-                          href={`/dashboard/officer/pr/${pr.id}`}
+                          href={`${basePath}/pr/${pr.id}`}
                           title="View / Verify this PR"
                           className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded text-[11px] font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-colors whitespace-nowrap"
                         >
@@ -200,7 +201,7 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
                           <span>Verify</span>
                         </Link>
                         <Link
-                          href={`/dashboard/officer/pr/${pr.id}`}
+                          href={`${basePath}/pr/${pr.id}`}
                           title="Print this PR"
                           className="inline-flex items-center gap-1 px-2 py-1.5 rounded text-[11px] font-bold bg-base-200 text-base-content/70 hover:bg-base-300 transition-colors"
                         >

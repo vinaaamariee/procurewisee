@@ -23,6 +23,7 @@ export interface VerificationRow {
 
 interface VerificationHistoryClientProps {
   initialPrs: VerificationRow[];
+  basePath?: string;
 }
 
 function downloadCsv(rows: VerificationRow[]) {
@@ -81,7 +82,7 @@ function downloadCsv(rows: VerificationRow[]) {
   URL.revokeObjectURL(url);
 }
 
-export default function VerificationHistoryClient({ initialPrs }: VerificationHistoryClientProps) {
+export default function VerificationHistoryClient({ initialPrs, basePath = "/dashboard/officer" }: VerificationHistoryClientProps) {
   const [search, setSearch] = useState("");
   const [officeFilter, setOfficeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -241,7 +242,7 @@ export default function VerificationHistoryClient({ initialPrs }: VerificationHi
                   return (
                   <tr key={p.id} className="hover:bg-base-200/30">
                     <td className="py-3 px-3 whitespace-nowrap">
-                      <Link href={`/dashboard/officer/pr/${p.id}`} className="font-bold text-primary hover:underline">
+                      <Link href={`${basePath}/pr/${p.id}`} className="font-bold text-primary hover:underline">
                         {p.prNumber}
                       </Link>
                     </td>

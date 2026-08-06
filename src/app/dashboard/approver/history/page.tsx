@@ -1,59 +1,72 @@
+import { PrStatus } from "@prisma/client";
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
-import HistoryClient from "./HistoryClient";
+import VerificationHistoryClient from "@/app/dashboard/officer/history/VerificationHistoryClient";
+import SectionHeader from "@/components/ui/SectionHeader";
 
-export const metadata = { title: "Approval History — ProcureWise" };
+export const metadata = {
+  title: "Verification History — Procurement Officer II — ProcureWise",
+};
 
-export default async function HistoryPage() {
+export default async function VerificationHistoryPage() {
   await requireRole("Administrative Approver");
 
   const prs = await prisma.purchaseRequest.findMany({
     where: {
       status: {
-        in: ["Submitted", "UnderReview", "Approved", "Received", "ReturnedForRevision", "Rejected"]
-      }
+        in: [
+          PrStatus.Approved,
+          PrStatus.Received,
+          PrStatus.ConvertedToRfq,
+          (PrStatus as any).Returned || "ReturnedForRevision",
+          PrStatus.ReturnedForRevision,
+          PrStatus.Rejected,
+        ] as any[],
+      },
     },
-    include: {
-      requestedBy: true,
-      statusHistory: {
-        include: {
-          changedBy: true
-        },
-        orderBy: {
-          createdAt: "desc"
-        }
-      }
+    select: {
+      id: true,
+      prNumber: true,
+      office: true,
+      department: true,
+      fundingSource: true,
+      purpose: true,
+      totalCost: true,
+      status: true,
+      remarks: true,
+      reviewedAt: true,
+      approvedAt: true,
+      submittedAt: true,
+      reviewedBy: {
+        select: { fullName: true },
+      },
+      requesterName: true,
     },
-    orderBy: {
-      updatedAt: "desc"
-    }
+    orderBy: { updatedAt: "desc" },
   });
 
-  // Serialize for client component props
-  const serializedPrs = prs.map(pr => {
-    // Find the latest decision entry in the history for this PR (from an approver)
-    const latestDecision = pr.statusHistory.find(h => 
-      h.status === 'Approved' || 
-      h.status === 'ReturnedForRevision' || 
-      h.status === 'Rejected' ||
-      h.status === 'UnderReview'
-    );
+  const serialized = prs.map((pr) => ({
+    id: pr.id,
+    prNumber: pr.prNumber,
+    office: pr.office,
+    department: pr.department,
+    fundingSource: pr.fundingSource,
+    purpose: pr.purpose,
+    totalCost: Number(pr.totalCost),
+    status: pr.status,
+    remarks: pr.remarks ?? null,
+    decisionDate: (pr.approvedAt || pr.reviewedAt || pr.submittedAt)?.toISOString() ?? null,
+    reviewedBy: pr.reviewedBy?.fullName ?? null,
+  }));
 
-    return {
-      id: pr.id,
-      prNumber: pr.prNumber,
-      department: pr.department,
-      office: pr.office,
-      purpose: pr.purpose,
-      totalCost: Number(pr.totalCost),
-      status: pr.status,
-      createdAt: pr.createdAt.toISOString(),
-      updatedAt: pr.updatedAt.toISOString(),
-      requesterName: pr.requestedBy?.fullName || pr.requesterName || "N/A",
-      decisionDate: latestDecision ? latestDecision.createdAt.toISOString() : null,
-      reviewedBy: latestDecision?.changedBy?.fullName || "N/A"
-    };
-  });
+  return (
+    <div className="space-y-8">
+      <SectionHeader
+        title="Verification History"
+        subtitle="Complete record of every Purchase Request verification decision — verified, returned for compliance, and rejected — with date, office, and fund source filters."
+      />
 
-  return <HistoryClient prs={serializedPrs} />;
+      <VerificationHistoryClient initialPrs={serialized} basePath="/dashboard/approver" />
+    </div>
+  );
 }

@@ -86,9 +86,11 @@ interface PrDetailsClientProps {
   initialPr: PurchaseRequest;
   budgets: Record<string, DepartmentBudget>;
   officerId: string;
+  canVerify?: boolean;
+  verifierLabel?: string;
 }
 
-export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDetailsClientProps) {
+export default function PrDetailsClient({ initialPr, budgets, officerId, canVerify = false, verifierLabel = "Procurement Staff" }: PrDetailsClientProps) {
   const router = useRouter();
   const [pr, setPr] = useState<PurchaseRequest>(initialPr);
   
@@ -477,13 +479,13 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
       {/* Right Column: Review Action Panel & Timeline */}
       <div className="space-y-6">
         
-        {/* Procurement Staff Review Actions */}
-        {!isLocked && (
+        {/* Verification Action Panel */}
+        {!isLocked && canVerify && (
           <div className="rounded-md border border-base-300 bg-base-100 p-4 shadow-none space-y-4">
             <div className="flex items-center gap-2 border-b border-base-200 pb-3 text-left">
               <ShieldCheck className="h-5 w-5 text-primary" />
               <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">
-                Procurement Staff Action Control
+                {verifierLabel} Action Control
               </h3>
             </div>
 

@@ -1,20 +1,17 @@
 import Link from "next/link";
-import { PrStatus, PmrStatus } from "@prisma/client";
+import { PmrStatus } from "@prisma/client";
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import { startTimer } from "@/lib/performance-logger";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import DashboardShell from "@/components/dashboard/DashboardShell";
 import StatCard from "@/components/dashboard/StatCard";
-import SectionHeader from "@/components/ui/SectionHeader";
 import StatusBadge from "@/components/ui/StatusBadge";
 import {
-  FileCheck2,
-  Undo2,
-  CalendarCheck2,
   ClipboardCheck,
-  Truck,
-  AlertTriangle,
+  FileText,
+  ShoppingCart,
+  Send,
   ArrowRight,
 } from "lucide-react";
 
@@ -22,117 +19,31 @@ export const metadata = { title: "Procurement Staff Dashboard — ProcureWise" }
 
 async function getProcurementStaffStats() {
   const timer = startTimer("getProcurementStaffStats");
-  const startOfDay = new Date();
-  startOfDay.setHours(0, 0, 0, 0);
 
-  const [
-    pendingPrs,
-    returnedPrs,
-    verifiedToday,
-    pmrCount,
-    pendingDeliveries,
-    partialDeliveries,
-    deliveredCount,
-  ] = await Promise.all([
-    prisma.purchaseRequest.count({
-      where: {
-        status: { in: [PrStatus.Submitted, PrStatus.UnderReview, (PrStatus as any).PendingProcurementReview || "Submitted"] as any[] },
-      },
-    }),
-    prisma.purchaseRequest.count({
-      where: {
-        status: { in: [(PrStatus as any).Returned || "ReturnedForRevision", PrStatus.ReturnedForRevision] as any[] },
-      },
-    }),
-    prisma.purchaseRequest.count({
-      where: { status: PrStatus.Approved, approvedAt: { gte: startOfDay } },
-    }),
+  const [pmrCount, rfqCount, poDraftCount, poReleasedCount] = await Promise.all([
     prisma.procurementMonitoringRecord.count({ where: { status: PmrStatus.Active } }),
+    prisma.requestForQuote.count(),
     prisma.purchaseOrder.count({
-      where: { status: { in: ["Draft", "PendingApproval", "Approved", "SentToSupplier"] } },
+      where: { status: { in: ["Draft", "PendingApproval"] } },
     }),
-    prisma.purchaseOrder.count({ where: { status: "PartiallyDelivered" } }),
-    prisma.purchaseOrder.count({ where: { status: { in: ["Delivered", "Completed"] } } }),
+    prisma.purchaseOrder.count({
+      where: { status: { in: ["Approved", "SentToSupplier"] } },
+    }),
   ]);
   timer.end();
 
   return {
-    pendingPrs,
-    returnedPrs,
-    verifiedToday,
     pmrCount,
-    pendingDeliveries,
-    partialDeliveries,
-    deliveredCount,
+    rfqCount,
+    poDraftCount,
+    poReleasedCount,
   };
 }
 
-async function getProcurementAlerts() {
-  const timer = startTimer("getProcurementAlerts");
+async function getRecentWork() {
+  const timer = startTimer("getProcurementStaffRecentWork");
 
-  const threeDaysAgo = new Date();
-  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
-
-  const stalePrs = await prisma.purchaseRequest.findMany({
-    where: {
-      status: { in: [PrStatus.Submitted, PrStatus.UnderReview, (PrStatus as any).PendingProcurementReview || "Submitted"] as any[] },
-      submittedAt: { lte: threeDaysAgo },
-    },
-    select: {
-      id: true,
-      prNumber: true,
-      department: true,
-      office: true,
-      purpose: true,
-      submittedAt: true,
-    },
-    orderBy: { submittedAt: "asc" },
-    take: 5,
-  });
-
-  const overdueDeliveries = await prisma.purchaseOrder.findMany({
-    where: {
-      status: { in: ["Approved", "SentToSupplier"] },
-      dateOfDelivery: { not: null, lte: threeDaysAgo },
-    },
-    select: {
-      id: true,
-      poNumber: true,
-      supplier: { select: { companyName: true } },
-      dateOfDelivery: true,
-      totalCost: true,
-    },
-    orderBy: { dateOfDelivery: "asc" },
-    take: 5,
-  });
-
-  const now = new Date();
-  const stalePrsWithAge = stalePrs.map((pr) => ({
-    ...pr,
-    daysPending: Math.ceil((now.getTime() - (pr.submittedAt ? pr.submittedAt.getTime() : now.getTime())) / (1000 * 60 * 60 * 24)),
-  }));
-
-  timer.end();
-  return { stalePrs: stalePrsWithAge, overdueDeliveries };
-}
-
-async function getRecentActivity() {
-  const timer = startTimer("getRecentActivity");
-
-  const [recentlyVerified, recentPmrs] = await Promise.all([
-    prisma.purchaseRequest.findMany({
-      where: { status: PrStatus.Approved },
-      select: {
-        id: true,
-        prNumber: true,
-        department: true,
-        office: true,
-        approvedAt: true,
-        reviewedBy: { select: { fullName: true } },
-      },
-      orderBy: { approvedAt: "desc" },
-      take: 5,
-    }),
+  const [recentPmrs, recentRfqs, recentPos] = await Promise.all([
     prisma.procurementMonitoringRecord.findMany({
       where: { status: PmrStatus.Active },
       include: {
@@ -142,54 +53,78 @@ async function getRecentActivity() {
       orderBy: { dateReceived: "desc" },
       take: 5,
     }),
+    prisma.requestForQuote.findMany({
+      select: {
+        id: true,
+        rfqNumber: true,
+        title: true,
+        status: true,
+        deadlineDate: true,
+        createdAt: true,
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
+    prisma.purchaseOrder.findMany({
+      select: {
+        id: true,
+        poNumber: true,
+        status: true,
+        totalCost: true,
+        dateOfDelivery: true,
+        createdAt: true,
+        supplier: { select: { companyName: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+    }),
   ]);
 
   timer.end();
-  return { recentlyVerified, recentPmrs };
+  return { recentPmrs, recentRfqs, recentPos };
 }
 
 export default async function ProcurementStaffDashboard() {
   const pageTimer = startTimer("ProcurementStaffDashboardPage");
   const { profile } = await requireRole("Procurement Officer");
-  const [stats, alerts, activity] = await Promise.all([
+  const [stats, work] = await Promise.all([
     getProcurementStaffStats(),
-    getProcurementAlerts(),
-    getRecentActivity(),
+    getRecentWork(),
   ]);
   pageTimer.end();
 
   const statCards = [
     {
-      label: "Pending Verification",
-      value: stats.pendingPrs,
-      desc: "PRs awaiting compliance verification",
-      href: "/dashboard/officer/pr",
-      Icon: FileCheck2,
-      accentClass: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
-    },
-    {
-      label: "Returned for Compliance",
-      value: stats.returnedPrs,
-      desc: "Sent back for corrections",
-      href: "/dashboard/officer/history",
-      Icon: Undo2,
-      accentClass: "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300",
-    },
-    {
-      label: "Verified Today",
-      value: stats.verifiedToday,
-      desc: "Approved by Procurement Office",
-      href: "/dashboard/officer/history",
-      Icon: CalendarCheck2,
-      accentClass: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
-    },
-    {
-      label: "PMR Entries Created",
+      label: "Active PMR Records",
       value: stats.pmrCount,
-      desc: "Active monitoring records",
+      desc: "Procurement Monitoring Register entries",
       href: "/dashboard/officer/pmr",
       Icon: ClipboardCheck,
       accentClass: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
+    },
+    {
+      label: "RFQs Issued",
+      value: stats.rfqCount,
+      desc: "Solicitations distributed to suppliers",
+      href: "/dashboard/officer/rfq",
+      Icon: FileText,
+      accentClass: "bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300",
+    },
+    {
+      label: "POs Drafted",
+      value: stats.poDraftCount,
+      desc: "Purchase Orders in preparation",
+      href: "/dashboard/officer/po",
+      Icon: ShoppingCart,
+      accentClass: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
+    },
+    {
+      label: "POs Released",
+      value: stats.poReleasedCount,
+      desc: "Approved and sent to suppliers",
+      href: "/dashboard/officer/po",
+      Icon: Send,
+      accentClass: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
     },
   ];
 
@@ -212,115 +147,68 @@ export default async function ProcurementStaffDashboard() {
         ))}
       </div>
 
-      {/* Delivery Monitoring Summary */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {[
-          {
-            label: "Pending Delivery",
-            value: stats.pendingDeliveries,
-            desc: "POs not yet delivered",
-            accent: "border-amber-300/60 text-amber-700 dark:text-amber-300",
-          },
-          {
-            label: "Partial Deliveries",
-            value: stats.partialDeliveries,
-            desc: "POs with partial receipt",
-            accent: "border-blue-300/60 text-blue-700 dark:text-blue-300",
-          },
-          {
-            label: "Delivered",
-            value: stats.deliveredCount,
-            desc: "Completed deliveries",
-            accent: "border-emerald-300/60 text-emerald-700 dark:text-emerald-300",
-          },
-        ].map((d) => (
-          <Link
-            key={d.label}
-            href="/dashboard/officer/deliveries"
-            className="rounded-md border border-base-300 bg-base-100 p-4 flex items-center justify-between hover:bg-base-200/50 transition-colors"
-          >
-            <div className="text-left">
-              <div className="text-[11px] font-bold uppercase tracking-wider text-base-content/65">{d.label}</div>
-              <div className={`text-2xl font-bold font-display ${d.accent}`}>{d.value}</div>
-              <div className="text-[10px] text-base-content/50">{d.desc}</div>
-            </div>
-            <Truck className={`h-8 w-8 shrink-0 ${d.accent}`} />
-          </Link>
-        ))}
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Procurement Alerts */}
+        {/* Recent RFQ Distribution */}
         <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-4">
           <div className="flex items-center justify-between border-b border-base-200 pb-3 text-left">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-600" />
-              <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Procurement Alerts</h3>
+              <FileText className="h-5 w-5 text-violet-600" />
+              <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Recent RFQ Distribution</h3>
             </div>
-            <Link href="/dashboard/officer/pr" className="text-xs font-bold text-primary hover:underline">
-              View Queue
+            <Link href="/dashboard/officer/rfq" className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+              Open RFQ <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
           <div className="space-y-3">
-            {alerts.stalePrs.length === 0 && alerts.overdueDeliveries.length === 0 && (
-              <p className="text-xs text-base-content/60 py-4">No pending alerts. All verification and delivery targets are on track.</p>
+            {work.recentRfqs.length === 0 && (
+              <p className="text-xs text-base-content/60 py-4">No RFQs have been issued yet. Convert a verified Purchase Request to start canvassing.</p>
             )}
-            {alerts.stalePrs.map((pr) => (
-              <Link key={pr.id} href={`/dashboard/officer/pr/${pr.id}`} className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
+            {work.recentRfqs.map((rfq) => (
+              <Link key={rfq.id} href={`/dashboard/officer/rfq/${rfq.id}`} className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-primary">{pr.prNumber}</span>
-                  <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300">
-                    {pr.daysPending}d pending
-                  </span>
+                  <span className="text-xs font-bold text-primary">{rfq.rfqNumber}</span>
+                  <StatusBadge status={rfq.status} />
                 </div>
-                <p className="text-xs text-base-content/70 mt-1 line-clamp-1">{pr.purpose}</p>
-                <p className="text-[10px] text-base-content/50 mt-0.5">{pr.department} · {pr.office}</p>
-              </Link>
-            ))}
-            {alerts.overdueDeliveries.map((po) => (
-              <Link key={po.id} href="/dashboard/officer/deliveries" className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-primary">{po.poNumber}</span>
-                  <span className="text-[10px] font-bold text-red-700 dark:text-red-300">Overdue delivery</span>
-                </div>
-                <p className="text-xs text-base-content/70 mt-1">{po.supplier.companyName}</p>
+                <p className="text-xs text-base-content/70 mt-1 line-clamp-1">{rfq.title}</p>
                 <p className="text-[10px] text-base-content/50 mt-0.5">
-                  Due {po.dateOfDelivery ? new Date(po.dateOfDelivery).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" }) : "—"}
+                  {rfq.deadlineDate
+                    ? `Deadline ${new Date(rfq.deadlineDate).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}`
+                    : `Created ${new Date(rfq.createdAt).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })}`}
                 </p>
               </Link>
             ))}
           </div>
         </div>
 
-        {/* Recent Verification Activity */}
+        {/* Recent Purchase Orders */}
         <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-4">
           <div className="flex items-center justify-between border-b border-base-200 pb-3 text-left">
             <div className="flex items-center gap-2">
-              <CalendarCheck2 className="h-5 w-5 text-emerald-600" />
-              <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Recent Verification Activity</h3>
+              <ShoppingCart className="h-5 w-5 text-amber-600" />
+              <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Recent Purchase Orders</h3>
             </div>
-            <Link href="/dashboard/officer/history" className="text-xs font-bold text-primary hover:underline">
-              View History
+            <Link href="/dashboard/officer/po" className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline">
+              Open PO <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
 
           <div className="space-y-3">
-            {activity.recentlyVerified.map((pr: any) => (
-              <Link key={pr.id} href={`/dashboard/officer/pmr`} className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
+            {work.recentPos.length === 0 && (
+              <p className="text-xs text-base-content/60 py-4">No purchase orders yet. Draft a PO once the BAC award has been resolved.</p>
+            )}
+            {work.recentPos.map((po) => (
+              <Link key={po.id} href={`/dashboard/officer/po/${po.id}`} className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-bold text-primary">{pr.prNumber}</span>
-                  <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
-                    {pr.approvedAt ? new Date(pr.approvedAt).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" }) : "—"}
-                  </span>
+                  <span className="text-xs font-bold text-primary">{po.poNumber}</span>
+                  <StatusBadge status={po.status} />
                 </div>
-                <p className="text-xs text-base-content/70 mt-1">{pr.department} · {pr.office}</p>
-                <p className="text-[10px] text-base-content/50 mt-0.5">Verified by {pr.reviewedBy?.fullName || "Procurement Office"}</p>
+                <p className="text-xs text-base-content/70 mt-1">{po.supplier.companyName}</p>
+                <p className="text-[10px] text-base-content/50 mt-0.5">
+                  ₱{Number(po.totalCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+                </p>
               </Link>
             ))}
-            {activity.recentlyVerified.length === 0 && (
-              <p className="text-xs text-base-content/60 py-4">No verified Purchase Requests yet this period.</p>
-            )}
           </div>
         </div>
       </div>
@@ -351,7 +239,7 @@ export default async function ProcurementStaffDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-base-200">
-              {activity.recentPmrs.map((pmr: any) => (
+              {work.recentPmrs.map((pmr: any) => (
                 <tr key={pmr.id} className="hover:bg-base-200/30">
                   <td className="py-3 px-3">
                     <Link href={`/dashboard/officer/pmr/${pmr.id}`} className="font-bold text-primary hover:underline">
@@ -368,10 +256,10 @@ export default async function ProcurementStaffDashboard() {
                   <td className="py-3 px-3"><StatusBadge status={pmr.status} /></td>
                 </tr>
               ))}
-              {activity.recentPmrs.length === 0 && (
+              {work.recentPmrs.length === 0 && (
                 <tr>
                   <td colSpan={7} className="py-6 text-center text-base-content/60">
-                    No PMR entries yet. Verify a Purchase Request to auto-create one.
+                    No PMR entries yet. Verified Purchase Requests are automatically recorded here by the Procurement Officer II.
                   </td>
                 </tr>
               )}
