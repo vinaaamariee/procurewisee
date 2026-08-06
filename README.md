@@ -1084,6 +1084,15 @@ A comprehensive upgrade to the document output and budget tracking pipeline to m
   - BAC Procurement Recommendation Report (`RfqEvaluationClient.tsx`)
   - Executive Procurement Analytics Reports (`AnalyticsDashboardClient.tsx`)
   - Purchase Requests (Appendix 60) for End-Users, Officers, and Approvers (`PrTrackerClient.tsx`, `PrDetailsClient.tsx`, `PrReviewClient.tsx` - now updated with `OfficialDocumentLayout` and local title handling)
+- **Full A4 Print Layout (August 2026)**: Refactored the Purchase Request print layout to maximize the printable A4 page:
+  - `@page` margin set to `10mm 12mm` (top/bottom, left/right)
+  - Removed `max-w-[850px]` constraint from `PRDocument.tsx`; document now fills the full printable width
+  - Replaced fixed pixel column widths in `PRItemsTable.tsx` with percentage-based `<colgroup>` layout: Item No 7% | Unit 8% | Description (auto) | Qty 10% | Unit Cost 12% | Total 13%
+  - Added `display:flex; flex-direction:column; min-height:277mm` to the page shell so the BSC footer anchors near the bottom margin
+  - Added `break-inside: avoid` / `page-break-inside: avoid` on metadata, items, purpose, and signature sections
+  - Metadata and signature grids always render as 2 equal columns (removed responsive stacking)
+  - Removed `vh` units from print mode; no fixed pixel widths remain in print paths
+
 
 ### 4. Direct Action Controls & Approval cards
 - **Action buttons**: Added print action buttons to the Requisition tracker, Officer detail, and Approver history views.
