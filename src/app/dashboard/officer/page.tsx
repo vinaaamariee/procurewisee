@@ -306,7 +306,7 @@ export default async function OfficerDashboard() {
           </div>
 
           <div className="space-y-3">
-            {activity.recentlyVerified.map((pr) => (
+            {activity.recentlyVerified.map((pr: any) => (
               <Link key={pr.id} href={`/dashboard/officer/pmr`} className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-bold text-primary">{pr.prNumber}</span>
@@ -351,7 +351,7 @@ export default async function OfficerDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-base-200">
-              {activity.recentPmrs.map((pmr) => (
+              {activity.recentPmrs.map((pmr: any) => (
                 <tr key={pmr.id} className="hover:bg-base-200/30">
                   <td className="py-3 px-3">
                     <Link href={`/dashboard/officer/pmr/${pmr.id}`} className="font-bold text-primary hover:underline">

@@ -53,7 +53,7 @@ export default async function ReportsPage() {
   ]);
 
   const serialized = {
-    prs: prs.map((pr) => ({
+    prs: prs.map((pr: any) => ({
       id: pr.id,
       prNumber: pr.prNumber,
       office: pr.office,
@@ -65,7 +65,7 @@ export default async function ReportsPage() {
       decisionDate: (pr.approvedAt || pr.reviewedAt || pr.submittedAt || pr.createdAt)?.toISOString() ?? null,
       reviewedBy: pr.reviewedBy?.fullName ?? null,
     })),
-    pmrs: pmrs.map((pmr) => ({
+    pmrs: pmrs.map((pmr: any) => ({
       id: pmr.id,
       pmrNumber: pmr.pmrNumber,
       prNumber: pmr.pr?.prNumber ?? null,
@@ -78,7 +78,7 @@ export default async function ReportsPage() {
       stage: pmr.stage,
       status: pmr.status,
     })),
-    pos: pos.map((po) => ({
+    pos: pos.map((po: any) => ({
       id: po.id,
       poNumber: po.poNumber,
       supplierName: po.supplier.companyName,
@@ -89,7 +89,7 @@ export default async function ReportsPage() {
       createdAt: po.createdAt.toISOString(),
       dateOfDelivery: po.dateOfDelivery ? po.dateOfDelivery.toISOString() : null,
     })),
-    receipts: receipts.map((r) => ({
+    receipts: receipts.map((r: any) => ({
       id: r.id,
       receiptNumber: r.receiptNumber,
       poNumber: r.po?.poNumber ?? null,
