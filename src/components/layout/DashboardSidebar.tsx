@@ -6,15 +6,16 @@ import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   FileCheck2,
-  ClipboardCheck,
   Truck,
   History,
   ScrollText,
   FileText,
-  ClipboardList,
   ShoppingCart,
   BarChart3,
   Star,
+  Building2,
+  TrendingUp,
+  Settings,
 } from "lucide-react";
 
 type NavItem = {
@@ -48,24 +49,14 @@ export default function DashboardSidebar({ role }: { role: string }) {
         title: "PROCUREMENT",
         items: [
           {
-            label: "Procurement Monitoring Record",
-            href: "/dashboard/officer/pmr",
-            icon: ClipboardCheck,
-          },
-          {
-            label: "Request for Quotation",
-            href: "/dashboard/officer/rfq",
+            label: "Purchase Requests",
+            href: "/dashboard/officer/pr",
             icon: FileText,
           },
           {
-            label: "BAC Transmittals",
-            href: "/dashboard/officer/transmittals",
-            icon: ClipboardList,
-          },
-          {
-            label: "Letters of Notice",
-            href: "/dashboard/officer/notices",
-            icon: ScrollText,
+            label: "RFQs",
+            href: "/dashboard/officer/rfq",
+            icon: FileCheck2,
           },
           {
             label: "Purchase Orders",
@@ -75,12 +66,42 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
       {
+        title: "SUPPLIERS",
+        items: [
+          {
+            label: "Suppliers",
+            href: "/dashboard/officer/suppliers",
+            icon: Building2,
+          },
+          {
+            label: "Evaluation",
+            href: "/dashboard/officer/evaluations",
+            icon: Star,
+          },
+        ],
+      },
+      {
         title: "REPORTS",
         items: [
+          {
+            label: "Forecasting",
+            href: "/dashboard/officer/forecast",
+            icon: TrendingUp,
+          },
           {
             label: "Reports",
             href: "/dashboard/officer/reports",
             icon: BarChart3,
+          },
+        ],
+      },
+      {
+        title: "SETTINGS",
+        items: [
+          {
+            label: "Settings",
+            href: "/dashboard/officer/settings",
+            icon: Settings,
           },
         ],
       },

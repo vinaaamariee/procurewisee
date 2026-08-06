@@ -5,6 +5,25 @@
 **Capstone Project for Batanes State College**
 
 
+## 📊 Procurement Staff Dashboard Redesign (Reference Layout)
+
+**Date**: August 2026
+
+Recreated the reference Procurement Staff dashboard layout at `/dashboard/officer` — sidebar groups, stat cards, action items, solicitation board, activity timeline, quick actions, and notifications — while keeping the official BSC Supplier Evaluation form and all existing business logic untouched.
+
+### Key Changes
+
+- **Sidebar groups** in `DashboardSidebar.tsx`: MAIN (Dashboard), PROCUREMENT (Purchase Requests, RFQs, Purchase Orders), SUPPLIERS (Suppliers, Evaluation), REPORTS (Forecasting, Reports), SETTINGS (Settings).
+- **Dashboard** (`/dashboard/officer/page.tsx`): `PROCUREMENT DASHBOARD` header, four stat cards (Pending PRs, Open RFQs, Pending POs, Active Suppliers), an **Action Items** queue (PR number, stage badge, title, office, due, priority, context-aware action — Record PMR / Distribute RFQ / Transmit to BAC / Generate PO + View), a **Notifications** panel (live counts: draft RFQs, suppliers without evaluation, closing RFQs, pending awards — plus BAC Transmittals and Letters of Notice links), a **Solicitation Board** (Published / Drafts / Closing Soon / Closed tabs with Reference Number, Title, Budget, Deadline, Status, Action), a **Recent Activity** timeline (from `AuditTrail` staff action types), and **Quick Actions** (six-card grid).
+- **Supplier dashboard module** (`/dashboard/officer/suppliers` + `[id]`): register table (name + TIN, PhilGEPS badge derived from latest evaluation, registration date, avg score as X.XX / 4, last evaluation date, approved-recommendations count, Verified/Unverified badge) and a profile page (header, 4 stat cards, Evaluation History, Purchase History, Previous RFQs, Performance Trend with ▲/▼/—).
+- **Stage derivation per verified PR** (no new schema): no RFQ → "Ready for PMR Recording / Record PMR"; RFQ Draft → "Waiting for Distribution / Distribute RFQ"; RFQ Published/Closed → "BAC Resolution Ready / Transmit to BAC"; RFQ Evaluated → "Award Approved / Generate PO"; PO exists → "Purchase Order / View PO".
+- **Notifications are derived from live counts** (draft RFQs, suppliers without evaluations, closing RFQs, pending awards) — no new Notification reads. "Notice of Award Generated"/"Letter of Notice Released" are not yet available as audit events (Transmittals/Letters of Notice are still placeholders), so those two timeline entries are omitted.
+- **Official BSC Supplier Evaluation form** (`/dashboard/officer/evaluations`, `src/app/actions/evaluation.ts`) is unchanged.
+
+### Verification
+
+`npx tsc --noEmit` clean, `npx eslint src/app/dashboard/officer src/components/layout/DashboardSidebar.tsx` clean (one pre-existing warning in `po/[id]/PoDetailsClient.tsx`), `next build` succeeds — `/dashboard/officer/suppliers` and `/dashboard/officer/suppliers/[id]` routes included.
+
 ## 📋 Procurement Staff Dashboard Aligned to Official Procedure (Document Preparation Focus)
 
 **Date**: August 2026
