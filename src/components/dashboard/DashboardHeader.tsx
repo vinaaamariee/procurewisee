@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import type { UserProfile } from "@/types/auth";
+import { ROLE_LABELS, type UserProfile } from "@/types/auth";
 
 export default function DashboardHeader({ profile, displayRole }: { profile: UserProfile; displayRole?: string }) {
   const formattedToday = new Intl.DateTimeFormat("en-PH", {
@@ -27,7 +27,7 @@ export default function DashboardHeader({ profile, displayRole }: { profile: Use
           <div className="flex items-center gap-1">
             <span>Role:</span>{" "}
             <span className="badge badge-sm rounded border-base-300 bg-base-200 text-base-content font-bold">
-              {displayRole || profile.role}
+              {displayRole || ROLE_LABELS[profile.role]}
             </span>
           </div>
           <div className="hidden sm:block h-3.5 w-px bg-base-300"></div>

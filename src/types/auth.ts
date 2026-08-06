@@ -15,8 +15,8 @@ export interface UserProfile {
 }
 
 export const ROLE_LABELS: Record<UserRole, string> = {
-  'Procurement Officer':    'Procurement Officer',
-  'Administrative Approver': 'Administrative Approver',
+  'Procurement Officer':    'Procurement Staff',
+  'Administrative Approver': 'Procurement Officer II',
   'Supplier':               'Supplier',
   'End User':               'End User',
 };

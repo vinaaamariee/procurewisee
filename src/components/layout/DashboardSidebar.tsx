@@ -133,7 +133,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
 
   /** UI-friendly display names — DB role strings are unchanged */
   const roleDisplayNames: Record<string, string> = {
-    "Procurement Officer": "Procurement Officer",
+    "Procurement Officer": "Procurement Staff",
     "Administrative Approver": "Procurement Officer II",
     "End User": "End User",
   };

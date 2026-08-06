@@ -1,6 +1,6 @@
 import { signout } from "@/app/actions/auth";
 import { getAuthenticatedUser } from "@/lib/auth/get-user-profile";
-import { ROLE_HOME } from "@/types/auth";
+import { ROLE_HOME, ROLE_LABELS } from "@/types/auth";
 import { ThemeToggle } from "@/components/theme-toggle";
 import NotificationBell from "@/components/notifications/NotificationBell";
 import GlobalSearch from "@/components/search/GlobalSearch";
@@ -86,7 +86,7 @@ export default async function DashboardLayout({
                     className="text-[10px] font-semibold tracking-wide"
                     style={{ color: "var(--text-muted)" }}
                   >
-                    {profile.role}
+                    {ROLE_LABELS[profile.role]}
                   </div>
                 </div>
               </div>
