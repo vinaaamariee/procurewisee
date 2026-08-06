@@ -8,18 +8,6 @@ import * as XLSX from "xlsx";
 import { FileDown, FileSpreadsheet, Printer } from "lucide-react";
 
 interface ReportsData {
-  prs: {
-    id: number;
-    prNumber: string;
-    office: string;
-    department: string;
-    fundingSource: string;
-    purpose: string;
-    totalCost: number;
-    status: string;
-    decisionDate: string | null;
-    reviewedBy: string | null;
-  }[];
   pmrs: {
     id: number;
     pmrNumber: string;
@@ -44,14 +32,16 @@ interface ReportsData {
     createdAt: string;
     dateOfDelivery: string | null;
   }[];
-  receipts: {
+  rfqs: {
     id: number;
-    receiptNumber: string;
-    poNumber: string | null;
-    supplierName: string;
-    dateReceived: string;
-    deliveryStatus: string;
-    receivedBy: string;
+    rfqNumber: string;
+    title: string;
+    status: string;
+    budget: number;
+    deadlineDate: string | null;
+    createdAt: string;
+    prNumber: string | null;
+    quoteCount: number;
   }[];
 }
 
@@ -130,48 +120,9 @@ function exportPdf(title: string, headers: string[], rows: (string | number | nu
 }
 
 export default function ReportsClient({ data }: { data: ReportsData }) {
-  const [tab, setTab] = useState("summary");
+  const [tab, setTab] = useState("pmr");
 
   const reports: Record<string, ReportTable> = useMemo(() => {
-    const prStatusCount = data.prs.reduce<Record<string, number>>((acc, p) => {
-      acc[p.status] = (acc[p.status] || 0) + 1;
-      return acc;
-    }, {});
-    const poStatusCount = data.pos.reduce<Record<string, number>>((acc, p) => {
-      acc[p.status] = (acc[p.status] || 0) + 1;
-      return acc;
-    }, {});
-    const pmrStatusCount = data.pmrs.reduce<Record<string, number>>((acc, p) => {
-      acc[p.status] = (acc[p.status] || 0) + 1;
-      return acc;
-    }, {});
-
-    const summaryRows: (string | number | null)[][] = [];
-    Object.entries(prStatusCount).forEach(([k, v]) => summaryRows.push(["Purchase Requests", k, v]));
-    Object.entries(poStatusCount).forEach(([k, v]) => summaryRows.push(["Purchase Orders", k, v]));
-    Object.entries(pmrStatusCount).forEach(([k, v]) => summaryRows.push(["PMR Records", k, v]));
-
-    const PENDING = ["Submitted", "UnderReview", "PendingProcurementReview", "Pending Procurement Review"];
-    const RETURNED = ["Returned", "ReturnedForRevision", "Returned for Revision", "Rejected"];
-
-    const pendingRows = data.prs
-      .filter((p) => PENDING.includes(p.status))
-      .map((p) => [p.prNumber, p.office, p.fundingSource, p.purpose, fmtDate(p.decisionDate), fmtMoney(p.totalCost), p.status]);
-
-    const returnedRows = data.prs
-      .filter((p) => RETURNED.includes(p.status))
-      .map((p) => [p.prNumber, p.office, p.fundingSource, fmtDate(p.decisionDate), p.reviewedBy, fmtMoney(p.totalCost), p.status]);
-
-    const verificationRows = data.prs.map((p) => [
-      p.prNumber,
-      p.office,
-      p.fundingSource,
-      fmtDate(p.decisionDate),
-      p.reviewedBy || "—",
-      fmtMoney(p.totalCost),
-      p.status,
-    ]);
-
     const pmrRows = data.pmrs.map((p) => [
       p.pmrNumber,
       p.prNumber || "—",
@@ -185,41 +136,85 @@ export default function ReportsClient({ data }: { data: ReportsData }) {
       fmtMoney(p.totalCost),
     ]);
 
+    const rfqRows = data.rfqs.map((r) => [
+      r.rfqNumber,
+      r.title,
+      r.prNumber || "—",
+      r.status,
+      r.quoteCount,
+      fmtDate(r.deadlineDate),
+      fmtDate(r.createdAt),
+      fmtMoney(r.budget),
+    ]);
+
+    const bacRows = data.rfqs
+      .filter((r) => r.status === "Published" || r.status === "Closed")
+      .map((r) => [
+        r.rfqNumber,
+        r.title,
+        r.prNumber || "—",
+        r.status,
+        fmtDate(r.deadlineDate),
+        fmtDate(r.createdAt),
+      ]);
+
+    const noticeRows = data.rfqs
+      .filter((r) => r.status === "Evaluated")
+      .map((r) => [
+        r.rfqNumber,
+        r.title,
+        r.prNumber || "—",
+        r.status,
+        fmtDate(r.createdAt),
+        fmtMoney(r.budget),
+      ]);
+
+    const poRows = data.pos.map((p) => [
+      p.poNumber,
+      p.prNumber || "—",
+      p.supplierName,
+      p.office || "—",
+      p.status,
+      fmtDate(p.createdAt),
+      fmtDate(p.dateOfDelivery),
+      fmtMoney(p.totalCost),
+    ]);
+
     return {
-      summary: {
-        title: "Status Summary Report",
-        headers: ["Category", "Status", "Count"],
-        rows: summaryRows,
-      },
-      verification: {
-        title: "Purchase Request Verification Report",
-        headers: ["PR No.", "Office", "Fund Source", "Decision Date", "Reviewed By", "Amount", "Status"],
-        rows: verificationRows,
-      },
-      pending: {
-        title: "Pending Verification Report",
-        headers: ["PR No.", "Office", "Fund Source", "Submitted", "Amount", "Status"],
-        rows: pendingRows,
-      },
-      returned: {
-        title: "Returned & Rejected Purchase Requests",
-        headers: ["PR No.", "Office", "Fund Source", "Decision Date", "Reviewed By", "Amount", "Status"],
-        rows: returnedRows,
-      },
       pmr: {
-        title: "Procurement Monitoring Record Register",
+        title: "Procurement Monitoring Record Report",
         headers: ["PMR No.", "PR No.", "Office", "Fund Source", "Date Received", "Verification Date", "Verified By", "Stage", "Status", "Amount"],
         rows: pmrRows,
+      },
+      rfq: {
+        title: "RFQ Preparation Report",
+        headers: ["RFQ No.", "Title", "PR No.", "Status", "Quotes", "Deadline", "Date Created", "Budget (₱)"],
+        rows: rfqRows,
+      },
+      bac: {
+        title: "BAC Transmittal Report",
+        headers: ["RFQ No.", "Title", "PR No.", "Status", "Deadline", "Date Created"],
+        rows: bacRows,
+      },
+      notices: {
+        title: "Letter of Notice Report",
+        headers: ["RFQ No.", "Title", "PR No.", "Status", "Date Created", "Amount"],
+        rows: noticeRows,
+      },
+      po: {
+        title: "Purchase Order Report",
+        headers: ["PO No.", "PR No.", "Supplier", "Office", "Status", "Date Created", "Date of Delivery", "Amount"],
+        rows: poRows,
       },
     };
   }, [data]);
 
   const tabs = [
-    { key: "summary", label: "Status Summary" },
-    { key: "verification", label: "Verification" },
-    { key: "pending", label: "Pending" },
-    { key: "returned", label: "Returned & Rejected" },
-    { key: "pmr", label: "PMR Register" },
+    { key: "pmr", label: "PMR Report" },
+    { key: "rfq", label: "RFQ Preparation" },
+    { key: "bac", label: "BAC Transmittal" },
+    { key: "notices", label: "Letter of Notice" },
+    { key: "po", label: "Purchase Order" },
   ];
 
   const active = reports[tab];
@@ -320,8 +315,10 @@ export default function ReportsClient({ data }: { data: ReportsData }) {
       <div className="flex flex-wrap gap-3">
         {[
           { href: "/dashboard/officer/pmr", label: "Procurement Monitoring Record" },
-          { href: "/dashboard/officer/rfq", label: "RFQ Distribution" },
-          { href: "/dashboard/officer/po", label: "Purchase Order" },
+          { href: "/dashboard/officer/rfq", label: "Request for Quotation" },
+          { href: "/dashboard/officer/transmittals", label: "BAC Transmittals" },
+          { href: "/dashboard/officer/notices", label: "Letters of Notice" },
+          { href: "/dashboard/officer/po", label: "Purchase Orders" },
         ].map((l) => (
           <Link key={l.href} href={l.href} className="btn btn-sm btn-ghost rounded-md text-xs font-bold border border-base-300">
             {l.label}

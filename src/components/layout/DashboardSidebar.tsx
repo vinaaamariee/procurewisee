@@ -53,7 +53,7 @@ export default function DashboardSidebar({ role }: { role: string }) {
             icon: ClipboardCheck,
           },
           {
-            label: "RFQ Distribution",
+            label: "Request for Quotation",
             href: "/dashboard/officer/rfq",
             icon: FileText,
           },
@@ -63,12 +63,12 @@ export default function DashboardSidebar({ role }: { role: string }) {
             icon: ClipboardList,
           },
           {
-            label: "Letter of Notice",
+            label: "Letters of Notice",
             href: "/dashboard/officer/notices",
             icon: ScrollText,
           },
           {
-            label: "Purchase Order",
+            label: "Purchase Orders",
             href: "/dashboard/officer/po",
             icon: ShoppingCart,
           },

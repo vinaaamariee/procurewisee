@@ -5,6 +5,31 @@
 **Capstone Project for Batanes State College**
 
 
+## 📋 Procurement Staff Dashboard Aligned to Official Procedure (Document Preparation Focus)
+
+**Date**: August 2026
+
+Refined the Procurement Staff module to match the official Batanes State College procurement procedure end-to-end. This is a **UI / information-architecture change only** — workflow transitions, PMR auto-creation, permissions, business logic, database, Prisma, API routes, and server actions are untouched. It supersedes the earlier role-realignment nav naming below ("RFQ Distribution" → **Request for Quotation**, "Letter of Notice" → **Letters of Notice**, "Purchase Order" → **Purchase Orders**).
+
+### Key Changes
+
+- **Official navigation names** in `DashboardSidebar.tsx`. Staff sidebar is now: Dashboard, Procurement Monitoring Record, Request for Quotation, BAC Transmittals, Letters of Notice, Purchase Orders, Reports. No abbreviations in nav/titles (RFQ is allowed inside document pages).
+- **Staff dashboard rewritten** (`/dashboard/officer`) as a **Document Preparation Workspace** with six compact cards:
+  1. Purchase Requests Ready for PMR → "Record to PMR →"
+  2. Request for Quotation → "Prepare RFQ →"
+  3. BAC Transmittals → "Transmit →"
+  4. Letters of Notice → "Prepare Notice →"
+  5. Purchase Orders → "Generate PO →"
+  6. **Procurement Pipeline** — compact workflow: Verified PR → Recorded to PMR → RFQ Prepared → Forwarded to BAC → Letter of Notice → Purchase Order (final: forwarded to Procurement Officer I).
+- **Work Queue table**: PR Number, Office, Current Stage, Assigned Activity, Date Received, Days Pending, Status, Action. Actions are context-aware (Record to PMR / Prepare RFQ / Forward to BAC / Prepare Letter of Notice / Generate PO / Manage PO + View Details). Stage is derived per PR from PMR → latest RFQ → PO existence, without new data models.
+- **Only verified Purchase Requests** (`Approved` / `Converted to RFQ`) ever appear on the staff dashboard — Draft, Submitted, Pending Verification, Returned, and Rejected are excluded by the `getStaffPipeline` query.
+- **Staff Reports** reduced to the official five: PMR Report, RFQ Preparation Report, BAC Transmittal Report, Letter of Notice Report, Purchase Order Report (the verification/pending/returned tabs and delivery/receipt data were removed; BAC and Notice reports are derived from RFQ status `Published`/`Closed` and `Evaluated`).
+- **Placeholders** (`/dashboard/officer/transmittals`, `/dashboard/officer/notices`) retitled to "BAC Transmittals" and "Letters of Notice".
+
+### Verification
+
+`npx tsc --noEmit` clean, `npx eslint .` clean (pre-existing warnings only), `next build` succeeds (39 pages; all staff routes present).
+
 ## 🔄 Procurement Role Realignment (Official BSC Workflow)
 
 **Date**: August 2026

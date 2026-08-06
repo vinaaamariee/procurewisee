@@ -8,7 +8,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import EmptyState from "@/components/ui/EmptyState";
 import { Plus } from "lucide-react";
 
-export const metadata = { title: "RFQ Solicitations — ProcureWise" };
+export const metadata = { title: "Request for Quotation — ProcureWise" };
 
 export default async function RfqListPage() {
   await requireRole("Procurement Officer");
@@ -36,15 +36,15 @@ export default async function RfqListPage() {
   return (
     <div className="space-y-8">
       <SectionHeader
-        title="RFQ Solicitations"
-        subtitle="Manage and monitor all Requests for Quotation issued to registered suppliers."
+        title="Request for Quotation"
+        subtitle="Prepare and manage all Requests for Quotation issued to registered suppliers."
         action={
           <Link
             href="/dashboard/officer/rfq/new"
             className="inline-flex items-center gap-2 rounded-xl bg-[var(--accent)] px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90"
           >
             <Plus className="h-4 w-4" />
-            New RFQ
+            New Request for Quotation
           </Link>
         }
       />

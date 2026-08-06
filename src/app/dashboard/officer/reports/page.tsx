@@ -10,25 +10,7 @@ export const metadata = {
 export default async function ReportsPage() {
   await requireRole("Procurement Officer");
 
-  const [prs, pmrs, pos, receipts] = await Promise.all([
-    prisma.purchaseRequest.findMany({
-      select: {
-        id: true,
-        prNumber: true,
-        office: true,
-        department: true,
-        fundingSource: true,
-        purpose: true,
-        totalCost: true,
-        status: true,
-        approvedAt: true,
-        reviewedAt: true,
-        submittedAt: true,
-        createdAt: true,
-        reviewedBy: { select: { fullName: true } },
-      },
-      orderBy: { createdAt: "desc" },
-    }),
+  const [pmrs, pos, rfqs] = await Promise.all([
     prisma.procurementMonitoringRecord.findMany({
       include: {
         pr: { select: { prNumber: true } },
@@ -43,28 +25,23 @@ export default async function ReportsPage() {
       },
       orderBy: { createdAt: "desc" },
     }),
-    prisma.acknowledgementReceipt.findMany({
-      include: {
-        po: { select: { poNumber: true } },
-        supplier: { select: { companyName: true } },
+    prisma.requestForQuote.findMany({
+      select: {
+        id: true,
+        rfqNumber: true,
+        title: true,
+        status: true,
+        approvedBudgetContract: true,
+        deadlineDate: true,
+        createdAt: true,
+        pr: { select: { prNumber: true } },
+        _count: { select: { quotes: true } },
       },
-      orderBy: { dateReceived: "desc" },
+      orderBy: { createdAt: "desc" },
     }),
   ]);
 
   const serialized = {
-    prs: prs.map((pr: any) => ({
-      id: pr.id,
-      prNumber: pr.prNumber,
-      office: pr.office,
-      department: pr.department,
-      fundingSource: pr.fundingSource,
-      purpose: pr.purpose,
-      totalCost: Number(pr.totalCost),
-      status: pr.status,
-      decisionDate: (pr.approvedAt || pr.reviewedAt || pr.submittedAt || pr.createdAt)?.toISOString() ?? null,
-      reviewedBy: pr.reviewedBy?.fullName ?? null,
-    })),
     pmrs: pmrs.map((pmr: any) => ({
       id: pmr.id,
       pmrNumber: pmr.pmrNumber,
@@ -89,14 +66,16 @@ export default async function ReportsPage() {
       createdAt: po.createdAt.toISOString(),
       dateOfDelivery: po.dateOfDelivery ? po.dateOfDelivery.toISOString() : null,
     })),
-    receipts: receipts.map((r: any) => ({
-      id: r.id,
-      receiptNumber: r.receiptNumber,
-      poNumber: r.po?.poNumber ?? null,
-      supplierName: r.supplier.companyName,
-      dateReceived: r.dateReceived.toISOString(),
-      deliveryStatus: r.deliveryStatus,
-      receivedBy: r.receivedBy,
+    rfqs: rfqs.map((rfq: any) => ({
+      id: rfq.id,
+      rfqNumber: rfq.rfqNumber,
+      title: rfq.title,
+      status: rfq.status,
+      budget: Number(rfq.approvedBudgetContract),
+      deadlineDate: rfq.deadlineDate ? rfq.deadlineDate.toISOString() : null,
+      createdAt: rfq.createdAt.toISOString(),
+      prNumber: rfq.pr?.prNumber ?? null,
+      quoteCount: rfq._count.quotes,
     })),
   };
 
@@ -104,7 +83,7 @@ export default async function ReportsPage() {
     <div className="space-y-8">
       <SectionHeader
         title="Operational Reports"
-        subtitle="Verification, PMR, delivery, returned, and pending reports. Export each report as PDF, Excel, or CSV."
+        subtitle="PMR, Request for Quotation, BAC Transmittal, Letter of Notice, and Purchase Order reports. Export each report as PDF, Excel, or CSV."
       />
 
       <ReportsClient data={serialized} />
