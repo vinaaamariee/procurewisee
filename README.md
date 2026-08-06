@@ -38,22 +38,22 @@ Reverted Purchase Request printing to a same-page workflow. The dedicated `/prin
 
 
 
-## 👷 Procurement Verification Officer Dashboard Redesign
+## 👷 Procurement Officer Dashboard Redesign
 
 **Date**: August 2026
 
-Redesigned the Procurement Officer II dashboard to reflect the official duties per BSC SOP §5.1 (Receive and Verify PRs) and §5.15 (Monitor Supplier Deliveries). The role is now labelled **"Procurement Verification Officer"** in the UI (sidebar footer, dashboard header role badge, browser tab title) while the database role string `"Procurement Officer"` remains unchanged — zero breaking changes to authentication, authorization, or business logic.
+Redesigned the Procurement Officer dashboard to reflect the official duties per BSC SOP §5.1 (Receive and Verify PRs) and §5.15 (Monitor Supplier Deliveries). The workspace is correctly mapped to the operational **Procurement Officer** dashboard (`/dashboard/officer`), while the **Procurement Officer II** dashboard (`/dashboard/approver`) handles administrative approvals and workflows and remains completely unchanged/untouched.
 
 ### Key Changes
 
-- **`DashboardSidebar.tsx`**: Added `roleDisplayNames` map that translates DB role strings to UI-friendly display names. "Procurement Officer" → "Procurement Verification Officer". Displayed as a small labeled line in the sidebar footer. All other roles unaffected.
-- **`DashboardHeader.tsx`**: Added optional `displayRole` prop; falls back to `profile.role` when not provided, so approver, end-user, and any other dashboard remain unchanged.
-- **`officer/page.tsx`**: Passes `displayRole="Procurement Verification Officer"` to `DashboardHeader`; updated metadata title.
+- **`DashboardSidebar.tsx`**: Maps the DB role `"Procurement Officer"` to UI label `"Procurement Officer"` and maps `"Administrative Approver"` to UI label `"Procurement Officer II"`. All other roles are untouched.
+- **`DashboardHeader.tsx`**: Added optional `displayRole` prop; falls back to `profile.role` when not provided.
+- **`officer/page.tsx`**: Passes `displayRole="Procurement Officer"` to `DashboardHeader`; updated metadata title.
 - **`officer/pr/PrAuditClient.tsx`**: Replaced the card-grid queue with a proper **searchable data table** matching the institutional spec:
   - Columns: PR Number | Office | Requestor | Purpose | Fund Source | Date Submitted | Est. Cost | Status | Actions
   - Inline action buttons: **Verify** (Eye icon → detail page) and **Print** (Printer icon)
   - Record count shown next to status filter; search now also matches Fund Source
-- **`officer/pr/page.tsx`**: Added `fundingSource` to Prisma `select` and serialized output.
+- **`officer/pr/page.tsx`**: Added `fundingSource` to Prisma `select` and serialized output; updated metadata title.
 - **`officer/history/VerificationHistoryClient.tsx`**: Table updated to match spec:
   - "Decision Date" renamed to **"Date Verified"**
   - "Reviewed By" renamed to **"Officer"**
