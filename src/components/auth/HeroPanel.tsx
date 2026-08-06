@@ -11,16 +11,16 @@ interface HeroPanelProps {
 /* Hero content for each state */
 const HERO_CONTENT = {
   login: {
-    title: "Welcome\nBack",
-    body: "Access the Procurement Management Information System of Batanes State College. Sign in using your registered institutional account.",
     btnLabel: "Create Account",
     btnTarget: "register" as const,
+    description:
+      "Access the Procurement Management Information System of Batanes State College. Sign in using your registered institutional account.",
   },
   register: {
-    title: "New to\nProcureWise?",
-    body: "Create an End User account to submit Purchase Requests, monitor procurement activities, and access institutional procurement services.",
     btnLabel: "Sign In",
     btnTarget: "login" as const,
+    description:
+      "Create an End User account to submit Purchase Requests, monitor procurement activities, and access institutional procurement services.",
   },
 };
 
@@ -30,65 +30,76 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
   return (
     <div className="relative w-full h-full flex flex-col justify-center items-center text-white select-none overflow-hidden">
 
-      {/* Layer 1 - solid maroon background — hardcoded to bypass next-themes/DaisyUI specificity conflict */}
+      {/* Layer 1 - solid maroon background (hardcoded gradient, per design spec) */}
       <div
         className="absolute inset-0"
-        style={{ background: "linear-gradient(165deg, #7B1E1E 0%, #601717 45%, #4A1010 100%)" }}
+        style={{ background: "linear-gradient(180deg, #842222 0%, #701919 100%)" }}
       />
 
-      {/* Layer 2 - BSC logo watermark */}
+      {/* Layer 2 - BSC logo watermark (no blur/rotation/shadow) */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
         <Image
           src="/images/bsc-logo.png"
           alt=""
-          width={420}
-          height={420}
-          className="object-contain grayscale"
-          style={{ opacity: 0.04, width: "420px", height: "420px" }}
+          width={520}
+          height={520}
+          className="object-contain"
+          style={{ opacity: 0.05, width: "520px", height: "520px" }}
         />
       </div>
 
-      {/* Layer 3 - subtle grid */}
+      {/* Layer 3 - dotted grid pattern */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.07) 1px, transparent 1px), " +
-            "linear-gradient(90deg, rgba(255,255,255,0.07) 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-          opacity: 0.045,
+          backgroundImage: "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+          opacity: 0.025,
         }}
       />
 
       {/* Hero content */}
-      <div className="relative z-10 w-full max-w-[360px] px-8 flex flex-col items-center text-center gap-7">
+      <div className="relative z-10 w-full max-w-[460px] px-8 flex flex-col items-center text-center gap-7">
 
-        {/* Title */}
-        <h2
-          className="text-[42px] font-extrabold leading-[1.05] tracking-tight text-white uppercase"
-          style={{ whiteSpace: "pre-line" }}
+        {/* Badge */}
+        <p
+          className="text-[12px] font-semibold uppercase leading-relaxed"
+          style={{ color: "rgba(255, 255, 255, 0.75)", letterSpacing: "4px" }}
         >
-          {content.title}
+          Procurement Management Information System
+        </p>
+
+        {/* Heading */}
+        <h2 className="text-[40px] xl:text-[52px] font-extrabold uppercase leading-[1.05] tracking-tight text-white">
+          Welcome to ProcureWise
         </h2>
 
-        {/* Body copy */}
-        <p className="text-[13px] text-white/85 leading-relaxed font-medium">
-          {content.body}
+        {/* Gold divider with diamond */}
+        <div className="flex items-center justify-center gap-3">
+          <span className="h-px w-12" style={{ backgroundColor: "#C89B3C" }} />
+          <span
+            className="block w-2 h-2 rotate-45"
+            style={{ backgroundColor: "#C89B3C" }}
+          />
+          <span className="h-px w-12" style={{ backgroundColor: "#C89B3C" }} />
+        </div>
+
+        {/* Description */}
+        <p
+          className="max-w-[420px] text-[15px] leading-[1.8]"
+          style={{ color: "rgba(255, 255, 255, 0.88)" }}
+        >
+          {content.description}
         </p>
 
         {/* CTA button */}
         <button
           type="button"
           onClick={() => onToggle(content.btnTarget)}
-          className="btn btn-outline border-white text-white font-semibold hover:bg-white hover:text-primary hover:border-white active:translate-y-px transition-all duration-200 px-9"
+          className="h-[54px] px-9 rounded-xl border-2 border-white text-white text-sm font-semibold transition-colors hover:bg-white hover:text-[#7B1E1E] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
         >
-          {content.btnLabel}
+          {content.btnLabel} →
         </button>
-
-        {/* College footer text */}
-        <p className="text-[10px] text-white/35 font-semibold tracking-wider uppercase">
-          Batanes State College · Republic of the Philippines
-        </p>
       </div>
     </div>
   );

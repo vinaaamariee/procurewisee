@@ -5,6 +5,22 @@
 **Capstone Project for Batanes State College**
 
 
+## 🏛️ Enterprise Authentication Redesign — Modern Split-Panel Login
+
+**Date**: August 2026
+
+Redesigned the shared authentication pages (`/login` and `/end-user/login`) into a modern enterprise split-panel layout inspired by Microsoft/Oracle/SAP sign-in screens. Both routes share the same component tree (`AuthLayout` → `HeroPanel` / `LoginForm` / `RegisterForm` / `AuthBranding`), so a single implementation covers both.
+
+### Key Changes
+
+- **Left panel (white)**: BSC official logo (88px), "Republic of the Philippines / BATANES STATE COLLEGE", the **ProcureWise** wordmark (Procure gray-900 + Wise maroon `#7B1E1E`), the "Procurement Management Information System" subtitle, and a thin gold (`#C89B3C`) divider.
+- **Form styling**: 56px (`h-14`) inputs with `rounded-xl`, light gray border, maroon hover/focus border + soft maroon focus ring; solid maroon `#7B1E1E` submit button with darker `#651517` hover; bottom "Need an account? Create Account" link. Register form restyled to match.
+- **Right hero panel**: solid maroon gradient (`linear-gradient(180deg, #842222 0%, #701919 100%)`) with the BSC logo as a 520px watermark at 5% opacity (no blur/rotation/shadow) and a subtle 24px dotted-grid overlay (opacity 0.025). Typography-only content: uppercase badge ("PROCUREMENT MANAGEMENT INFORMATION SYSTEM"), "WELCOME TO PROCUREWISE" heading (52px/800), gold line + diamond divider, description, and an outlined "Create Account →" button (white border → hover white bg + maroon text). Footer strip removed.
+- **Photos/assets removed**: no Header-Frame.png, building photo, landscape photo, or footer icon strip. `public/images/Header-Frame.png` has zero code references.
+- **Animation**: kept the sliding split-panel "Login4" motion — hero slides and forms fade at **600ms** `cubic-bezier(0.65,0,0.35,1)`; only the hero panel, forms, and opacity animate (no bounce, no scaling, no glassmorphism).
+- **Component details**: `AuthBranding` now renders the full institutional text stack + gold divider and defaults the logo to 88px; `HeroPanel` rewritten with per-tab CTA ("Create Account →" / "Sign In →") and no footer. Plain elements + Tailwind utilities are used for the buttons/inputs because `globals.css` has un-layered `!important` overrides on `.btn-*`/`.input` that would otherwise force the global radius/border.
+- **Verification**: `npx tsc --noEmit` clean, `npx eslint .` clean (pre-existing warnings only), `next build` succeeds.
+
 ## 🖨️ Same-Page Purchase Request Printing — No Dedicated Print Route
 
 **Date**: August 2026

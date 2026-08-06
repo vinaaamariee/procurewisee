@@ -91,7 +91,7 @@ export default function LoginForm({
               autoComplete="email"
               placeholder="username@bsc.edu.ph"
               aria-label="Institutional Email"
-              className="input input-bordered input-primary w-full h-12 pl-10"
+              className="w-full h-14 pl-10 rounded-xl border border-base-300 bg-base-100 text-sm font-medium text-base-content placeholder:text-base-content/40 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:opacity-60"
               disabled={isPending}
             />
             <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40 pointer-events-none" />
@@ -111,7 +111,7 @@ export default function LoginForm({
               autoComplete="current-password"
               placeholder="••••••••"
               aria-label="Password"
-              className="input input-bordered input-primary w-full h-12 pl-10 pr-10"
+              className="w-full h-14 pl-10 pr-10 rounded-xl border border-base-300 bg-base-100 text-sm font-medium text-base-content placeholder:text-base-content/40 outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:opacity-60"
               disabled={isPending}
             />
             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-base-content/40 pointer-events-none" />
@@ -152,7 +152,7 @@ export default function LoginForm({
         {/* Submit */}
         <button
           type="submit"
-          className="btn btn-primary btn-block h-12 min-h-12 mt-1"
+          className="w-full h-14 mt-1 flex items-center justify-center gap-2 rounded-xl bg-primary text-white text-sm font-semibold transition-colors hover:bg-[#651517] disabled:opacity-60 disabled:cursor-not-allowed"
           disabled={isPending}
         >
           {isPending ? (
@@ -174,16 +174,16 @@ export default function LoginForm({
       </div>
 
       {/* Register link */}
-      <p className="text-center text-xs text-base-content/60 font-semibold">
-        Need an account?{" "}
-        <button
-          type="button"
-          onClick={() => onToggleTab?.("register")}
-          className="font-bold text-primary hover:text-primary-focus hover:underline bg-transparent border-none p-0 cursor-pointer"
-        >
-          Create End User Account
-        </button>
-      </p>
+        <p className="text-center text-xs text-base-content/60 font-semibold">
+          Need an account?{" "}
+          <button
+            type="button"
+            onClick={() => onToggleTab?.("register")}
+            className="font-bold text-primary hover:text-primary-focus hover:underline bg-transparent border-none p-0 cursor-pointer"
+          >
+            Create Account
+          </button>
+        </p>
     </div>
   );
 }
