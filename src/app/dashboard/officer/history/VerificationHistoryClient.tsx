@@ -220,7 +220,7 @@ export default function VerificationHistoryClient({ initialPrs }: VerificationHi
                   <th className="py-2.5 px-3 whitespace-nowrap">Fund Source</th>
                   <th className="py-2.5 px-3">Purpose</th>
                   <th className="py-2.5 px-3 whitespace-nowrap">Date Verified</th>
-                  <th className="py-2.5 px-3 whitespace-nowrap">Officer</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">Procurement Staff</th>
                   <th className="py-2.5 px-3 whitespace-nowrap">Action Taken</th>
                   <th className="py-2.5 px-3">Remarks</th>
                   <th className="py-2.5 px-3 text-right whitespace-nowrap">Amount</th>

@@ -13,7 +13,7 @@ export default function WorkflowSection() {
     {
       title: "Review & Approval",
       subtitle: "Procurement Verification",
-      description: "Procurement Officers review specifications, PPMP alignment, & assign staff.",
+      description: "Procurement Staff review specifications, PPMP alignment, & assign staff.",
       icon: CheckSquare,
     },
     {

@@ -8,9 +8,9 @@ interface ErrorProps {
   reset: () => void;
 }
 
-export default function OfficerDashboardError({ error, reset }: ErrorProps) {
+export default function ProcurementStaffDashboardError({ error, reset }: ErrorProps) {
   useEffect(() => {
-    console.error("[OfficerDashboard] Error:", error);
+    console.error("[ProcurementStaffDashboard] Error:", error);
   }, [error]);
 
   return (
@@ -30,7 +30,7 @@ export default function OfficerDashboardError({ error, reset }: ErrorProps) {
           Something went wrong
         </h2>
         <p className="mt-2 text-sm" style={{ color: "var(--text-muted)" }}>
-          An error occurred while loading the Officer Dashboard. This may be a
+          An error occurred while loading the Procurement Staff Dashboard. This may be a
           temporary issue — try again or contact your system administrator if the
           problem persists.
         </p>

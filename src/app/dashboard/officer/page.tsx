@@ -18,10 +18,10 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-export const metadata = { title: "Procurement Officer Dashboard — ProcureWise" };
+export const metadata = { title: "Procurement Staff Dashboard — ProcureWise" };
 
-async function getOfficerStats() {
-  const timer = startTimer("getOfficerStats");
+async function getProcurementStaffStats() {
+  const timer = startTimer("getProcurementStaffStats");
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
 
@@ -148,11 +148,11 @@ async function getRecentActivity() {
   return { recentlyVerified, recentPmrs };
 }
 
-export default async function OfficerDashboard() {
-  const pageTimer = startTimer("OfficerDashboardPage");
+export default async function ProcurementStaffDashboard() {
+  const pageTimer = startTimer("ProcurementStaffDashboardPage");
   const { profile } = await requireRole("Procurement Officer");
   const [stats, alerts, activity] = await Promise.all([
-    getOfficerStats(),
+    getProcurementStaffStats(),
     getProcurementAlerts(),
     getRecentActivity(),
   ]);
@@ -195,7 +195,7 @@ export default async function OfficerDashboard() {
 
   return (
     <DashboardShell>
-      <DashboardHeader profile={profile} displayRole="Procurement Officer" />
+      <DashboardHeader profile={profile} displayRole="Procurement Staff" />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-8">

@@ -294,7 +294,7 @@ export default function AcknowledgementReceiptDocument({
               <div className="grid grid-cols-2 gap-8 mt-6">
                 <div>
                   <div className="border-b border-black h-8 w-4/5"></div>
-                  <p className="text-[10px] mt-1">Signature over Printed Name<br />BAC Secretariat / Procurement Officer</p>
+                  <p className="text-[10px] mt-1">Signature over Printed Name<br />BAC Secretariat / Procurement Staff</p>
                 </div>
                 <div>
                   <div className="border-b border-black h-8 w-4/5"></div>

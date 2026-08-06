@@ -79,7 +79,7 @@ export async function submitRequisitionAction(input: RequisitionSubmissionInput)
         data: {
           requisitionId: req.id,
           status: "Pending" as RequisitionStatus,
-          remarks: "Requisition successfully logged. Queued for Procurement Officer review."
+          remarks: "Requisition successfully logged. Queued for Procurement Staff review."
         }
       });
 

@@ -13,7 +13,7 @@ export default function FeaturesSection() {
     {
       title: "Official RFQ Generation",
       badge: "PR-to-RFQ",
-      description: "Automated PR-to-RFQ conversion that builds Request for Quotation documents from approved purchase requests without re-encoding data. Managed by Procurement Officers.",
+      description: "Automated PR-to-RFQ conversion that builds Request for Quotation documents from approved purchase requests without re-encoding data. Managed by Procurement Staff.",
       icon: Layers,
     },
     {

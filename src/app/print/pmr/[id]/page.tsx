@@ -45,7 +45,7 @@ export default async function PrintPmrPage({ params }: PageProps) {
     totalCost: Number(pmr.totalCost),
     dateReceived: pmr.dateReceived.toISOString(),
     verificationDate: pmr.verificationDate ? pmr.verificationDate.toISOString() : null,
-    verifiedBy: pmr.verifiedBy?.fullName || "Procurement Officer",
+    verifiedBy: pmr.verifiedBy?.fullName || "Procurement Staff",
     stage: pmr.stage,
     status: pmr.status,
     remarks: pmr.remarks,

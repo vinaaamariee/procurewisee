@@ -36,7 +36,7 @@ export default function StatsSection() {
               Role-Based
             </div>
             <div className="stat-desc text-xs font-semibold text-base-content/70">
-              End User, Officer & Administrator
+              End User, Procurement Staff & Administrator
             </div>
           </div>
 

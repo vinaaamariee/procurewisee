@@ -160,7 +160,7 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
               onChange={(e) => setNewStepRole(e.target.value)}
               style={{ padding: "0.5rem", borderRadius: "0.5rem", border: "1px solid rgba(0,0,0,0.12)", fontSize: "0.8rem", background: "#fff" }}
             >
-              {ROLES.map(r => <option key={r} value={r}>{r === "Administrative Approver" ? "Procurement Officer II" : r}</option>)}
+              {ROLES.map(r => <option key={r} value={r}>{r === "Administrative Approver" ? "Procurement Officer II" : r === "Procurement Officer" ? "Procurement Staff" : r}</option>)}
             </select>
           </div>
 
@@ -282,7 +282,7 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
                   </div>
 
                   <div>
-                    <span style={{ fontSize: "0.85rem", fontWeight: 800, color: theme.textMain }}>{step.role === "Administrative Approver" ? "Procurement Officer II" : step.role}</span>
+                    <span style={{ fontSize: "0.85rem", fontWeight: 800, color: theme.textMain }}>{step.role === "Administrative Approver" ? "Procurement Officer II" : step.role === "Procurement Officer" ? "Procurement Staff" : step.role}</span>
                     <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.15rem", fontSize: "0.72rem", color: theme.textMuted }}>
                       <span>Action: <strong>{step.action}</strong></span>
                       <span>•</span>

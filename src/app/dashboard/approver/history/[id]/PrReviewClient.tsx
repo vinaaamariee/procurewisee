@@ -181,7 +181,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
     fundingSource: pr.fundingSource,
     totalCost: Number(pr.totalCost),
     requesterName: pr.requesterName || "Requisitioner",
-    officerName: pr.officerName || "Procurement Officer",
+    officerName: pr.officerName || "Procurement Staff",
     items: pr.items.map((item) => ({
       id: item.id,
       description: item.description,
@@ -393,7 +393,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                 <span style={{ fontSize: '0.85rem', fontWeight: 600, color: theme.textPrimary }}>{pr.fundingSource}</span>
               </div>
               <div>
-                <span style={{ display: 'block', fontSize: '0.7rem', color: theme.textSecondary, textTransform: 'uppercase', fontWeight: 700 }}>Assigned Procurement Officer</span>
+                <span style={{ display: 'block', fontSize: '0.7rem', color: theme.textSecondary, textTransform: 'uppercase', fontWeight: 700 }}>Assigned Procurement Staff</span>
                 <span style={{ fontSize: '0.85rem', fontWeight: 600, color: theme.textPrimary }}>{pr.officerName}</span>
               </div>
               <div style={{ gridColumn: 'span 2' }}>

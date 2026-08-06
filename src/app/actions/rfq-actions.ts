@@ -129,7 +129,7 @@ export async function createRfqAction({
           data: {
             purchaseRequestId: prId,
             status: 'ConvertedToRfq',
-            remarks: `Converted to RFQ #${rfqNumber.trim()} by Procurement Officer`,
+            remarks: `Converted to RFQ #${rfqNumber.trim()} by Procurement Staff`,
             changedById: profile.id,
           },
         });

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
-import { ROLE_HOME } from '@/types/auth';
+import { ROLE_HOME, ROLE_LABELS } from '@/types/auth';
 import { signout } from '@/app/actions/auth';
 import { Lock, ShieldAlert, UserCheck, LogOut, ArrowLeft } from 'lucide-react';
 
@@ -63,7 +63,7 @@ export default async function UnauthorizedPage({ searchParams }: PageProps) {
                 </span>
                 <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-base-content">
                   <UserCheck className="h-4 w-4 text-[#A6761D] flex-shrink-0" />
-                  <span className="truncate">{profile.role}</span>
+                  <span className="truncate">{ROLE_LABELS[profile.role] || profile.role}</span>
                 </div>
               </div>
 
@@ -74,7 +74,7 @@ export default async function UnauthorizedPage({ searchParams }: PageProps) {
                 </span>
                 <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-error">
                   <ShieldAlert className="h-4 w-4 text-error flex-shrink-0" />
-                  <span className="truncate">{requiredRole}</span>
+                  <span className="truncate">{ROLE_LABELS[requiredRole as keyof typeof ROLE_LABELS] || requiredRole}</span>
                 </div>
               </div>
             </div>

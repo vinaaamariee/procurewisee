@@ -954,7 +954,7 @@ export async function convertPrToRfqAction(prId: number) {
         data: {
           purchaseRequestId: prId,
           status: PrStatus.ConvertedToRfq,
-          remarks: `Converted to RFQ #${rfqNumber} by Procurement Officer`,
+          remarks: `Converted to RFQ #${rfqNumber} by Procurement Staff`,
           changedById: profile.id,
         },
       });

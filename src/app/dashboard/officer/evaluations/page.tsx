@@ -1,10 +1,10 @@
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
-import OfficerEvaluationsClient from "./OfficerEvaluationsClient";
+import ProcurementStaffEvaluationsClient from "./ProcurementStaffEvaluationsClient";
 
 export const metadata = { title: "Supplier Evaluations & Scorecards — ProcureWise" };
 
-export default async function OfficerEvaluationsPage() {
+export default async function ProcurementStaffEvaluationsPage() {
   const { profile } = await requireRole("Procurement Officer");
 
   // Fetch active suppliers
@@ -27,7 +27,7 @@ export default async function OfficerEvaluationsPage() {
         </p>
       </div>
 
-      <OfficerEvaluationsClient suppliers={suppliers} officerName={profile.fullName} />
+      <ProcurementStaffEvaluationsClient suppliers={suppliers} officerName={profile.fullName} />
     </div>
   );
 }

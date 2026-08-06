@@ -96,14 +96,14 @@ export default function PrWorkflowTimeline({
                 {entry.actorName && (
                   <p className="text-xs text-[var(--text-muted)]">
                     <span className="font-semibold text-[var(--text-primary)]">{entry.actorName}</span>
-                    {entry.actorRole && ` (${entry.actorRole === "Administrative Approver" ? "Procurement Officer II" : entry.actorRole})`}
+                    {entry.actorRole && ` (${entry.actorRole === "Administrative Approver" ? "Procurement Officer II" : entry.actorRole === "Procurement Officer" ? "Procurement Staff" : entry.actorRole})`}
                   </p>
                 )}
 
                 {/* Preserved Return Comment or Remarks */}
                 {entry.remarks && (
                   <div className="mt-2 rounded-lg border border-red-200 bg-red-50/70 p-3 dark:border-red-900/40 dark:bg-red-950/30 text-xs text-red-900 dark:text-red-200">
-                    <span className="font-bold block mb-0.5">Officer Reason / Return Remark:</span>
+                    <span className="font-bold block mb-0.5">Procurement Staff Reason / Return Remark:</span>
                     <p className="italic leading-relaxed whitespace-pre-wrap">{entry.remarks}</p>
                   </div>
                 )}

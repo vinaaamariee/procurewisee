@@ -19,7 +19,7 @@ export default function HelpSection() {
     },
     {
       question: "What role will I be assigned?",
-      answer: "Roles are assigned by the Administrator based on your position: End User for faculty/offices, Procurement Officer for procurement staff, and Administrator for IT/system administrators.",
+      answer: "Roles are assigned by the Administrator based on your position: End User for faculty/offices, Procurement Staff for procurement personnel, and Administrator for IT/system administrators.",
     },
   ];
 

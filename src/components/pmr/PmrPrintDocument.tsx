@@ -130,9 +130,9 @@ export default function PmrPrintDocument({ pmr, printAreaId = 'pmrPrintArea' }: 
             <span>Recorded By:</span>
             <div className="pt-6 text-center">
               <span className="block font-black underline uppercase">
-                {pmr.verifiedBy || "Procurement Officer"}
+                {pmr.verifiedBy || "Procurement Staff"}
               </span>
-              <span className="text-[9px] text-slate-500 font-bold">Procurement Officer (Verification)</span>
+              <span className="text-[9px] text-slate-500 font-bold">Procurement Staff (Verification)</span>
             </div>
           </div>
           <div className="p-4 space-y-4">

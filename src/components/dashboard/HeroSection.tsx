@@ -20,7 +20,7 @@ function formatDate(): string {
 
 export default async function HeroSection() {
   const { profile } = await getAuthenticatedUser();
-  const firstName = profile.fullName?.split(" ")[0] ?? "Officer";
+  const firstName = profile.fullName?.split(" ")[0] ?? "Procurement Staff";
   const greeting = getGreeting();
   const date = formatDate();
 
@@ -75,7 +75,7 @@ export default async function HeroSection() {
               }}
             >
               <Zap className="h-3 w-3 text-amber-300" />
-              Procurement Officer Portal
+              Procurement Staff Portal
             </span>
           </div>
 

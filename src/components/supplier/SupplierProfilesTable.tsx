@@ -35,12 +35,12 @@ export default function SupplierProfilesTable({
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const isOfficer = userRole === 'Procurement Officer';
+  const isProcurementStaff = userRole === 'Procurement Officer';
 
   // Handler for verification toggle
   const handleToggleVerification = (supplierId: number) => {
-    if (!isOfficer) {
-      setErrorMsg('Unauthorized: Only Procurement Officers can change verification status.');
+    if (!isProcurementStaff) {
+      setErrorMsg('Unauthorized: Only Procurement Staff can change verification status.');
       return;
     }
 
@@ -231,7 +231,7 @@ export default function SupplierProfilesTable({
                 <th style={{ padding: '1rem 1.25rem', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.8px', textAlign: 'center' }}>Reliability (5.00)</th>
                 <th style={{ padding: '1rem 1.25rem', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.8px', textAlign: 'center' }}>Quality Compliance</th>
                 <th style={{ padding: '1rem 1.25rem', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.8px', textAlign: 'center' }}>Avg Delivery Lead Time</th>
-                {isOfficer && (
+                {isProcurementStaff && (
                   <th style={{ padding: '1rem 1.25rem', fontWeight: 700, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.8px', textAlign: 'right' }}>Actions</th>
                 )}
               </tr>
@@ -328,7 +328,7 @@ export default function SupplierProfilesTable({
                     </td>
 
                     {/* Column 6: Actions */}
-                    {isOfficer && (
+                    {isProcurementStaff && (
                       <td style={{ padding: '1.25rem', textAlign: 'right', verticalAlign: 'middle' }}>
                         <button
                           type="button"
@@ -360,7 +360,7 @@ export default function SupplierProfilesTable({
 
               {filteredSuppliers.length === 0 && (
                 <tr>
-                  <td colSpan={isOfficer ? 6 : 5} style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
+                  <td colSpan={isProcurementStaff ? 6 : 5} style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.9rem' }}>
                     No suppliers match your search or filters.
                   </td>
                 </tr>

@@ -11,7 +11,7 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function ApproverAnalyticsPage() {
+export default async function ProcurementOfficerIIAnalyticsPage() {
   const { profile } = await getAuthenticatedUser();
   if (profile.role !== "Administrative Approver") {
     return redirect("/unauthorized");

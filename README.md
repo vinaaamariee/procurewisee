@@ -5,6 +5,32 @@
 **Capstone Project for Batanes State College**
 
 
+## 🏷️ Project-Wide Procurement Role Naming Standardization
+
+**Date**: August 2026
+
+Standardized the user-facing naming of the two procurement roles to match the official Batanes State College procurement procedure (BSC SOP). Previously the app mixed three names (`Procurement Officer`, `Officer`, `Administrative Approver`) for two roles, which caused dashboard changes to be applied to the wrong role.
+
+### Role Naming Map
+
+| Database role (unchanged) | App role key (unchanged) | New UI label |
+| --- | --- | --- |
+| `'Procurement Officer'` | `Procurement Officer` | **Procurement Staff** |
+| `'Administrative Approver'` | `Administrative Approver` | **Procurement Officer II** |
+
+### Key Changes
+
+- **Display labels centralized**: `ROLE_LABELS` in `src/types/auth.ts` now returns `Procurement Staff` and `Procurement Officer II`. The shared dashboard header (`src/app/dashboard/layout.tsx`), `DashboardHeader`, and the `/unauthorized` page all render the label via `ROLE_LABELS`, so the header no longer shows the raw DB role `"Administrative Approver"`.
+- **Sidebar footer** (`DashboardSidebar.tsx`): display names `Procurement Staff` / `Procurement Officer II` (DB role keys unchanged).
+- **Pages & components**: page titles, `displayRole` props, print documents (PMR, PR, Acknowledgement Receipt), the PR workflow timeline, verification history table, supplier-profile verification messages, workflow-builder option labels, the staff-account form, and user-facing remarks all use the new labels.
+- **Component identifiers**: `OfficerDashboard` → `ProcurementStaffDashboard`, `OfficerAnalyticsPage` → `ProcurementStaffAnalyticsPage`, `OfficerEvaluationsClient` → `ProcurementStaffEvaluationsClient`, `ApproverDashboard` → `ProcurementOfficerIIDashboard`, `ApproverAnalyticsPage` → `ProcurementOfficerIIAnalyticsPage`, plus matching helper/timer names.
+- **Preserved**: DB schema, Prisma models/enums, role values, `requireRole` guards, server actions, API routes, and all business/workflow logic are unchanged — this was a naming refactor only.
+
+### Verification
+
+`npx tsc --noEmit` clean, `npx eslint .` clean, `next build` succeeds.
+
+
 ## 🏛️ Enterprise Authentication Redesign — Modern Split-Panel Login
 
 **Date**: August 2026

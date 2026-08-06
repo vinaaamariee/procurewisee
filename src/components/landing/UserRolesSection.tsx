@@ -20,7 +20,7 @@ export default function UserRolesSection() {
       ],
     },
     {
-      title: "Procurement Officer",
+      title: "Procurement Staff",
       subtitle: "Procurement Office Personnel",
       badge: "Procurement Manager",
       icon: ShieldAlert,

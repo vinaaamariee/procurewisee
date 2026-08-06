@@ -266,8 +266,8 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
               : h.status === "Returned" || h.status === "ReturnedForRevision"
               ? "Returned for Revision"
               : h.status,
-          actorName: h.changedBy?.fullName || "Procurement Officer",
-          actorRole: "Procurement Officer",
+          actorName: h.changedBy?.fullName || "Procurement Staff",
+          actorRole: "Procurement Staff",
           timestamp: h.createdAt,
           remarks: h.remarks,
         });
@@ -307,7 +307,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
     fundingSource: pr.fundingSource,
     totalCost: Number(pr.totalCost),
     requesterName: pr.requestedBy?.fullName || pr.requesterName || "BSC Requisitioner",
-    officerName: pr.assignedOfficer?.fullName || "Procurement Officer",
+    officerName: pr.assignedOfficer?.fullName || "Procurement Staff",
     items: pr.items.map((item) => ({
       id: item.id,
       description: item.description,
@@ -477,13 +477,13 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
       {/* Right Column: Review Action Panel & Timeline */}
       <div className="space-y-6">
         
-        {/* Officer Review Actions */}
+        {/* Procurement Staff Review Actions */}
         {!isLocked && (
           <div className="rounded-md border border-base-300 bg-base-100 p-4 shadow-none space-y-4">
             <div className="flex items-center gap-2 border-b border-base-200 pb-3 text-left">
               <ShieldCheck className="h-5 w-5 text-primary" />
               <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">
-                Officer Action Control
+                Procurement Staff Action Control
               </h3>
             </div>
 

@@ -231,7 +231,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
         fundingSource: selectedPr.fundingSource,
         totalCost: Number(selectedPr.totalCost),
         requesterName: selectedPr.requestedBy?.fullName || "BSC Requisitioner",
-        officerName: selectedPr.assignedOfficer?.fullName || "Procurement Officer",
+        officerName: selectedPr.assignedOfficer?.fullName || "Procurement Staff",
         items: selectedPr.items.map((item) => ({
           id: item.id,
           description: item.description,
@@ -263,8 +263,8 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
     ...(selectedPr.statusHistory || []).filter(h => h.status !== "Draft" && h.status !== "Submitted").map(h => ({
       status: h.status,
       actionTitle: h.status === "Approved" ? "Approved by Procurement Office" : h.status === "Returned" || h.status === "ReturnedForRevision" ? "Returned for Revision" : h.status,
-      actorName: h.changedBy?.fullName || "Procurement Officer",
-      actorRole: "Procurement Officer",
+      actorName: h.changedBy?.fullName || "Procurement Staff",
+      actorRole: "Procurement Staff",
       timestamp: h.createdAt,
       remarks: h.remarks,
     }))

@@ -28,10 +28,10 @@ import TableContainer from '@/components/ui/TableContainer';
 import StatusBadge from '@/components/ui/StatusBadge';
 import Link from 'next/link';
 
-export const metadata = { title: 'Approver Dashboard — ProcureWise' };
+export const metadata = { title: 'Procurement Officer II Dashboard — ProcureWise' };
 
-async function getApproverStats() {
-  const timer = startTimer('getApproverStats');
+async function getProcurementOfficerIIStats() {
+  const timer = startTimer('getProcurementOfficerIIStats');
   const [totalCanvases, pendingReview, approvedCount, recentAuditLogs] = await Promise.all([
     prisma.canvasAbstract.count(),
     prisma.purchaseRequest.count({ where: { status: { in: ['Submitted', 'UnderReview'] } } }),
@@ -109,8 +109,8 @@ async function getPendingRecommendations() {
   }));
 }
 
-async function getApproverDashboardPRs() {
-  const timer = startTimer('getApproverDashboardPRs');
+async function getProcurementOfficerIIDashboardPRs() {
+  const timer = startTimer('getProcurementOfficerIIDashboardPRs');
   
   const startOfToday = new Date();
   startOfToday.setHours(0, 0, 0, 0);
@@ -164,12 +164,12 @@ async function getApproverDashboardPRs() {
   };
 }
 
-export default async function ApproverDashboard() {
+export default async function ProcurementOfficerIIDashboard() {
   await requireRole('Administrative Approver');
   const [stats, recs, prData] = await Promise.all([
-    getApproverStats(),
+    getProcurementOfficerIIStats(),
     getPendingRecommendations(),
-    getApproverDashboardPRs()
+    getProcurementOfficerIIDashboardPRs()
   ]);
 
   const renderPrTable = (prs: any[], emptyMessage: string) => {
@@ -188,7 +188,7 @@ export default async function ApproverDashboard() {
           <table className="w-full min-w-[800px] border-collapse text-sm">
             <thead>
               <tr className="border-b border-[var(--border)] bg-[var(--bg-dark)]">
-                {['PR Number', 'Department / Office', 'Date Submitted', 'Assigned Officer', 'Status', 'Action'].map(h => (
+                {['PR Number', 'Department / Office', 'Date Submitted', 'Assigned Procurement Staff', 'Status', 'Action'].map(h => (
                   <th key={h} className="px-5 py-3 text-left text-xs font-bold uppercase tracking-wide text-[var(--text-secondary)]">
                     {h}
                   </th>

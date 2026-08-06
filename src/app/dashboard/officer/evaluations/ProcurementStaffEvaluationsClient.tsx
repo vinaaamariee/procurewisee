@@ -13,7 +13,7 @@ interface Supplier {
   companyName: string;
 }
 
-interface OfficerEvaluationsClientProps {
+interface ProcurementStaffEvaluationsClientProps {
   suppliers: Supplier[];
   officerName: string;
 }
@@ -58,7 +58,7 @@ const defaultRatings = () => ({
   deliveryPerformance: 4,
 });
 
-export default function OfficerEvaluationsClient({ suppliers, officerName }: OfficerEvaluationsClientProps) {
+export default function ProcurementStaffEvaluationsClient({ suppliers, officerName }: ProcurementStaffEvaluationsClientProps) {
   const [selectedSupplierId, setSelectedSupplierId] = useState("");
   const [scorecard, setScorecard] = useState<any>(null);
 

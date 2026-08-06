@@ -124,7 +124,7 @@ export default function AboutPage() {
               </h2>
 
               <p className="text-sm sm:text-base text-gray-600 dark:text-slate-300 leading-relaxed">
-                ProcureWise bridges traditional government procurement workflows with cutting-edge analytics. By replacing manual paperwork with automated canvas generation, multi-criteria decision support, and digital auditability, the system empowers Procurement Officers, Approvers, and Requisitions to achieve maximum value for state college funds.
+                ProcureWise bridges traditional government procurement workflows with cutting-edge analytics. By replacing manual paperwork with automated canvas generation, multi-criteria decision support, and digital auditability, the system empowers Procurement Staff, Approvers, and Requisitions to achieve maximum value for state college funds.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
