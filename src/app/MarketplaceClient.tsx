@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createPrFromCartAction } from "./actions/pr";
 import { getPpmpList } from "./actions/ppmp";
@@ -189,20 +190,20 @@ function HeroSection() {
               Decision Support for Batanes State College.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
-              <a
+              <Link
                 href="/catalog"
                 className="inline-flex items-center gap-2 bg-[#D4A017] hover:bg-[#c49315] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg shadow-md"
               >
                 <Package className="w-4 h-4" />
                 Browse Catalog
-              </a>
-              <a
+              </Link>
+              <Link
                 href="/track"
                 className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 backdrop-blur-sm"
               >
                 <FileText className="w-4 h-4" />
                 Track Purchase Request
-              </a>
+              </Link>
             </div>
           </div>
 

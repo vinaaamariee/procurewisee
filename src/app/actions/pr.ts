@@ -1,7 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { PrStatus, Prisma } from "@prisma/client";
+import { PrStatus, PmrStatus, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
 import crypto from "crypto";
@@ -216,6 +216,58 @@ export async function approvePrByOfficerAction(id: number) {
         },
       });
 
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: id,
+          status: PrStatus.Approved,
+          remarks: "Purchase Request verified by the Procurement Office.",
+          changedById: profile.id,
+        },
+      });
+
+      const year = new Date().getFullYear();
+      const pmrCount = await tx.procurementMonitoringRecord.count({
+        where: {
+          pmrNumber: {
+            startsWith: `PMR-${year}-`,
+          },
+        },
+      });
+      const pmrNumber = `PMR-${year}-${String(pmrCount + 1).padStart(4, "0")}`;
+
+      const pmr = await tx.procurementMonitoringRecord.upsert({
+        where: { prId: id },
+        update: {
+          stage: "PR Verified",
+          status: PmrStatus.Active,
+          verificationDate: new Date(),
+          verifiedById: profile.id,
+          remarks: "PMR entry recorded from verified Purchase Request.",
+        },
+        create: {
+          pmrNumber,
+          prId: id,
+          office: old.office,
+          department: old.department,
+          fundSource: old.fundingSource,
+          purpose: old.purpose,
+          totalCost: old.totalCost,
+          dateReceived: old.receivedAt || old.submittedAt || new Date(),
+          verificationDate: new Date(),
+          verifiedById: profile.id,
+          stage: "PR Verified",
+          status: PmrStatus.Active,
+        },
+      });
+
+      await logAuditTrail({
+        actionType: "CREATE_PMR",
+        tableAffected: "procurement_monitoring_records",
+        recordId: pmr.id,
+        newState: pmr,
+        tx,
+      });
+
       await logAuditTrail({
         actionType: "APPROVE_PR",
         tableAffected: "purchase_requests",
@@ -225,7 +277,7 @@ export async function approvePrByOfficerAction(id: number) {
         tx,
       });
 
-      return pr;
+      return { pr, pmr };
     });
 
     revalidatePath("/", "layout");
@@ -284,9 +336,67 @@ export async function returnPrByOfficerAction(id: number, remarks: string) {
   }
 }
 
+export async function rejectPrByOfficerAction(id: number, remarks: string) {
+  try {
+    const { profile } = await getAuthenticatedUser();
+    if (profile.role !== "Procurement Officer" && profile.role !== "Administrative Approver") {
+      return { success: false, error: "Unauthorized role for this action." };
+    }
+
+    if (!remarks || !remarks.trim()) {
+      return { success: false, error: "A reason is required when rejecting a Purchase Request." };
+    }
+
+    const old = await prisma.purchaseRequest.findUnique({ where: { id } });
+    if (!old) return { success: false, error: "PR not found." };
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const pr = await tx.purchaseRequest.update({
+        where: { id },
+        data: {
+          status: PrStatus.Rejected,
+          remarks: remarks.trim(),
+          reviewedAt: new Date(),
+          assignedOfficerId: profile.id,
+          ...({ reviewedById: profile.id } as any),
+        },
+      });
+
+      await tx.purchaseRequestStatusHistory.create({
+        data: {
+          purchaseRequestId: id,
+          status: PrStatus.Rejected,
+          remarks: remarks.trim(),
+          changedById: profile.id,
+        },
+      });
+
+      await logAuditTrail({
+        actionType: "REJECT_PR",
+        tableAffected: "purchase_requests",
+        recordId: id,
+        oldState: old,
+        newState: pr,
+        tx,
+      });
+
+      return pr;
+    });
+
+    revalidatePath("/", "layout");
+    return { success: true, pr: updated };
+  } catch (error: any) {
+    console.error("Error rejecting PR:", error);
+    return { success: false, error: error.message || "Failed to reject Purchase Request." };
+  }
+}
+
 export async function reviewPrAction(id: number, status: PrStatus, remarks?: string, officerId?: string) {
   if (status === PrStatus.Approved) {
     return approvePrByOfficerAction(id);
+  }
+  if (status === PrStatus.Rejected) {
+    return rejectPrByOfficerAction(id, remarks || "");
   }
   if (status === (PrStatus as any).Returned || status === PrStatus.ReturnedForRevision) {
     return returnPrByOfficerAction(id, remarks || "");

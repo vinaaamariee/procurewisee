@@ -6,7 +6,7 @@ import { AlertCircle, CheckCircle, XCircle } from "lucide-react";
 interface ReviewPrModalProps {
   isOpen: boolean;
   onClose: () => void;
-  mode: "approve" | "return";
+  mode: "approve" | "return" | "reject";
   onConfirm: (remarks?: string) => Promise<void>;
   isProcessing: boolean;
   prNumber: string;
@@ -27,12 +27,12 @@ export default function ReviewPrModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (mode === "return" && !remarks.trim()) {
-      setError("Return reason comment is required to return a Purchase Request.");
+    if (mode !== "approve" && !remarks.trim()) {
+      setError("A reason is required for this action.");
       return;
     }
     setError(null);
-    await onConfirm(mode === "return" ? remarks.trim() : undefined);
+    await onConfirm(mode === "approve" ? undefined : remarks.trim());
     setRemarks("");
   };
 
@@ -53,7 +53,11 @@ export default function ReviewPrModal({
             )}
             <div>
               <h3 className="text-lg font-bold text-[var(--text-primary)]">
-                {mode === "approve" ? "Approve Purchase Request" : "Return Purchase Request"}
+                {mode === "approve"
+                  ? "Approve Purchase Request"
+                  : mode === "reject"
+                  ? "Reject Purchase Request"
+                  : "Return Purchase Request"}
               </h3>
               <p className="text-xs text-[var(--text-muted)] font-medium">
                 {prNumber}
@@ -81,12 +85,21 @@ export default function ReviewPrModal({
             </div>
           ) : (
             <div className="space-y-3">
-              <div className="rounded-xl border border-amber-200 bg-amber-50/70 p-3.5 dark:border-amber-900/50 dark:bg-amber-950/30 text-xs text-amber-800 dark:text-amber-300">
-                Return this Purchase Request to the End User for revision. A clear explanation is required.
+              <div
+                className={`rounded-xl border p-3.5 text-xs ${
+                  mode === "reject"
+                    ? "border-red-200 bg-red-50/70 dark:border-red-900/50 dark:bg-red-950/30 text-red-800 dark:text-red-300"
+                    : "border-amber-200 bg-amber-50/70 dark:border-amber-900/50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300"
+                }`}
+              >
+                {mode === "reject"
+                  ? "Reject this Purchase Request. This permanently closes the request and cannot be resubmitted by the End User. A clear justification is required."
+                  : "Return this Purchase Request to the End User for revision. A clear explanation is required."}
               </div>
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
-                  Reason for Returning <span className="text-red-500">*</span>
+                  {mode === "reject" ? "Reason for Rejection" : "Reason for Returning"}{" "}
+                  <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   rows={4}
@@ -95,7 +108,11 @@ export default function ReviewPrModal({
                     setRemarks(e.target.value);
                     if (e.target.value.trim()) setError(null);
                   }}
-                  placeholder="Explain what corrections or missing documents (e.g. PPMP, item specs) are required..."
+                  placeholder={
+                    mode === "reject"
+                      ? "Explain why this request is being rejected..."
+                      : "Explain what corrections or missing documents (e.g. PPMP, item specs) are required..."
+                  }
                   className="w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent)] text-[var(--text-primary)]"
                   autoFocus
                 />
@@ -129,6 +146,18 @@ export default function ReviewPrModal({
                   <span className="loading loading-spinner loading-xs" />
                 ) : (
                   "Approve Purchase Request"
+                )}
+              </button>
+            ) : mode === "reject" ? (
+              <button
+                type="submit"
+                disabled={isProcessing || !remarks.trim()}
+                className="btn btn-error btn-sm rounded-xl px-5 text-white shadow-xs disabled:opacity-50"
+              >
+                {isProcessing ? (
+                  <span className="loading loading-spinner loading-xs" />
+                ) : (
+                  "Reject Request"
                 )}
               </button>
             ) : (

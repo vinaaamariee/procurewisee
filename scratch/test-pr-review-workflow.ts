@@ -30,7 +30,7 @@ async function main() {
   // 4. Verify Approval Action
   console.log("Testing Approval Action...");
   const approveRes = await approvePrByOfficerAction(pr.id);
-  console.log("Approve result:", approveRes.success ? `PASSED (Status: ${approveRes.pr?.status}, ApprovedAt: ${approveRes.pr?.approvedAt})` : `FAILED (${approveRes.error})`);
+  console.log("Approve result:", approveRes.success ? `PASSED (Status: ${(approveRes.pr as any)?.pr?.status}, ApprovedAt: ${(approveRes.pr as any)?.pr?.approvedAt})` : `FAILED (${approveRes.error})`);
 
   console.log("=== All Workflow Tests Completed Successfully ===");
 }

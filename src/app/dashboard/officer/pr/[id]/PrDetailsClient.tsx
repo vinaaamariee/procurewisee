@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { reviewPrAction, receivePrAction, updatePrItemAction, getPreCanvassingData, convertPrToRfqAction, approvePrByOfficerAction, returnPrByOfficerAction } from "@/app/actions/pr";
+import { reviewPrAction, receivePrAction, updatePrItemAction, getPreCanvassingData, convertPrToRfqAction, approvePrByOfficerAction, returnPrByOfficerAction, rejectPrByOfficerAction } from "@/app/actions/pr";
 import { useRouter } from "next/navigation";
 import ReviewPrModal from "@/components/pr/ReviewPrModal";
 import PrValidationChecklist, { ValidationItem } from "@/components/pr/PrValidationChecklist";
 import PrWorkflowTimeline, { TimelineEntry } from "@/components/pr/PrWorkflowTimeline";
 import PrWorkflowTimelineStepper from "@/components/pr/PrWorkflowTimelineStepper";
-import { ShieldCheck, Lock, ArrowLeft, Printer, FileText, CheckCircle2, AlertTriangle } from "lucide-react";
+import { ShieldCheck, Lock, ArrowLeft, Printer, FileText, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
 import StatusBadge from "@/components/ui/StatusBadge";
 
 interface Product {
@@ -127,12 +127,12 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
 
   const isAllChecklistPassed = checklist.every((c) => c.checked);
   const isApproved = pr.status === "Approved";
-  const isLocked = isApproved || pr.status === "ConvertedToRfq" || pr.status === "Converted to RFQ";
+  const isLocked = isApproved || pr.status === "ConvertedToRfq" || pr.status === "Converted to RFQ" || pr.status === "Rejected";
 
   // Modal State
   const [modalState, setModalState] = useState<{
     isOpen: boolean;
-    mode: "approve" | "return";
+    mode: "approve" | "return" | "reject";
   }>({
     isOpen: false,
     mode: "approve",
@@ -153,7 +153,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
     );
   };
 
-  const handleOpenModal = (mode: "approve" | "return") => {
+  const handleOpenModal = (mode: "approve" | "return" | "reject") => {
     if (mode === "approve" && !isAllChecklistPassed) {
       setErrorMsg("All 5 compliance validation checklist items must pass before approving.");
       return;
@@ -176,10 +176,23 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
             status: "Approved",
             approvedAt: new Date().toISOString(),
           }));
-          setSuccessMsg("Purchase Request verified! It is now ready for recording to the Procurement Monitoring Register.");
+          setSuccessMsg("Purchase Request verified! A Procurement Monitoring Record (PMR) entry has been created automatically.");
           setModalState({ isOpen: false, mode: "approve" });
         } else {
           setErrorMsg(res.error || "Failed to approve Purchase Request.");
+        }
+      } else if (modalState.mode === "reject") {
+        const res = await rejectPrByOfficerAction(pr.id, remarks || "");
+        if (res.success && res.pr) {
+          setPr((prev) => ({
+            ...prev,
+            status: "Rejected",
+            remarks: remarks || res.pr.remarks,
+          }));
+          setSuccessMsg("Purchase Request rejected. The requisitioner has been notified of the decision.");
+          setModalState({ isOpen: false, mode: "reject" });
+        } else {
+          setErrorMsg(res.error || "Failed to reject Purchase Request.");
         }
       } else {
         const res = await returnPrByOfficerAction(pr.id, remarks || "");
@@ -473,6 +486,16 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
               >
                 <AlertTriangle className="h-4.5 w-4.5" />
                 <span>Return with Comment</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleOpenModal("reject")}
+                disabled={isProcessing}
+                className="w-full btn btn-ghost btn-outline border-error/40 text-error rounded-md font-bold flex items-center justify-center gap-2"
+              >
+                <XCircle className="h-4.5 w-4.5" />
+                <span>Reject Request</span>
               </button>
             </div>
           </div>

@@ -5,6 +5,29 @@
 **Capstone Project for Batanes State College**
 
 
+## 🛒 Procurement Officer Module Refactor — PR Verification, PMR, Deliveries, History, Reports
+
+**Date**: August 2026
+
+Rebuilt the Procurement Officer module around the live BSC verification workflow: verifying Purchase Requests against a 5-point compliance checklist (Verify / Return / Reject), automatically creating a Procurement Monitoring Record (PMR) on approval, monitoring supplier deliveries, reviewing verification history, and generating operational reports. The officer sidebar was reduced to exactly 6 items (Dashboard, Purchase Request Verification, Procurement Monitoring Record, Delivery Monitoring, Verification History, Reports) — RFQ/PO/supplier/evaluation/forecast/settings pages still exist but are no longer reachable from the officer navigation.
+
+### Key Changes
+- **Database (`prisma/schema.prisma` + live DDL)**:
+  - New `ProcurementMonitoringRecord` model (`@@map("procurement_monitoring_records")`) with unique `pmr_number`, unique one-to-one `pr_id` (cascade delete), office/department/fund source/purpose/total cost, `date_received`, `verification_date`, `verified_by_id` (FK → `user_profiles`, set null), `stage` (default `"PR Verified"`), `status` (default `Active`), remarks, and indexes on `pr_id`/`verified_by_id`/`status`/`stage`/`date_received`.
+  - New `PmrStatus` enum (`Active` / `Archived` / `Cancelled`); `PurchaseRequest.pmr` and `UserProfile.pmrVerified` back-relations.
+  - ⚠️ **Migration workflow**: Prisma `migrate dev`/`db push` cannot run against the Supabase **pooler** (`prepared statement "s1" already exists` — PgBouncer transaction pooling) and the direct host is unreachable. Schema changes must be applied via the manual-DDL pattern documented at the bottom of this file (reproducible SQL in `%TEMP%\opencode\pmr_ddl.sql` + a Node `.cjs` runner that reads `.env` and drives `pg`). The migration folder is therefore intentionally not updated for this feature (pre-existing drift).
+- **`src/app/actions/pr.ts`**: `approvePrByOfficerAction` now auto-creates the PMR entry inside the approval transaction (`PMR-{year}-{NNNN}` numbering, `CREATE_PMR` + `APPROVE_PR` audit trails); new `rejectPrByOfficerAction` (requires remarks, writes status history + `REJECT_PR` audit); `reviewPrAction` dispatches approve/return/reject.
+- **`src/app/actions/pmr.ts`** (new): `getPmrs`, `updatePmrAction`, `archivePmrAction` with audit logging.
+- **`src/components/layout/DashboardSidebar.tsx`**: officer nav now exactly 6 items.
+- **`src/app/dashboard/officer/page.tsx`**: new operational dashboard — 4 KPI stat cards (Pending Verification, Returned for Compliance, Verified Today, PMR Entries Created), 3 delivery summary cards, Procurement Alerts (PRs stale > 3 days, overdue deliveries), Recent Verification Activity, Latest PMR Entries.
+- **PR Verification**: `/dashboard/officer/pr` retitled; `PrDetailsClient` adds a Reject action + modal; `ReviewPrModal` supports `approve`/`return`/`reject` modes; success message notes the PMR was auto-created.
+- **PMR module**: `/dashboard/officer/pmr` register (search, status/stage/office filters, CSV export) → `/dashboard/officer/pmr/[id]` detail (stage/status/remarks edit, archive, print) → `/print/pmr/[id]` official A4 print sheet (`src/components/pmr/PmrPrintDocument.tsx`).
+- **Delivery Monitoring**: `/dashboard/officer/deliveries` with PO / delivery-receipt tabs, search, status filter, and pending/partial/delivered/receipt counts.
+- **Verification History**: `/dashboard/officer/history` with search, office/status/fund-source filters, date range, and CSV export.
+- **Reports**: `/dashboard/officer/reports` with 7 report tabs (Status Summary, Verification, Pending, Returned & Rejected, PMR Register, Delivery, Receipts) and CSV / Excel (`xlsx`) / PDF (print window) export.
+- **Verification**: `npx tsc --noEmit` clean, `npx eslint .` clean (only pre-existing warnings), `next build` succeeds with all new routes compiling.
+
+
 ## 🖨️ Officer PR Details Page — Official A4 Print (Appendix 60)
 
 **Date**: August 2026

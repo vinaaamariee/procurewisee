@@ -19,6 +19,7 @@ model UserProfile {
   auditTrails             AuditTrail[]
   canvasesCompiled        CanvasAbstract[]               @relation("CanvasCompiledBy")
   notifications           Notification[]
+  pmrVerified             ProcurementMonitoringRecord[]   @relation("PmrVerifiedBy")
   ppmpsPrepared           Ppmp[]                         @relation("PpmpPreparedBy")
   prStatusChanges         PurchaseRequestStatusHistory[] @relation("PrStatusChangedBy")
   prsAssigned             PurchaseRequest[]              @relation("PrAssignedOfficer")
@@ -507,6 +508,7 @@ model PurchaseRequest {
   rfqs               RequestForQuote[]
   items              PurchaseRequestItem[]
   statusHistory      PurchaseRequestStatusHistory[]
+  pmr                ProcurementMonitoringRecord?
   assignedOfficer    UserProfile?                   @relation("PrAssignedOfficer", fields: [assignedOfficerId], references: [id])
   createdBy          UserProfile?                   @relation("PrCreatedBy", fields: [createdById], references: [id])
   ppmp               Ppmp?                          @relation(fields: [ppmpId], references: [id])
@@ -616,6 +618,34 @@ model PurchaseRequestStatusHistory {
 
   @@index([purchaseRequestId])
   @@map("purchase_request_status_history")
+}
+
+model ProcurementMonitoringRecord {
+  id               Int        @id @default(autoincrement()) @map("pmr_id")
+  pmrNumber        String     @unique @db.VarChar(50)
+  prId             Int        @unique
+  office           String     @db.VarChar(100)
+  department       String?    @db.VarChar(100)
+  fundSource       String?    @db.VarChar(100)
+  purpose          String?
+  totalCost        Decimal    @default(0.00) @db.Decimal(12, 2)
+  dateReceived     DateTime   @default(now()) @map("date_received")
+  verificationDate DateTime?  @map("verification_date")
+  verifiedById     String?    @map("verified_by_id")
+  stage            String     @default("PR Verified") @db.VarChar(100)
+  status           PmrStatus  @default(Active)
+  remarks          String?
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  pr               PurchaseRequest @relation(fields: [prId], references: [id], onDelete: Cascade)
+  verifiedBy       UserProfile?    @relation("PmrVerifiedBy", fields: [verifiedById], references: [id])
+
+  @@index([prId])
+  @@index([verifiedById])
+  @@index([status])
+  @@index([stage])
+  @@index([dateReceived])
+  @@map("procurement_monitoring_records")
 }
 
 model AcknowledgementReceipt {
@@ -838,4 +868,10 @@ enum DeliveryStatus {
 enum EvaluationType {
   EndUser           @map("End User")
   ProcurementOffice @map("Procurement Office")
+}
+
+enum PmrStatus {
+  Active
+  Archived
+  Cancelled
 }

@@ -152,7 +152,7 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
                     href={`/dashboard/officer/pr/${pr.id}`}
                     className="w-full btn btn-sm btn-outline border-base-300 text-xs flex items-center justify-center gap-2 rounded-md hover:bg-base-200"
                   >
-                    <span>Validate & Review</span>
+                    <span>Verify Request</span>
                     <ArrowRight className="h-4 w-4" />
                   </Link>
                 </div>

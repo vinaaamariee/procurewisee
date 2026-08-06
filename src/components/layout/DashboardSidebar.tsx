@@ -5,22 +5,20 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
+  FileCheck2,
+  ClipboardCheck,
+  Truck,
+  History,
+  ScrollText,
   FileText,
   ClipboardList,
   ShoppingCart,
   BarChart3,
   Users,
-  FileCheck2,
   Workflow,
-  ClipboardCheck,
-  ScrollText,
   ChartNoAxesCombined,
-  CalendarDays,
   Star,
-  Sparkles,
-  ListOrdered,
   Settings,
-  TrendingUp,
 } from "lucide-react";
 
 type NavItem = {
@@ -54,34 +52,24 @@ export default function DashboardSidebar({ role }: { role: string }) {
         title: "PROCUREMENT",
         items: [
           {
-            label: "Purchase Requests",
+            label: "Purchase Request Verification",
             href: "/dashboard/officer/pr",
-            icon: FileText,
+            icon: FileCheck2,
           },
           {
-            label: "RFQs",
-            href: "/dashboard/officer/rfq",
-            icon: ClipboardList,
+            label: "Procurement Monitoring Record",
+            href: "/dashboard/officer/pmr",
+            icon: ClipboardCheck,
           },
           {
-            label: "Purchase Orders",
-            href: "/dashboard/officer/po",
-            icon: ShoppingCart,
-          },
-        ],
-      },
-      {
-        title: "SUPPLIERS",
-        items: [
-          {
-            label: "Suppliers",
-            href: "/dashboard/supplier-profiles",
-            icon: Users,
+            label: "Delivery Monitoring",
+            href: "/dashboard/officer/deliveries",
+            icon: Truck,
           },
           {
-            label: "Evaluations",
-            href: "/dashboard/officer/evaluations",
-            icon: Star,
+            label: "Verification History",
+            href: "/dashboard/officer/history",
+            icon: History,
           },
         ],
       },
@@ -89,24 +77,9 @@ export default function DashboardSidebar({ role }: { role: string }) {
         title: "REPORTS",
         items: [
           {
-            label: "Forecasting",
-            href: "/dashboard/officer/forecast",
-            icon: TrendingUp,
-          },
-          {
             label: "Reports",
-            href: "/dashboard/officer/analytics",
-            icon: BarChart3,
-          },
-        ],
-      },
-      {
-        title: "SETTINGS",
-        items: [
-          {
-            label: "Settings",
-            href: "/dashboard/officer/settings",
-            icon: Settings,
+            href: "/dashboard/officer/reports",
+            icon: ScrollText,
           },
         ],
       },

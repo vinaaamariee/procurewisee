@@ -5,7 +5,7 @@ import PrAuditClient from "./PrAuditClient";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = {
-  title: "Purchase Request Approval and Validation Hub — ProcureWise",
+  title: "Purchase Request Verification — ProcureWise",
 };
 
 export default async function PrAuditingPage() {
@@ -58,8 +58,8 @@ export default async function PrAuditingPage() {
   return (
     <div className="space-y-8">
       <SectionHeader
-        title="Purchase Request Approval and Validation Hub"
-        subtitle="Validate department requisitions, perform 5-point compliance verification, and authorize eligible Purchase Requests for RFQ generation."
+        title="Purchase Request Verification"
+        subtitle="Receive requisitions, run the 5-point compliance verification, and authorize eligible Purchase Requests for recording to the Procurement Monitoring Register."
       />
 
       <PrAuditClient initialPrs={(serializedPrs as any)} />
