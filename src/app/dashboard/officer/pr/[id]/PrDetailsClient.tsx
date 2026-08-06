@@ -7,6 +7,7 @@ import ReviewPrModal from "@/components/pr/ReviewPrModal";
 import PrValidationChecklist, { ValidationItem } from "@/components/pr/PrValidationChecklist";
 import PrWorkflowTimeline, { TimelineEntry } from "@/components/pr/PrWorkflowTimeline";
 import PrWorkflowTimelineStepper from "@/components/pr/PrWorkflowTimelineStepper";
+import PRPrintDocument, { PRPrintData } from "@/components/pr/PRPrintDocument";
 import { ShieldCheck, Lock, ArrowLeft, Printer, FileText, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
 import StatusBadge from "@/components/ui/StatusBadge";
 
@@ -295,6 +296,29 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
     }
   };
 
+  // Reuse the PR data already loaded by the page — no refetch for printing.
+  const printData: PRPrintData = {
+    id: pr.id,
+    prNumber: pr.prNumber,
+    requestDate: new Date(pr.requestDate).toISOString(),
+    department: pr.department,
+    office: pr.office,
+    purpose: pr.purpose,
+    fundingSource: pr.fundingSource,
+    totalCost: Number(pr.totalCost),
+    requesterName: pr.requestedBy?.fullName || pr.requesterName || "BSC Requisitioner",
+    officerName: pr.assignedOfficer?.fullName || "Procurement Officer",
+    items: pr.items.map((item) => ({
+      id: item.id,
+      description: item.description,
+      specification: item.specification,
+      quantity: item.quantity,
+      unit: item.unit || "pcs",
+      estimatedUnitCost: Number(item.estimatedUnitCost),
+      estimatedCost: Number(item.estimatedCost),
+    })),
+  };
+
   return (
     <div className="pr-print-root">
     <div className="no-print">
@@ -342,7 +366,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
             <div className="flex items-center gap-2 flex-wrap no-print">
               <button
                 type="button"
-                onClick={() => window.open(`/print/pr/${pr.id}`, "_blank")}
+                onClick={() => window.print()}
                 className="btn btn-ghost btn-sm rounded-md text-xs font-bold border border-base-300 text-base-content"
               >
                 <Printer className="h-4 w-4 mr-1" />
@@ -529,6 +553,11 @@ export default function PrDetailsClient({ initialPr, budgets, officerId }: PrDet
         isProcessing={isProcessing}
         prNumber={pr.prNumber}
       />
+    </div>
+
+    {/* Hidden official Appendix 60 document — printed via window.print() without leaving the page */}
+    <div id="prPrintArea-container" className="hidden print:block">
+      <PRPrintDocument pr={printData} />
     </div>
     </div>
     </div>

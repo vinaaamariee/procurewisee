@@ -5,6 +5,22 @@
 **Capstone Project for Batanes State College**
 
 
+## 🖨️ Same-Page Purchase Request Printing — No Dedicated Print Route
+
+**Date**: August 2026
+
+Reverted Purchase Request printing to a same-page workflow. The dedicated `/print/pr/[id]` route (new tab + auto-print) was removed. Each PR view (officer `PrDetailsClient`, approver `PrReviewClient`, end-user `PrTrackerClient`) now embeds a hidden official Appendix 60 document (`#prPrintArea`) rendered from the **same PR data already loaded by the page** — no refetch, no navigation, no new tab. Clicking **Print PR / Print Request** calls `window.print()` directly; the dashboard shell (sidebar, header, nav, cards, buttons, modals) is hidden via the print stylesheet and only the official BSC-header → Appendix 60 → BSC-footer sheet is printed.
+
+### Key Changes
+- **Removed** `src/app/print/pr/[id]/page.tsx` (the `/print/pr/[id]` route no longer exists). `src/components/pr/AutoPrint.tsx` is **kept** because the out-of-scope PMR print route `/print/pmr/[id]` still depends on it.
+- **`PrDetailsClient.tsx` / `PrReviewClient.tsx` / `PrTrackerClient.tsx`**: each now builds a `PRPrintData` snapshot from the already-loaded PR state and renders `<div id="prPrintArea-container" className="hidden print:block"><PRPrintDocument pr={...} /></div>` inside the existing `pr-print-root` wrapper. The interactive UI stays wrapped in `.no-print`. The end-user tracker prints the currently selected PR.
+- **Print buttons**: `window.open("/print/pr/...")` replaced with `window.print()` — browser Print Preview opens immediately on the current page.
+- **`PRPrintDocument.tsx`**: unchanged and still pure/stateless — renders the Appendix 60 layout (PR No., Entity, Office, Fund Source, Purpose, itemized schedule, totals, Requested By / Approved By) inside `OfficialDocumentLayout`.
+- **`OfficialDocumentLayout.tsx`**: unchanged — still owns the BSC header/footer images and the print stylesheet (`@media print` with `visibility: hidden` on `body *`, `#prPrintArea` re-visible, `.no-print`/`aside`/`nav`/site header/footer hidden, `@page A4 portrait; margin: 10mm`).
+- **Access control**: preserved inherently — the end-user tracker only lists the user's own PRs, so no separate ownership check is needed on print.
+- **Verification**: `npx tsc --noEmit` clean, `npx eslint .` clean (only pre-existing warnings), `next build` succeeds with the route list confirmed: `/print/pr/[id]` gone, `/print/pmr/[id]` retained.
+
+
 ## 🛒 Procurement Officer Module Refactor — PR Verification, PMR, Deliveries, History, Reports
 
 **Date**: August 2026

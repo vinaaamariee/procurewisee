@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { startPrReview, approvePr, returnPr, rejectPr } from '@/app/actions/pr-approval';
 import PrWorkflowTimelineStepper from '@/components/pr/PrWorkflowTimelineStepper';
+import PRPrintDocument, { PRPrintData } from '@/components/pr/PRPrintDocument';
 
 interface PrItem {
   id: number;
@@ -169,6 +170,29 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
 
   const remainingBudget = deptBudget ? deptBudget.allocated - deptBudget.spent : 0;
 
+  // Reuse the PR data already loaded by the page — no refetch for printing.
+  const printData: PRPrintData = {
+    id: pr.id,
+    prNumber: pr.prNumber,
+    requestDate: pr.requestDate,
+    department: pr.department,
+    office: pr.office,
+    purpose: pr.purpose,
+    fundingSource: pr.fundingSource,
+    totalCost: Number(pr.totalCost),
+    requesterName: pr.requesterName || "Requisitioner",
+    officerName: pr.officerName || "Procurement Officer",
+    items: pr.items.map((item) => ({
+      id: item.id,
+      description: item.description,
+      specification: item.specification,
+      quantity: item.quantity,
+      unit: item.unit || "pcs",
+      estimatedUnitCost: Number(item.estimatedUnitCost),
+      estimatedCost: Number(item.estimatedCost),
+    })),
+  };
+
   return (
     <div className="pr-print-root" style={{ display: 'flex', flexDirection: 'column', gap: '2rem', position: 'relative' }}>
       
@@ -226,7 +250,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
         {/* Top Action Bar for Approver */}
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <button
-            onClick={() => window.open(`/print/pr/${pr.id}`, "_blank")}
+            onClick={() => window.print()}
             className="no-print"
             style={{
               padding: '0.6rem 1.4rem', borderRadius: '0.75rem', border: `1px solid ${theme.border}`,
@@ -608,7 +632,12 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
           from { transform: scale(0.95); opacity: 0; }
           to { transform: scale(1); opacity: 1; }
         }
-      `}</style>
+      `}      </style>
+
+      {/* Hidden official Appendix 60 document — printed via window.print() without leaving the page */}
+      <div id="prPrintArea-container" className="hidden print:block">
+        <PRPrintDocument pr={printData} />
+      </div>
 
     </div>
   );

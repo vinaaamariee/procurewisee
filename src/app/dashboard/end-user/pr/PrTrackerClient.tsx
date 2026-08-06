@@ -5,6 +5,7 @@ import { submitPrAction, resubmitPrAction, deletePrDraftAction } from "@/app/act
 import EmptyState from "@/components/ui/EmptyState";
 import PrWorkflowTimeline, { TimelineEntry } from "@/components/pr/PrWorkflowTimeline";
 import PrWorkflowTimelineStepper from "@/components/pr/PrWorkflowTimelineStepper";
+import PRPrintDocument, { PRPrintData } from "@/components/pr/PRPrintDocument";
 import { AlertTriangle, Lock, FileEdit, CheckCircle2, Send, Trash2, ArrowRight } from "lucide-react";
 
 interface Product {
@@ -218,6 +219,31 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
   const isReturned = selectedPr && (selectedPr.status === "Returned" || selectedPr.status === "ReturnedForRevision" || selectedPr.status === "Returned for Revision");
   const isApproved = selectedPr && selectedPr.status === "Approved";
 
+  // Reuse the selected PR data already loaded by the page — no refetch for printing.
+  const printData: PRPrintData | null = selectedPr
+    ? {
+        id: selectedPr.id,
+        prNumber: selectedPr.prNumber,
+        requestDate: new Date(selectedPr.requestDate).toISOString(),
+        department: selectedPr.department,
+        office: selectedPr.office,
+        purpose: selectedPr.purpose,
+        fundingSource: selectedPr.fundingSource,
+        totalCost: Number(selectedPr.totalCost),
+        requesterName: selectedPr.requestedBy?.fullName || "BSC Requisitioner",
+        officerName: selectedPr.assignedOfficer?.fullName || "Procurement Officer",
+        items: selectedPr.items.map((item) => ({
+          id: item.id,
+          description: item.description,
+          specification: item.specification,
+          quantity: item.quantity,
+          unit: item.unit || "pcs",
+          estimatedUnitCost: Number(item.estimatedUnitCost),
+          estimatedCost: Number(item.estimatedCost),
+        })),
+      }
+    : null;
+
   // Build timeline entries
   const timelineEntries: TimelineEntry[] = selectedPr ? [
     {
@@ -245,6 +271,8 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
   ] : [];
 
   return (
+    <div className="pr-print-root">
+    <div className="no-print">
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 text-[var(--text-primary)]">
       {/* Sidebar PR List */}
       <div className="lg:col-span-1 space-y-4 max-h-[calc(100vh-200px)] overflow-y-auto pr-1">
@@ -394,7 +422,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
                   {!isEditing && selectedPr && (
                     <button
                       type="button"
-                      onClick={() => window.open(`/print/pr/${selectedPr.id}`, "_blank")}
+                      onClick={() => window.print()}
                       className="btn btn-ghost btn-sm rounded-xl text-xs font-bold border border-[var(--border)]"
                     >
                       Print PR
@@ -583,6 +611,15 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
           />
         )}
       </div>
+    </div>
+    </div>
+
+    {/* Hidden official Appendix 60 document — printed via window.print() without leaving the page */}
+    {printData && (
+      <div id="prPrintArea-container" className="hidden print:block">
+        <PRPrintDocument pr={printData} />
+      </div>
+    )}
     </div>
   );
 }
