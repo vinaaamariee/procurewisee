@@ -5,7 +5,7 @@ import PrAuditClient from "./PrAuditClient";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = {
-  title: "Purchase Request Verification — ProcureWise",
+  title: "Purchase Request Verification — Procurement Verification Officer — ProcureWise",
 };
 
 export default async function PrAuditingPage() {
@@ -34,6 +34,7 @@ export default async function PrAuditingPage() {
       totalCost: true,
       status: true,
       purpose: true,
+      fundingSource: true,
       requestedBy: {
         select: {
           fullName: true,
@@ -53,6 +54,7 @@ export default async function PrAuditingPage() {
     requestDate: pr.requestDate.toISOString(),
     submittedAt: pr.submittedAt ? pr.submittedAt.toISOString() : pr.requestDate.toISOString(),
     requestorName: pr.requestedBy?.fullName || pr.requesterName || "End User",
+    fundingSource: pr.fundingSource || "—",
   }));
 
   return (

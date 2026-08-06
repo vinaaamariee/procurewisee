@@ -16,6 +16,7 @@ export interface VerificationRow {
   purpose: string;
   totalCost: number;
   status: string;
+  remarks: string | null;
   decisionDate: string | null;
   reviewedBy: string | null;
 }
@@ -32,10 +33,21 @@ function downloadCsv(rows: VerificationRow[]) {
     "Fund Source",
     "Purpose",
     "Total Cost",
-    "Decision Date",
+    "Date Verified",
     "Status",
+    "Action Taken",
     "Reviewed By",
+    "Remarks",
   ];
+  const getActionTaken = (status: string) => {
+    const s = status.toLowerCase().replace(/[\s_]/g, "");
+    if (s === "approved") return "Verified";
+    if (s === "returnedforrevision" || s === "returned") return "Returned for Revision";
+    if (s === "rejected") return "Rejected";
+    if (s === "received") return "Received";
+    if (s === "convertedforrfq" || s === "convertedforrfq") return "Converted to RFQ";
+    return status;
+  };
   const escape = (v: string | number | null | undefined) => {
     const s = v === null || v === undefined ? "" : String(v);
     return `"${s.replace(/"/g, '""')}"`;
@@ -52,7 +64,9 @@ function downloadCsv(rows: VerificationRow[]) {
         r.totalCost.toFixed(2),
         r.decisionDate ? new Date(r.decisionDate).toLocaleDateString("en-PH") : "",
         r.status,
+        getActionTaken(r.status),
         r.reviewedBy,
+        r.remarks,
       ].map(escape).join(",")
     ),
   ];
@@ -201,39 +215,70 @@ export default function VerificationHistoryClient({ initialPrs }: VerificationHi
             <table className="w-full text-left text-xs border-collapse">
               <thead>
                 <tr className="border-b border-base-300 bg-base-200 text-base-content/85 uppercase text-[10px] font-bold">
-                  <th className="py-2.5 px-3">PR No.</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">PR No.</th>
                   <th className="py-2.5 px-3">Office</th>
-                  <th className="py-2.5 px-3">Fund Source</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">Fund Source</th>
                   <th className="py-2.5 px-3">Purpose</th>
-                  <th className="py-2.5 px-3">Decision Date</th>
-                  <th className="py-2.5 px-3">Reviewed By</th>
-                  <th className="py-2.5 px-3 text-right">Amount</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">Date Verified</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">Officer</th>
+                  <th className="py-2.5 px-3 whitespace-nowrap">Action Taken</th>
+                  <th className="py-2.5 px-3">Remarks</th>
+                  <th className="py-2.5 px-3 text-right whitespace-nowrap">Amount</th>
                   <th className="py-2.5 px-3">Status</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-base-200">
-                {filtered.map((p) => (
+                {filtered.map((p) => {
+                  const getActionTaken = (status: string) => {
+                    const s = status.toLowerCase().replace(/[\s_]/g, "");
+                    if (s === "approved") return "Verified";
+                    if (s === "returnedforrevision" || s === "returned") return "Returned for Revision";
+                    if (s === "rejected") return "Rejected";
+                    if (s === "received") return "Received";
+                    if (s === "convertedforrfq") return "Converted to RFQ";
+                    return status;
+                  };
+                  return (
                   <tr key={p.id} className="hover:bg-base-200/30">
-                    <td className="py-3 px-3">
+                    <td className="py-3 px-3 whitespace-nowrap">
                       <Link href={`/dashboard/officer/pr/${p.id}`} className="font-bold text-primary hover:underline">
                         {p.prNumber}
                       </Link>
                     </td>
                     <td className="py-3 px-3 text-base-content/70">{p.office}</td>
-                    <td className="py-3 px-3 text-base-content/70">{p.fundingSource}</td>
-                    <td className="py-3 px-3 text-base-content/70 line-clamp-1 max-w-[16rem]">{p.purpose}</td>
-                    <td className="py-3 px-3 text-base-content/70">
+                    <td className="py-3 px-3 text-base-content/70 whitespace-nowrap">{p.fundingSource}</td>
+                    <td className="py-3 px-3 text-base-content/70 line-clamp-1 max-w-[14rem]">{p.purpose}</td>
+                    <td className="py-3 px-3 text-base-content/70 whitespace-nowrap">
                       {p.decisionDate
                         ? new Date(p.decisionDate).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" })
                         : "—"}
                     </td>
-                    <td className="py-3 px-3 text-base-content/70">{p.reviewedBy || "—"}</td>
-                    <td className="py-3 px-3 text-right font-bold text-base-content">
+                    <td className="py-3 px-3 text-base-content/70 whitespace-nowrap">{p.reviewedBy || "—"}</td>
+                    <td className="py-3 px-3 whitespace-nowrap">
+                      <span className={`inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                        getActionTaken(p.status) === "Verified"
+                          ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300"
+                          : getActionTaken(p.status).startsWith("Returned")
+                          ? "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300"
+                          : getActionTaken(p.status) === "Rejected"
+                          ? "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300"
+                          : "bg-base-200 text-base-content/70"
+                      }`}>
+                        {getActionTaken(p.status)}
+                      </span>
+                    </td>
+                    <td className="py-3 px-3 text-base-content/60 max-w-[14rem]">
+                      <div className="line-clamp-2 leading-relaxed text-[11px]">
+                        {p.remarks || "—"}
+                      </div>
+                    </td>
+                    <td className="py-3 px-3 text-right font-bold text-base-content whitespace-nowrap">
                       ₱{p.totalCost.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
                     </td>
                     <td className="py-3 px-3"><StatusBadge status={p.status} /></td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
           </div>

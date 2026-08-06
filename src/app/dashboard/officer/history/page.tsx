@@ -5,7 +5,7 @@ import VerificationHistoryClient from "./VerificationHistoryClient";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = {
-  title: "Verification History — ProcureWise",
+  title: "Verification History — Procurement Verification Officer — ProcureWise",
 };
 
 export default async function VerificationHistoryPage() {
@@ -33,6 +33,7 @@ export default async function VerificationHistoryPage() {
       purpose: true,
       totalCost: true,
       status: true,
+      remarks: true,
       reviewedAt: true,
       approvedAt: true,
       submittedAt: true,
@@ -53,6 +54,7 @@ export default async function VerificationHistoryPage() {
     purpose: pr.purpose,
     totalCost: Number(pr.totalCost),
     status: pr.status,
+    remarks: pr.remarks ?? null,
     decisionDate: (pr.approvedAt || pr.reviewedAt || pr.submittedAt)?.toISOString() ?? null,
     reviewedBy: pr.reviewedBy?.fullName ?? null,
   }));

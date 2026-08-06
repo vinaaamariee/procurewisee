@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import type { UserProfile } from "@/types/auth";
 
-export default function DashboardHeader({ profile }: { profile: UserProfile }) {
+export default function DashboardHeader({ profile, displayRole }: { profile: UserProfile; displayRole?: string }) {
   const formattedToday = new Intl.DateTimeFormat("en-PH", {
     weekday: "long",
     month: "long",
@@ -27,7 +27,7 @@ export default function DashboardHeader({ profile }: { profile: UserProfile }) {
           <div className="flex items-center gap-1">
             <span>Role:</span>{" "}
             <span className="badge badge-sm rounded border-base-300 bg-base-200 text-base-content font-bold">
-              {profile.role}
+              {displayRole || profile.role}
             </span>
           </div>
           <div className="hidden sm:block h-3.5 w-px bg-base-300"></div>

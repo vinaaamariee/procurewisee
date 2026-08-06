@@ -131,6 +131,14 @@ export default function DashboardSidebar({ role }: { role: string }) {
 
   const sections = navConfig[role] || [];
 
+  /** UI-friendly display names — DB role strings are unchanged */
+  const roleDisplayNames: Record<string, string> = {
+    "Procurement Officer": "Procurement Verification Officer",
+    "Administrative Approver": "Administrative Approver",
+    "End User": "End User",
+  };
+  const displayRole = roleDisplayNames[role] || role;
+
   return (
     <aside
       className="relative flex w-72 flex-col overflow-hidden bg-base-100 border-r border-base-300 shadow-none shrink-0"
@@ -236,7 +244,12 @@ export default function DashboardSidebar({ role }: { role: string }) {
         <div className="mt-0.5 text-[10px] text-base-content/50 leading-tight">
           Procurement Management System
         </div>
-        <div className="mt-2 text-[9px] text-base-content/40">
+        {role && (
+          <div className="mt-2 text-[9px] font-semibold text-primary/70 uppercase tracking-wide leading-tight">
+            {displayRole}
+          </div>
+        )}
+        <div className="mt-1 text-[9px] text-base-content/40">
           © 2026 Batanes State College
         </div>
       </div>

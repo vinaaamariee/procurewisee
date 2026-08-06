@@ -1,11 +1,11 @@
-"use client";
+﻿"use client";
 
 import React, { useState } from "react";
 import Link from "next/link";
 import EmptyState from "@/components/ui/EmptyState";
 import Card from "@/components/ui/Card";
-import { Search, ArrowRight } from "lucide-react";
 import StatusBadge from "@/components/ui/StatusBadge";
+import { Search, Eye, Printer } from "lucide-react";
 
 interface PurchaseRequest {
   id: number;
@@ -18,11 +18,24 @@ interface PurchaseRequest {
   totalCost: any;
   status: string;
   purpose: string;
+  fundingSource?: string;
 }
 
 interface PrAuditClientProps {
   initialPrs: PurchaseRequest[];
 }
+
+const fmtDate = (d: Date | string | undefined | null) =>
+  d
+    ? new Date(d).toLocaleDateString("en-PH", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "—";
+
+const fmtMoney = (n: any) =>
+  `₱${Number(n).toLocaleString("en-PH", { minimumFractionDigits: 2 })}`;
 
 export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
   const [prs] = useState<PurchaseRequest[]>(initialPrs);
@@ -30,18 +43,24 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
   const [statusFilter, setStatusFilter] = useState("all");
 
   const filteredPrs = prs.filter((pr) => {
+    const q = search.toLowerCase();
     const matchesSearch =
-      pr.prNumber.toLowerCase().includes(search.toLowerCase()) ||
-      pr.department.toLowerCase().includes(search.toLowerCase()) ||
-      (pr.office && pr.office.toLowerCase().includes(search.toLowerCase())) ||
-      (pr.requestorName && pr.requestorName.toLowerCase().includes(search.toLowerCase())) ||
-      pr.purpose.toLowerCase().includes(search.toLowerCase());
+      !q ||
+      pr.prNumber.toLowerCase().includes(q) ||
+      pr.department.toLowerCase().includes(q) ||
+      (pr.office && pr.office.toLowerCase().includes(q)) ||
+      (pr.requestorName && pr.requestorName.toLowerCase().includes(q)) ||
+      pr.purpose.toLowerCase().includes(q) ||
+      (pr.fundingSource && pr.fundingSource.toLowerCase().includes(q));
 
+    const st = pr.status.toLowerCase().replace(/[\s_]/g, "");
     const matchesStatus =
       statusFilter === "all" ||
-      (statusFilter === "pending" && ["pendingprocurementreview", "pending procurement review", "submitted", "underreview"].includes(pr.status.toLowerCase())) ||
-      (statusFilter === "returned" && ["returned", "returnedforrevision", "returned for revision"].includes(pr.status.toLowerCase())) ||
-      (statusFilter === "approved" && pr.status.toLowerCase() === "approved");
+      (statusFilter === "pending" &&
+        ["pendingprocurementreview", "submitted", "underreview"].includes(st)) ||
+      (statusFilter === "returned" &&
+        ["returned", "returnedforrevision"].includes(st)) ||
+      (statusFilter === "approved" && st === "approved");
 
     return matchesSearch && matchesStatus;
   });
@@ -55,16 +74,16 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
             <Search className="absolute left-3 top-3 h-4.5 w-4.5 text-base-content/40" />
             <input
               type="text"
-              placeholder="Search by PR number, department, office, requestor..."
+              placeholder="Search by PR number, office, requestor, fund source, purpose…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full input pl-9"
             />
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
             <span className="text-xs font-bold uppercase tracking-wide text-base-content/60">
-              Status Filter
+              Status
             </span>
             <select
               value={statusFilter}
@@ -76,11 +95,14 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
               <option value="returned">Returned</option>
               <option value="approved">Verified</option>
             </select>
+            <span className="text-xs text-base-content/50">
+              {filteredPrs.length} record{filteredPrs.length !== 1 ? "s" : ""}
+            </span>
           </div>
         </div>
       </Card>
 
-      {/* Grid Queue */}
+      {/* Verification Queue Table */}
       {filteredPrs.length === 0 ? (
         <EmptyState
           preset="purchase-requests"
@@ -95,71 +117,103 @@ export default function PrAuditClient({ initialPrs }: PrAuditClientProps) {
           }}
         />
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredPrs.map((pr) => {
-            return (
-              <Card key={pr.id} className="p-5 flex flex-col justify-between space-y-4 shadow-none">
-                <div className="space-y-3">
-                  {/* Header */}
-                  <div className="flex items-center justify-between">
-                    <span className="text-base font-bold text-primary font-display">
-                      {pr.prNumber}
-                    </span>
-                    <StatusBadge status={pr.status} />
-                  </div>
+        <Card className="p-0 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="border-b border-base-300 bg-base-200 text-base-content/85 uppercase text-[10px] font-bold">
+                  <th className="py-3 px-3 whitespace-nowrap">PR Number</th>
+                  <th className="py-3 px-3">Office</th>
+                  <th className="py-3 px-3 whitespace-nowrap">Requestor</th>
+                  <th className="py-3 px-3">Purpose</th>
+                  <th className="py-3 px-3 whitespace-nowrap">Fund Source</th>
+                  <th className="py-3 px-3 whitespace-nowrap">Date Submitted</th>
+                  <th className="py-3 px-3 text-right whitespace-nowrap">Est. Cost</th>
+                  <th className="py-3 px-3">Status</th>
+                  <th className="py-3 px-3 text-center whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-base-200">
+                {filteredPrs.map((pr) => (
+                  <tr key={pr.id} className="hover:bg-base-200/30 transition-colors">
+                    {/* PR Number */}
+                    <td className="py-3 px-3 whitespace-nowrap">
+                      <Link
+                        href={`/dashboard/officer/pr/${pr.id}`}
+                        className="font-bold text-primary hover:underline"
+                      >
+                        {pr.prNumber}
+                      </Link>
+                    </td>
 
-                  {/* Department & Office */}
-                  <div className="text-left">
-                    <div className="text-sm font-bold text-base-content">
-                      {pr.department}
-                    </div>
-                    {pr.office && (
-                      <div className="text-xs text-base-content/60 mt-0.5">
-                        Office: {pr.office}
+                    {/* Office / Department */}
+                    <td className="py-3 px-3">
+                      <div className="font-medium text-base-content">
+                        {pr.office || pr.department}
                       </div>
-                    )}
-                  </div>
+                      {pr.office && pr.department && pr.office !== pr.department && (
+                        <div className="text-[10px] text-base-content/50 mt-0.5">
+                          {pr.department}
+                        </div>
+                      )}
+                    </td>
 
-                  {/* Requestor */}
-                  {pr.requestorName && (
-                    <div className="text-xs text-base-content/60 font-medium text-left">
-                      Requestor: <span className="text-base-content font-semibold">{pr.requestorName}</span>
-                    </div>
-                  )}
+                    {/* Requestor */}
+                    <td className="py-3 px-3 text-base-content/80 whitespace-nowrap">
+                      {pr.requestorName || "—"}
+                    </td>
 
-                  {/* Purpose */}
-                  <p className="text-xs text-base-content/75 line-clamp-2 leading-relaxed min-h-[2.5rem] text-left">
-                    {pr.purpose}
-                  </p>
-                </div>
+                    {/* Purpose */}
+                    <td className="py-3 px-3 text-base-content/70 max-w-[18rem]">
+                      <div className="line-clamp-2 leading-relaxed">{pr.purpose}</div>
+                    </td>
 
-                {/* Footer */}
-                <div className="border-t border-base-200 pt-3 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-base-content/50">
-                    <span>
-                      Submitted: {new Date(pr.submittedAt || pr.requestDate).toLocaleDateString("en-PH", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <span className="font-bold text-base-content text-sm">
-                      ₱{Number(pr.totalCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
-                    </span>
-                  </div>
+                    {/* Fund Source */}
+                    <td className="py-3 px-3 text-base-content/70 whitespace-nowrap">
+                      {pr.fundingSource || "—"}
+                    </td>
 
-                  <Link
-                    href={`/dashboard/officer/pr/${pr.id}`}
-                    className="w-full btn btn-sm btn-outline border-base-300 text-xs flex items-center justify-center gap-2 rounded-md hover:bg-base-200"
-                  >
-                    <span>Verify Request</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
+                    {/* Date Submitted */}
+                    <td className="py-3 px-3 text-base-content/70 whitespace-nowrap">
+                      {fmtDate(pr.submittedAt || pr.requestDate)}
+                    </td>
+
+                    {/* Estimated Cost */}
+                    <td className="py-3 px-3 text-right font-bold text-base-content whitespace-nowrap">
+                      {fmtMoney(pr.totalCost)}
+                    </td>
+
+                    {/* Status */}
+                    <td className="py-3 px-3">
+                      <StatusBadge status={pr.status} />
+                    </td>
+
+                    {/* Actions */}
+                    <td className="py-3 px-3">
+                      <div className="flex items-center gap-1.5 justify-center">
+                        <Link
+                          href={`/dashboard/officer/pr/${pr.id}`}
+                          title="View / Verify this PR"
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded text-[11px] font-bold bg-primary/10 text-primary hover:bg-primary/20 transition-colors whitespace-nowrap"
+                        >
+                          <Eye className="h-3.5 w-3.5" />
+                          <span>Verify</span>
+                        </Link>
+                        <Link
+                          href={`/dashboard/officer/pr/${pr.id}`}
+                          title="Print this PR"
+                          className="inline-flex items-center gap-1 px-2 py-1.5 rounded text-[11px] font-bold bg-base-200 text-base-content/70 hover:bg-base-300 transition-colors"
+                        >
+                          <Printer className="h-3.5 w-3.5" />
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
       )}
     </div>
   );
