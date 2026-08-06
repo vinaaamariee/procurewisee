@@ -18,6 +18,23 @@ The Procurement Officer's PR details page (`/dashboard/officer/pr/[id]`) previou
   - Wrapped the entire dashboard grid (master details, validation checklist, line items, review action panel, workflow timeline, modals) in `.no-print` so `window.print()` emits only the official A4 sheet.
 
 
+## 🖨️ Purchase Request Print Pagination Fix — Footer on the Same Page
+
+**Date**: August 2026
+
+The Purchase Request print layout was splitting the official BSC footer onto a separate page and leaving excessive whitespace. The root cause was screen-style viewport layout CSS inside `OfficialDocumentLayout.tsx` (a flex-column shell with `min-height: 277mm`, `flex: 1` content, and `margin-top: auto` footer anchoring) that forced the document taller than a single A4 page. The printable layout was refactored into natural document flow so the header, content, and footer print together on one A4 sheet. No business logic, database code, or document contents were changed.
+
+### Key Changes (`src/components/documents/OfficialDocumentLayout.tsx`)
+- Replaced the flex `min-height: 277mm` page shell and `<table>` (`thead`/`tfoot`) structure with a single natural-flow `.print-document` wrapper: header image → content → footer image.
+- Removed all viewport/height-based print CSS: `min-height: 277mm`, `display: flex`, `flex: 1`, `.print-content`, and `margin-top: auto` footer anchoring. No artificial page height remains — the document grows naturally with its content.
+- The official footer is part of the normal document flow and renders directly below the signature block with `margin-top: 24px`; Chrome Print handles remaining page space automatically instead of being forced to the paper bottom.
+- Added `break-inside: avoid` / `page-break-inside: avoid` to the metadata section, items table, purpose section, signature section, and footer image.
+- Print wrapper is a single container using `width: 100%` / `box-sizing: border-box`; header/footer images print at `width: 100%; height: auto; display: block`.
+- `@page` set to `size: A4 portrait; margin: 10mm`.
+
+**Unchanged**: BSC header/footer assets, document contents, signature blocks, validation, API calls, and all PR print consumers (`PRDocument.tsx`, `PrDetailsClient.tsx`, `PrReviewClient.tsx`).
+
+
 ## 🖨️ Purchase Request One-Page Print Optimization
 
 **Date**: August 2026

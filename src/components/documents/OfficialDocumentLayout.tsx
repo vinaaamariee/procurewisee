@@ -13,17 +13,19 @@ export default function OfficialDocumentLayout({
   printAreaId = 'pr-document',
 }: OfficialDocumentLayoutProps) {
   return (
-    <div className="print-page w-full bg-white text-black">
+    <div className="print-document w-full bg-white text-black">
       {/* Universal Print & Screen Stylesheet */}
       <style dangerouslySetInnerHTML={{ __html: `
         /* ============================================================
            PURCHASE REQUEST — OFFICIAL A4 PRINT STYLESHEET
-           A4 Portrait | Margins: 10mm top/bottom, 12mm left/right
+           A4 Portrait | Margin: 10mm
+           Single natural-flow document: header → content → footer.
+           No artificial page heights and no forced footer anchoring.
         ============================================================ */
         @media print {
           @page {
             size: A4 portrait;
-            margin: 10mm 12mm;
+            margin: 10mm;
           }
 
           html,
@@ -65,7 +67,7 @@ export default function OfficialDocumentLayout({
             display: none !important;
           }
 
-          /* Suppress site header/footer — the BSC branding comes from the document table */
+          /* Suppress site header/footer — the BSC branding comes from the document itself */
           body > header,
           body > footer,
           nav {
@@ -93,14 +95,12 @@ export default function OfficialDocumentLayout({
             padding: 0 !important;
           }
 
-          /* ── The actual printable page shell ── */
+          /* ── The actual printable page shell (natural flow, no fixed height) ── */
           #${printAreaId} {
-            display: flex !important;
-            flex-direction: column !important;
+            display: block !important;
             position: static !important;
             width: 100% !important;
             max-width: none !important;
-            min-height: 277mm !important;
             padding: 0 !important;
             margin: 0 !important;
             border: none !important;
@@ -109,22 +109,16 @@ export default function OfficialDocumentLayout({
             color: #000 !important;
           }
 
-          /* ── Layout table: header repeats on every page via thead/tfoot ── */
-          .official-layout-table {
+          /* ── Single document wrapper ── */
+          .print-document {
             width: 100% !important;
-            border: none !important;
-            border-collapse: collapse !important;
-            margin: 0 !important;
-            padding: 0 !important;
-          }
-
-          .official-layout-table td {
-            border: none !important;
-            padding: 0 !important;
-            vertical-align: top !important;
+            box-sizing: border-box !important;
+            background: #fff !important;
           }
 
           /* ── Official branding images — full printable width ── */
+          .print-header img,
+          .print-footer img,
           .official-print-header img,
           .official-print-footer img {
             display: block !important;
@@ -133,34 +127,23 @@ export default function OfficialDocumentLayout({
             object-fit: contain !important;
           }
 
-          /* ── Document body fills remaining vertical space ── */
+          /* ── Content flows naturally; footer renders right after the signatures ── */
           .document-content {
-            flex: 1 !important;
             width: 100% !important;
           }
 
-          /* ── print-page / print-content / print-footer helpers ── */
-          .print-page {
-            width: 100% !important;
-            min-height: 277mm !important;
-            display: flex !important;
-            flex-direction: column !important;
-            background: #fff !important;
+          .print-footer,
+          .official-print-footer {
+            margin-top: 24px !important;
           }
 
-          .print-content {
-            flex: 1 !important;
-          }
-
-          .print-footer {
-            margin-top: auto !important;
-          }
-
-          /* ── Prevent page breaks inside key sections ── */
+          /* ── Prevent page breaks inside key sections and the footer image ── */
           .pr-metadata-section,
           .pr-items-section,
           .pr-purpose-section,
-          .pr-signature-section {
+          .pr-signature-section,
+          .official-print-header,
+          .official-print-footer {
             break-inside: avoid !important;
             page-break-inside: avoid !important;
           }
@@ -238,57 +221,37 @@ export default function OfficialDocumentLayout({
             border-top: 1px solid #e2e8f0;
             padding-top: 1rem;
           }
-
-          .official-layout-table {
-            width: 100%;
-          }
         }
       ` }} />
 
-      {/* Official header — repeats on every printed page */}
-      <table className="official-layout-table border-none border-collapse w-full">
-        <thead>
-          <tr>
-            <td className="border-none p-0">
-              <div className="official-print-header w-full">
-                <Image
-                  src="/images/bsc-header.png"
-                  alt="Official Batanes State College Header"
-                  width={1024}
-                  height={159}
-                  priority
-                  className="w-full h-auto object-contain"
-                />
-              </div>
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="border-none p-0">
-              <div className="document-content w-full text-black">
-                {children}
-              </div>
-            </td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td className="border-none p-0">
-              <div className="official-print-footer w-full">
-                <Image
-                  src="/images/bsc-footer.png"
-                  alt="Official Batanes State College Footer"
-                  width={1024}
-                  height={118}
-                  priority
-                  className="w-full h-auto object-contain"
-                />
-              </div>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+      {/* Official header — top of the document */}
+      <div className="official-print-header print-header w-full">
+        <Image
+          src="/images/bsc-header.png"
+          alt="Official Batanes State College Header"
+          width={1024}
+          height={159}
+          priority
+          className="w-full h-auto object-contain"
+        />
+      </div>
+
+      {/* Document body — flows naturally between header and footer */}
+      <div className="document-content w-full text-black">
+        {children}
+      </div>
+
+      {/* Official footer — normal document flow, directly after the content */}
+      <div className="official-print-footer print-footer w-full">
+        <Image
+          src="/images/bsc-footer.png"
+          alt="Official Batanes State College Footer"
+          width={1024}
+          height={118}
+          priority
+          className="w-full h-auto object-contain"
+        />
+      </div>
     </div>
   );
 }
