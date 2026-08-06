@@ -621,22 +621,22 @@ model PurchaseRequestStatusHistory {
 }
 
 model ProcurementMonitoringRecord {
-  id               Int        @id @default(autoincrement()) @map("pmr_id")
-  pmrNumber        String     @unique @db.VarChar(50)
-  prId             Int        @unique
-  office           String     @db.VarChar(100)
-  department       String?    @db.VarChar(100)
-  fundSource       String?    @db.VarChar(100)
+  id               Int             @id @default(autoincrement()) @map("pmr_id")
+  pmrNumber        String          @unique @map("pmr_number") @db.VarChar(50)
+  prId             Int             @unique @map("pr_id")
+  office           String          @db.VarChar(100)
+  department       String?         @db.VarChar(100)
+  fundSource       String?         @map("fund_source") @db.VarChar(100)
   purpose          String?
-  totalCost        Decimal    @default(0.00) @db.Decimal(12, 2)
-  dateReceived     DateTime   @default(now()) @map("date_received")
-  verificationDate DateTime?  @map("verification_date")
-  verifiedById     String?    @map("verified_by_id")
-  stage            String     @default("PR Verified") @db.VarChar(100)
-  status           PmrStatus  @default(Active)
+  totalCost        Decimal         @default(0.00) @map("total_cost") @db.Decimal(12, 2)
+  dateReceived     DateTime        @default(now()) @map("date_received")
+  verificationDate DateTime?       @map("verification_date")
+  verifiedById     String?         @map("verified_by_id")
+  stage            String          @default("PR Verified") @db.VarChar(100)
+  status           PmrStatus       @default(Active)
   remarks          String?
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @updatedAt
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
   pr               PurchaseRequest @relation(fields: [prId], references: [id], onDelete: Cascade)
   verifiedBy       UserProfile?    @relation("PmrVerifiedBy", fields: [verifiedById], references: [id])
 
