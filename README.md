@@ -23,6 +23,28 @@ No business logic, workflow, or database schema was changed. Top-level `rfqItem.
 `npx prisma generate`, `npx tsc --noEmit`, and `npm run build` all clean.
 
 
+## 🔧 PMR Stage Progress Bar — Added Stage Stepper
+
+**Date**: August 2026
+
+Added a live-reacting `StageStepper` component to the PMR detail page (`/dashboard/officer/pmr/[id]`). Previously, there was no visual progress indicator — stage was just a plain dropdown. Now changing the stage dropdown immediately updates the stepper and progress bar without needing to save first.
+
+### Key Changes
+
+- **`PmrDetailClient.tsx`** — new `StageStepper` sub-component added.
+  - **Desktop**: full horizontal labeled stepper with circle nodes (✅ done / filled active / greyed future) and connector lines that fill green as stages complete.
+  - **Mobile**: compact dot-bar with label of the current stage.
+  - **Progress bar**: smooth `transition-all duration-500` bar below the stepper. Fills proportionally based on `currentIdx / (total - 1)`. Turns `success` colour when the final stage ("Completed") is reached.
+  - **"Next stage" label** shown in bottom-right.
+- The stepper is driven by the `stage` React state (same state as the dropdown), so it reacts in real time before the user even clicks Save.
+- `Save Changes` button label changes to `Saving…` while the request is in flight.
+- No schema, server action, or data model changes — purely UI.
+
+### Verification
+
+Open `/dashboard/officer/pmr/[id]` for any PMR → stepper shows the current stage. Change the "Procurement Stage" dropdown → stepper and progress bar animate immediately to the selected position.
+
+
 ## 📊 Operational Reports — Live Viewer Rewrite
 
 **Date**: August 2026

@@ -13,6 +13,8 @@ import {
   Archive,
   FileText,
   ClipboardCheck,
+  CheckCircle2,
+  Circle,
 } from "lucide-react";
 
 interface PmrItem {
@@ -68,6 +70,131 @@ const STAGE_OPTIONS = [
 
 const STATUS_OPTIONS = ["Active", "Archived", "Cancelled"];
 
+/* ─────────────────────────────────────────────
+   Stage Progress Stepper
+───────────────────────────────────────────── */
+function StageStepper({ currentStage }: { currentStage: string }) {
+  const currentIdx = STAGE_OPTIONS.indexOf(currentStage);
+  const pct =
+    STAGE_OPTIONS.length <= 1
+      ? 100
+      : (currentIdx / (STAGE_OPTIONS.length - 1)) * 100;
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-extrabold uppercase tracking-wider text-base-content/50">
+          Procurement Stage Progress
+        </span>
+        <span className="text-[10px] font-bold text-base-content/60">
+          {currentIdx + 1} / {STAGE_OPTIONS.length}
+        </span>
+      </div>
+
+      {/* Desktop: full labeled stepper */}
+      <div className="hidden sm:flex items-start w-full">
+        {STAGE_OPTIONS.map((s, idx) => {
+          const done = idx < currentIdx;
+          const active = idx === currentIdx;
+          const isLast = idx === STAGE_OPTIONS.length - 1;
+          return (
+            <React.Fragment key={s}>
+              <div className="flex flex-col items-center gap-1.5 shrink-0">
+                <div
+                  className={`h-7 w-7 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
+                    done
+                      ? "bg-success border-success text-white"
+                      : active
+                      ? "bg-primary border-primary text-white shadow-md"
+                      : "bg-base-100 border-base-300 text-base-content/30"
+                  }`}
+                >
+                  {done ? (
+                    <CheckCircle2 className="h-4 w-4" />
+                  ) : (
+                    <Circle
+                      className={`h-3.5 w-3.5 ${active ? "fill-white" : "fill-none"}`}
+                    />
+                  )}
+                </div>
+                <span
+                  className={`text-[9px] font-bold text-center leading-tight max-w-[60px] uppercase tracking-wide transition-colors duration-300 ${
+                    done
+                      ? "text-success"
+                      : active
+                      ? "text-primary"
+                      : "text-base-content/35"
+                  }`}
+                >
+                  {s}
+                </span>
+              </div>
+              {!isLast && (
+                <div
+                  className={`flex-1 h-0.5 mt-3.5 mx-0.5 transition-all duration-500 ${
+                    done ? "bg-success" : "bg-base-200"
+                  }`}
+                />
+              )}
+            </React.Fragment>
+          );
+        })}
+      </div>
+
+      {/* Mobile: dots + label */}
+      <div className="sm:hidden space-y-2">
+        <div className="flex items-center gap-1">
+          {STAGE_OPTIONS.map((s, idx) => {
+            const done = idx < currentIdx;
+            const active = idx === currentIdx;
+            return (
+              <div key={s} className="flex items-center gap-1 flex-1">
+                <div
+                  className={`h-2 w-2 rounded-full shrink-0 transition-all duration-300 ${
+                    done ? "bg-success" : active ? "bg-primary" : "bg-base-300"
+                  }`}
+                />
+                {idx < STAGE_OPTIONS.length - 1 && (
+                  <div
+                    className={`flex-1 h-0.5 transition-all duration-300 ${
+                      done ? "bg-success" : "bg-base-200"
+                    }`}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <p className="text-xs font-bold text-base-content">
+          {currentStage}
+        </p>
+      </div>
+
+      {/* Smooth progress bar */}
+      <div className="h-2 w-full rounded-full bg-base-200 overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-500 ease-out"
+          style={{
+            width: `${pct}%`,
+            background: currentIdx === STAGE_OPTIONS.length - 1
+              ? "oklch(var(--su))"      /* success colour when done */
+              : "oklch(var(--p))",       /* primary colour in progress */
+          }}
+        />
+      </div>
+
+      <p className="text-[10px] text-base-content/50 text-right">
+        {currentIdx === STAGE_OPTIONS.length - 1
+          ? "✅ Procurement cycle complete"
+          : `Next: ${STAGE_OPTIONS[currentIdx + 1]}`}
+      </p>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   Main Component
+───────────────────────────────────────────── */
 export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
   const router = useRouter();
   const [stage, setStage] = useState(pmr.stage);
@@ -121,7 +248,10 @@ export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
     <div className="space-y-6">
       {/* Action bar */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link href="/dashboard/officer/pmr" className="btn btn-ghost btn-sm rounded-md text-xs font-bold border border-base-300">
+        <Link
+          href="/dashboard/officer/pmr"
+          className="btn btn-ghost btn-sm rounded-md text-xs font-bold border border-base-300"
+        >
           <ArrowLeft className="h-4 w-4" />
           Back to Register
         </Link>
@@ -152,7 +282,7 @@ export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
             className="btn btn-primary btn-sm rounded-md text-xs font-bold text-white"
           >
             <Save className="h-4 w-4 mr-1" />
-            Save Changes
+            {isProcessing ? "Saving…" : "Save Changes"}
           </button>
         </div>
       </div>
@@ -170,6 +300,11 @@ export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
         </div>
       )}
 
+      {/* Stage Progress Stepper */}
+      <Card className="p-5">
+        <StageStepper currentStage={stage} />
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* PMR Details */}
         <Card className="p-5 space-y-5 lg:col-span-2">
@@ -179,8 +314,12 @@ export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
                 <ClipboardCheck className="h-6 w-6" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-primary font-display">{pmr.pmrNumber}</h3>
-                <p className="text-xs text-base-content/60 font-medium">Procurement Monitoring Record</p>
+                <h3 className="text-xl font-bold text-primary font-display">
+                  {pmr.pmrNumber}
+                </h3>
+                <p className="text-xs text-base-content/60 font-medium">
+                  Procurement Monitoring Record
+                </p>
               </div>
             </div>
             <StatusBadge status={pmr.status} />
@@ -188,71 +327,128 @@ export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-left">
             <div>
-              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">PR Reference</span>
-              <span className="font-bold text-base-content text-sm">{pmr.pr?.prNumber || `PR #${pmr.prId}`}</span>
-            </div>
-            <div>
-              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Office</span>
-              <span className="font-bold text-base-content text-sm">{pmr.office}</span>
-            </div>
-            <div>
-              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Department</span>
-              <span className="font-medium text-base-content text-sm">{pmr.department || "—"}</span>
-            </div>
-            <div>
-              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Fund Source</span>
-              <span className="font-medium text-base-content text-sm">{pmr.fundSource || "—"}</span>
-            </div>
-            <div>
-              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Date Received</span>
-              <span className="font-medium text-base-content text-sm">
-                {new Date(pmr.dateReceived).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                PR Reference
+              </span>
+              <span className="font-bold text-base-content text-sm">
+                {pmr.pr?.prNumber || `PR #${pmr.prId}`}
               </span>
             </div>
             <div>
-              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Verification Date</span>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                Office
+              </span>
+              <span className="font-bold text-base-content text-sm">{pmr.office}</span>
+            </div>
+            <div>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                Department
+              </span>
+              <span className="font-medium text-base-content text-sm">
+                {pmr.department || "—"}
+              </span>
+            </div>
+            <div>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                Fund Source
+              </span>
+              <span className="font-medium text-base-content text-sm">
+                {pmr.fundSource || "—"}
+              </span>
+            </div>
+            <div>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                Date Received
+              </span>
+              <span className="font-medium text-base-content text-sm">
+                {new Date(pmr.dateReceived).toLocaleDateString("en-PH", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </span>
+            </div>
+            <div>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                Verification Date
+              </span>
               <span className="font-medium text-base-content text-sm">
                 {pmr.verificationDate
-                  ? new Date(pmr.verificationDate).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })
+                  ? new Date(pmr.verificationDate).toLocaleDateString("en-PH", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })
                   : "—"}
               </span>
             </div>
             <div>
-              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Verified By</span>
-              <span className="font-medium text-base-content text-sm">{pmr.verifiedBy || "—"}</span>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                Verified By
+              </span>
+              <span className="font-medium text-base-content text-sm">
+                {pmr.verifiedBy || "—"}
+              </span>
             </div>
             <div>
-              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Total Cost</span>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                Total Cost
+              </span>
               <span className="font-bold text-primary text-sm">
                 ₱{pmr.totalCost.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
               </span>
             </div>
             <div className="sm:col-span-2">
-              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Purpose</span>
-              <span className="font-medium text-base-content leading-relaxed">{pmr.purpose || "—"}</span>
+              <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                Purpose
+              </span>
+              <span className="font-medium text-base-content leading-relaxed">
+                {pmr.purpose || "—"}
+              </span>
             </div>
           </div>
 
           {/* Update form */}
           <div className="border-t border-base-200 pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px] mb-1.5">Procurement Stage</label>
-              <select value={stage} onChange={(e) => setStage(e.target.value)} className="w-full select select-sm border-base-300 bg-base-100 font-medium">
+              <label className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px] mb-1.5">
+                Procurement Stage
+              </label>
+              <select
+                value={stage}
+                onChange={(e) => setStage(e.target.value)}
+                className="w-full select select-sm border-base-300 bg-base-100 font-medium"
+              >
                 {STAGE_OPTIONS.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
                 ))}
               </select>
+              <p className="text-[10px] text-base-content/50 mt-1">
+                Progress bar updates live as you select a stage.
+              </p>
             </div>
             <div>
-              <label className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px] mb-1.5">Status</label>
-              <select value={status} onChange={(e) => setStatus(e.target.value)} className="w-full select select-sm border-base-300 bg-base-100 font-medium">
+              <label className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px] mb-1.5">
+                Status
+              </label>
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                className="w-full select select-sm border-base-300 bg-base-100 font-medium"
+              >
                 {STATUS_OPTIONS.map((s) => (
-                  <option key={s} value={s}>{s}</option>
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
                 ))}
               </select>
             </div>
             <div className="sm:col-span-2">
-              <label className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px] mb-1.5">Remarks</label>
+              <label className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px] mb-1.5">
+                Remarks
+              </label>
               <textarea
                 rows={3}
                 value={remarks}
@@ -268,34 +464,57 @@ export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
         <Card className="p-5 space-y-4">
           <div className="flex items-center gap-2 border-b border-base-200 pb-3">
             <FileText className="h-5 w-5 text-primary" />
-            <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Linked Purchase Request</h3>
+            <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">
+              Linked Purchase Request
+            </h3>
           </div>
 
           {pmr.pr ? (
             <div className="space-y-3 text-xs">
               <div>
-                <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">PR Number</span>
-                <Link href={`/dashboard/officer/pr/${pmr.prId}`} className="font-bold text-primary hover:underline text-sm">
+                <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                  PR Number
+                </span>
+                <Link
+                  href={`/dashboard/officer/pr/${pmr.prId}`}
+                  className="font-bold text-primary hover:underline text-sm"
+                >
                   {pmr.pr.prNumber}
                 </Link>
               </div>
               <div>
-                <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Requisitioner</span>
-                <span className="font-medium text-base-content">{pmr.pr.requesterName}</span>
+                <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                  Requisitioner
+                </span>
+                <span className="font-medium text-base-content">
+                  {pmr.pr.requesterName}
+                </span>
               </div>
               <div>
-                <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Request Date</span>
+                <span className="block font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                  Request Date
+                </span>
                 <span className="font-medium text-base-content">
-                  {new Date(pmr.pr.requestDate).toLocaleDateString("en-PH", { month: "long", day: "numeric", year: "numeric" })}
+                  {new Date(pmr.pr.requestDate).toLocaleDateString("en-PH", {
+                    month: "long",
+                    day: "numeric",
+                    year: "numeric",
+                  })}
                 </span>
               </div>
               <div className="border-t border-base-200 pt-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Line Items</span>
-                  <span className="font-bold text-base-content">{pmr.pr.items.length}</span>
+                  <span className="font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                    Line Items
+                  </span>
+                  <span className="font-bold text-base-content">
+                    {pmr.pr.items.length}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="font-bold uppercase tracking-wider text-base-content/50 text-[10px]">Total ABC</span>
+                  <span className="font-bold uppercase tracking-wider text-base-content/50 text-[10px]">
+                    Total ABC
+                  </span>
                   <span className="font-bold text-primary">
                     ₱{pmr.totalCost.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
                   </span>
@@ -303,7 +522,9 @@ export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
               </div>
             </div>
           ) : (
-            <p className="text-xs text-base-content/60">No linked Purchase Request found.</p>
+            <p className="text-xs text-base-content/60">
+              No linked Purchase Request found.
+            </p>
           )}
         </Card>
       </div>
@@ -312,7 +533,9 @@ export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
       {pmr.pr && pmr.pr.items.length > 0 && (
         <Card className="p-5 space-y-4">
           <div className="border-b border-base-200 pb-3">
-            <h3 className="text-base font-bold text-base-content">Itemized Specifications</h3>
+            <h3 className="text-base font-bold text-base-content">
+              Itemized Specifications
+            </h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
@@ -328,19 +551,27 @@ export default function PmrDetailClient({ pmr }: { pmr: PmrDetailData }) {
                 {pmr.pr.items.map((item) => (
                   <tr key={item.id}>
                     <td className="py-3 px-3">
-                      <div className="font-bold text-base-content">{item.description}</div>
+                      <div className="font-bold text-base-content">
+                        {item.description}
+                      </div>
                       {item.specification && (
-                        <div className="text-[11px] text-base-content/60 mt-0.5">{item.specification}</div>
+                        <div className="text-[11px] text-base-content/60 mt-0.5">
+                          {item.specification}
+                        </div>
                       )}
                     </td>
                     <td className="py-3 px-3 text-center font-bold text-base-content">
                       {item.quantity} {item.unit}
                     </td>
                     <td className="py-3 px-3 text-right text-base-content/70 font-medium">
-                      ₱{item.estimatedUnitCost.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+                      ₱{item.estimatedUnitCost.toLocaleString("en-PH", {
+                        minimumFractionDigits: 2,
+                      })}
                     </td>
                     <td className="py-3 px-3 text-right font-bold text-base-content">
-                      ₱{item.estimatedCost.toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+                      ₱{item.estimatedCost.toLocaleString("en-PH", {
+                        minimumFractionDigits: 2,
+                      })}
                     </td>
                   </tr>
                 ))}
