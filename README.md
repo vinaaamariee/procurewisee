@@ -5,6 +5,24 @@
 **Capstone Project for Batanes State College**
 
 
+## 🐞 Fix: RFQ Create/Publish failing on `appItemId` in nested items create
+
+**Date**: August 2026
+
+The RFQ publish/create flow failed at runtime with `Unknown argument "appItemId". Did you mean "appItem"?`. Prisma's runtime validator for a nested `items.create` uses the **checked** input `RfqItemCreateWithoutRfqInput`, which only accepts relation fields (`appItem`, `product`, `unit`) — the scalar foreign keys `appItemId`/`productId` exist only in the unchecked input types.
+
+### Key Changes
+
+- **`src/app/actions/rfq.ts`** — nested `items.create` no longer passes `appItemId`/`productId` scalar fields. Uses relation `connect` syntax instead: `appItem: { connect: { id } }` and `product: { connect: { id } }`, applied only when the FK is present (never `null`/`undefined`).
+- **`src/app/actions/rfq-actions.ts`** — same fix applied to `createRfqAction`'s nested `items.create`.
+
+No business logic, workflow, or database schema was changed. Top-level `rfqItem.create` callers (`prisma/seed.ts`, `scripts/test-rfq-engine.ts`, `convertPrToRfqAction`) were verified to use the unchecked input, which correctly accepts the scalar FKs.
+
+### Verification
+
+`npx prisma generate`, `npx tsc --noEmit`, and `npm run build` all clean.
+
+
 ## 📊 Operational Reports — Live Viewer Rewrite
 
 **Date**: August 2026

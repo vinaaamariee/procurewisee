@@ -55,8 +55,8 @@ export async function createRfq(data: {
                 create: { name: item.unit.trim(), abbreviation: item.unit.trim().slice(0, 15) }
               }
             },
-            appItemId: item.appItemId || null,
-            productId: item.productId || null,
+            ...(item.appItemId != null ? { appItem: { connect: { id: item.appItemId } } } : {}),
+            ...(item.productId != null ? { product: { connect: { id: item.productId } } } : {}),
           })),
         },
       },
