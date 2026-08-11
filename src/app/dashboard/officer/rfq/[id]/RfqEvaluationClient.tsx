@@ -286,6 +286,8 @@ export default function RfqEvaluationClient({
       if (res.success) {
         setSuccessMsg("Canvass evaluated successfully.");
         setCurrentRfqStatus("Evaluated");
+      } else {
+        setErrorMsg(res.error ?? "Failed to finalize canvass. Please try again.");
       }
     } catch (e: any) {
       setErrorMsg(e.message);

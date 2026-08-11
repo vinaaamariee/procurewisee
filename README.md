@@ -5,6 +5,28 @@
 **Capstone Project for Batanes State College**
 
 
+## 🐞 Fix: "Finalize & Approve Canvass" Feedback + PMR Return Shape
+
+**Date**: August 2026
+
+Bug fixes for two related issues where server-action return values were misread on the client, leaving users with no feedback or incorrect data in hand.
+
+### Key Changes
+
+- **`RfqEvaluationClient.tsx`** — `handleAwardCanvass` now handles `res.success === false` explicitly. `generateRecommendations` never throws (it always returns `{ success: false, error }`), so the old `catch`-only error path meant a failed finalize (e.g., no submitted quotes, auth failure) was silent. An `else` branch now surfaces `res.error` (or a default message) in the red error banner.
+- **`src/app/actions/pr.ts`** — `approvePrByOfficerAction` now returns `{ success: true, pr: updated.pr, pmr: updated.pmr }` instead of `{ success: true, pr: updated }`, where `updated` was the transaction's wrapper object `{ pr, pmr }`. Client code reading `res.pr` now receives the actual PR record (and `res.pmr` exposes the PMR), making future `res.pr.status` / `res.pmr.pmrNumber` reads correct.
+- **`PrDetailsClient.tsx`** — the verify-success banner now includes the generated PMR number (`res.pmr?.pmrNumber`) so the officer can reference the PMR entry immediately.
+- **Schema confirmed**: `ProcurementMonitoringRecord.prId` has `@unique` (`prisma/schema.prisma`), so the `upsert({ where: { prId } })` in the approval transaction is safe and the PMR is created correctly.
+
+### Notes
+
+- The officer reports page (`/dashboard/officer/reports`) is a Server Component that refetches on navigation; `revalidatePath("/", "layout")` already invalidates the Next.js cache after approval, so navigating to reports shows fresh data.
+
+### Verification
+
+`npx tsc --noEmit` clean, `npx eslint` on the three changed files clean. Manual: RFQ with no quotes → red error banner on "Finalize & Approve Canvass"; approved PR → success banner shows the PMR number.
+
+
 ## 📊 Procurement Staff Dashboard Redesign (Reference Layout)
 
 **Date**: August 2026

@@ -281,7 +281,7 @@ export async function approvePrByOfficerAction(id: number) {
     });
 
     revalidatePath("/", "layout");
-    return { success: true, pr: updated };
+    return { success: true, pr: updated.pr, pmr: updated.pmr };
   } catch (error: any) {
     console.error("Error approving PR:", error);
     return { success: false, error: error.message || "Failed to approve Purchase Request." };

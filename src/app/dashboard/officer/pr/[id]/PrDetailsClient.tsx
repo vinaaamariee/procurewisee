@@ -179,7 +179,8 @@ export default function PrDetailsClient({ initialPr, budgets, officerId, canVeri
             status: "Approved",
             approvedAt: new Date().toISOString(),
           }));
-          setSuccessMsg("Purchase Request verified! A Procurement Monitoring Record (PMR) entry has been created automatically.");
+          const pmrRef = res.pmr?.pmrNumber ? ` (${res.pmr.pmrNumber})` : "";
+          setSuccessMsg(`Purchase Request verified! A PMR entry${pmrRef} has been created and is now visible in the Operational Reports.`);
           setModalState({ isOpen: false, mode: "approve" });
         } else {
           setErrorMsg(res.error || "Failed to approve Purchase Request.");
