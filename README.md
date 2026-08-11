@@ -5,6 +5,32 @@
 **Capstone Project for Batanes State College**
 
 
+## 📊 Operational Reports — Live Viewer Rewrite
+
+**Date**: August 2026
+
+Replaced the download-first generic table in `/dashboard/officer/reports` with five dedicated live report viewers. Data is now visible directly in the page without needing to export first.
+
+### Key Changes
+
+- **`ReportsClient.tsx`** — fully rewritten. Five tab-scoped components (`PmrTable`, `RfqTable`, `BacTable`, `NoticesTable`, `PoTable`) replace the single generic `ReportTable` pattern.
+- **Live search** on every tab — filters by relevant fields (PMR number, PR number, office, fund source, supplier name, RFQ title, etc.) as the user types.
+- **Status filter dropdown** on RFQ and Purchase Order tabs.
+- **`StatusBadge`** used on every status column — colour-coded at a glance.
+- **Clickable RFQ links** on RFQ, BAC Transmittal, and Letters of Notice tables — navigate directly to the evaluation page.
+- **Count badges** on each tab button show total record counts at a glance.
+- **Export stays secondary** — CSV, Excel, Print PDF buttons are still present per tab but are no longer the primary action.
+- **Page metadata and subtitle** updated to reflect "Live view" wording.
+
+### No schema / server changes
+
+All data is still fetched by the existing Server Component (`page.tsx`) via Prisma and passed as `data` props. No server actions, routes, or Prisma queries were modified.
+
+### Verification
+
+`npx tsc --noEmit` clean. Manual: open `/dashboard/officer/reports` → PMR tab shows live table with search and StatusBadge; RFQ tab includes status filter; BAC and Notices tabs include direct View links; PO tab includes status filter and supplier names.
+
+
 ## 🐞 Fix: "Finalize & Approve Canvass" Feedback + PMR Return Shape
 
 **Date**: August 2026

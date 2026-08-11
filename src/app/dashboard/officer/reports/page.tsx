@@ -4,7 +4,7 @@ import ReportsClient from "./ReportsClient";
 import SectionHeader from "@/components/ui/SectionHeader";
 
 export const metadata = {
-  title: "Operational Reports \u2014 Procurement Staff \u2014 ProcureWise",
+  title: "Operational Reports — Procurement Officer — ProcureWise",
 };
 
 export default async function ReportsPage() {
@@ -83,7 +83,7 @@ export default async function ReportsPage() {
     <div className="space-y-8">
       <SectionHeader
         title="Operational Reports"
-        subtitle="PMR, Request for Quotation, BAC Transmittal, Letter of Notice, and Purchase Order reports. Export each report as PDF, Excel, or CSV."
+        subtitle="Live view of PMR, RFQ, BAC Transmittal, Letter of Notice, and Purchase Order records. Search and filter inline — export to CSV, Excel, or PDF as needed."
       />
 
       <ReportsClient data={serialized} />
