@@ -5,6 +5,26 @@
 **Capstone Project for Batanes State College**
 
 
+## 📦 Product Catalog — Restored Access for All User Roles
+
+**Date**: August 2026
+
+The Product Catalog (`/dashboard/catalog`) was not linked in the sidebar navigation or dashboard quick actions for any user role, making it effectively hidden.
+
+### Key Changes
+
+- **`src/components/layout/DashboardSidebar.tsx`** — Added a `CATALOG` nav section with a **Product Catalog** link (`/dashboard/catalog`) to all three role nav configs: `Procurement Officer`, `Administrative Approver`, and `End User`.
+- **`src/app/dashboard/officer/page.tsx`** — Added **Product Catalog** as a Quick Action shortcut on the Procurement Staff dashboard.
+- **`src/app/dashboard/end-user/page.tsx`** — Added a **Product Catalog** button in the Quick Actions panel of the End User dashboard.
+
+No schema, server action, or data model changes — purely navigation/UI.
+
+### Verification
+
+Log in as any role → the **Product Catalog** link appears in the sidebar under the CATALOG section. Officers also see it in Quick Actions; End Users see it in the Quick Actions panel on their dashboard.
+
+---
+
 ## 🐞 Fix: RFQ Create/Publish failing on `appItemId` in nested items create
 
 **Date**: August 2026
