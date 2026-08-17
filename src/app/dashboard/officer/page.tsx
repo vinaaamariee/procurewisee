@@ -24,6 +24,7 @@ import {
   ScrollText,
   BarChart3,
   UserRound,
+  BookOpen,
 } from "lucide-react";
 
 export const metadata = { title: "Procurement Staff Dashboard — ProcureWise" };
@@ -392,6 +393,7 @@ export default async function ProcurementStaffDashboard() {
     { label: "Purchase Orders", href: "/dashboard/officer/po", Icon: ShoppingCart },
     { label: "Supplier Evaluation", href: "/dashboard/officer/evaluations", Icon: Star },
     { label: "Suppliers", href: "/dashboard/officer/suppliers", Icon: Building2 },
+    { label: "Product Catalog", href: "/dashboard/catalog", Icon: BookOpen },
     { label: "Reports", href: "/dashboard/officer/reports", Icon: BarChart3 },
   ];
 

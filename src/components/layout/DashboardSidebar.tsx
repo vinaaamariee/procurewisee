@@ -16,6 +16,7 @@ import {
   Building2,
   TrendingUp,
   Settings,
+  BookOpen,
 } from "lucide-react";
 
 type NavItem = {
@@ -96,6 +97,16 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
       {
+        title: "CATALOG",
+        items: [
+          {
+            label: "Product Catalog",
+            href: "/dashboard/catalog",
+            icon: BookOpen,
+          },
+        ],
+      },
+      {
         title: "SETTINGS",
         items: [
           {
@@ -129,6 +140,12 @@ export default function DashboardSidebar({ role }: { role: string }) {
         ],
       },
       {
+        title: "CATALOG",
+        items: [
+          { label: "Product Catalog", href: "/dashboard/catalog", icon: BookOpen },
+        ],
+      },
+      {
         title: "REPORTS",
         items: [
           { label: "Reports", href: "/dashboard/approver/reports", icon: ScrollText },
@@ -152,6 +169,12 @@ export default function DashboardSidebar({ role }: { role: string }) {
         title: "SUPPLIERS",
         items: [
           { label: "Evaluations", href: "/dashboard/end-user/evaluation", icon: Star },
+        ],
+      },
+      {
+        title: "CATALOG",
+        items: [
+          { label: "Product Catalog", href: "/dashboard/catalog", icon: BookOpen },
         ],
       },
     ],

@@ -2,7 +2,7 @@ import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
-import { AlertTriangle, CheckCircle2, FileText, PlusCircle, CornerUpLeft } from "lucide-react";
+import { AlertTriangle, CheckCircle2, FileText, PlusCircle, CornerUpLeft, BookOpen } from "lucide-react";
 import StatusBadge from "@/components/ui/StatusBadge";
 
 export const metadata = { title: "End User Dashboard — ProcureWise" };
@@ -359,6 +359,14 @@ export default async function EndUserDashboard() {
               >
                 <FileText className="h-4.5 w-4.5" />
                 My Purchase Requests
+              </Link>
+
+              <Link
+                href="/dashboard/catalog"
+                className="w-full btn btn-outline rounded-md font-bold text-xs flex items-center justify-center gap-2 py-2 border-base-300 text-base-content hover:bg-base-200"
+              >
+                <BookOpen className="h-4.5 w-4.5" />
+                Product Catalog
               </Link>
             </div>
           </div>
