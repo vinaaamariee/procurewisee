@@ -6,6 +6,64 @@
 
 ---
 
+## 📦 Phase 9: PhilGEPS Catalog Import
+
+**Date**: August 2026
+
+Imported 1,289 unique common-use supplies and equipment items from the BSC historical procurement records (SVP 2025 Excel files) into the Product Catalog. The catalog is now populated with real institutional items.
+
+### Database Migration
+
+- **Applied**: `supplier_id` column added to `user_profiles` (INTEGER, nullable) with unique partial index
+- **Script**: `scripts/apply-supplier-auth-migration.ts` (run via `npx tsx scripts/apply-supplier-auth-migration.ts`)
+- **Verified**: `user_profiles` has `supplier_id` (nullable), unique index where NOT NULL, non-Supplier users unaffected, existing users not broken
+
+### Catalog Import Summary
+
+| Metric | Value |
+|--------|-------|
+| Source files readable | 6 of 12 |
+| Corrupted source files | 6 (Jan, Feb, Mar, Apr, Nov, Dec 2025) |
+| Unique items extracted | 1,289 |
+| New products created | 0 (all already existed from previous seed) |
+| Existing products updated | 1,289 (categories + UOMs corrected) |
+| Total catalog products | 2,716 |
+| Categories used | 13 (inferred from item names) |
+| UOM records created | 57 (normalized from source) |
+| Prices imported | **NONE** |
+| Price fields on CatalogProduct | **NONE** (`estimated_unit_cost` column does not exist) |
+
+### Source Data
+
+The PhilGEPS source was the 12 SVP 2025 Excel workbooks in `historical data/`. Each file's DATA sheet contains procurement transaction records with columns: Item, Unit of Issue, Unit Budget, Unit LCRB, Remarks, etc.
+
+- **6 files corrupted** (bad compressed size) — January, February, March, April, November, December 2025
+- **6 files readable** — May through October 2025
+
+### Data Normalization
+
+**UOM Normalization**: 57 unique UOM values from source were normalized (e.g., "pc"/"pcs"/"pc." → "piece", "kgs"/"kls" → "kilogram"). However, some complex UOM strings like "100 sheets/ream", "boxes (100's)", "boxes 20's" were preserved as-is since they represent specific packaging.
+
+**Category Inference**: 13 categories were inferred from item names using keyword matching:
+- Office Supplies, ICT Equipment, Janitorial & Cleaning, Food & Beverages, Hardware & Maintenance, Furniture & Fixtures, Medical & Health Supplies, Signage & Prints, Sports & Apparel, Electrical & Lighting, Books & Educational Materials, Fuel & Energy, Other Supplies
+
+**Product Codes**: Generated as `PGEP-{sequence}` since source data had no product codes.
+
+### What Was NOT Imported
+
+- PhilGEPS prices (Unit Budget, Unit LCRB) — **discarded**
+- Supplier names — not applicable to catalog
+- PR numbers, dates, fund sources — transaction data, not catalog
+- Any pricing whatsoever
+
+### Files
+
+- `scripts/import-philgeps-catalog.ts` — Idempotent import script (safe to re-run)
+- `scripts/check-db-state.ts` — Database state verification
+- `scripts/apply-supplier-auth-migration.ts` — Supplier auth DB migration
+
+---
+
 ## 🛡️ Phase 8 Audit — Catalog Cleanup, Security Fixes, and Legacy Removal
 
 **Date**: August 2026
