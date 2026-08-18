@@ -5,6 +5,27 @@
 **Capstone Project for Batanes State College**
 
 
+## 🧹 Legacy Model Removal — OfficeItem & PriceQuote
+
+**Date**: August 2026
+
+Removed the legacy `OfficeItem` and `PriceQuote` Prisma models and all associated code. These were standalone duplicates replaced by the production models: `CatalogProduct` (for product reference) and `PreCanvassResponse`/`PreCanvassResponseItem` + `SupplierQuote`/`QuoteDetail` (for pricing).
+
+### What Was Removed
+
+- **Prisma Schema**: `OfficeItem` and `PriceQuote` models
+- **Seed file**: `officeItems` import and legacy seeding section
+- **Database check utility**: `officeItem` and `priceQuote` count queries
+- **Mock data**: `src/lib/mock-price-data.ts` (entire file — contained only OfficeItem/PriceQuote types and mock data)
+- **Price comparison page**: `src/app/price-comparison/` directory (page + client component)
+- **Price comparison components**: `src/components/price-comparison/` directory (SummaryCards, PriceChart, ComparisonTable, FilterBar)
+
+### Verification
+
+`npx prisma generate` and `npx tsc --noEmit` confirm no remaining references. Navigation sidebar had no links to `/price-comparison` — no nav changes needed.
+
+---
+
 ## 🔄 Pre-Canvass Workflow — Separate Preliminary Supplier Canvassing
 
 **Date**: August 2026

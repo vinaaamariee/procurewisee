@@ -7,10 +7,6 @@ const PrStatus = { Draft: "Draft", Submitted: "Submitted", UnderReview: "UnderRe
 const PoStatus = { Draft: "Draft", Approved: "Approved", Issued: "Issued", Received: "Received", Cancelled: "Cancelled" } as const;
 const DeliveryStatus = { Pending: "Pending", PartiallyDelivered: "PartiallyDelivered", Delivered: "Delivered", Failed: "Failed", CompleteDelivery: "CompleteDelivery" } as const;
 const EvaluationType = { Performance: "Performance", Quality: "Quality", Delivery: "Delivery", EndUser: "EndUser", ProcurementOffice: "ProcurementOffice" } as const;
-import { officeItems } from "../src/lib/mock-price-data";
-
-
-
 // ─────────────────────────────────────────────────────────────────────────────
 // HELPERS
 // ─────────────────────────────────────────────────────────────────────────────
@@ -26,24 +22,6 @@ function mcdmScore(price: number, delivery: number, reliability: number) {
 
 async function main() {
   console.log("🌱 Starting ProcureWise seed...\n");
-
-  // ── LEGACY: OfficeItem + PriceQuote (keep existing behaviour) ──────────────
-  console.log("📦 Seeding legacy OfficeItems & PriceQuotes...");
-  for (const item of officeItems) {
-    await prisma.officeItem.upsert({
-      where: { id: item.id },
-      update: { name: item.name, unit: item.unit, category: item.category, description: item.description },
-      create: { id: item.id, name: item.name, unit: item.unit, category: item.category, description: item.description },
-    });
-    for (const quote of item.quotes) {
-      await prisma.priceQuote.upsert({
-        where: { supplierId_itemId: { supplierId: quote.supplierId, itemId: item.id } },
-        update: { unitPrice: quote.unitPrice, availability: quote.availability, deliveryDays: quote.deliveryDays, notes: quote.notes ?? null },
-        create: { supplierId: quote.supplierId, itemId: item.id, unitPrice: quote.unitPrice, availability: quote.availability, deliveryDays: quote.deliveryDays, notes: quote.notes ?? null },
-      });
-    }
-  }
-  console.log("  ✔ Legacy tables seeded.\n");
 
   // ── 1. SUPPLIERS ──────────────────────────────────────────────────────────
   console.log("🏢 Seeding suppliers...");

@@ -5,20 +5,17 @@ async function main() {
   console.log("Checking database tables...");
   try {
     const supplierCount = await prisma.supplier.count();
-    const itemCount = await prisma.officeItem.count();
-    const quoteCount = await prisma.priceQuote.count();
+    const catalogCount = await prisma.catalogProduct.count();
 
     console.log(`Suppliers count: ${supplierCount}`);
-    console.log(`OfficeItems count: ${itemCount}`);
-    console.log(`PriceQuotes count: ${quoteCount}`);
+    console.log(`CatalogProducts count: ${catalogCount}`);
 
-    if (supplierCount > 0 && itemCount > 0 && quoteCount > 0) {
+    if (supplierCount > 0 && catalogCount > 0) {
       console.log("Database seeding appears successful!");
-      // Print some samples
       const sampleSuppliers = await prisma.supplier.findMany({ take: 3 });
       console.log("Sample Suppliers:", sampleSuppliers.map((s: any) => s.companyName));
-      const sampleItems = await prisma.officeItem.findMany({ take: 3 });
-      console.log("Sample Items:", sampleItems.map((i: any) => i.name));
+      const sampleProducts = await prisma.catalogProduct.findMany({ take: 3 });
+      console.log("Sample Catalog Products:", sampleProducts.map((p: any) => p.name));
     } else {
       console.log("Database contains no seed data or incomplete seed data.");
     }

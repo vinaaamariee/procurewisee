@@ -313,32 +313,6 @@ model AuditTrail {
   @@map("audit_trails")
 }
 
-model OfficeItem {
-  id          String       @id
-  name        String
-  unit        String
-  category    String
-  description String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  quotes      PriceQuote[]
-}
-
-model PriceQuote {
-  id           String     @id @default(uuid())
-  supplierId   String
-  itemId       String
-  unitPrice    Float
-  availability String
-  deliveryDays Int
-  notes        String?
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  item         OfficeItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
-
-  @@unique([supplierId, itemId])
-}
-
 model Requisition {
   id             Int                        @id @default(autoincrement()) @map("requisition_id")
   trackingCode   String                     @unique @db.VarChar(50)
