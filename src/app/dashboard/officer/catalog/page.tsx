@@ -29,7 +29,7 @@ export default async function ManageCatalogPage() {
       category: p.category.name,
       description: p.description,
       unitOfMeasure: p.unit.abbreviation,
-      estimatedUnitCost: Number(p.estimatedUnitCost),
+      remarks: p.remarks || null,
       isActive: p.isActive,
     }));
   } catch (error: any) {

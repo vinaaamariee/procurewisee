@@ -30,9 +30,6 @@ interface CatalogPageProps {
     q?: string;
     category?: string;
     brand?: string;
-    minPrice?: string;
-    maxPrice?: string;
-    available?: string;
     sort?: string;
     page?: string;
   }>;
@@ -43,19 +40,14 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
 
   const categoryId = params.category ? parseInt(params.category, 10) : undefined;
   const brandId = params.brand ? parseInt(params.brand, 10) : undefined;
-  const minPrice = params.minPrice ? parseFloat(params.minPrice) : undefined;
-  const maxPrice = params.maxPrice ? parseFloat(params.maxPrice) : undefined;
   const page = params.page ? parseInt(params.page, 10) : 1;
-  const sortBy = (params.sort as "lowestPrice" | "highestPrice" | "recentlyUpdated" | "mostRequested" | "recentlyAdded") || "recentlyAdded";
+  const sortBy = (params.sort as "recentlyUpdated" | "mostRequested" | "recentlyAdded") || "recentlyAdded";
 
   const [{ products, totalCount, totalPages }, filters] = await Promise.all([
     getCatalogPage({
       search: params.q,
       categoryId,
       brandId,
-      minPrice,
-      maxPrice,
-      onlyAvailable: params.available === "true",
       sortBy,
       page,
       pageSize: 24,
@@ -193,11 +185,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
           <div className="mb-6">
             <ProductFilters
               brands={filters.brands}
-              priceRange={filters.priceRange}
               selectedBrandId={brandId}
-              minPrice={minPrice}
-              maxPrice={maxPrice}
-              onlyAvailable={params.available === "true"}
               selectedSort={sortBy}
               mobileCategories={filters.categories}
               selectedCategoryId={categoryId}

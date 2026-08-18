@@ -10,7 +10,7 @@ interface Product {
   category: string;
   description: string;
   unitOfMeasure: string;
-  estimatedUnitCost: number;
+  remarks: string | null;
 }
 
 interface CatalogBrowserProps {
@@ -140,7 +140,7 @@ export default function CatalogBrowser({ products, categories, role, roleHome }:
                   <th style={{ padding: '0.75rem 0.5rem', textAlign: 'left' }}>Product Name</th>
                   <th style={{ padding: '0.75rem 0.5rem', textAlign: 'left' }}>Specs / Description</th>
                   <th style={{ padding: '0.75rem 0.5rem', textAlign: 'center', width: '100px' }}>Unit</th>
-                  <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right', width: '140px' }}>Est. Unit Cost</th>
+                  <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right', width: '140px' }}>Remarks</th>
                 </tr>
               </thead>
               <tbody>
@@ -170,8 +170,8 @@ export default function CatalogBrowser({ products, categories, role, roleHome }:
                     <td style={{ padding: '0.85rem 0.5rem', textAlign: 'center', color: 'var(--text-muted)', fontWeight: 600 }}>
                       {p.unitOfMeasure}
                     </td>
-                    <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right', fontWeight: 700, color: 'var(--green)', fontSize: '0.9rem' }}>
-                      ₱{Number(p.estimatedUnitCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
+                    <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right', fontWeight: 600, color: 'var(--text-secondary)', fontSize: '0.82rem' }}>
+                      {p.remarks || '—'}
                     </td>
                   </tr>
                 ))}
