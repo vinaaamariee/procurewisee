@@ -19,7 +19,6 @@ interface CatalogProduct {
   category: string;
   description: string;
   unitOfMeasure: string;
-  estimatedUnitCost: number;
 }
 
 interface ItemRow {
@@ -535,7 +534,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
                         <option value="" style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>-- Select Catalog Product --</option>
                         {catalogProducts.map((p) => (
                           <option key={p.id} value={p.id} style={{ background: 'var(--bg-dark)', color: 'var(--text-primary)' }}>
-                            [{p.sku}] {p.name} (₱{Number(p.estimatedUnitCost).toLocaleString('en-PH')})
+                            [{p.sku}] {p.name}
                           </option>
                         ))}
                       </select>

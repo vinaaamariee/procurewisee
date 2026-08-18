@@ -51,7 +51,6 @@ export default async function PrTrackerPage() {
       estimatedCost: item.estimatedCost ? Number(item.estimatedCost) : 0,
       product: item.product ? {
         ...item.product,
-        estimatedUnitCost: Number(item.product.estimatedUnitCost),
       } : null,
     })),
     statusHistory: pr.statusHistory?.map((sh: { createdAt: { toISOString: () => any; }; }) => ({

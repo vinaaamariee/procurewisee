@@ -253,7 +253,6 @@ export default async function NewRfqPage({ searchParams }: PageProps) {
       category: p.category.name,
       description: p.description,
       unitOfMeasure: p.unit.abbreviation,
-      estimatedUnitCost: 0,
     }));
 
     // Fetch total RFQ count for sequencing

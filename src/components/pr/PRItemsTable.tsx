@@ -9,7 +9,6 @@ export interface CatalogProductOption {
   category: string;
   description: string;
   unitOfMeasure: string;
-  estimatedUnitCost: number;
 }
 
 export interface PRItemRow {
@@ -81,7 +80,7 @@ export default function PRItemsTable({
         if (field === 'productId') {
           const prodVal = value ? parseInt(value) : null;
           const matchedProduct = catalogProducts.find((p) => p.id === prodVal);
-          const unitCost = matchedProduct ? matchedProduct.estimatedUnitCost : item.estimatedUnitCost;
+          const unitCost = item.estimatedUnitCost;
           const description = matchedProduct
             ? `${matchedProduct.name} - ${matchedProduct.description}`
             : item.description;
@@ -220,7 +219,7 @@ export default function PRItemsTable({
                         <option value="">-- Autocomplete from Product Catalog (Optional) --</option>
                         {catalogProducts.map((p) => (
                           <option key={p.id} value={p.id}>
-                            [{p.sku}] {p.name} (₱{Number(p.estimatedUnitCost).toLocaleString('en-PH')})
+                            [{p.sku}] {p.name}
                           </option>
                         ))}
                       </select>

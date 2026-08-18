@@ -17,7 +17,6 @@ export interface CatalogProduct {
   category: string;
   description: string;
   unitOfMeasure: string;
-  estimatedUnitCost: number;
 }
 
 export interface ItemRow {
@@ -102,7 +101,7 @@ export default function RFQItemsTable({
         if (field === 'productId') {
           const prodVal = value ? parseInt(value) : null;
           const matchedProduct = catalogProducts.find((p) => p.id === prodVal);
-          const newUnitCost = matchedProduct ? matchedProduct.estimatedUnitCost : (item.unitCost || 0);
+          const newUnitCost = item.unitCost || 0;
           return {
             ...item,
             productId: prodVal,
@@ -253,7 +252,7 @@ export default function RFQItemsTable({
                             <option value="">-- Link Product Catalog (Optional) --</option>
                             {catalogProducts.map((p) => (
                               <option key={p.id} value={p.id}>
-                                [{p.sku}] {p.name} (₱{Number(p.estimatedUnitCost).toLocaleString('en-PH')})
+                                [{p.sku}] {p.name}
                               </option>
                             ))}
                           </select>
