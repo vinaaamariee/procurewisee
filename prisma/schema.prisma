@@ -34,7 +34,7 @@ model UserProfile {
   preCanvassSuppliersSelected   PreCanvassSupplier[]           @relation("PreCanvassSupplierSelectedBy")
   preCanvassAbstractsGenerated  PreCanvassAbstract[]           @relation("PreCanvassAbstractGeneratedBy")
   supplier                      Supplier?                      @relation("SupplierUserProfile", fields: [supplierId], references: [id])
-  supplierId                    Int?                           @unique
+  supplierId                    Int?                           @unique @map("supplier_id")
 
   @@map("user_profiles")
 }
@@ -945,3 +945,4 @@ model PreCanvassAbstract {
 
   @@index([generatedById])
   @@map("pre_canvass_abstracts")
+}

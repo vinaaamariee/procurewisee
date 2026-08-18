@@ -93,12 +93,12 @@ export default async function proxy(request: NextRequest) {
 
   const { data: profile } = await supabase
     .from('user_profiles')
-    .select('role, is_active')
+    .select('role, isActive')
     .eq('id', user.id)
     .single();
 
   role = profile?.role ?? null;
-  isActive = profile?.is_active ?? null;
+  isActive = (profile as any)?.isActive ?? null;
 
   // No profile row → account not fully set up
   if (!role) {

@@ -20,13 +20,19 @@ export async function login(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
+  // Determine the originating login page so errors redirect back there
+  const next = formData.get('next') as string;
+  const loginPage = (next && next.startsWith('/') && !next.startsWith('/login') && !next.startsWith('/unauthorized'))
+    ? `/login?next=${encodeURIComponent(next)}`
+    : '/login';
+
   const { data: authData, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   });
 
   if (error || !authData.user) {
-    return redirect('/login?error=Invalid credentials. Please try again.');
+    return redirect(`${loginPage}?error=Invalid credentials. Please try again.`);
   }
 
   // Fetch role from user_profiles — never trust JWT claims alone
@@ -37,7 +43,7 @@ export async function login(formData: FormData) {
 
   if (!profileRow) {
     await supabase.auth.signOut();
-    return redirect('/login?error=Account not configured. Contact your administrator.');
+    return redirect(`${loginPage}?error=Account not configured. Contact your administrator.`);
   }
 
   // Convert Prisma UserRole to App UserRole (with space)
@@ -52,12 +58,12 @@ export async function login(formData: FormData) {
 
   if (appRole === 'Supplier') {
     await supabase.auth.signOut();
-    return redirect('/login?error=Supplier login is disabled. Supplier accounts are for reference only.');
+    return redirect(`${loginPage}?error=Supplier login is disabled. Supplier accounts are for reference only.`);
   }
 
   if (!profileRow.isActive) {
     await supabase.auth.signOut();
-    return redirect('/login?error=Your account has been deactivated.');
+    return redirect(`${loginPage}?error=Your account has been deactivated.`);
   }
 
   // Set role cookie
@@ -68,8 +74,6 @@ export async function login(formData: FormData) {
     secure: true,
     sameSite: 'lax',
   });
-
-  const next = formData.get('next') as string;
 
   revalidatePath('/', 'layout');
   if (next && next.startsWith('/') && !next.startsWith('/login') && !next.startsWith('/unauthorized')) {

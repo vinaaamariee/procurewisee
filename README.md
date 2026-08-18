@@ -6,6 +6,20 @@
 
 ---
 
+## 🛡️ Phase 10.2: End User Authentication Resolution & Schema Alignment
+
+**Date**: August 2026
+
+Resolved the End User authentication, PostgreSQL schema alignment, and Next.js 16 Proxy routing.
+
+### What Was Fixed
+1. **Prisma Schema & Model Closing Brace**: Added missing closing brace `}` to `model PreCanvassAbstract` in `prisma/schema.prisma`.
+2. **Database Column Mapping for `UserProfile.supplierId`**: Mapped `UserProfile.supplierId` to `@map("supplier_id")` to match the PostgreSQL column naming convention in `user_profiles`.
+3. **Proxy Column Name Query**: Updated `src/proxy.ts` to query `.select('role, isActive')` matching the actual column name `"isActive"` in PostgreSQL rather than `is_active`.
+4. **Next.js 16 Proxy Migration**: Cleaned redundant `src/middleware.ts` to adhere to Next.js 16 `src/proxy.ts` standard.
+
+---
+
 ## 🛡️ Phase 10.1: Audit Bug Fixes and Runtime Error Diagnosis
 
 **Date**: August 2026
