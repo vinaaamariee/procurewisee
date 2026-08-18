@@ -103,6 +103,19 @@ The `ProductListItem` interface (`@/features/catalog/server/queries`) was simpli
 
 PPMP components still need a cost field for planning workflows, so local state and UI placeholders remain (`0`). The catalog is now a pure product reference without pricing. Pricing will be reintroduced via a separate supplier-pricing module.
 
+**Date**: August 2026
+
+Removed all remaining `estimatedUnitCost` references from PR and RFQ creation frontend components. The `CatalogProductOption` / `CatalogProduct` interfaces no longer include `estimatedUnitCost`, catalog product dropdowns now show `[SKU] Name` without pricing, and item tables use their own unit cost values (not the catalog's removed field).
+
+### Affected Files
+
+- `src/components/pr/PRItemsTable.tsx` — Removed `estimatedUnitCost` from `CatalogProductOption` interface; item linking now uses the PR item's own cost; dropdown shows `[SKU] Name` only.
+- `src/components/officer/RfqCreationForm.tsx` — Removed `estimatedUnitCost` from `CatalogProduct` interface; dropdown shows `[SKU] Name` only.
+- `src/components/rfq/RFQItemsTable.tsx` — Removed `estimatedUnitCost` from `CatalogProduct` interface; item linking uses item's own `unitCost`; dropdown shows `[SKU] Name` only.
+- `src/app/dashboard/end-user/pr/page.tsx` — Removed `estimatedUnitCost` from product serialization (no longer on `CatalogProduct`).
+- `src/app/dashboard/officer/rfq/new/page.tsx` — Removed `estimatedUnitCost: 0` from `catalogProducts` mapping.
+- `src/app/dashboard/end-user/pr/new/page.tsx` — Removed `estimatedUnitCost: 0` from `catalogProducts` mapping.
+
 
 ## 📦 Product Catalog — Restored Access for All User Roles
 
