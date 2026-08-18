@@ -17,6 +17,7 @@ import {
   TrendingUp,
   Settings,
   BookOpen,
+  ClipboardList,
 } from "lucide-react";
 
 type NavItem = {
@@ -53,6 +54,11 @@ export default function DashboardSidebar({ role }: { role: string }) {
             label: "Purchase Requests",
             href: "/dashboard/officer/pr",
             icon: FileText,
+          },
+          {
+            label: "Pre-Canvass",
+            href: "/dashboard/officer/pre-canvass",
+            icon: ClipboardList,
           },
           {
             label: "RFQs",

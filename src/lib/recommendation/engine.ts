@@ -101,50 +101,8 @@ export async function recommendBestSupplierInternal(productId: number): Promise<
 
   // Calculate Expected Change percentage from the forecast
   let expectedChange: string | null = null;
-  if (forecastPrice !== null && Number(product.estimatedUnitCost) > 0) {
-    const changePct = ((forecastPrice - Number(product.estimatedUnitCost)) / Number(product.estimatedUnitCost)) * 100;
-    expectedChange = changePct >= 0 ? `+${changePct.toFixed(1)}%` : `${changePct.toFixed(1)}%`;
-  }
-
-  // 3. Fetch active supplier prices
-  let activePrices = await prisma.supplierProductPrice.findMany({
-    where: { productId, available: true },
-    include: {
-      supplier: {
-        include: {
-          evaluations: {
-            select: {
-              id: true,
-              supplierId: true,
-              evaluationType: true,
-              evaluatorName: true,
-              evaluationDate: true,
-              productQuality: true,
-              deliveryCompliance: true,
-              accuracy: true,
-              responsiveness: true,
-              communication: true,
-              clearCommunication: true,
-              costEffectiveness: true,
-              valueForMoney: true,
-              wouldRecommend: true,
-              rfqResponsiveness: true,
-              competitivePricing: true,
-              specificationCompliance: true,
-              documentCompliance: true,
-              deliveryPerformance: true,
-              comments: true,
-              recommendation: true,
-              createdAt: true,
-            },
-          },
-          purchaseOrders: {
-            select: { id: true, status: true },
-          },
-        },
-      },
-    },
-  });
+  // 3. No active supplier prices — fall back entirely to historical records
+  const activePrices: any[] = [];
 
   const recommendations: SupplierRecommendation[] = [];
 
@@ -657,12 +615,8 @@ export async function scoreRfqQuotesInternal(
       forecastPrice = forecast.points[0].value;
       forecastTrend = forecast.trend;
 
-      const firstProduct = rfq.items.find((item) => item.productId === firstProductId)?.product;
-      const estCost = firstProduct ? Number(firstProduct.estimatedUnitCost) : 0;
-      if (estCost > 0) {
-        const changePct = ((forecastPrice - estCost) / estCost) * 100;
-        expectedChange = changePct >= 0 ? `+${changePct.toFixed(1)}%` : `${changePct.toFixed(1)}%`;
-      }
+      // expectedChange requires a known current price; without catalog pricing, skip calculation
+      // If historical data is available downstream, it can be used instead
     }
 
     // Historical price metrics for dashboard

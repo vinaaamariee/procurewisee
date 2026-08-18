@@ -119,11 +119,8 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
       forecastTrend = forecast.trend;
       
       const firstProduct = rfq.items.find(item => item.productId === firstProductId)?.product;
-      const estCost = firstProduct ? Number(firstProduct.estimatedUnitCost) : 0;
-      if (estCost > 0) {
-        const changePct = ((forecastPrice - estCost) / estCost) * 100;
-        expectedChange = changePct >= 0 ? `+${changePct.toFixed(1)}%` : `${changePct.toFixed(1)}%`;
-      }
+      // Without catalog pricing, expectedChange cannot be computed from estimatedUnitCost
+      // It can be derived from historical data if needed
     }
 
     if (avgPriceRes) {

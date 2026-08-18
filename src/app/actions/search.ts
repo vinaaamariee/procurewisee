@@ -104,7 +104,7 @@ export async function globalSearchAction(query: string) {
       products: products.map(p => ({
         id: p.id,
         title: p.name,
-        subtitle: `Est. Cost: ₱${Number(p.estimatedUnitCost).toLocaleString()}`,
+        subtitle: p.description || p.name,
         link: `/catalog/${p.id}`
       })),
       purchaseRequests: prs.map(p => ({

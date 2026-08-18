@@ -1,18 +1,14 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { forecastProductPrice } from "@/lib/forecast/engine";
 
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────────────────
 
-export type MarketAvailability = "Available" | "Limited" | "Unavailable";
-
 export interface CatalogFilters {
   categories: Array<{ id: number; name: string; productCount: number }>;
   brands: Array<{ id: number; name: string }>;
-  priceRange: { min: number; max: number };
 }
 
 export interface ProductListItem {
@@ -23,41 +19,10 @@ export interface ProductListItem {
   category: { id: number; name: string };
   brand: { id: number; name: string } | null;
   unit: { id: number; name: string; abbreviation: string };
-  estimatedUnitCost: number;
   imageUrl: string | null;
   popularity: number;
   updatedAt: Date;
-  lowestPrice: number | null;
-  availableSupplierCount: number;
-  availability: MarketAvailability;
-  forecastTrend?: "increasing" | "decreasing" | "stable" | "unknown";
-  forecastExpectedChange?: string | null;
-  averageHistoricalPrice?: number;
-  lowestHistoricalPrice?: number;
-  highestHistoricalPrice?: number;
-}
-
-export interface SupplierPrice {
-  id: number;
-  supplier: {
-    id: number;
-    companyName: string;
-    reliabilityRating: number | null;
-    historicalDeliveryDays: number;
-    isVerified: boolean;
-  };
-  unitPrice: number;
-  available: boolean;
   remarks: string | null;
-  updatedAt: Date;
-  priceEffectiveDate: Date;
-  priceExpiryDate: Date | null;
-}
-
-export interface PriceHistoryPoint {
-  price: number;
-  effectiveDate: Date;
-  supplierName: string;
 }
 
 export interface ProductDetail {
@@ -68,18 +33,12 @@ export interface ProductDetail {
   category: { id: number; name: string };
   brand: { id: number; name: string } | null;
   unit: { id: number; name: string; abbreviation: string };
-  estimatedUnitCost: number;
   imageUrl: string | null;
   popularity: number;
   createdAt: Date;
   updatedAt: Date;
+  remarks: string | null;
   specifications: Array<{ specificationName: string; specificationValue: string }>;
-  supplierPrices: SupplierPrice[];
-  priceHistory: PriceHistoryPoint[];
-  lowestPrice: number | null;
-  preferredSupplier: string | null;
-  availableSupplierCount: number;
-  availability: MarketAvailability;
 }
 
 export interface CatalogPageResult {
@@ -91,25 +50,14 @@ export interface CatalogPageResult {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// HELPERS
-// ─────────────────────────────────────────────────────────────────────────────
-
-function resolveAvailability(availableCount: number): MarketAvailability {
-  if (availableCount === 0) return "Unavailable";
-  if (availableCount === 1) return "Limited";
-  return "Available";
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
 // QUERIES
 // ─────────────────────────────────────────────────────────────────────────────
 
 /**
- * Fetches all filter options: categories with product counts, active brands,
- * and the overall price range from supplier prices.
+ * Fetches all filter options: categories with product counts and active brands.
  */
 export async function getCatalogFilters(): Promise<CatalogFilters> {
-  const [categories, brands, priceAgg] = await Promise.all([
+  const [categories, brands] = await Promise.all([
     prisma.category.findMany({
       where: { isActive: true },
       select: {
@@ -124,11 +72,6 @@ export async function getCatalogFilters(): Promise<CatalogFilters> {
       select: { id: true, name: true },
       orderBy: { name: "asc" },
     }),
-    prisma.supplierProductPrice.aggregate({
-      _min: { unitPrice: true },
-      _max: { unitPrice: true },
-      where: { available: true },
-    }),
   ]);
 
   return {
@@ -138,10 +81,6 @@ export async function getCatalogFilters(): Promise<CatalogFilters> {
       productCount: c._count.products,
     })),
     brands: brands.map((b) => ({ id: b.id, name: b.name })),
-    priceRange: {
-      min: priceAgg._min.unitPrice ? Number(priceAgg._min.unitPrice) : 0,
-      max: priceAgg._max.unitPrice ? Number(priceAgg._max.unitPrice) : 100000,
-    },
   };
 }
 
@@ -153,10 +92,7 @@ export async function getCatalogPage(params: {
   search?: string;
   categoryId?: number;
   brandId?: number;
-  minPrice?: number;
-  maxPrice?: number;
-  onlyAvailable?: boolean;
-  sortBy?: "lowestPrice" | "highestPrice" | "recentlyUpdated" | "mostRequested" | "recentlyAdded";
+  sortBy?: "recentlyUpdated" | "mostRequested" | "recentlyAdded";
   page?: number;
   pageSize?: number;
 }): Promise<CatalogPageResult> {
@@ -180,24 +116,6 @@ export async function getCatalogPage(params: {
           ],
         }
       : {}),
-    ...(params.onlyAvailable
-      ? {
-          supplierPrices: { some: { available: true } },
-        }
-      : {}),
-    ...(params.minPrice !== undefined || params.maxPrice !== undefined
-      ? {
-          supplierPrices: {
-            some: {
-              available: true,
-              unitPrice: {
-                ...(params.minPrice !== undefined ? { gte: params.minPrice } : {}),
-                ...(params.maxPrice !== undefined ? { lte: params.maxPrice } : {}),
-              },
-            },
-          },
-        }
-      : {}),
   };
 
   // Determine orderBy
@@ -205,9 +123,8 @@ export async function getCatalogPage(params: {
   if (params.sortBy === "mostRequested") orderBy = { popularity: "desc" };
   else if (params.sortBy === "recentlyUpdated") orderBy = { updatedAt: "desc" };
   else if (params.sortBy === "recentlyAdded") orderBy = { createdAt: "desc" };
-  // lowestPrice / highestPrice require post-sort (below)
 
-  const [rawProducts, totalCount] = await Promise.all([
+  const [products, totalCount] = await Promise.all([
     prisma.catalogProduct.findMany({
       where,
       orderBy,
@@ -218,49 +135,20 @@ export async function getCatalogPage(params: {
         productCode: true,
         name: true,
         description: true,
-        estimatedUnitCost: true,
         imageUrl: true,
         popularity: true,
         updatedAt: true,
+        remarks: true,
         category: { select: { id: true, name: true } },
         brand: { select: { id: true, name: true } },
         unit: { select: { id: true, name: true, abbreviation: true } },
-        supplierPrices: {
-          where: { available: true },
-          select: { unitPrice: true },
-        },
       },
     }),
     prisma.catalogProduct.count({ where }),
   ]);
 
-  const productIds = rawProducts.map((p) => p.id);
-  const allHistPrices = await prisma.historicalPrice.findMany({
-    where: { productId: { in: productIds } }
-  });
-
-  let productsRaw = rawProducts.map((p) => {
-    const availablePrices = p.supplierPrices.map((sp) => Number(sp.unitPrice));
-    const lowestPrice = availablePrices.length > 0 ? Math.min(...availablePrices) : null;
-    const availableSupplierCount = p.supplierPrices.length;
-
-    const histPrices = allHistPrices
-      .filter((hp) => hp.productId === p.id)
-      .map((hp) => Number(hp.unitPrice));
-    
-    const averageHistoricalPrice = histPrices.length > 0
-      ? histPrices.reduce((a, b) => a + b, 0) / histPrices.length
-      : Number(p.estimatedUnitCost);
-
-    const lowestHistoricalPrice = histPrices.length > 0
-      ? Math.min(...histPrices)
-      : Number(p.estimatedUnitCost);
-
-    const highestHistoricalPrice = histPrices.length > 0
-      ? Math.max(...histPrices)
-      : Number(p.estimatedUnitCost);
-
-    return {
+  return {
+    products: products.map((p) => ({
       id: p.id,
       productCode: p.productCode,
       name: p.name,
@@ -268,56 +156,11 @@ export async function getCatalogPage(params: {
       category: p.category,
       brand: p.brand,
       unit: p.unit,
-      estimatedUnitCost: Number(p.estimatedUnitCost),
       imageUrl: p.imageUrl,
       popularity: p.popularity,
       updatedAt: p.updatedAt,
-      lowestPrice,
-      availableSupplierCount,
-      availability: resolveAvailability(availableSupplierCount),
-      averageHistoricalPrice,
-      lowestHistoricalPrice,
-      highestHistoricalPrice,
-    };
-  });
-
-  const products: ProductListItem[] = await Promise.all(
-    productsRaw.map(async (p) => {
-      const forecast = await forecastProductPrice(p.id).catch(() => null);
-      let forecastTrend: "increasing" | "decreasing" | "stable" | "unknown" = "unknown";
-      let forecastExpectedChange: string | null = null;
-      if (forecast) {
-        forecastTrend = forecast.trend;
-        if (forecast.points.length > 0 && p.estimatedUnitCost > 0) {
-          const changePct = ((forecast.points[0].value - p.estimatedUnitCost) / p.estimatedUnitCost) * 100;
-          forecastExpectedChange = changePct >= 0 ? `+${changePct.toFixed(1)}%` : `${changePct.toFixed(1)}%`;
-        }
-      }
-      return {
-        ...p,
-        forecastTrend,
-        forecastExpectedChange,
-      };
-    })
-  );
-
-  // Client-side sort by price (lowest/highest)
-  if (params.sortBy === "lowestPrice") {
-    products.sort((a, b) => {
-      if (a.lowestPrice === null) return 1;
-      if (b.lowestPrice === null) return -1;
-      return a.lowestPrice - b.lowestPrice;
-    });
-  } else if (params.sortBy === "highestPrice") {
-    products.sort((a, b) => {
-      if (a.lowestPrice === null) return 1;
-      if (b.lowestPrice === null) return -1;
-      return b.lowestPrice - a.lowestPrice;
-    });
-  }
-
-  return {
-    products,
+      remarks: p.remarks,
+    })),
     totalCount,
     page,
     pageSize,
@@ -326,8 +169,7 @@ export async function getCatalogPage(params: {
 }
 
 /**
- * Fetches a single product with full detail: specifications, supplier prices
- * (including supplier info), and price history.
+ * Fetches a single product with full detail: specifications.
  */
 export async function getProductDetail(id: number): Promise<ProductDetail | null> {
   const product = await prisma.catalogProduct.findUnique({
@@ -337,41 +179,16 @@ export async function getProductDetail(id: number): Promise<ProductDetail | null
       productCode: true,
       name: true,
       description: true,
-      estimatedUnitCost: true,
       imageUrl: true,
       popularity: true,
       createdAt: true,
       updatedAt: true,
+      remarks: true,
       category: { select: { id: true, name: true } },
       brand: { select: { id: true, name: true } },
       unit: { select: { id: true, name: true, abbreviation: true } },
       specifications: {
         select: { specificationName: true, specificationValue: true },
-      },
-      supplierPrices: {
-        select: {
-          id: true,
-          unitPrice: true,
-          available: true,
-          remarks: true,
-          updatedAt: true,
-          priceEffectiveDate: true,
-          priceExpiryDate: true,
-          supplier: {
-            select: {
-              id: true,
-              companyName: true,
-              reliabilityRating: true,
-              historicalDeliveryDays: true,
-              isVerified: true,
-            },
-          },
-          history: {
-            select: { price: true, effectiveDate: true, createdAt: true },
-            orderBy: { effectiveDate: "asc" },
-          },
-        },
-        orderBy: { unitPrice: "asc" },
       },
     },
   });
@@ -383,29 +200,6 @@ export async function getProductDetail(id: number): Promise<ProductDetail | null
     .update({ where: { id }, data: { popularity: { increment: 1 } } })
     .catch(() => {});
 
-  const availableSupplierPrices = product.supplierPrices.filter((sp) => sp.available);
-  const availableSupplierCount = availableSupplierPrices.length;
-
-  const lowestPrice =
-    availableSupplierPrices.length > 0
-      ? Number(availableSupplierPrices[0].unitPrice) // already sorted asc
-      : null;
-
-  const preferredSupplier =
-    availableSupplierPrices.length > 0
-      ? availableSupplierPrices[0].supplier.companyName
-      : null;
-
-  // Flatten price history across all supplier prices
-  const priceHistory: PriceHistoryPoint[] = product.supplierPrices.flatMap((sp) =>
-    sp.history.map((h) => ({
-      price: Number(h.price),
-      effectiveDate: h.effectiveDate,
-      supplierName: sp.supplier.companyName,
-    }))
-  );
-  priceHistory.sort((a, b) => a.effectiveDate.getTime() - b.effectiveDate.getTime());
-
   return {
     id: product.id,
     productCode: product.productCode,
@@ -414,33 +208,12 @@ export async function getProductDetail(id: number): Promise<ProductDetail | null
     category: product.category,
     brand: product.brand,
     unit: product.unit,
-    estimatedUnitCost: Number(product.estimatedUnitCost),
     imageUrl: product.imageUrl,
     popularity: product.popularity,
     createdAt: product.createdAt,
     updatedAt: product.updatedAt,
+    remarks: product.remarks,
     specifications: product.specifications,
-    supplierPrices: product.supplierPrices.map((sp) => ({
-      id: sp.id,
-      supplier: {
-        id: sp.supplier.id,
-        companyName: sp.supplier.companyName,
-        reliabilityRating: sp.supplier.reliabilityRating ? Number(sp.supplier.reliabilityRating) : null,
-        historicalDeliveryDays: sp.supplier.historicalDeliveryDays,
-        isVerified: sp.supplier.isVerified,
-      },
-      unitPrice: Number(sp.unitPrice),
-      available: sp.available,
-      remarks: sp.remarks,
-      updatedAt: sp.updatedAt,
-      priceEffectiveDate: sp.priceEffectiveDate,
-      priceExpiryDate: sp.priceExpiryDate,
-    })),
-    priceHistory,
-    lowestPrice,
-    preferredSupplier,
-    availableSupplierCount,
-    availability: resolveAvailability(availableSupplierCount),
   };
 }
 
@@ -461,40 +234,27 @@ export async function getRelatedProducts(
       productCode: true,
       name: true,
       description: true,
-      estimatedUnitCost: true,
       imageUrl: true,
       popularity: true,
       updatedAt: true,
+      remarks: true,
       category: { select: { id: true, name: true } },
       brand: { select: { id: true, name: true } },
       unit: { select: { id: true, name: true, abbreviation: true } },
-      supplierPrices: {
-        where: { available: true },
-        select: { unitPrice: true },
-      },
     },
   });
 
-  return products.map((p) => {
-    const availablePrices = p.supplierPrices.map((sp) => Number(sp.unitPrice));
-    const lowestPrice = availablePrices.length > 0 ? Math.min(...availablePrices) : null;
-    const availableSupplierCount = p.supplierPrices.length;
-
-    return {
-      id: p.id,
-      productCode: p.productCode,
-      name: p.name,
-      description: p.description,
-      category: p.category,
-      brand: p.brand,
-      unit: p.unit,
-      estimatedUnitCost: Number(p.estimatedUnitCost),
-      imageUrl: p.imageUrl,
-      popularity: p.popularity,
-      updatedAt: p.updatedAt,
-      lowestPrice,
-      availableSupplierCount,
-      availability: resolveAvailability(availableSupplierCount),
-    };
-  });
+  return products.map((p) => ({
+    id: p.id,
+    productCode: p.productCode,
+    name: p.name,
+    description: p.description,
+    category: p.category,
+    brand: p.brand,
+    unit: p.unit,
+    imageUrl: p.imageUrl,
+    popularity: p.popularity,
+    updatedAt: p.updatedAt,
+    remarks: p.remarks,
+  }));
 }

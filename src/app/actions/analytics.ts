@@ -258,8 +258,6 @@ export async function getIntelligentProcurementAnalytics(): Promise<AnalyticsPay
       
       const historicalAvg = histPrices.length > 0
         ? histPrices.reduce((a, b) => a + b, 0) / histPrices.length
-        : product
-        ? Number(product.estimatedUnitCost)
         : Number(item.unitPrice) * 1.10;
 
       const awardedPrice = Number(item.unitPrice);
@@ -394,7 +392,7 @@ export async function getIntelligentProcurementAnalytics(): Promise<AnalyticsPay
 
   for (const prod of catalogProducts.slice(0, 5)) {
     const forecast = await forecastProductPrice(prod.id).catch(() => null);
-    const currentPrice = Number(prod.estimatedUnitCost);
+    const currentPrice = 0;
 
     const actuals = historicalPrices
       .filter((hp) => hp.productId === prod.id)

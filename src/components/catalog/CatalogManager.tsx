@@ -11,7 +11,7 @@ interface Product {
   category: string;
   description: string;
   unitOfMeasure: string;
-  estimatedUnitCost: number;
+  remarks: string | null;
   isActive: boolean;
 }
 
@@ -32,7 +32,7 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [unitOfMeasure, setUnitOfMeasure] = useState('pcs');
-  const [estimatedUnitCost, setEstimatedUnitCost] = useState<number | ''>('');
+  const [remarks, setRemarks] = useState('');
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -44,7 +44,7 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
     setCategory('');
     setDescription('');
     setUnitOfMeasure('pcs');
-    setEstimatedUnitCost('');
+    setRemarks('');
     setErrorMsg(null);
     setIsFormOpen(true);
   };
@@ -56,7 +56,7 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
     setCategory(p.category);
     setDescription(p.description);
     setUnitOfMeasure(p.unitOfMeasure);
-    setEstimatedUnitCost(p.estimatedUnitCost);
+    setRemarks(p.remarks || '');
     setErrorMsg(null);
     setIsFormOpen(true);
   };
@@ -66,7 +66,7 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
     setErrorMsg(null);
     setSuccessMsg(null);
 
-    if (!sku.trim() || !name.trim() || !category.trim() || !unitOfMeasure.trim() || estimatedUnitCost === '') {
+    if (!sku.trim() || !name.trim() || !category.trim() || !unitOfMeasure.trim()) {
       setErrorMsg('Please fill in all required fields.');
       return;
     }
@@ -80,7 +80,7 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
           category,
           description,
           unitOfMeasure,
-          estimatedUnitCost: Number(estimatedUnitCost),
+          remarks: remarks || undefined,
         });
       } else {
         res = await createCatalogProduct({
@@ -89,7 +89,7 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
           category,
           description,
           unitOfMeasure,
-          estimatedUnitCost: Number(estimatedUnitCost),
+          remarks: remarks || undefined,
         });
       }
 
@@ -141,7 +141,7 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
             transition: 'all 0.2s',
           }}
         >
-          ➕ Add Catalog Item
+          Add Catalog Item
         </button>
       </div>
 
@@ -159,18 +159,18 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
           gap: '1.25rem'
         }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--secondary)', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
-            {editingProduct ? `✏️ Edit Product: ${editingProduct.sku}` : '➕ Add New Catalog Product'}
+            {editingProduct ? `Edit Product: ${editingProduct.sku}` : 'Add New Catalog Product'}
           </h3>
 
           {errorMsg && (
             <div style={{ padding: '0.75rem', borderRadius: 8, background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', fontSize: '0.8rem' }}>
-              ⚠️ {errorMsg}
+              {errorMsg}
             </div>
           )}
 
           {successMsg && (
             <div style={{ padding: '0.75rem', borderRadius: 8, background: 'var(--green-dim)', border: '1px solid var(--border)', color: 'var(--green)', fontSize: '0.8rem' }}>
-              ✅ {successMsg}
+              {successMsg}
             </div>
           )}
 
@@ -226,20 +226,6 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
                 style={{ padding: '0.5rem', borderRadius: 6, background: 'var(--bg-deep)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontSize: '0.85rem' }}
               />
             </div>
-
-            {/* Estimated Unit Cost */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 700 }}>Estimated Unit Cost (₱) *</label>
-              <input
-                type="number"
-                step="0.01"
-                required
-                value={estimatedUnitCost}
-                onChange={(e) => setEstimatedUnitCost(e.target.value === '' ? '' : parseFloat(e.target.value))}
-                placeholder="0.00"
-                style={{ padding: '0.5rem', borderRadius: 6, background: 'var(--bg-deep)', border: '1px solid var(--border)', color: 'var(--green)', fontSize: '0.85rem', fontWeight: 700 }}
-              />
-            </div>
           </div>
 
           {/* Description */}
@@ -250,6 +236,18 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Describe standard product dimensions, specifications, material, etc..."
+              style={{ padding: '0.5rem', borderRadius: 6, background: 'var(--bg-deep)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontSize: '0.82rem', fontFamily: 'sans-serif' }}
+            />
+          </div>
+
+          {/* Remarks */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <label style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', fontWeight: 700 }}>Remarks / Notes</label>
+            <textarea
+              rows={2}
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              placeholder="Additional notes about this product..."
               style={{ padding: '0.5rem', borderRadius: 6, background: 'var(--bg-deep)', border: '1px solid var(--border)', color: 'var(--text-primary)', fontSize: '0.82rem', fontFamily: 'sans-serif' }}
             />
           </div>
@@ -291,7 +289,7 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
                 <th style={{ padding: '0.75rem 0.5rem', textAlign: 'left', width: '140px' }}>Category</th>
                 <th style={{ padding: '0.75rem 0.5rem', textAlign: 'left' }}>Product Name</th>
                 <th style={{ padding: '0.75rem 0.5rem', textAlign: 'center', width: '80px' }}>Unit</th>
-                <th style={{ padding: '0.75rem 0.5rem', textAlign: 'right', width: '130px' }}>Est. Cost</th>
+                <th style={{ padding: '0.75rem 0.5rem', textAlign: 'left' }}>Remarks</th>
                 <th style={{ padding: '0.75rem 0.5rem', textAlign: 'center', width: '130px' }}>Actions</th>
               </tr>
             </thead>
@@ -312,8 +310,8 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
                   <td style={{ padding: '0.85rem 0.5rem', textAlign: 'center', color: 'var(--text-muted)', fontWeight: 600 }}>
                     {p.unitOfMeasure}
                   </td>
-                  <td style={{ padding: '0.85rem 0.5rem', textAlign: 'right', fontWeight: 700, color: 'var(--green)' }}>
-                    ₱{Number(p.estimatedUnitCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}
+                  <td style={{ padding: '0.85rem 0.5rem', color: 'var(--text-muted)', fontSize: '0.8rem', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {p.remarks || '—'}
                   </td>
                   <td style={{ padding: '0.85rem 0.5rem', textAlign: 'center' }}>
                     <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center' }}>
@@ -321,14 +319,14 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
                         onClick={() => openEditForm(p)}
                         style={{ padding: '0.3rem 0.6rem', borderRadius: 6, background: 'var(--accent-glass)', border: '1px solid var(--border)', color: 'var(--accent)', fontSize: '0.75rem', cursor: 'pointer' }}
                       >
-                        ✏️ Edit
+                        Edit
                       </button>
                       <button
                         onClick={() => handleDelete(p.id, p.name)}
                         disabled={!p.isActive}
                         style={{ padding: '0.3rem 0.6rem', borderRadius: 6, background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', fontSize: '0.75rem', cursor: p.isActive ? 'pointer' : 'not-allowed', opacity: p.isActive ? 1 : 0.5 }}
                       >
-                        🗑️ Deactivate
+                        Deactivate
                       </button>
                     </div>
                   </td>

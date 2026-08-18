@@ -31,7 +31,7 @@ export default async function NewPrPage() {
       category: p.category.name,
       description: p.description,
       unitOfMeasure: p.unit.abbreviation,
-      estimatedUnitCost: Number(p.estimatedUnitCost),
+      estimatedUnitCost: 0,
     }));
   } catch (error: any) {
     console.error('[DATABASE FETCH ERROR] Failed to load catalog data for New PR page:', error);

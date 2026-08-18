@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect } from "react";
 import { reviewPrAction, receivePrAction, updatePrItemAction, getPreCanvassingData, convertPrToRfqAction, approvePrByOfficerAction, returnPrByOfficerAction, rejectPrByOfficerAction } from "@/app/actions/pr";
+import { createPreCanvassAction, getPreCanvassByPrAction } from "@/app/actions/pre-canvass";
 import { useRouter } from "next/navigation";
 import ReviewPrModal from "@/components/pr/ReviewPrModal";
 import PrValidationChecklist, { ValidationItem } from "@/components/pr/PrValidationChecklist";
 import PrWorkflowTimeline, { TimelineEntry } from "@/components/pr/PrWorkflowTimeline";
 import PrWorkflowTimelineStepper from "@/components/pr/PrWorkflowTimelineStepper";
 import PRPrintDocument, { PRPrintData } from "@/components/pr/PRPrintDocument";
-import { ShieldCheck, Lock, ArrowLeft, Printer, FileText, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
+import { ShieldCheck, Lock, ArrowLeft, Printer, FileText, CheckCircle2, AlertTriangle, XCircle, ClipboardList, ArrowRight } from "lucide-react";
 import StatusBadge from "@/components/ui/StatusBadge";
 
 interface Product {
@@ -130,7 +131,8 @@ export default function PrDetailsClient({ initialPr, budgets, officerId, canVeri
 
   const isAllChecklistPassed = checklist.every((c) => c.checked);
   const isApproved = pr.status === "Approved";
-  const isLocked = isApproved || pr.status === "ConvertedToRfq" || pr.status === "Converted to RFQ" || pr.status === "Rejected";
+  const isConverted = pr.status === "ConvertedToRfq";
+  const isLocked = isApproved || isConverted || pr.status === "Rejected";
 
   // Modal State
   const [modalState, setModalState] = useState<{
@@ -149,6 +151,24 @@ export default function PrDetailsClient({ initialPr, budgets, officerId, canVeri
   const [preCanvassData, setPreCanvassData] = useState<any | null>(null);
   const [isPreCanvassOpen, setIsPreCanvassOpen] = useState(false);
   const [preCanvassLoading, setPreCanvassLoading] = useState(false);
+  const [linkedPreCanvass, setLinkedPreCanvass] = useState<{ id: number; preCanvassNumber: string; status: string } | null>(null);
+  const [isCreatingPreCanvass, setIsCreatingPreCanvass] = useState(false);
+  const [isConvertingToRfq, setIsConvertingToRfq] = useState(false);
+
+  // Check for existing pre-canvass on mount
+  useEffect(() => {
+    if (pr.status === "Approved" || pr.status === "ConvertedToRfq") {
+      getPreCanvassByPrAction(pr.id).then((res) => {
+        if (res.success && res.preCanvass) {
+          setLinkedPreCanvass({
+            id: res.preCanvass.id,
+            preCanvassNumber: res.preCanvass.preCanvassNumber,
+            status: res.preCanvass.status,
+          });
+        }
+      });
+    }
+  }, [pr.id, pr.status]);
 
   const handleToggleChecklist = (id: string) => {
     setChecklist((prev) =>
@@ -234,6 +254,40 @@ export default function PrDetailsClient({ initialPr, budgets, officerId, canVeri
       setErrorMsg(err.message || "Failed to load pre-canvassing data.");
     } finally {
       setPreCanvassLoading(false);
+    }
+  };
+
+  const handleCreatePreCanvass = async () => {
+    setIsCreatingPreCanvass(true);
+    setErrorMsg(null);
+    try {
+      const res = await createPreCanvassAction(pr.id);
+      if (res.success && res.preCanvass) {
+        router.push(`/dashboard/officer/pre-canvass/${res.preCanvass.id}`);
+      } else {
+        setErrorMsg(res.error || "Failed to create pre-canvass.");
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to create pre-canvass.");
+    } finally {
+      setIsCreatingPreCanvass(false);
+    }
+  };
+
+  const handleConvertToRfq = async () => {
+    setIsConvertingToRfq(true);
+    setErrorMsg(null);
+    try {
+      const res = await convertPrToRfqAction(pr.id);
+      if (res.success && res.rfq) {
+        router.push(`/dashboard/officer/rfq/${res.rfq.id}`);
+      } else {
+        setErrorMsg(res.error || "Failed to convert to RFQ.");
+      }
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to convert to RFQ.");
+    } finally {
+      setIsConvertingToRfq(false);
     }
   };
 
@@ -337,16 +391,31 @@ export default function PrDetailsClient({ initialPr, budgets, officerId, canVeri
               <span>Verified</span>
             </div>
             <p className="text-xs text-base-content/80 leading-relaxed font-medium">
-              This Purchase Request has successfully passed Procurement Verification and is now ready for recording to the Procurement Monitoring Register.
+              This Purchase Request has passed Procurement Verification. 
+              {!linkedPreCanvass && " Create a Pre-Canvass to begin supplier canvassing with exactly 3 suppliers."}
+              {linkedPreCanvass && (linkedPreCanvass.status === "FullyResponded" || linkedPreCanvass.status === "PartiallyResponded" || linkedPreCanvass.status === "Closed")
+                ? " Pre-Canvass is complete. You can now convert this PR to an official RFQ."
+                : linkedPreCanvass 
+                ? ` Pre-Canvass ${linkedPreCanvass.preCanvassNumber} is in progress (${linkedPreCanvass.status.replace(/([A-Z])/g, " $1").trim()}).`
+                : ""}
             </p>
           </div>
         )}
 
-        {isLocked && (
+        {isApproved && pr.status !== "ConvertedToRfq" && (
           <div className="rounded-md border border-base-300 bg-base-200 p-4 text-base-content flex items-start gap-3 text-xs shadow-none">
             <Lock className="h-4 w-4 text-base-content/50 shrink-0 mt-0.5" />
             <span>
-              This Purchase Request has already been approved. Further modifications are no longer permitted. If changes are required, contact the Procurement Office.
+              This Purchase Request has been verified. The next step is to complete Pre-Canvassing (select 3 suppliers, collect responses) before converting to an official RFQ.
+            </span>
+          </div>
+        )}
+
+        {pr.status === "ConvertedToRfq" && (
+          <div className="rounded-md border border-base-300 bg-base-200 p-4 text-base-content flex items-start gap-3 text-xs shadow-none">
+            <Lock className="h-4 w-4 text-base-content/50 shrink-0 mt-0.5" />
+            <span>
+              This Purchase Request has been converted to an official RFQ. Further modifications are no longer permitted.
             </span>
           </div>
         )}
@@ -375,15 +444,58 @@ export default function PrDetailsClient({ initialPr, budgets, officerId, canVeri
                 <Printer className="h-4 w-4 mr-1" />
                 Print PR
               </button>
-              <button
-                type="button"
-                onClick={handleOpenPreCanvass}
-                disabled={preCanvassLoading}
-                className="btn btn-outline btn-sm rounded-md text-xs font-bold border-primary text-primary hover:bg-primary/5"
-              >
-                <FileText className="h-4 w-4 mr-1" />
-                {preCanvassLoading ? "Analyzing..." : "Pre-Canvassing"}
-              </button>
+              
+              {/* Pre-Canvass Button / Status */}
+              {isApproved && !linkedPreCanvass && (
+                <button
+                  type="button"
+                  onClick={handleCreatePreCanvass}
+                  disabled={isCreatingPreCanvass}
+                  className="btn btn-primary btn-sm rounded-md text-xs font-bold"
+                >
+                  <ClipboardList className="h-4 w-4 mr-1" />
+                  {isCreatingPreCanvass ? "Creating..." : "Create Pre-Canvass"}
+                </button>
+              )}
+              
+              {linkedPreCanvass && (
+                <button
+                  type="button"
+                  onClick={() => router.push(`/dashboard/officer/pre-canvass/${linkedPreCanvass.id}`)}
+                  className="btn btn-outline btn-sm rounded-md text-xs font-bold border-primary text-primary hover:bg-primary/5"
+                >
+                  <ClipboardList className="h-4 w-4 mr-1" />
+                  Pre-Canvass: {linkedPreCanvass.preCanvassNumber}
+                  <span className={`ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold ${
+                    linkedPreCanvass.status === "FullyResponded" || linkedPreCanvass.status === "PartiallyResponded"
+                      ? "bg-success/20 text-success"
+                      : linkedPreCanvass.status === "Closed"
+                      ? "bg-base-300 text-base-content/70"
+                      : "bg-warning/20 text-warning"
+                  }`}>
+                    {linkedPreCanvass.status === "FullyResponded" ? "Completed" : 
+                     linkedPreCanvass.status === "PartiallyResponded" ? "Partial" :
+                     linkedPreCanvass.status === "Closed" ? "Closed" :
+                     linkedPreCanvass.status.replace(/([A-Z])/g, " $1").trim()}
+                  </span>
+                </button>
+              )}
+
+              {/* Convert to RFQ Button */}
+              {isApproved && (
+                <button
+                  type="button"
+                  onClick={handleConvertToRfq}
+                  disabled={isConvertingToRfq || !linkedPreCanvass || 
+                    (linkedPreCanvass.status !== "FullyResponded" && linkedPreCanvass.status !== "PartiallyResponded" && linkedPreCanvass.status !== "Closed")}
+                  className="btn btn-success btn-sm rounded-md text-xs font-bold text-white disabled:opacity-50"
+                  title={!linkedPreCanvass ? "Complete pre-canvass first" : 
+                    linkedPreCanvass.status === "Draft" || linkedPreCanvass.status === "InvitationSent" ? "Pre-canvass must be completed first" : ""}
+                >
+                  <ArrowRight className="h-4 w-4 mr-1" />
+                  {isConvertingToRfq ? "Converting..." : "Convert to RFQ"}
+                </button>
+              )}
             </div>
           </div>
 

@@ -1,17 +1,9 @@
 import Link from "next/link";
-import { Package, ArrowRight, Clock, Users, Tag } from "lucide-react";
+import { Package, Tag } from "lucide-react";
 import type { ProductListItem } from "@/features/catalog/server/queries";
-import AvailabilityBadge from "./AvailabilityBadge";
 
 interface ProductCardProps {
   product: ProductListItem;
-}
-
-function formatCurrency(amount: number) {
-  return `₱${amount.toLocaleString("en-PH", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`;
 }
 
 function timeAgo(date: Date): string {
@@ -26,9 +18,6 @@ function timeAgo(date: Date): string {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const displayPrice = product.lowestPrice ?? product.estimatedUnitCost;
-  const isCanvassedPrice = product.lowestPrice !== null;
-
   return (
     <div
       className="group flex flex-col overflow-hidden rounded-2xl border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg"
@@ -71,11 +60,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Tag className="h-2.5 w-2.5" />
           {product.category.name}
         </span>
-
-        {/* Availability */}
-        <div className="absolute right-3 top-3">
-          <AvailabilityBadge availability={product.availability} />
-        </div>
       </div>
 
       {/* Content */}
@@ -103,77 +87,23 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.description}
         </p>
 
-        {/* Price & Meta */}
+        {/* Meta */}
         <div className="mt-auto pt-4 space-y-3.5">
-          <div className="flex items-start justify-between">
-            <div>
-              <div
-                className="text-base font-extrabold tabular-nums"
-                style={{ color: "var(--accent)" }}
-              >
-                {formatCurrency(displayPrice)}
-              </div>
-              <div className="text-[9px] font-bold text-gray-400 uppercase tracking-wide">
-                {isCanvassedPrice ? "Lowest Evaluated Bid" : "Estimated Unit Cost"}
-              </div>
-            </div>
-            
-            <div className="text-right">
-              <div className="flex items-center justify-end gap-1 text-[11px] font-bold" style={{ color: "var(--text-secondary)" }}>
-                <Users className="h-3.5 w-3.5" />
-                <span>{product.availableSupplierCount} {product.availableSupplierCount === 1 ? "Supplier" : "Suppliers"}</span>
-              </div>
-              <span className="text-[9px] text-gray-400 font-bold block mt-0.5">{product.unit.abbreviation} unit</span>
-            </div>
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold" style={{ color: "var(--text-secondary)" }}>
+              {product.unit.abbreviation}
+            </span>
+            <span className="text-[10px] text-gray-400 font-bold">
+              Updated {timeAgo(product.updatedAt)}
+            </span>
           </div>
 
-          {/* Historical price highlights */}
-          <div className="grid grid-cols-2 gap-2 bg-muted/10 border p-2 rounded-xl text-[10px]" style={{ borderColor: "var(--border)" }}>
-            <div>
-              <span className="text-gray-400 block font-bold text-[8px] uppercase tracking-wider">Hist. Average</span>
-              <span className="font-extrabold tabular-nums" style={{ color: "var(--text-secondary)" }}>
-                {formatCurrency(product.averageHistoricalPrice ?? displayPrice)}
-              </span>
-            </div>
-            <div>
-              <span className="text-gray-400 block font-bold text-[8px] uppercase tracking-wider">Hist. Lowest</span>
-              <span className="font-extrabold tabular-nums text-green-600">
-                {formatCurrency(product.lowestHistoricalPrice ?? displayPrice)}
-              </span>
-            </div>
-          </div>
-
-          {/* ARIMA Forecast & Recommendation Badges */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-1">
-            {product.forecastTrend && product.forecastTrend !== "unknown" && (
-              <span
-                className="px-1.5 py-0.5 rounded text-[9px] font-black uppercase"
-                style={{
-                  color:
-                    product.forecastTrend === "increasing"
-                      ? "var(--accent)"
-                      : product.forecastTrend === "decreasing"
-                      ? "var(--green)"
-                      : "var(--text-secondary)",
-                  backgroundColor:
-                    product.forecastTrend === "increasing"
-                      ? "rgba(239, 68, 68, 0.05)"
-                      : product.forecastTrend === "decreasing"
-                      ? "rgba(34, 197, 94, 0.05)"
-                      : "rgba(107, 114, 128, 0.05)",
-                }}
-              >
-                Forecast: {product.forecastTrend === "increasing" ? "↑" : product.forecastTrend === "decreasing" ? "↓" : "→"}{" "}
-                {product.forecastTrend}
-              </span>
-            )}
-            
-            {product.availableSupplierCount > 0 && (
-              <span className="px-1.5 py-0.5 bg-green-500/10 border border-green-500/20 text-green-600 font-extrabold rounded text-[8px] uppercase">
-                Best-Value Match
-              </span>
-            )}
-          </div>
+          {/* Remarks */}
+          {product.remarks && (
+            <p className="text-[10px] text-gray-500 italic line-clamp-1">
+              {product.remarks}
+            </p>
+          )}
 
           {/* Action buttons */}
           <div className="grid grid-cols-2 gap-2 pt-2">

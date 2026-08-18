@@ -628,16 +628,7 @@ export async function getPreCanvassingData(prId: number) {
         items: {
           include: {
             unit: true,
-            product: {
-              include: {
-                supplierPrices: {
-                  where: { available: true },
-                  include: { supplier: true },
-                  orderBy: { unitPrice: "asc" },
-                  take: 1
-                }
-              }
-            }
+            product: true
           }
         }
       }
@@ -697,7 +688,7 @@ export async function getPreCanvassingData(prId: number) {
       }));
 
       // Calculate lowest price, average historical price, etc.
-      const catalogPrice = item.product ? Number(item.product.estimatedUnitCost) : Number(item.estimatedUnitCost);
+      const catalogPrice = item.product ? 0 : Number(item.estimatedUnitCost);
       const allPrices = [
         ...historicalQuotes.map(q => q.price),
         ...previousOrders.map(o => o.price),
@@ -708,7 +699,7 @@ export async function getPreCanvassingData(prId: number) {
       const averagePrice = allPrices.length > 0 ? allPrices.reduce((sum, p) => sum + p, 0) / allPrices.length : catalogPrice;
       
       // Supplier trends / references
-      const preferredSupplierName = item.product?.supplierPrices?.[0]?.supplier.companyName;
+      const preferredSupplierName = undefined;
       const supplierRefs = Array.from(new Set([
         ...(preferredSupplierName ? [preferredSupplierName] : []),
         ...historicalQuotes.map(q => q.supplier),
@@ -881,19 +872,39 @@ export async function deletePrDraftAction(id: number) {
 }
 
 // Convert an Approved PR into a new RFQ (Procurement Officer action)
+// Now requires a completed pre-canvass before allowing RFQ creation
 export async function convertPrToRfqAction(prId: number) {
   try {
     const { profile } = await requireRole("Procurement Officer");
 
     const pr = await prisma.purchaseRequest.findUnique({
       where: { id: prId },
-      include: { items: { include: { unit: true } } },
+      include: {
+        items: { include: { unit: true } },
+        preCanvass: true,
+      },
     });
 
     if (!pr) return { success: false, error: "Purchase Request not found." };
 
     if (pr.status !== PrStatus.Approved) {
       return { success: false, error: "Only Approved Purchase Requests can be converted to an RFQ." };
+    }
+
+    // Verify pre-canvass exists and is completed
+    if (!pr.preCanvass) {
+      return {
+        success: false,
+        error: "A pre-canvass must be completed before creating an official RFQ. Please create and complete the pre-canvass first.",
+      };
+    }
+
+    const completedStatuses = ["FullyResponded", "PartiallyResponded", "Closed"];
+    if (!completedStatuses.includes(pr.preCanvass.status)) {
+      return {
+        success: false,
+        error: `Pre-canvass must be completed before creating an RFQ. Current status: ${pr.preCanvass.status.replace(/([A-Z])/g, " $1")}`,
+      };
     }
 
     const year = new Date().getFullYear();
@@ -911,13 +922,13 @@ export async function convertPrToRfqAction(prId: number) {
           prId: pr.id,
           title: `Procurement for ${pr.purpose || pr.department}`,
           approvedBudgetContract: pr.totalCost,
-          deadlineDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days deadline default
+          deadlineDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           status: "Draft",
           createdById: profile.id,
         },
       });
 
-      // 2. Populate RFQ Items from PR items (no re-encoding needed)
+      // 2. Populate RFQ Items from PR items
       for (let i = 0; i < pr.items.length; i++) {
         const item = pr.items[i];
         let targetUnitId = item.unitId;
@@ -954,7 +965,7 @@ export async function convertPrToRfqAction(prId: number) {
         data: {
           purchaseRequestId: prId,
           status: PrStatus.ConvertedToRfq,
-          remarks: `Converted to RFQ #${rfqNumber} by Procurement Staff`,
+          remarks: `Converted to RFQ #${rfqNumber} by Procurement Staff (Pre-Canvass: ${pr.preCanvass!.preCanvassNumber})`,
           changedById: profile.id,
         },
       });

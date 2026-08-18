@@ -9,7 +9,7 @@ export interface CatalogProductInput {
   category: string;
   description: string;
   unitOfMeasure: string;
-  estimatedUnitCost: number;
+  remarks?: string;
 }
 
 // Shape returned to dashboard/catalog — keeps backward compat by flattening relations
@@ -20,7 +20,7 @@ export interface FlatCatalogProduct {
   category: string;          // flat category name for backward compat
   description: string;
   unitOfMeasure: string;     // unit abbreviation for backward compat
-  estimatedUnitCost: number;
+  remarks: string | null;
   isActive: boolean;
 }
 
@@ -55,7 +55,7 @@ export async function getCatalogProducts(filters?: {
         productCode: true,
         name: true,
         description: true,
-        estimatedUnitCost: true,
+        remarks: true,
         category: { select: { name: true } },
         unit: { select: { abbreviation: true } },
         isActive: true,
@@ -69,7 +69,7 @@ export async function getCatalogProducts(filters?: {
       category: p.category.name,
       description: p.description,
       unitOfMeasure: p.unit.abbreviation,
-      estimatedUnitCost: Number(p.estimatedUnitCost),
+      remarks: p.remarks,
       isActive: p.isActive,
     }));
   } catch (error) {
@@ -102,7 +102,7 @@ export async function createCatalogProduct(data: CatalogProductInput) {
         description: data.description,
         categoryId: categoryRecord.id,
         unitId: unitRecord.id,
-        estimatedUnitCost: data.estimatedUnitCost,
+        remarks: data.remarks || null,
       },
     });
 
@@ -148,9 +148,7 @@ export async function updateCatalogProduct(id: number, data: Partial<CatalogProd
         ...(data.description ? { description: data.description } : {}),
         ...(categoryId ? { categoryId } : {}),
         ...(unitId ? { unitId } : {}),
-        ...(data.estimatedUnitCost !== undefined
-          ? { estimatedUnitCost: data.estimatedUnitCost }
-          : {}),
+        ...(data.remarks !== undefined ? { remarks: data.remarks } : {}),
       },
     });
 
