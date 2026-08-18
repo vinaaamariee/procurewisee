@@ -12,8 +12,6 @@ export interface RecentProduct {
   name: string;
   category: string;
   brand: string;
-  estimatedUnitCost: number;
-  lowestSupplierPrice: number | null;
   updatedAt: Date;
 }
 
@@ -64,16 +62,9 @@ export async function getRecentProducts(): Promise<RecentProduct[]> {
     select: {
       id: true,
       name: true,
-      estimatedUnitCost: true,
       updatedAt: true,
       category: { select: { name: true } },
       brand: { select: { name: true } },
-      supplierPrices: {
-        where: { available: true },
-        select: { unitPrice: true },
-        orderBy: { unitPrice: "asc" },
-        take: 1,
-      },
     },
   });
 
@@ -82,9 +73,6 @@ export async function getRecentProducts(): Promise<RecentProduct[]> {
     name: p.name,
     category: p.category.name,
     brand: p.brand?.name ?? "Generic",
-    estimatedUnitCost: Number(p.estimatedUnitCost),
-    lowestSupplierPrice:
-      p.supplierPrices.length > 0 ? Number(p.supplierPrices[0].unitPrice) : null,
     updatedAt: p.updatedAt,
   }));
 }

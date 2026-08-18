@@ -143,7 +143,7 @@ export default function PPMPDashboardClient({
     setMessage("");
 
     const currentDraftTotal = cartItems.reduce(
-      (sum, item) => sum + item.quantity * item.product.estimatedUnitCost,
+      (sum, item) => sum + item.quantity * 0,
       0
     );
 
@@ -162,7 +162,7 @@ export default function PPMPDashboardClient({
           productId: item.product.id,
           generalDescription: item.description || item.product.name,
           quantity: item.quantity,
-          estimatedUnitCost: item.product.estimatedUnitCost,
+          estimatedUnitCost: 0,
         })),
       });
 
@@ -226,13 +226,10 @@ export default function PPMPDashboardClient({
         category: { id: 0, name: "General" },
         brand: null,
         unit: item.product?.unit || { id: 0, name: "unit", abbreviation: "unit" },
-        estimatedUnitCost: Number(item.estimatedUnitCost),
         imageUrl: null,
         popularity: 0,
         updatedAt: new Date(),
-        lowestPrice: Number(item.estimatedUnitCost),
-        availableSupplierCount: 1,
-        availability: "Available" as const,
+        remarks: null,
       };
 
       return {
@@ -347,7 +344,7 @@ export default function PPMPDashboardClient({
                   <input
                     type="text"
                     disabled
-                    value={`₱${addProductDialogItem.estimatedUnitCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+                    value={`₱${(0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
                     style={{
                       width: "100%",
                       padding: "0.6rem 0.8rem",

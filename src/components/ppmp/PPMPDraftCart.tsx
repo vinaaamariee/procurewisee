@@ -44,7 +44,7 @@ export default function PPMPDraftCart({
   isSaving,
 }: PPMPDraftCartProps) {
   const currentDraftTotal = items.reduce(
-    (sum, item) => sum + item.quantity * item.product.estimatedUnitCost,
+    (sum, item) => sum + item.quantity * 0,
     0
   );
 
@@ -219,7 +219,7 @@ export default function PPMPDraftCart({
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", maxHeight: "280px", overflowY: "auto", paddingRight: "0.25rem" }}>
               {items.map((item) => {
-                const itemTotal = item.quantity * item.product.estimatedUnitCost;
+                const itemTotal = item.quantity * 0;
                 return (
                   <div
                     key={item.product.id}
@@ -286,7 +286,7 @@ export default function PPMPDraftCart({
                           Unit Price
                         </span>
                         <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text-primary)" }}>
-                          ₱{item.product.estimatedUnitCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          ₱{(0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
                       </div>
                       <div style={{ textAlign: "right" }}>

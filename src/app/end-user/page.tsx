@@ -21,7 +21,7 @@ export default async function EndUserRequisitionPage() {
     category: product.category.name,
     description: product.description,
     unitOfMeasure: product.unit.abbreviation,
-    estimatedUnitCost: Number(product.estimatedUnitCost),
+    estimatedUnitCost: 0,
     isActive: product.isActive,
   }));
 

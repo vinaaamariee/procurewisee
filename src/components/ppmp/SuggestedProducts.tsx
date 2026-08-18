@@ -24,13 +24,9 @@ export default function SuggestedProducts({
     .filter((_, i) => i % 3 === 0)
     .slice(0, 4);
 
-  // Most Economical (sorted by lowestPrice or estimatedUnitCost asc)
+  // Most Economical (sorted by name as fallback since no price data)
   const economicalProducts = [...products]
-    .sort((a, b) => {
-      const priceA = a.lowestPrice ?? a.estimatedUnitCost;
-      const priceB = b.lowestPrice ?? b.estimatedUnitCost;
-      return priceA - priceB;
-    })
+    .sort((a, b) => a.name.localeCompare(b.name))
     .slice(0, 4);
 
   // Recently Updated (sorted by updatedAt desc)
@@ -106,7 +102,7 @@ export default function SuggestedProducts({
       {/* Grid of items */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "1rem" }}>
         {activeList.map((product) => {
-          const currentPrice = product.estimatedUnitCost;
+          const currentPrice = 0;
           return (
             <div
               key={product.id}

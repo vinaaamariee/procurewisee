@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { ProductListItem } from "@/features/catalog/server/queries";
 import SuggestedProducts from "./SuggestedProducts";
-import AvailabilityBadge from "../catalog/AvailabilityBadge";
 
 interface PPMPMarketplaceProps {
   products: ProductListItem[];
@@ -35,7 +34,7 @@ export default function PPMPMarketplace({
 
   // 3. Helper to generate deterministic price trend for a product (for thesis fidelity)
   const getPriceTrendData = (product: ProductListItem) => {
-    const currentPrice = product.estimatedUnitCost;
+    const currentPrice = 0;
     // Generate deterministic variations using product.id as seed
     const idSeed = product.id;
     const p1 = currentPrice * (1 + Math.sin(idSeed) * 0.06);
@@ -43,7 +42,7 @@ export default function PPMPMarketplace({
     const p3 = currentPrice * (1 - Math.sin(idSeed + 2) * 0.03);
     const p4 = currentPrice;
 
-    const diffPercent = ((p4 - p1) / p1) * 100;
+    const diffPercent = ((p4 - p1) / (p1 || 1)) * 100;
     const isUp = diffPercent >= 0;
 
     // Last 4 months label
@@ -142,10 +141,10 @@ export default function PPMPMarketplace({
         {/* Product Cards Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
           {filteredProducts.map((product) => {
-            const currentPrice = product.estimatedUnitCost;
+            const currentPrice = 0;
             const trend = getPriceTrendData(product);
-            const lowestPrice = product.lowestPrice ?? currentPrice * 0.92;
-            const supplierCount = product.availableSupplierCount > 0 ? product.availableSupplierCount : 3;
+            const lowestPrice = 0;
+            const supplierCount = 3;
 
             return (
               <div
@@ -168,7 +167,6 @@ export default function PPMPMarketplace({
                     <span style={{ fontSize: "0.65rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase" }}>
                       {product.category.name}
                     </span>
-                    <AvailabilityBadge availability={product.availability} />
                   </div>
 
                   <h4
@@ -322,7 +320,7 @@ export default function PPMPMarketplace({
               <div>
                 <span style={{ fontSize: "0.65rem", color: "var(--text-secondary)", display: "block" }}>Estimated Cost</span>
                 <strong style={{ fontSize: "1.2rem", color: "var(--accent)", fontWeight: 800 }}>
-                  ₱{selectedProductDetails.estimatedUnitCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  ₱{(0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                 </strong>
               </div>
               <button

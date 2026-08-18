@@ -84,37 +84,24 @@ export default async function PublicPPMPPage({ searchParams }: PageProps) {
       category: { select: { id: true, name: true } },
       brand: { select: { id: true, name: true } },
       unit: { select: { id: true, name: true, abbreviation: true } },
-      supplierPrices: {
-        where: { available: true },
-        select: { unitPrice: true },
-      },
     },
     orderBy: { popularity: "desc" },
   });
 
   // Map database products to the ProductListItem format
-  const products: ProductListItem[] = rawProducts.map((p) => {
-    const prices = p.supplierPrices.map((sp) => Number(sp.unitPrice));
-    const lowestPrice = prices.length > 0 ? Math.min(...prices) : null;
-    const count = p.supplierPrices.length;
-
-    return {
-      id: p.id,
-      productCode: p.productCode,
-      name: p.name,
-      description: p.description,
-      category: p.category,
-      brand: p.brand,
-      unit: p.unit,
-      estimatedUnitCost: Number(p.estimatedUnitCost),
-      imageUrl: p.imageUrl,
-      popularity: p.popularity,
-      updatedAt: p.updatedAt,
-      lowestPrice,
-      availableSupplierCount: count,
-      availability: count === 0 ? "Unavailable" : count === 1 ? "Limited" : "Available",
-    };
-  });
+  const products: ProductListItem[] = rawProducts.map((p) => ({
+    id: p.id,
+    productCode: p.productCode,
+    name: p.name,
+    description: p.description,
+    category: p.category,
+    brand: p.brand,
+    unit: p.unit,
+    imageUrl: p.imageUrl,
+    popularity: p.popularity,
+    updatedAt: p.updatedAt,
+    remarks: p.remarks,
+  }));
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] flex flex-col">

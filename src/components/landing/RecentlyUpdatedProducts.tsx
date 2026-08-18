@@ -64,8 +64,7 @@ export default function RecentlyUpdatedProducts({
       {/* Product cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {products.map((product) => {
-          const displayPrice =
-            product.lowestSupplierPrice ?? product.estimatedUnitCost;
+          const displayPrice = 0;
 
           return (
             <Link
