@@ -4,35 +4,35 @@ const pool = new Pool({ connectionString: process.env.DIRECT_URL });
 
 async function main() {
   try {
-    // Get actual table names
-    const tables = await pool.query(`SELECT tablename FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename`);
-    console.log('=== ALL TABLES ===');
-    console.log(tables.rows.map(r => r.tablename).join('\n'));
+    // Check indexes on user_profiles
+    const indexes = await pool.query(`
+      SELECT indexname, indexdef 
+      FROM pg_indexes 
+      WHERE tablename = 'user_profiles' 
+      ORDER BY indexname
+    `);
+    console.log('=== user_profiles indexes ===');
+    indexes.rows.forEach(r => console.log(`  ${r.indexname}: ${r.indexdef}`));
 
-    // Check if estimatedUnitCost exists on catalog_products and what its value is for different products
-    const ecc = await pool.query(`SELECT product_id, name, estimated_unit_cost FROM catalog_products WHERE estimated_unit_cost IS NOT NULL AND estimated_unit_cost > 0 ORDER BY product_id LIMIT 5`);
-    console.log('\n=== estimatedUnitCost on catalog (non-zero samples) ===');
-    console.table(ecc.rows);
+    // Check for any partial unique index on supplier_id
+    const partialIdx = await pool.query(`
+      SELECT indexname, indexdef 
+      FROM pg_indexes 
+      WHERE tablename = 'user_profiles' AND indexdef LIKE '%supplier_id%'
+    `);
+    console.log('\n=== supplier_id indexes ===');
+    partialIdx.rows.forEach(r => console.log(`  ${r.indexname}: ${r.indexdef}`));
 
-    // Check all PK sequences
-    const seqs = await pool.query(`SELECT sequencename FROM pg_sequences WHERE schemaname = 'public'`);
-    console.log('\n=== SEQUENCES ===');
-    console.log(seqs.rows.map(r => r.sequename).join('\n'));
-
-    // Check actual RFQ table name
-    const rfqTable = tables.rows.filter(r => r.tablename.includes('rfq') || r.tablename.includes('request') || r.tablename.includes('quote'));
-    console.log('\n=== RFQ/Quote related tables ===');
-    console.log(rfqTable.map(r => r.tablename));
-
-    // Existing PRs
-    const prs = await pool.query(`SELECT id, pr_number, status, purpose, requester_id FROM purchase_requests ORDER BY id DESC LIMIT 5`);
-    console.log('\n=== Recent PRs ===');
-    console.table(prs.rows);
-
-    // Pre-canvasses
-    const pcs = await pool.query(`SELECT pc.id, pc.pre_canvass_number, pc.status, pc.pr_id FROM pre_canvasses pc ORDER BY pc.id DESC LIMIT 5`);
-    console.log('\n=== Recent Pre-Canvasses ===');
-    console.table(pcs.rows);
+    // Check for orphaned auth accounts (Supabase auth user without UserProfile)
+    // We can't query auth.users directly, but check if any test emails exist
+    const testUsers = await pool.query(`
+      SELECT id, email, username, role, isActive, supplier_id 
+      FROM user_profiles 
+      WHERE email LIKE '%test%' OR email LIKE '%e2e%' OR email LIKE '%procurewise.local%'
+      ORDER BY email
+    `);
+    console.log('\n=== Test accounts ===');
+    console.table(testUsers.rows);
 
   } catch (err) {
     console.error('ERROR:', err.message);
