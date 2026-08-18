@@ -5,6 +5,29 @@
 **Capstone Project for Batanes State College**
 
 
+## 🧹 Catalog Schema Cleanup — Removed Pricing Fields from ProductListItem
+
+**Date**: August 2026
+
+The `ProductListItem` interface (`@/features/catalog/server/queries`) was simplified to remove pricing and availability fields that no longer exist on the `CatalogProduct` model: `estimatedUnitCost`, `lowestPrice`, `lowestSupplierPrice`, `availableSupplierCount`, `availability`, `forecastTrend`, `forecastExpectedChange`, `averageHistoricalPrice`, `lowestHistoricalPrice`, `highestHistoricalPrice`, and `supplierPrices`.
+
+### Affected Files
+
+- **`src/features/landing/server/queries.ts`** — `RecentProduct` interface no longer includes `estimatedUnitCost` or `lowestSupplierPrice`. Query no longer joins `supplierPrices`.
+- **`src/components/landing/RecentlyUpdatedProducts.tsx`** — Uses `0` placeholder for removed price display.
+- **`src/components/ppmp/SuggestedProducts.tsx`** — "Most Economical" sort uses name fallback instead of price. Card price display uses `0` placeholder.
+- **`src/components/ppmp/PPMPMarketplace.tsx`** — Price trend data, pricing grid, and availability badge all use `0`/placeholder values. `AvailabilityBadge` import removed.
+- **`src/components/ppmp/PPMPDraftCart.tsx`** — Cost calculations and unit price display use `0` placeholder.
+- **`src/app/end-user/ppmp/page.tsx`** — Simplified product query (no `supplierPrices` include) and direct mapping to `ProductListItem`.
+- **`src/app/dashboard/end-user/ppmp/page.tsx`** — Same simplification as above.
+- **`src/app/dashboard/end-user/ppmp/PPMPDashboardClient.tsx`** — Draft total, save action items, edit fallback product, and dialog all use `0` placeholder.
+- **`src/app/end-user/page.tsx`** — Serialized product `estimatedUnitCost` uses `0` placeholder.
+
+### Rationale
+
+PPMP components still need a cost field for planning workflows, so local state and UI placeholders remain (`0`). The catalog is now a pure product reference without pricing. Pricing will be reintroduced via a separate supplier-pricing module.
+
+
 ## 📦 Product Catalog — Restored Access for All User Roles
 
 **Date**: August 2026
