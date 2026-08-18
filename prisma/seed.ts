@@ -514,7 +514,6 @@ async function main() {
         categoryId: categoryRecord.id,
         unitId: unitRecord.id,
         brandId: brandRecord.id,
-        estimatedUnitCost: cp.estimatedUnitCost,
         popularity: cp.popularity,
       },
       create: {
@@ -524,34 +523,12 @@ async function main() {
         categoryId: categoryRecord.id,
         unitId: unitRecord.id,
         brandId: brandRecord.id,
-        estimatedUnitCost: cp.estimatedUnitCost,
         popularity: cp.popularity,
       },
       include: {
         category: true,
         unit: true,
         brand: true,
-      }
-    });
-
-    // Also seed SupplierProductPrice for these products so we have prices!
-    await prisma.supplierProductPrice.upsert({
-      where: {
-        supplierId_productId: {
-          supplierId: cp.preferredSupplierId,
-          productId: prod.id,
-        }
-      },
-      update: {
-        unitPrice: cp.estimatedUnitCost,
-        available: true,
-      },
-      create: {
-        supplierId: cp.preferredSupplierId,
-        productId: prod.id,
-        unitPrice: cp.estimatedUnitCost,
-        available: true,
-        priceEffectiveDate: new Date(),
       }
     });
 
@@ -660,22 +637,22 @@ async function main() {
           {
             productId: seededProducts[3].id,
             description: seededProducts[3].name,
-            brand: seededProducts[3].brand?.name,
+            brand: seededProducts[3].brand?.name || null,
             quantity: 2,
             unitId: seededProducts[3].unitId,
-            estimatedUnitCost: seededProducts[3].estimatedUnitCost,
-            unitCost: seededProducts[3].estimatedUnitCost,
+            estimatedUnitCost: 0,
+            unitCost: 0,
             estimatedCost: 110000.00,
             specification: catalogProductsData[3].technicalSpecifications,
           },
           {
             productId: seededProducts[4].id,
             description: seededProducts[4].name,
-            brand: seededProducts[4].brand?.name,
+            brand: seededProducts[4].brand?.name || null,
             quantity: 1,
             unitId: seededProducts[4].unitId,
-            estimatedUnitCost: seededProducts[4].estimatedUnitCost,
-            unitCost: seededProducts[4].estimatedUnitCost,
+            estimatedUnitCost: 0,
+            unitCost: 0,
             estimatedCost: 9600.00,
             specification: catalogProductsData[4].technicalSpecifications,
           }
@@ -701,11 +678,11 @@ async function main() {
           {
             productId: seededProducts[0].id,
             description: seededProducts[0].name,
-            brand: seededProducts[0].brand?.name,
+            brand: seededProducts[0].brand?.name || null,
             quantity: 100,
             unitId: seededProducts[0].unitId,
-            estimatedUnitCost: seededProducts[0].estimatedUnitCost,
-            unitCost: seededProducts[0].estimatedUnitCost,
+            estimatedUnitCost: 0,
+            unitCost: 0,
             estimatedCost: 22000.00,
             specification: catalogProductsData[0].technicalSpecifications,
           }

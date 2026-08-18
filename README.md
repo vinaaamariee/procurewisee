@@ -5,7 +5,83 @@
 **Capstone Project for Batanes State College**
 
 
-## 🧹 Catalog Schema Cleanup — Removed Pricing Fields from ProductListItem
+## 🔄 Pre-Canvass Workflow — Separate Preliminary Supplier Canvassing
+
+**Date**: August 2026
+
+Implemented a complete pre-canvass procurement workflow that separates preliminary supplier canvassing from the official RFQ process. Pre-canvassing is now a mandatory step before creating an official RFQ.
+
+### Workflow
+
+1. **End User** creates a Purchase Request (PR)
+2. **Procurement Officer** verifies and approves the PR
+3. **Procurement Officer** creates a Pre-Canvass (selects exactly 3 suppliers)
+4. **Suppliers** respond to the pre-canvass with pricing and availability
+5. **Procurement Officer** generates the Abstract of Quotation (AOQ)
+6. **Procurement Officer** converts the approved PR to an official RFQ
+7. Official RFQ process continues as before
+
+### Key Changes
+
+- **Prisma Schema**: Added 5 new models (`PreCanvass`, `PreCanvassSupplier`, `PreCanvassResponse`, `PreCanvassResponseItem`, `PreCanvassAbstract`) and 2 enums (`PreCanvassStatus`, `PreCanvassResponseStatus`)
+- **Server Actions** (`src/app/actions/pre-canvass.ts`): 11 actions including create, select suppliers, send, submit response, generate AOQ, close, cancel
+- **Procurement UI** (`src/app/dashboard/officer/pre-canvass/`): List page with stats, detail page with supplier selector, AOQ generation, timeline
+- **Supplier UI** (`src/app/supplier/pre-canvass/`): Response form with item-level pricing, availability, delivery days
+- **RFQ Creation** (`src/app/actions/pr.ts`): `convertPrToRfqAction` now requires completed pre-canvass before allowing RFQ creation
+- **PR Detail** (`src/app/dashboard/officer/pr/[id]/PrDetailsClient.tsx`): Shows pre-canvass status, "Create Pre-Canvass" button, "Convert to RFQ" button with validation
+
+### Business Rules
+
+- Pre-Canvass requires **exactly 3 suppliers** (enforced server-side)
+- Pre-canvass and official RFQ are **two separate procurement events** — never merge them
+- Pre-Canvass must be completed before creating an official RFQ
+- Catalog does NOT contain supplier prices — prices come from pre-canvass responses
+
+### Files
+
+- `prisma/schema.prisma` — New Pre-Canvass models and relationships
+- `src/app/actions/pre-canvass.ts` — All pre-canvass server actions
+- `src/app/dashboard/officer/pre-canvass/page.tsx` — Pre-canvass list
+- `src/app/dashboard/officer/pre-canvass/[id]/page.tsx` — Pre-canvass detail
+- `src/app/dashboard/officer/pre-canvass/[id]/PreCanvassDetailClient.tsx` — Detail client component
+- `src/app/supplier/pre-canvass/page.tsx` — Supplier pre-canvass page
+- `src/app/supplier/pre-canvass/SupplierPreCanvassClient.tsx` — Supplier response form
+
+
+## 🧹 Catalog Schema Cleanup — Removed Pricing from Catalog
+
+**Date**: August 2026
+
+Removed all pricing data from the Product Catalog. The catalog is now a pure product reference without pricing. Pricing is managed exclusively through the Pre-Canvass process.
+
+### What Was Removed
+
+- `estimatedUnitCost` field from `CatalogProduct` model
+- `supplierPrices` relation from `CatalogProduct`
+- `SupplierProductPrice` model (entirely removed)
+- `ProductPriceHistory` model (entirely removed)
+- Price-related UI components: `SupplierComparisonTable`, `HistoricalPriceChart` (now placeholders)
+- Price sorting, filtering, and display from catalog pages
+- Price analytics from product detail pages
+
+### What Remains
+
+- `HistoricalPrice` model (for external market price tracking)
+- `remarks` field on `CatalogProduct` for product notes
+- All product info: name, description, category, brand, unit, specifications, images
+
+### Affected Files
+
+- `prisma/schema.prisma` — Removed `estimatedUnitCost`, `supplierPrices`, `SupplierProductPrice`, `ProductPriceHistory`
+- `src/features/catalog/server/queries.ts` — Simplified queries without pricing
+- `src/app/actions/catalog.ts` — CRUD without pricing
+- `src/components/catalog/*` — Updated components without price display
+- `src/app/catalog/*` — Updated pages without pricing
+- `src/components/ppmp/*` — Updated to use `0` placeholder for cost fields
+- `src/lib/recommendation/engine.ts` — Stubbed out price-based recommendations
+- `src/lib/dashboard/get-forecast-intelligence.ts` — Removed pricing from forecast
+- `src/app/actions/analytics.ts` — Removed pricing from analytics
+- `prisma/seed.ts` — Updated seed data without pricing
 
 **Date**: August 2026
 
