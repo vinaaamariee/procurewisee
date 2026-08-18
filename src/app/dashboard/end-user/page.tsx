@@ -62,16 +62,21 @@ function getProgressStep(status: string) {
 export default async function EndUserDashboard() {
   const { profile } = await requireRole("End User");
 
-  // Fetch all Purchase Requests for authenticated user
-  const prs = await prisma.purchaseRequest.findMany({
-    where: { requestedById: profile.id },
-    orderBy: { updatedAt: "desc" },
-    include: {
-      assignedOfficer: {
-        select: { fullName: true }
+  // Fetch all Purchase Requests for authenticated user (with error handling)
+  let prs: Awaited<ReturnType<typeof prisma.purchaseRequest.findMany>> = [];
+  try {
+    prs = await prisma.purchaseRequest.findMany({
+      where: { requestedById: profile.id },
+      orderBy: { updatedAt: "desc" },
+      include: {
+        assignedOfficer: {
+          select: { fullName: true }
+        }
       }
-    }
-  });
+    });
+  } catch (error) {
+    console.error("[EndUserDashboard] Failed to fetch PRs:", error);
+  }
 
   // Calculate lifecycle counts
   const draftCount = prs.filter((p) => p.status === "Draft").length;

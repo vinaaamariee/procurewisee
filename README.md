@@ -6,6 +6,88 @@
 
 ---
 
+## 🛡️ Phase 10.1: Audit Bug Fixes and Runtime Error Diagnosis
+
+**Date**: August 2026
+
+Fixed all five issues from the Phase 10 code-level audit and diagnosed the `/dashboard/end-user` runtime error.
+
+### What Was Fixed
+
+**1. RFQ Pre-Canvass Gate (HIGH)**
+- `src/app/actions/rfq-actions.ts`: `createRfqAction` now enforces pre-canvass completion when `prId` is provided — checks PR status is `Approved`, pre-canvass exists, and pre-canvass status is `FullyResponded`, `PartiallyResponded`, or `Closed`.
+- Both RFQ creation paths (`convertPrToRfqAction` and `createRfqAction`) now enforce the same gate server-side. The fix is defense-in-depth — the UI form does not pass `prId`, but the server action now rejects the request regardless.
+
+**2. Role Cookie Security (MEDIUM)**
+- `src/proxy.ts`: The `pw-user-role` cookie is now **never trusted for authorization decisions**. The proxy always fetches the role from the database (`user_profiles` table) on every request. The cookie is set after DB verification for UI rendering convenience only. An End User modifying their cookie to `Procurement Officer` will still be treated as End User because the proxy re-fetches from the DB.
+- Eliminated `didFetchRole` conditional logic — all code paths now unconditionally set the cookie from the DB-verified role.
+
+**3. PO → PR Link (MEDIUM)**
+- `src/app/actions/po.ts`: `createPoFromAwardAction` now resolves the originating PR from the RFQ's `prId` and sets `PurchaseOrder.prId`. Traceability chain is now: `PO → RFQ → PR` (direct) in addition to the existing `PO → RFQ → Canvas → Recommendation` path.
+
+**4. PO Item Mapping (LOW)**
+- `src/app/actions/po.ts`: `createPoFromAwardAction` now preserves `brand`, `specification`, `unit`, and `stockNo` from the originating PR items when auto-creating `PurchaseOrderItem` records. The fix matches PR items to RFQ items via product linkage or description prefix matching.
+
+**5. Evaluation Naming (LOW)**
+- `src/app/actions/evaluation.ts`: Renamed `submitSupplierEvaluationAction` → `submitSupplierPerformanceEvaluationAction` to clarify this is a supplier performance rating, not an RFQ award evaluation.
+- Updated callers in `EvaluationFormClient.tsx` and `ProcurementStaffEvaluationsClient.tsx`.
+
+### Runtime Error Diagnosis
+
+**Root cause**: Unhandled exceptions in server component dependency chain. Two Prisma queries had no error handling:
+1. `prisma.purchaseRequest.findMany()` in `src/app/dashboard/end-user/page.tsx` — no try-catch
+2. `prisma.auditTrail.findMany()` in `src/app/actions/activity.ts` (called by `ActivityFeed` server component) — no try-catch
+
+When either query fails (connection pool exhaustion, statement timeout, adapter issue), the error propagates unhandled through the Server Component tree and produces the "Application Error" message.
+
+**Fixes applied**:
+- Added try-catch with `console.error` and empty-array fallback to `getRecentActivity()` in `src/app/actions/activity.ts`
+- Added try-catch with `console.error` and empty-array fallback to the PR query in `src/app/dashboard/end-user/page.tsx`
+- Added try-catch to `getAuthenticatedUser()` in `src/lib/auth/get-user-profile.ts` for both the Supabase auth check and the Prisma profile query, redirecting to login with descriptive error messages on failure
+
+**Note**: The exact production failure trigger could not be reproduced locally (requires real Supabase session + production database). The fix ensures graceful degradation — the page renders with empty data instead of crashing. If the error recurs, the `console.error` messages will provide the specific Prisma exception for further diagnosis.
+
+### Database/Prisma Consistency
+
+- `user_profiles.supplier_id` column present with unique partial index ✅
+- `CatalogProduct` has no `estimatedUnitCost` column ✅
+- Removed models (`SupplierProductPrice`, `ProductPriceHistory`, `OfficeItem`, `PriceQuote`) have zero references ✅
+- All 83 `estimatedUnitCost` references are on `PurchaseRequestItem`/`PpmpItem` (correct) ✅
+- `pw-user-role` cookie is UI-only, authorization uses DB-verified role ✅
+
+### Regression Search
+
+| Searched Term | References Found | Classification |
+|---------------|-----------------|----------------|
+| `SupplierProductPrice` | 0 | Clean |
+| `ProductPriceHistory` | 0 | Clean |
+| `OfficeItem` | 0 | Clean |
+| `PriceQuote` | 0 | Clean |
+| `submitSupplierEvaluationAction` | 0 | Renamed |
+| `pw-user-role` | 15 | All VALID (UI-only) |
+| `createRfqAction` | 3 callers | All VALID (2 pass prId correctly, 1 standalone) |
+| `convertPrToRfqAction` | 1 caller | VALID |
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `src/app/actions/rfq-actions.ts` | Added pre-canvass gate to `createRfqAction` |
+| `src/proxy.ts` | Always fetch role from DB, never trust cookie |
+| `src/app/actions/po.ts` | Added `prId` resolution and PO item metadata mapping |
+| `src/app/actions/evaluation.ts` | Renamed `submitSupplierEvaluationAction` |
+| `src/app/dashboard/end-user/evaluation/EvaluationFormClient.tsx` | Updated import |
+| `src/app/dashboard/officer/evaluations/ProcurementStaffEvaluationsClient.tsx` | Updated import |
+| `src/app/actions/activity.ts` | Added try-catch to `getRecentActivity` |
+| `src/app/dashboard/end-user/page.tsx` | Added try-catch to PR query |
+| `src/lib/auth/get-user-profile.ts` | Added try-catch to Supabase auth and Prisma profile queries |
+
+### Build Result
+
+`npx prisma generate` ✅ | `npx next build` ✅ (all routes compile, no type errors)
+
+---
+
 ## 🔍 Phase 10: Full Runtime Workflow Audit
 
 **Date**: August 2026

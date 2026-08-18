@@ -87,32 +87,18 @@ export default async function proxy(request: NextRequest) {
     return response;
   }
 
-  // ── Read cached role from cookie ──────────────────────────────────────────
-  let role = request.cookies.get('pw-user-role')?.value;
-  let didFetchRole = false;
-
+  // ── Always fetch role from database (cookie is UI convenience only, never trusted for auth) ──
+  let role: string | null = null;
   let isActive: boolean | null = null;
 
-  if (!role) {
-    // Fallback: Query profile from database
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('role, is_active')
-      .eq('id', user.id)
-      .single();
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role, is_active')
+    .eq('id', user.id)
+    .single();
 
-    role = profile?.role;
-    isActive = profile?.is_active ?? null;
-    didFetchRole = true;
-  } else {
-    // Role came from cookie — still need to check is_active
-    const { data: profile } = await supabase
-      .from('user_profiles')
-      .select('is_active')
-      .eq('id', user.id)
-      .single();
-    isActive = profile?.is_active ?? null;
-  }
+  role = profile?.role ?? null;
+  isActive = profile?.is_active ?? null;
 
   // No profile row → account not fully set up
   if (!role) {
@@ -143,28 +129,24 @@ export default async function proxy(request: NextRequest) {
     return redirectResponse;
   }
 
-  // If we fetched the role from the database, cache it in cookies
-  if (didFetchRole) {
-    response.cookies.set('pw-user-role', role, {
-      path: '/',
-      maxAge: 60 * 60 * 24, // 1 day
-      secure: true,
-      sameSite: 'lax',
-    });
-  }
+  // Cache role in cookie for UI rendering convenience (NOT used for authorization)
+  response.cookies.set('pw-user-role', role, {
+    path: '/',
+    maxAge: 60 * 60 * 24, // 1 day
+    secure: true,
+    sameSite: 'lax',
+  });
 
   // ── PUBLIC ROUTE: Login page (/login) ─────────────────────────────────────
   if (isLoginRoute) {
     const dest = ROLE_HOME[role] ?? '/unauthorized';
     const redirectResponse = NextResponse.redirect(new URL(dest, request.url));
-    if (didFetchRole) {
-      redirectResponse.cookies.set('pw-user-role', role, {
-        path: '/',
-        maxAge: 60 * 60 * 24,
-        secure: true,
-        sameSite: 'lax',
-      });
-    }
+    redirectResponse.cookies.set('pw-user-role', role, {
+      path: '/',
+      maxAge: 60 * 60 * 24,
+      secure: true,
+      sameSite: 'lax',
+    });
     return redirectResponse;
   }
 
@@ -178,14 +160,12 @@ export default async function proxy(request: NextRequest) {
     const unauthorizedUrl = new URL('/unauthorized', request.url);
     unauthorizedUrl.searchParams.set('required', routeGuard.role);
     const redirectResponse = NextResponse.redirect(unauthorizedUrl);
-    if (didFetchRole) {
-      redirectResponse.cookies.set('pw-user-role', role, {
-        path: '/',
-        maxAge: 60 * 60 * 24,
-        secure: true,
-        sameSite: 'lax',
-      });
-    }
+    redirectResponse.cookies.set('pw-user-role', role, {
+      path: '/',
+      maxAge: 60 * 60 * 24,
+      secure: true,
+      sameSite: 'lax',
+    });
     return redirectResponse;
   }
 
@@ -193,14 +173,12 @@ export default async function proxy(request: NextRequest) {
   if (pathname === '/dashboard' || pathname === '/dashboard/') {
     const correctDest = ROLE_HOME[role] ?? '/unauthorized';
     const redirectResponse = NextResponse.redirect(new URL(correctDest, request.url));
-    if (didFetchRole) {
-      redirectResponse.cookies.set('pw-user-role', role, {
-        path: '/',
-        maxAge: 60 * 60 * 24,
-        secure: true,
-        sameSite: 'lax',
-      });
-    }
+    redirectResponse.cookies.set('pw-user-role', role, {
+      path: '/',
+      maxAge: 60 * 60 * 24,
+      secure: true,
+      sameSite: 'lax',
+    });
     return redirectResponse;
   }
 
@@ -209,18 +187,16 @@ export default async function proxy(request: NextRequest) {
   requestHeaders.set('x-user-role', role);
   requestHeaders.set('x-user-id', user.id);
 
-  // Re-build response to attach headers and potential cookies
+  // Re-build response to attach headers and cookies
   const nextResponse = NextResponse.next({ request: { headers: requestHeaders } });
   nextResponse.headers.set('x-user-role', role);
 
-  if (didFetchRole) {
-    nextResponse.cookies.set('pw-user-role', role, {
-      path: '/',
-      maxAge: 60 * 60 * 24,
-      secure: true,
-      sameSite: 'lax',
-    });
-  }
+  nextResponse.cookies.set('pw-user-role', role, {
+    path: '/',
+    maxAge: 60 * 60 * 24,
+    secure: true,
+    sameSite: 'lax',
+  });
 
   return nextResponse;
 }

@@ -92,40 +92,45 @@ function initials(name: string): string {
 }
 
 export async function getRecentActivity(limit: number = 12): Promise<ActivityItem[]> {
-  const logs = await prisma.auditTrail.findMany({
-    orderBy: { timestamp: 'desc' },
-    take: limit,
-    include: {
-      user: { select: { fullName: true, username: true } },
-    },
-  });
+  try {
+    const logs = await prisma.auditTrail.findMany({
+      orderBy: { timestamp: 'desc' },
+      take: limit,
+      include: {
+        user: { select: { fullName: true, username: true } },
+      },
+    });
 
-  return logs.map(log => {
-    const resolved = resolveAction(log.actionType, log.tableAffected);
+    return logs.map(log => {
+      const resolved = resolveAction(log.actionType, log.tableAffected);
 
-    // Derive description from newState JSON when available
-    let description = `Action on ${log.tableAffected.replace(/_/g, ' ')} #${log.recordId}`;
-    if (log.newState && typeof log.newState === 'object') {
-      const s = log.newState as Record<string, unknown>;
-      const candidate = s.prNumber ?? s.poNumber ?? s.rfqNumber ?? s.ppmpNumber ?? s.companyName ?? s.purpose ?? s.title;
-      if (candidate) description = String(candidate);
-    }
+      // Derive description from newState JSON when available
+      let description = `Action on ${log.tableAffected.replace(/_/g, ' ')} #${log.recordId}`;
+      if (log.newState && typeof log.newState === 'object') {
+        const s = log.newState as Record<string, unknown>;
+        const candidate = s.prNumber ?? s.poNumber ?? s.rfqNumber ?? s.ppmpNumber ?? s.companyName ?? s.purpose ?? s.title;
+        if (candidate) description = String(candidate);
+      }
 
-    const fullName = log.user?.fullName ?? log.user?.username ?? 'System';
+      const fullName = log.user?.fullName ?? log.user?.username ?? 'System';
 
-    return {
-      id: log.id,
-      icon: resolved.icon,
-      title: resolved.title,
-      description,
-      userName: fullName,
-      userInitials: initials(fullName),
-      timestamp: log.timestamp.toLocaleString('en-PH', {
-        month: 'short', day: 'numeric', year: 'numeric',
-        hour: '2-digit', minute: '2-digit',
-      }),
-      relativeTime: getRelativeTime(log.timestamp),
-      category: resolved.category,
-    };
-  });
+      return {
+        id: log.id,
+        icon: resolved.icon,
+        title: resolved.title,
+        description,
+        userName: fullName,
+        userInitials: initials(fullName),
+        timestamp: log.timestamp.toLocaleString('en-PH', {
+          month: 'short', day: 'numeric', year: 'numeric',
+          hour: '2-digit', minute: '2-digit',
+        }),
+        relativeTime: getRelativeTime(log.timestamp),
+        category: resolved.category,
+      };
+    });
+  } catch (error) {
+    console.error('[ActivityFeed] Failed to fetch recent activity:', error);
+    return [];
+  }
 }

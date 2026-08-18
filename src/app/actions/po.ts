@@ -39,6 +39,12 @@ export async function createPoFromAwardAction(recommendationId: number) {
       });
       if (existing) return { po: existing, supplierName: rec.supplier.companyName };
 
+      // Resolve the originating PR from the RFQ
+      const rfq = await tx.requestForQuote.findUnique({
+        where: { id: rec.canvas.rfqId },
+        select: { prId: true },
+      });
+
       // Generate PO number
       const year = new Date().getFullYear();
       const count = await tx.purchaseOrder.count({
@@ -52,6 +58,7 @@ export async function createPoFromAwardAction(recommendationId: number) {
           poNumber,
           supplierId: rec.supplierId,
           rfqId: rec.canvas.rfqId,
+          prId: rfq?.prId ?? null,
           totalCost: rec.supplierQuote.totalQuotedAmount,
           deliveryTerms: "FOB Destination",
           paymentTerms: "15 days upon complete delivery",
@@ -63,8 +70,51 @@ export async function createPoFromAwardAction(recommendationId: number) {
         },
       });
 
+      // Build a lookup from RFQ item id → PR item (for brand/spec/unit/stockNo)
+      let prItemMap = new Map<number, { brand?: string | null; specification?: string | null; unitText?: string | null; stockNo?: string | null }>();
+      if (rfq?.prId) {
+        const prItems = await tx.purchaseRequestItem.findMany({
+          where: { prId: rfq.prId },
+          select: { id: true, brand: true, specification: true, unitText: true, stockNo: true },
+        });
+        for (const pi of prItems) prItemMap.set(pi.id, pi);
+      }
+
       for (const detail of rec.supplierQuote.quoteDetails) {
         const itemTotal = Number(detail.unitPrice) * detail.quantityMultiplier;
+
+        // Try to find the originating PR item via RFQ item's product linkage
+        let brand: string | null = null;
+        let specification: string | null = null;
+        let unit: string | null = null;
+        let stockNo: string | null = null;
+
+        // The RFQ item may link back to a PR item via product; fetch it
+        const rfqItem = await tx.rfqItem.findUnique({
+          where: { id: detail.rfqItemId },
+          select: { particulars: true, productId: true },
+        });
+
+        // If there's a PR, look up the corresponding PR item by matching particulars/description
+        if (rfq?.prId && rfqItem) {
+          const matchedPrItem = await tx.purchaseRequestItem.findFirst({
+            where: {
+              prId: rfq.prId,
+              OR: [
+                { productId: rfqItem.productId ?? undefined },
+                { description: { contains: rfqItem.particulars.substring(0, 30) } },
+              ],
+            },
+            select: { brand: true, specification: true, unitText: true, stockNo: true },
+          });
+          if (matchedPrItem) {
+            brand = matchedPrItem.brand ?? null;
+            specification = matchedPrItem.specification ?? null;
+            unit = matchedPrItem.unitText ?? null;
+            stockNo = matchedPrItem.stockNo ?? null;
+          }
+        }
+
         await tx.purchaseOrderItem.create({
           data: {
             poId: po.id,
@@ -72,6 +122,10 @@ export async function createPoFromAwardAction(recommendationId: number) {
             quantity: detail.quantityMultiplier,
             unitPrice: detail.unitPrice,
             totalCost: new Prisma.Decimal(itemTotal),
+            brand,
+            specification,
+            unit,
+            stockNo,
           },
         });
       }

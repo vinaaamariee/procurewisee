@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { submitSupplierEvaluationAction } from "@/app/actions/evaluation";
+import { submitSupplierPerformanceEvaluationAction } from "@/app/actions/evaluation";
 
 enum EvaluationType {
   EndUser = "EndUser",
@@ -139,7 +139,7 @@ export default function EvaluationFormClient({
     setSuccessMsg(null);
 
     try {
-      const res = await submitSupplierEvaluationAction({
+      const res = await submitSupplierPerformanceEvaluationAction({
         supplierId: parseInt(selectedSupplierId),
         evaluationType: EvaluationType.EndUser,
         evaluatorName: respondentName,

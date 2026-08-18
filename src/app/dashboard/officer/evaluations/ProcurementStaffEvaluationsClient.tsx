@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { submitSupplierEvaluationAction, getSupplierScorecard } from "@/app/actions/evaluation";
+import { submitSupplierPerformanceEvaluationAction, getSupplierScorecard } from "@/app/actions/evaluation";
 import EmptyState from "@/components/ui/EmptyState";
 
 enum EvaluationType {
@@ -112,7 +112,7 @@ export default function ProcurementStaffEvaluationsClient({ suppliers, officerNa
     setSuccessMsg(null);
 
     try {
-      const res = await submitSupplierEvaluationAction({
+      const res = await submitSupplierPerformanceEvaluationAction({
         supplierId: parseInt(selectedSupplierId),
         evaluationType: EvaluationType.ProcurementOffice,
         evaluatorName: officerName,

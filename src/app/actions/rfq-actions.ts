@@ -72,7 +72,29 @@ export async function createRfqAction({
       }
     }
 
-    // 3. Database Transaction: Check duplicate RFQ Number and insert records
+    // 3. If linking a PR, enforce pre-canvass completion
+    if (prId) {
+      const pr = await prisma.purchaseRequest.findUnique({
+        where: { id: prId },
+        select: { status: true, prNumber: true, preCanvass: { select: { status: true, preCanvassNumber: true } } },
+      });
+
+      if (!pr) {
+        return { success: false, error: `Purchase Request #${prId} not found.` };
+      }
+      if (pr.status !== 'Approved') {
+        return { success: false, error: `Purchase Request ${pr.prNumber} must be Approved before converting to RFQ. Current status: ${pr.status}` };
+      }
+      if (!pr.preCanvass) {
+        return { success: false, error: 'A pre-canvass must be completed before creating an official RFQ. Please create and complete the pre-canvass first.' };
+      }
+      const completedStatuses = ['FullyResponded', 'PartiallyResponded', 'Closed'];
+      if (!completedStatuses.includes(pr.preCanvass.status)) {
+        return { success: false, error: `Pre-canvass must be completed before creating an RFQ. Current status: ${pr.preCanvass.status.replace(/([A-Z])/g, ' $1')}` };
+      }
+    }
+
+    // 4. Database Transaction: Check duplicate RFQ Number and insert records
     const result = await prisma.$transaction(async (tx) => {
       const existingRfq = await tx.requestForQuote.findUnique({
         where: { rfqNumber },
@@ -111,15 +133,6 @@ export async function createRfqAction({
 
       // If prId is provided, update PR status to ConvertedToRfq and add to status history
       if (prId) {
-        const prCheck = await tx.purchaseRequest.findUnique({
-          where: { id: prId },
-          select: { status: true, prNumber: true },
-        });
-
-        if (prCheck?.status === 'ConvertedToRfq') {
-          throw new Error(`Purchase Request ${prCheck.prNumber} is already converted to an RFQ.`);
-        }
-
         await tx.purchaseRequest.update({
           where: { id: prId },
           data: { status: 'ConvertedToRfq' },

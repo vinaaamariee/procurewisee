@@ -46,7 +46,7 @@ interface SubmitEvaluationInput {
   philGepsExpirationDate?: string;
 }
 
-export async function submitSupplierEvaluationAction(input: SubmitEvaluationInput) {
+export async function submitSupplierPerformanceEvaluationAction(input: SubmitEvaluationInput) {
   try {
     const result = await prisma.$transaction(async (tx) => {
       // 1. Save evaluation

@@ -29,24 +29,37 @@ export const getAuthenticatedUser = cache(async (): Promise<{
   }
 
   if (!userId) {
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    try {
+      const supabase = await createClient();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
 
-    if (authError || !user) {
+      if (authError || !user) {
+        timer.end();
+        redirect('/login');
+      }
+      userId = user.id;
+      userEmail = user.email ?? null;
+    } catch (e) {
+      console.error('[getAuthenticatedUser] Supabase auth check failed:', e);
       timer.end();
-      redirect('/login');
+      redirect('/login?error=Authentication service unavailable. Please try again.');
     }
-    userId = user.id;
-    userEmail = user.email ?? null;
   }
 
   // Fetch profile via Prisma (connection pool, significantly faster than Supabase REST)
-  const profileRow = await prisma.userProfile.findUnique({
-    where: { id: userId },
-  });
+  let profileRow: Awaited<ReturnType<typeof prisma.userProfile.findUnique>> = null;
+  try {
+    profileRow = await prisma.userProfile.findUnique({
+      where: { id: userId },
+    });
+  } catch (e) {
+    console.error('[getAuthenticatedUser] Prisma profile query failed:', e);
+    timer.end();
+    redirect('/login?error=Database connection failed. Please try again.');
+  }
 
   if (!profileRow) {
     const supabase = await createClient();
@@ -56,7 +69,7 @@ export const getAuthenticatedUser = cache(async (): Promise<{
   }
 
   // Convert Prisma UserRole to App UserRole (with space)
-  let appRole = profileRow.role as string;
+  let appRole = profileRow!.role as string;
   if (appRole === 'ProcurementOfficer') {
     appRole = 'Procurement Officer';
   } else if (appRole === 'AdministrativeApprover') {
@@ -72,7 +85,7 @@ export const getAuthenticatedUser = cache(async (): Promise<{
     redirect('/login?error=Supplier login is disabled. Supplier accounts are for reference only.');
   }
 
-  if (!profileRow.isActive) {
+  if (!profileRow!.isActive) {
     const supabase = await createClient();
     await supabase.auth.signOut();
     timer.end();
@@ -80,19 +93,19 @@ export const getAuthenticatedUser = cache(async (): Promise<{
   }
 
   const profile: UserProfile = {
-    id: profileRow.id,
-    username: profileRow.username,
-    fullName: profileRow.fullName,
-    email: profileRow.email,
+    id: profileRow!.id,
+    username: profileRow!.username,
+    fullName: profileRow!.fullName,
+    email: profileRow!.email,
     role: appRole as any,
-    isActive: profileRow.isActive,
-    createdAt: profileRow.createdAt.toISOString(),
-    supplierId: profileRow.supplierId ?? null,
+    isActive: profileRow!.isActive,
+    createdAt: profileRow!.createdAt.toISOString(),
+    supplierId: profileRow!.supplierId ?? null,
   };
 
   timer.end();
   return {
-    user: { id: userId, email: userEmail ?? profileRow.email },
+    user: { id: userId, email: userEmail ?? profileRow!.email },
     profile,
   };
 });
