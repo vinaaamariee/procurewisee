@@ -6,6 +6,89 @@
 
 ---
 
+## 🔍 Phase 10: Full Runtime Workflow Audit
+
+**Date**: August 2026
+
+Comprehensive code-level audit of the entire procurement workflow — from PR creation through pre-canvass, AOQ, RFQ, evaluation, recommendation, and PO. This audit verified that no catalog pricing leaks into the procurement chain, pre-canvass gates are enforced, and the data flow is correct. A production browser test with authenticated users remains outstanding.
+
+### Build Verification
+
+`npx prisma generate` ✅ | `npx next build` ✅ (all routes compile, 0 errors)
+
+### Database State (at audit time)
+
+| Entity | Count |
+|--------|-------|
+| Users | 16 (6 Procurement Officer, 2 Administrative Approver, 7 Supplier, 1 End User) |
+| Suppliers | 7 |
+| Catalog Products | 2,716 |
+| Pre-Canvass Records | 0 |
+| RFQ Records | 7 |
+| Purchase Orders | 3 |
+| Supplier Quotes | 40 |
+
+### Auth System
+
+- **Supplier login blocked** at three layers: edge proxy (`proxy.ts:137-144`), `getAuthenticatedUser()` (`get-user-profile.ts:68-73`), and login action (`auth.ts:53-56`)
+- **End User self-registration** via `/end-user/login` (PR/AA/Supplier are admin-seeded only)
+- **`pw-user-role` cookie**: client-writable but the proxy falls back to DB role when cookie is missing; when present, role-based routing trusts the cookie value without re-validating against the DB — **potential role escalation if cookie is tampered** (requires HMAC signing to fix)
+
+### Workflow Audit Results
+
+#### PR Creation — ✅ Clean
+- All cost fields (`estimatedUnitCost`, `estimatedCost`, `totalCost`) derived from user-entered values only
+- `estimatedUnitCost` was removed from `CatalogProduct` model and schema
+- Server action recalculates totals independently of client values (defensive coding)
+
+#### PPMP — ✅ Clean
+- User-entered estimated unit cost with inline editing in `PPMPDraftCart`
+- Server recalculates `estimatedBudget` from items in the DB transaction, ignoring client-sent value
+- Draft → Submitted → Approved → Convert to PR state machine correct
+
+#### Pre-Canvass — ✅ Correct
+- **Exactly 3 suppliers enforced** at 4 locations: `selectPreCanvassSuppliersAction`, duplicate check, `sendPreCanvassAction`, and client-side guard
+- **Supplier selection** is Procurement Officer only (all mutation actions check `requireRole("Procurement Officer")`)
+- **AOQ generation** reads exclusively from `PreCanvassResponseItem` — missing responses are `null`, not ₱0, and are excluded from lowest-price calculation
+- **Pre-Canvass must be completed** (`FullyResponded`, `PartiallyResponded`, or `Closed`) before RFQ conversion
+
+#### RFQ Conversion — ✅ Correct (with caveat)
+- `convertPrToRfqAction` correctly gates on PR status (`Approved`) and pre-canvass status
+- Pre-canvass prices are **never overwritten** into RFQ items — RFQ items have no price field
+- **Caveat**: `createRfqAction` in `rfq-actions.ts` accepts a `prId` parameter and does NOT check pre-canvass completion — however, the UI form (`RfqCreationForm`) does NOT pass `prId`, so this bypass is not exploitable from the browser. A server-side fix should add the same gate for defense-in-depth.
+
+#### Final RFQ & Evaluation — ✅ Clean
+- Supplier quotes stored in `SupplierQuote` → `QuoteDetail` tables — completely separate from pre-canvass pricing
+- Recommendation engine (`lib/recommendation/engine.ts`) uses `SupplierQuote.totalQuotedAmount` and `QuoteDetail.unitPrice` — no pre-canvass pricing referenced
+- Evaluation scoring: price score from final RFQ quotes, delivery score from offered delivery days
+
+#### Purchase Order — ✅ Correct (with gaps)
+- PO references `supplierId`, `rfqId`, and `totalCost` from the approved recommendation
+- PO items use `QuoteDetail.unitPrice` (final RFQ quoted price)
+- **Gap**: PO does not link back to PR (`prId` not set despite schema supporting it) — traceability requires PO → RFQ → PR
+- **Gap**: PO item auto-creation does not populate `brand`, `specification`, `unit`, or `stockNo` fields
+
+### Bugs & Gaps Found
+
+| # | Severity | Location | Issue |
+|---|----------|----------|-------|
+| 1 | **HIGH** | `rfq-actions.ts:17-136` | `createRfqAction` accepts `prId` without checking pre-canvass completion — bypasses `convertPrToRfqAction` gate (not exploitable from UI but should be fixed server-side) |
+| 2 | **MEDIUM** | `proxy.ts:91-114` | `pw-user-role` cookie not HMAC-signed — forged cookie could allow role escalation |
+| 3 | **MEDIUM** | `po.ts:50-63` | PO never linked to originating PR (`prId` not set) despite schema support |
+| 4 | **LOW** | `po.ts:66-77` | PO item auto-creation doesn't populate brand/specification/unit/stockNo |
+| 5 | **LOW** | `evaluation.ts` naming | `submitSupplierEvaluationAction` is for supplier performance ratings, not RFQ award evaluation — confusing for future developers |
+| 6 | **INFO** | `pr.ts:902` | `PartiallyResponded` accepted as "completed" pre-canvass — means RFQ proceeds with incomplete supplier responses (intentional but worth documenting) |
+
+### Outstanding Work
+
+- **Browser runtime test** with authenticated End User, Procurement Officer, and Supplier accounts through the full PR → Pre-Canvass → AOQ → RFQ → Evaluation → PO flow
+- **Fix `createRfqAction`** to check pre-canvass completion when `prId` is provided
+- **HMAC-sign `pw-user-role` cookie** to prevent role escalation
+- **Link PO back to PR** (`prId` field in `createPoFromAwardAction`)
+- **Populate PO item metadata** from quote details
+
+---
+
 ## 📦 Phase 9: PhilGEPS Catalog Import
 
 **Date**: August 2026
