@@ -102,7 +102,6 @@ export default function SuggestedProducts({
       {/* Grid of items */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "1rem" }}>
         {activeList.map((product) => {
-          const currentPrice = 0;
           return (
             <div
               key={product.id}
@@ -124,14 +123,9 @@ export default function SuggestedProducts({
                 <h4 style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--text-primary)", margin: "0.2rem 0 0 0", lineClamp: 1, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical" }}>
                   {product.name}
                 </h4>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: "0.5rem" }}>
-                  <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--accent)" }}>
-                    ₱{currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                  </span>
-                  <span style={{ fontSize: "0.65rem", color: "var(--text-secondary)" }}>
-                    per {product.unit.abbreviation || "unit"}
-                  </span>
-                </div>
+                <span style={{ fontSize: "0.65rem", color: "var(--text-secondary)", marginTop: "0.35rem", display: "block" }}>
+                  Unit: {product.unit.abbreviation || "unit"}
+                </span>
               </div>
 
               <button

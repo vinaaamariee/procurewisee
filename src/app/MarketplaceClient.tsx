@@ -41,11 +41,9 @@ interface Product {
   category: string;
   description: string;
   unitOfMeasure: string;
-  estimatedUnitCost: number;
   brand: string;
   popularity: number;
   technicalSpecifications: string;
-  latestCanvassedPrice: number | null;
   preferredSupplier: string;
   isActive: boolean;
 }
@@ -53,7 +51,6 @@ interface Product {
 interface CartItem {
   id: number;
   name: string;
-  estimatedUnitCost: number;
   uom: string;
   quantity: number;
   brand: string;
@@ -332,9 +329,6 @@ function FilterToolbar({
   setSelectedBrand,
   selectedSupplier,
   setSelectedSupplier,
-  maxPrice,
-  setMaxPrice,
-  absoluteMaxPrice,
   sortBy,
   setSortBy,
   viewMode,
@@ -396,21 +390,6 @@ function FilterToolbar({
           ))}
         </select>
 
-        {/* Price */}
-        <div className="flex items-center gap-2 min-w-[160px]">
-          <span className="text-[10px] text-gray-400 font-bold uppercase whitespace-nowrap">
-            Max ₱{maxPrice.toLocaleString()}
-          </span>
-          <input
-            type="range"
-            min="0"
-            max={absoluteMaxPrice}
-            value={maxPrice}
-            onChange={(e) => setMaxPrice(Number(e.target.value))}
-            className="w-full h-1.5 accent-[#0B3B6E] cursor-pointer"
-          />
-        </div>
-
         {/* Divider */}
         <div className="h-6 w-px bg-gray-200 dark:bg-slate-700 hidden sm:block" />
 
@@ -421,8 +400,6 @@ function FilterToolbar({
           className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#0B3B6E] cursor-pointer transition"
         >
           <option value="popularity">Popularity</option>
-          <option value="priceAsc">Price: Low to High</option>
-          <option value="priceDesc">Price: High to Low</option>
           <option value="newest">Newest Added</option>
         </select>
 
@@ -521,23 +498,13 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) 
         <div className="flex items-end justify-between">
           <div>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-              Est. Price
-            </p>
-            <p className="text-xl font-black text-gray-900 dark:text-white leading-tight">
-              ₱{p.estimatedUnitCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+              Enter during PR
             </p>
           </div>
           <div className="text-right">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Unit</p>
             <p className="text-sm font-bold text-[#D4A017]">{p.unitOfMeasure}</p>
           </div>
-        </div>
-
-        <div className="flex items-center gap-1 text-[11px] text-gray-400">
-          <Truck className="w-3 h-3 shrink-0" />
-          <span className="truncate">
-            <span className="font-semibold text-gray-700 dark:text-slate-300">{p.preferredSupplier}</span>
-          </span>
         </div>
 
         <button
@@ -571,8 +538,6 @@ function ProductListItem({ p, onAdd }: { p: Product; onAdd: (p: Product) => void
         </h3>
         <p className="text-xs text-gray-400 font-semibold flex items-center gap-2">
           <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{p.brand}</span>
-          <span className="text-gray-300 dark:text-slate-700">•</span>
-          <span className="flex items-center gap-1"><Truck className="w-3 h-3" />{p.preferredSupplier}</span>
         </p>
         <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed max-w-2xl">
           {p.description}
@@ -587,10 +552,7 @@ function ProductListItem({ p, onAdd }: { p: Product; onAdd: (p: Product) => void
 
       <div className="md:w-44 shrink-0 flex flex-col justify-between items-end border-t md:border-t-0 md:border-l border-gray-100 dark:border-slate-800 pt-4 md:pt-0 md:pl-5 gap-4">
         <div className="text-right">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Est. Price</p>
-          <p className="text-2xl font-black text-gray-900 dark:text-white leading-tight">
-            ₱{p.estimatedUnitCost.toLocaleString(undefined, { minimumFractionDigits: 2 })}
-          </p>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Enter during PR</p>
           <p className="text-xs text-[#D4A017] font-semibold">per {p.unitOfMeasure}</p>
         </div>
 
@@ -677,9 +639,8 @@ function CartDrawer({
                   <p className="text-[11px] text-gray-400 font-semibold mt-0.5 uppercase tracking-wide">
                     {item.brand}
                   </p>
-                  <p className="text-xs font-bold text-[#D4A017] mt-1">
-                    ₱{item.estimatedUnitCost.toFixed(2)}{" "}
-                    <span className="text-gray-400 font-normal">/ {item.uom}</span>
+                  <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 mt-1">
+                    {item.uom}
                   </p>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
@@ -710,10 +671,7 @@ function CartDrawer({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                  Total Estimated Value
-                </p>
-                <p className="text-2xl font-black text-gray-900 dark:text-white mt-0.5">
-                  ₱{cartTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  Costs entered during PR
                 </p>
               </div>
               <div className="text-right text-xs text-gray-400">
@@ -1009,7 +967,6 @@ export default function MarketplaceClient({
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedSupplier, setSelectedSupplier] = useState("");
-  const [maxPrice, setMaxPrice] = useState<number>(100000);
   const [sortBy, setSortBy] = useState("popularity");
 
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
@@ -1058,7 +1015,6 @@ export default function MarketplaceClient({
         {
           id: product.id,
           name: product.name,
-          estimatedUnitCost: product.estimatedUnitCost,
           uom: product.unitOfMeasure,
           quantity: 1,
           brand: product.brand,
@@ -1089,14 +1045,6 @@ export default function MarketplaceClient({
     () => Array.from(new Set(products.map((p) => p.brand))),
     [products]
   );
-  const absoluteMaxPrice = useMemo(() => {
-    const costs = products.map((p) => p.estimatedUnitCost);
-    return costs.length > 0 ? Math.max(...costs) : 100000;
-  }, [products]);
-
-  useEffect(() => {
-    setMaxPrice(absoluteMaxPrice);
-  }, [absoluteMaxPrice]);
 
   const processedProducts = useMemo(() => {
     let result = products.filter((p) => {
@@ -1108,22 +1056,16 @@ export default function MarketplaceClient({
       const matchesCategory = !selectedCategory || p.category === selectedCategory;
       const matchesBrand = !selectedBrand || p.brand === selectedBrand;
       const matchesSupplier = !selectedSupplier || p.preferredSupplier === selectedSupplier;
-      const matchesPrice = p.estimatedUnitCost <= maxPrice;
-      return matchesSearch && matchesCategory && matchesBrand && matchesSupplier && matchesPrice;
+      return matchesSearch && matchesCategory && matchesBrand && matchesSupplier;
     });
 
     if (sortBy === "popularity") result.sort((a, b) => b.popularity - a.popularity);
-    else if (sortBy === "priceAsc") result.sort((a, b) => a.estimatedUnitCost - b.estimatedUnitCost);
-    else if (sortBy === "priceDesc") result.sort((a, b) => b.estimatedUnitCost - a.estimatedUnitCost);
     else if (sortBy === "newest") result.sort((a, b) => b.id - a.id);
 
     return result;
-  }, [products, searchQuery, selectedCategory, selectedBrand, selectedSupplier, maxPrice, sortBy]);
+  }, [products, searchQuery, selectedCategory, selectedBrand, selectedSupplier, sortBy]);
 
-  const cartTotal = cart.reduce(
-    (sum, item) => sum + item.estimatedUnitCost * item.quantity,
-    0
-  );
+  const cartTotal = 0;
 
   // ── Handlers (ALL UNCHANGED) ───────────────────────────────────────────────
   const handleCheckoutClick = async () => {
@@ -1181,7 +1123,7 @@ export default function MarketplaceClient({
           brand: item.brand,
           quantity: item.quantity,
           unit: item.uom,
-          estimatedUnitCost: item.estimatedUnitCost,
+          estimatedUnitCost: 0,
           specification: item.specifications,
         })),
       });
@@ -1247,9 +1189,6 @@ export default function MarketplaceClient({
           setSelectedBrand={setSelectedBrand}
           selectedSupplier={selectedSupplier}
           setSelectedSupplier={setSelectedSupplier}
-          maxPrice={maxPrice}
-          setMaxPrice={setMaxPrice}
-          absoluteMaxPrice={absoluteMaxPrice}
           sortBy={sortBy}
           setSortBy={setSortBy}
           viewMode={viewMode}
@@ -1262,7 +1201,6 @@ export default function MarketplaceClient({
             setSelectedCategory("");
             setSelectedBrand("");
             setSelectedSupplier("");
-            setMaxPrice(absoluteMaxPrice);
             setSearchQuery("");
           }}
         />

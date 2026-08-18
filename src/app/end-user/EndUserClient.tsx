@@ -11,14 +11,12 @@ interface Product {
   category: string;
   description: string;
   unitOfMeasure: string;
-  estimatedUnitCost: number;
   isActive: boolean;
 }
 
 interface CartItem {
   id: number;
   name: string;
-  estimatedUnitCost: number;
   uom: string;
   quantity: number;
 }
@@ -63,7 +61,6 @@ export default function EndUserClient({ products }: EndUserClientProps) {
             const newCart = [...cart, {
               id: targetProd.id,
               name: targetProd.name,
-              estimatedUnitCost: targetProd.estimatedUnitCost,
               uom: targetProd.unitOfMeasure,
               quantity: 1
             }];
@@ -107,7 +104,6 @@ export default function EndUserClient({ products }: EndUserClientProps) {
       saveCart([...cart, {
         id: product.id,
         name: product.name,
-        estimatedUnitCost: product.estimatedUnitCost,
         uom: product.unitOfMeasure,
         quantity: 1
       }]);
@@ -139,7 +135,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
         items: cart.map(item => ({
           productName: item.name,
           quantity: item.quantity,
-          estimatedUnitPrice: item.estimatedUnitCost,
+          estimatedUnitPrice: 0,
         }))
       });
 
@@ -158,7 +154,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
     }
   };
 
-  const cartTotal = cart.reduce((sum, item) => sum + (item.estimatedUnitCost * item.quantity), 0);
+  const cartTotal = 0;
 
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] flex flex-col">
@@ -244,8 +240,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
 
                   <div className="mt-6 flex items-center justify-between border-t border-gray-100 pt-4">
                     <div>
-                      <span className="text-lg font-black text-gray-900">₱{product.estimatedUnitCost.toFixed(2)}</span>
-                      <span className="text-[10px] text-gray-500 ml-1">/ {product.unitOfMeasure}</span>
+                      <span className="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">per {product.unitOfMeasure}</span>
                     </div>
                     <button
                       disabled={!product.isActive}
@@ -288,7 +283,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                   <div key={item.id} className="py-3 flex justify-between items-center text-xs">
                     <div className="flex-1 pr-3">
                       <p className="font-bold text-gray-900 leading-tight">{item.name}</p>
-                      <p className="text-gray-500 mt-0.5">₱{item.estimatedUnitCost.toFixed(2)} • per {item.uom}</p>
+                      <p className="text-gray-500 mt-0.5">per {item.uom}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <button 
@@ -314,8 +309,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
           {cart.length > 0 && (
             <div className="border-t pt-4 mt-6 space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-xs text-gray-500 font-semibold uppercase">Total Est. Value</span>
-                <span className="text-xl font-black text-[#7e191b]">₱{cartTotal.toFixed(2)}</span>
+                <span className="text-xs text-gray-500 font-semibold uppercase">Costs entered during PR</span>
               </div>
               <button
                 onClick={() => setIsCheckoutOpen(true)}

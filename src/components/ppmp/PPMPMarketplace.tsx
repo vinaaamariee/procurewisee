@@ -32,33 +32,6 @@ export default function PPMPMarketplace({
     return matchesSearch && matchesCategory;
   });
 
-  // 3. Helper to generate deterministic price trend for a product (for thesis fidelity)
-  const getPriceTrendData = (product: ProductListItem) => {
-    const currentPrice = 0;
-    // Generate deterministic variations using product.id as seed
-    const idSeed = product.id;
-    const p1 = currentPrice * (1 + Math.sin(idSeed) * 0.06);
-    const p2 = currentPrice * (1 + Math.cos(idSeed) * 0.04);
-    const p3 = currentPrice * (1 - Math.sin(idSeed + 2) * 0.03);
-    const p4 = currentPrice;
-
-    const diffPercent = ((p4 - p1) / (p1 || 1)) * 100;
-    const isUp = diffPercent >= 0;
-
-    // Last 4 months label
-    return {
-      points: [
-        { month: "Jan", price: p1 },
-        { month: "Feb", price: p2 },
-        { month: "Mar", price: p3 },
-        { month: "Apr", price: p4 },
-      ],
-      avgPrice: (p1 + p2 + p3 + p4) / 4,
-      trendText: `${isUp ? "↑" : "↓"} ${Math.abs(diffPercent).toFixed(1)}%`,
-      isUp,
-    };
-  };
-
   return (
     <div
       style={{
@@ -141,9 +114,6 @@ export default function PPMPMarketplace({
         {/* Product Cards Grid */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1.5rem" }}>
           {filteredProducts.map((product) => {
-            const currentPrice = 0;
-            const trend = getPriceTrendData(product);
-            const lowestPrice = 0;
             const supplierCount = 3;
 
             return (
@@ -194,54 +164,7 @@ export default function PPMPMarketplace({
                     Brand: {product.brand?.name || "Generic"} • Code: {product.productCode || "N/A"}
                   </span>
 
-                  {/* Pricing grid */}
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "1fr 1fr 1fr",
-                      gap: "0.5rem",
-                      margin: "1rem 0",
-                      background: "rgba(0,0,0,0.02)",
-                      borderRadius: "8px",
-                      padding: "0.5rem 0.75rem",
-                      border: "1px solid var(--border)",
-                    }}
-                  >
-                    <div>
-                      <span style={{ display: "block", fontSize: "0.6rem", color: "var(--text-secondary)" }}>Current Price</span>
-                      <strong style={{ fontSize: "0.85rem", color: "var(--accent)", fontWeight: 800 }}>
-                        ₱{currentPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                      </strong>
-                    </div>
-                    <div>
-                      <span style={{ display: "block", fontSize: "0.6rem", color: "var(--text-secondary)" }}>Avg Historical</span>
-                      <strong style={{ fontSize: "0.85rem", color: "var(--text-primary)", fontWeight: 700 }}>
-                        ₱{trend.avgPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                      </strong>
-                    </div>
-                    <div>
-                      <span style={{ display: "block", fontSize: "0.6rem", color: "var(--text-secondary)" }}>Lowest Price</span>
-                      <strong style={{ fontSize: "0.85rem", color: "#10b981", fontWeight: 700 }}>
-                        ₱{lowestPrice.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                      </strong>
-                    </div>
-                  </div>
-
-                  {/* Monthly Trend Sparkline list */}
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "0.65rem", color: "var(--text-secondary)", background: "rgba(0,0,0,0.01)", padding: "0.4rem 0.6rem", borderRadius: "6px", border: "1px dashed var(--border)", marginBottom: "0.75rem" }}>
-                    <div style={{ display: "flex", gap: "0.5rem" }}>
-                      {trend.points.map((pt) => (
-                        <span key={pt.month} style={{ fontVariantNumeric: "tabular-nums" }}>
-                          {pt.month}: <strong>₱{pt.price.toFixed(0)}</strong>
-                        </span>
-                      ))}
-                    </div>
-                    <span style={{ fontWeight: 700, color: trend.isUp ? "#ef4444" : "#10b981" }}>
-                      {trend.trendText}
-                    </span>
-                  </div>
-
-                  <span style={{ display: "block", fontSize: "0.65rem", color: "var(--text-muted)" }}>
+                  <span style={{ display: "block", fontSize: "0.65rem", color: "var(--text-muted)", marginTop: "0.75rem" }}>
                     Suppliers compared: <strong>{supplierCount} vendors</strong> • Last updated: <strong>{new Date(product.updatedAt).toLocaleDateString(undefined, { month: "short", year: "numeric" })}</strong>
                   </span>
                 </div>
@@ -316,13 +239,7 @@ export default function PPMPMarketplace({
               {selectedProductDetails.description}
             </p>
 
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: "1rem" }}>
-              <div>
-                <span style={{ fontSize: "0.65rem", color: "var(--text-secondary)", display: "block" }}>Estimated Cost</span>
-                <strong style={{ fontSize: "1.2rem", color: "var(--accent)", fontWeight: 800 }}>
-                  ₱{(0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
-                </strong>
-              </div>
+            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", borderTop: "1px solid var(--border)", paddingTop: "1rem" }}>
               <button
                 type="button"
                 onClick={() => {

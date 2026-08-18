@@ -44,6 +44,7 @@ export default function PPMPDashboardClient({
 
   const [addProductDialogItem, setAddProductDialogItem] = useState<ProductListItem | null>(null);
   const [addQuantity, setAddQuantity] = useState<number>(1);
+  const [addEstimatedCost, setAddEstimatedCost] = useState<number>(0);
   const [addSpecifications, setAddSpecifications] = useState<string>("");
 
   const [message, setMessage] = useState("");
@@ -67,6 +68,7 @@ export default function PPMPDashboardClient({
           product,
           quantity: 1,
           description: product.description || "",
+          estimatedUnitCost: 0,
         },
       ]);
     }
@@ -87,6 +89,7 @@ export default function PPMPDashboardClient({
         if (targetProd) {
           setAddProductDialogItem(targetProd);
           setAddQuantity(1);
+          setAddEstimatedCost(0);
           setAddSpecifications(targetProd.description || "");
           setActiveTab("create");
         }
@@ -119,6 +122,15 @@ export default function PPMPDashboardClient({
     );
   };
 
+  // 4b. Update item estimated unit cost
+  const handleUpdateEstimatedUnitCost = (productId: number, cost: number) => {
+    setCartItems(
+      cartItems.map((item) =>
+        item.product.id === productId ? { ...item, estimatedUnitCost: Math.max(0, cost) } : item
+      )
+    );
+  };
+
   // 5. Update draft metadata
   const handleUpdateMetadata = (key: string, val: any) => {
     if (key === "ppmpNumber") setPpmpNumber(val);
@@ -143,7 +155,7 @@ export default function PPMPDashboardClient({
     setMessage("");
 
     const currentDraftTotal = cartItems.reduce(
-      (sum, item) => sum + item.quantity * 0,
+      (sum, item) => sum + item.quantity * item.estimatedUnitCost,
       0
     );
 
@@ -162,7 +174,7 @@ export default function PPMPDashboardClient({
           productId: item.product.id,
           generalDescription: item.description || item.product.name,
           quantity: item.quantity,
-          estimatedUnitCost: 0,
+          estimatedUnitCost: item.estimatedUnitCost,
         })),
       });
 
@@ -236,6 +248,7 @@ export default function PPMPDashboardClient({
         product,
         quantity: item.quantity,
         description: item.generalDescription,
+        estimatedUnitCost: item.estimatedUnitCost || 0,
       };
     });
 
@@ -342,17 +355,20 @@ export default function PPMPDashboardClient({
                     Estimated Unit Cost
                   </label>
                   <input
-                    type="text"
-                    disabled
-                    value={`₱${(0).toLocaleString(undefined, { minimumFractionDigits: 2 })}`}
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={addEstimatedCost}
+                    onChange={(e) => setAddEstimatedCost(parseFloat(e.target.value) || 0)}
                     style={{
                       width: "100%",
                       padding: "0.6rem 0.8rem",
                       borderRadius: "8px",
                       border: "1px solid var(--border)",
-                      background: "rgba(0,0,0,0.03)",
-                      color: "var(--text-muted)",
+                      background: "var(--bg-deep)",
+                      color: "var(--text-primary)",
                       fontSize: "0.8rem",
+                      outline: "none",
                     }}
                   />
                 </div>
@@ -430,6 +446,7 @@ export default function PPMPDashboardClient({
                   if (existingIndex > -1) {
                     const updated = [...cartItems];
                     updated[existingIndex].quantity = validatedQty;
+                    updated[existingIndex].estimatedUnitCost = addEstimatedCost;
                     updated[existingIndex].description = addSpecifications;
                     setCartItems(updated);
                   } else {
@@ -438,6 +455,7 @@ export default function PPMPDashboardClient({
                       {
                         product: addProductDialogItem,
                         quantity: validatedQty,
+                        estimatedUnitCost: addEstimatedCost,
                         description: addSpecifications,
                       },
                     ]);
@@ -769,6 +787,7 @@ export default function PPMPDashboardClient({
               budgetAlreadyPlanned={budgetAlreadyPlanned}
               onUpdateQuantity={handleUpdateQuantity}
               onUpdateDescription={handleUpdateDescription}
+              onUpdateEstimatedUnitCost={handleUpdateEstimatedUnitCost}
               onRemoveItem={handleRemoveItem}
               onUpdateMetadata={handleUpdateMetadata}
               onSaveDraft={handleSaveDraft}

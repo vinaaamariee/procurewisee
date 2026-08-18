@@ -87,6 +87,7 @@ export const getAuthenticatedUser = cache(async (): Promise<{
     role: appRole as any,
     isActive: profileRow.isActive,
     createdAt: profileRow.createdAt.toISOString(),
+    supplierId: profileRow.supplierId ?? null,
   };
 
   timer.end();

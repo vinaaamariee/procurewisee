@@ -6,6 +6,7 @@ export interface DraftItem {
   product: ProductListItem;
   quantity: number;
   description: string;
+  estimatedUnitCost: number;
 }
 
 interface PPMPDraftCartProps {
@@ -19,6 +20,7 @@ interface PPMPDraftCartProps {
   budgetAlreadyPlanned: number;
   onUpdateQuantity: (productId: number, qty: number) => void;
   onUpdateDescription: (productId: number, desc: string) => void;
+  onUpdateEstimatedUnitCost: (productId: number, cost: number) => void;
   onRemoveItem: (productId: number) => void;
   onUpdateMetadata: (key: string, val: any) => void;
   onSaveDraft: () => void;
@@ -37,6 +39,7 @@ export default function PPMPDraftCart({
   budgetAlreadyPlanned,
   onUpdateQuantity,
   onUpdateDescription,
+  onUpdateEstimatedUnitCost,
   onRemoveItem,
   onUpdateMetadata,
   onSaveDraft,
@@ -44,7 +47,7 @@ export default function PPMPDraftCart({
   isSaving,
 }: PPMPDraftCartProps) {
   const currentDraftTotal = items.reduce(
-    (sum, item) => sum + item.quantity * 0,
+    (sum, item) => sum + item.quantity * item.estimatedUnitCost,
     0
   );
 
@@ -219,7 +222,7 @@ export default function PPMPDraftCart({
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", maxHeight: "280px", overflowY: "auto", paddingRight: "0.25rem" }}>
               {items.map((item) => {
-                const itemTotal = item.quantity * 0;
+                const itemTotal = item.quantity * item.estimatedUnitCost;
                 return (
                   <div
                     key={item.product.id}
@@ -282,12 +285,26 @@ export default function PPMPDraftCart({
                         />
                       </div>
                       <div>
-                        <span style={{ fontSize: "0.65rem", color: "var(--text-secondary)", display: "block", marginBottom: "0.15rem" }}>
+                        <label style={{ fontSize: "0.65rem", color: "var(--text-secondary)", display: "block", marginBottom: "0.15rem" }}>
                           Unit Price
-                        </span>
-                        <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text-primary)" }}>
-                          ₱{(0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                        </span>
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          step="0.01"
+                          value={item.estimatedUnitCost}
+                          onChange={(e) => onUpdateEstimatedUnitCost(item.product.id, parseFloat(e.target.value) || 0)}
+                          style={{
+                            width: "100%",
+                            padding: "0.3rem 0.5rem",
+                            borderRadius: "6px",
+                            border: "1px solid var(--border)",
+                            background: "var(--surface)",
+                            color: "var(--text-primary)",
+                            fontSize: "0.75rem",
+                            outline: "none",
+                          }}
+                        />
                       </div>
                       <div style={{ textAlign: "right" }}>
                         <span style={{ fontSize: "0.65rem", color: "var(--text-secondary)", display: "block", marginBottom: "0.15rem" }}>

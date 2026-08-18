@@ -326,12 +326,12 @@ export async function submitPreCanvassResponseAction(
   input: PreCanvassResponseInput
 ) {
   try {
-    // Determine the authenticated supplier
-    const { profile } = await getAuthenticatedUser();
+    const { profile } = await requireRole("Supplier");
 
-    // Find supplier record for this user (supplier role users)
-    // In a real implementation, this would link UserProfile to Supplier
-    // For now, we validate using the preCanvassSupplierId
+    if (!profile.supplierId) {
+      return { success: false, error: "Your account is not linked to a supplier." };
+    }
+
     const preCanvassSupplier = await prisma.preCanvassSupplier.findUnique({
       where: { id: input.preCanvassId },
       include: {
@@ -342,6 +342,11 @@ export async function submitPreCanvassResponseAction(
 
     if (!preCanvassSupplier) {
       return { success: false, error: "Pre-canvass supplier record not found." };
+    }
+
+    // Verify the authenticated supplier owns this invitation
+    if (preCanvassSupplier.supplierId !== profile.supplierId) {
+      return { success: false, error: "You are not authorized to respond to this pre-canvass." };
     }
 
     // Verify the pre-canvass is open for responses
@@ -798,12 +803,16 @@ export async function getAvailableSuppliersAction() {
 // 10b. GET SUPPLIER PRE-CANVASS RESPONSES (for supplier-facing UI)
 // ─────────────────────────────────────────────────────────────────────────────
 
-export async function getSupplierPreCanvassResponsesAction(supplierId: number) {
+export async function getSupplierPreCanvassResponsesAction() {
   try {
-    await getAuthenticatedUser();
+    const { profile } = await requireRole("Supplier");
+
+    if (!profile.supplierId) {
+      return { success: false, error: "Your account is not linked to a supplier." };
+    }
 
     const preCanvassSuppliers = await prisma.preCanvassSupplier.findMany({
-      where: { supplierId },
+      where: { supplierId: profile.supplierId },
       include: {
         preCanvass: {
           include: {
@@ -843,17 +852,20 @@ export async function getSupplierPreCanvassResponsesAction(supplierId: number) {
 // ─────────────────────────────────────────────────────────────────────────────
 
 export async function getSupplierPreCanvassDetailAction(
-  preCanvassId: number,
-  supplierId: number
+  preCanvassId: number
 ) {
   try {
-    await getAuthenticatedUser();
+    const { profile } = await requireRole("Supplier");
+
+    if (!profile.supplierId) {
+      return { success: false, error: "Your account is not linked to a supplier." };
+    }
 
     // Verify the supplier is part of this pre-canvass
     const preCanvassSupplier = await prisma.preCanvassSupplier.findFirst({
       where: {
         preCanvassId,
-        supplierId,
+        supplierId: profile.supplierId,
       },
       include: {
         preCanvass: {

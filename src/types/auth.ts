@@ -12,6 +12,7 @@ export interface UserProfile {
   role: UserRole;
   isActive: boolean;
   createdAt: string;
+  supplierId?: number | null;
 }
 
 export const ROLE_LABELS: Record<UserRole, string> = {

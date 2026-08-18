@@ -4,6 +4,35 @@
 
 **Capstone Project for Batanes State College**
 
+---
+
+## 🛡️ Phase 8 Audit — Catalog Cleanup, Security Fixes, and Legacy Removal
+
+**Date**: August 2026
+
+Completed a comprehensive audit and fix cycle covering four areas: remaining catalog pricing references, pre-canvass supplier authentication security, PPMP cost input, and legacy model removal.
+
+### What Was Fixed
+
+1. **Catalog Pricing References** — Removed all remaining `estimatedUnitCost` references from `MarketplaceClient.tsx`, `EndUserClient.tsx`, `PRItemsTable.tsx`, `RfqCreationForm.tsx`, `RFQItemsTable.tsx`, and PR/RFQ creation pages. Catalog product dropdowns now show `[SKU] Name` only (no pricing). PR items use their own user-entered cost values.
+
+2. **Pre-Canvass Supplier Authentication (IDOR Fix)** — Added `supplierId` field to `UserProfile` schema with a unique constraint, linking user accounts to supplier records. Updated `getAuthenticatedUser()` to include `supplierId` in the profile. Fixed three supplier-facing server actions (`submitPreCanvassResponseAction`, `getSupplierPreCanvassResponsesAction`, `getSupplierPreCanvassDetailAction`) to derive supplier identity from the authenticated session instead of trusting client-supplied `supplierId`. All three now use `requireRole("Supplier")` and validate ownership server-side.
+
+3. **PPMP Cost Input** — Added editable estimated unit cost field to the PPMP workflow. `PPMPDraftCart` now supports inline editing of unit costs with per-item totals. `PPMPDashboardClient` dialog has an editable cost field. `PPMPMarketplace` and `SuggestedProducts` no longer display pricing (catalog has no price). Draft totals are calculated from actual user-entered costs.
+
+4. **Legacy Model Removal** — Removed `OfficeItem` and `PriceQuote` Prisma models, the `/price-comparison` demo page and its components, and `src/lib/mock-price-data.ts`. Updated `check-db.ts` to reference `catalogProduct` instead of legacy models. Added `scratch/` and `scripts/` to `tsconfig.json` excludes.
+
+5. **TypeScript Build Fix** — Excluded `scratch/`, `scratch-*.ts`, and `scripts/` from `tsconfig.json` to prevent stale utility files from blocking the production build. `next build` now succeeds cleanly.
+
+### DB Migration Required
+
+Run `npx tsx scripts/apply-supplier-auth-migration.ts` to add the `supplier_id` column and unique index to `user_profiles`.
+
+### Verification
+
+`npx prisma generate` ✅ | `npx tsc --noEmit` ✅ (only scratch/scripts excluded) | `next build` ✅ (all routes compile)
+
+---
 
 ## 🧹 Legacy Model Removal — OfficeItem & PriceQuote
 
