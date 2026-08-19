@@ -53,6 +53,56 @@ Implemented the complete End User procurement workflow: PPMP creation, interacti
 
 ---
 
+## 🛡️ End User Security Hardening & E2E Verification
+
+**Date**: August 2026
+
+Fixed 5 server-side security vulnerabilities in the End User workflow and verified the complete procurement chain via a 13-step E2E test (52 assertions, 0 failures).
+
+### Security Fixes
+
+| # | File | Action | Fix |
+|---|------|--------|-----|
+| 1 | `ppmp.ts` | `submitPpmpAction` | Added ownership check: `preparedById === profile.id` |
+| 2 | `ppmp.ts` | `deletePpmpAction` | Added ownership check: `preparedById === profile.id` |
+| 3 | `pr.ts` | `submitPrAction` | Added ownership check: `requestedById === profile.id` |
+| 4 | `pr.ts` | `reviewPrAction` fallback | Added `requireRole(["Procurement Officer", "Administrative Approver"])` + `PrStatus` enum validation |
+| 5 | `ppmp.ts` | `reviewPpmpAction` | Added state machine validation: PPMP must be `Submitted`; only `Approved` or `Returned` target status allowed |
+
+### E2E Test Results
+
+| Step | Description | Assertions |
+|------|-------------|------------|
+| 1 | End User creates PPMP (Draft) | 3 ✓ |
+| 2 | End User submits PPMP | 1 ✓ |
+| 3 | Approver approves PPMP | 1 ✓ |
+| 4 | End User converts PPMP → PR | 5 ✓ |
+| 5 | End User creates PR from Catalog Cart (independent path) | 5 ✓ |
+| 6 | End User submits PR (PendingProcurementReview + submittedAt) | 3 ✓ |
+| 7 | Officer creates Pre-Canvass | 3 ✓ |
+| 8 | Officer selects 3 suppliers | 3 ✓ |
+| 9 | Officer sends Pre-Canvass | 3 ✓ |
+| 10 | Officer generates AOQ (Abstract) | 4 ✓ |
+| 11 | Package Review chain verification (PPMP → PR → Items → PreCanvass → 3 Suppliers → Abstract) | 13 ✓ |
+| 12 | Cross-user PPMP ownership manipulation rejected | 3 ✓ |
+| 13 | Cross-user PR ownership + role validation rejected | 5 ✓ |
+
+**Total: 52/52 passed, 0 failed**
+
+### Files Changed
+
+| File | Change |
+|------|--------|
+| `src/app/actions/ppmp.ts` | Ownership checks on submit/delete, state machine on review |
+| `src/app/actions/pr.ts` | Ownership check on submit, role check + status validation on review fallback |
+| `scripts/e2e-enduser-workflow.ts` | New: 13-step E2E workflow test script |
+
+### Build Verification
+
+`npx prisma validate` ✅ | `npx prisma generate` ✅ | `npx next build` ✅ (45 routes, 0 errors) | `npx tsx scripts/e2e-enduser-workflow.ts` ✅ (52/52)
+
+---
+
 ## 📦 Supplier Quotations / AOQ — End User Page
 
 **Date**: August 2026

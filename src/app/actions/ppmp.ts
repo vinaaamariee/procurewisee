@@ -170,9 +170,12 @@ export async function createPpmpAction(input: CreatePpmpInput) {
 
 export async function submitPpmpAction(id: number) {
   try {
-    await requireRole("End User");
+    const { profile } = await requireRole("End User");
     const old = await prisma.ppmp.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PPMP not found." };
+    if (old.preparedById !== profile.id) {
+      return { success: false, error: "You can only submit your own PPMPs." };
+    }
 
     const updated = await prisma.ppmp.update({
       where: { id },
@@ -197,9 +200,12 @@ export async function submitPpmpAction(id: number) {
 
 export async function deletePpmpAction(id: number) {
   try {
-    await requireRole("End User");
+    const { profile } = await requireRole("End User");
     const old = await prisma.ppmp.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PPMP not found." };
+    if (old.preparedById !== profile.id) {
+      return { success: false, error: "You can only delete your own PPMPs." };
+    }
     if (old.status !== PpmpStatus.Draft && old.status !== PpmpStatus.Returned) {
       return { success: false, error: "Only Draft or Returned PPMPs can be deleted." };
     }
@@ -307,6 +313,12 @@ export async function reviewPpmpAction(id: number, status: PpmpStatus, remarks?:
     await requireRole("Administrative Approver");
     const old = await prisma.ppmp.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PPMP not found." };
+    if (old.status !== PpmpStatus.Submitted) {
+      return { success: false, error: "Only Submitted PPMPs can be reviewed." };
+    }
+    if (status !== PpmpStatus.Approved && status !== PpmpStatus.Returned) {
+      return { success: false, error: "PPMP can only be Approved or Returned." };
+    }
 
     const updated = await prisma.ppmp.update({
       where: { id },

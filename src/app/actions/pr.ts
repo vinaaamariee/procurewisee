@@ -163,6 +163,9 @@ export async function submitPrAction(id: number) {
     const { profile } = await requireRole("End User");
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
+    if (old.requestedById !== profile.id) {
+      return { success: false, error: "You can only submit your own Purchase Requests." };
+    }
 
     const targetStatus = (PrStatus as any).PendingProcurementReview || PrStatus.Submitted;
 
@@ -403,9 +406,14 @@ export async function reviewPrAction(id: number, status: PrStatus, remarks?: str
     return returnPrByOfficerAction(id, remarks || "");
   }
   try {
-    const { profile } = await getAuthenticatedUser();
+    const { profile } = await requireRole(["Procurement Officer", "Administrative Approver"]);
     const old = await prisma.purchaseRequest.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PR not found." };
+
+    const allowedStatuses = Object.values(PrStatus);
+    if (!allowedStatuses.includes(status)) {
+      return { success: false, error: `Invalid status: ${status}` };
+    }
 
     const updated = await prisma.$transaction(async (tx) => {
       const pr = await tx.purchaseRequest.update({
