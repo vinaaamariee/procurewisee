@@ -29,6 +29,10 @@ interface PpmpInfo {
   ppmpNumber: string;
   projectTitle: string;
   status: string;
+  documentUrl: string | null;
+  documentName: string | null;
+  documentSize: number | null;
+  documentUploadedAt: string | null;
 }
 
 interface PreCanvassSupplier {
@@ -215,6 +219,35 @@ export default function PackageReviewClient({ prs }: PackageReviewClientProps) {
                   detail={selectedPr.ppmp ? `${selectedPr.ppmp.ppmpNumber} — ${selectedPr.ppmp.projectTitle}` : "Not linked"}
                   complete={checklist.hasPpmp}
                 />
+                {selectedPr.ppmp && (
+                  <div className="ml-7 flex items-center gap-2 py-1">
+                    <FileText className="h-3.5 w-3.5 text-base-content/40" />
+                    {selectedPr.ppmp.documentUrl ? (
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-base-content/60 truncate max-w-[180px]" title={selectedPr.ppmp.documentName || ""}>
+                          {selectedPr.ppmp.documentName || "PPMP Document"}
+                        </span>
+                        <a
+                          href={selectedPr.ppmp.documentUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-primary hover:underline"
+                        >
+                          View
+                        </a>
+                        <a
+                          href={selectedPr.ppmp.documentUrl}
+                          download={selectedPr.ppmp.documentName || "ppmp-document"}
+                          className="text-xs text-primary hover:underline"
+                        >
+                          Download
+                        </a>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-warning">No document uploaded</span>
+                    )}
+                  </div>
+                )}
                 <ChecklistItem
                   icon={<FileText className="h-4 w-4" />}
                   label="Purchase Request"

@@ -50,6 +50,10 @@ export default async function PackageReviewPage() {
       ppmpNumber: pr.ppmp.ppmpNumber,
       projectTitle: pr.ppmp.projectTitle,
       status: pr.ppmp.status,
+      documentUrl: pr.ppmp.documentUrl || null,
+      documentName: pr.ppmp.documentName || null,
+      documentSize: pr.ppmp.documentSize || null,
+      documentUploadedAt: pr.ppmp.documentUploadedAt ? pr.ppmp.documentUploadedAt.toISOString() : null,
     } : null,
     items: pr.items.map((item: any) => ({
       id: item.id,

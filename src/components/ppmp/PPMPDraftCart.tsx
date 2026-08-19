@@ -1,6 +1,7 @@
 import React from "react";
 import { ProductListItem } from "@/features/catalog/server/queries";
 import BudgetWidget from "./BudgetWidget";
+import PpmpDocumentUpload, { type PpmpDocument } from "./PpmpDocumentUpload";
 
 export interface DraftItem {
   product: ProductListItem;
@@ -18,11 +19,16 @@ interface PPMPDraftCartProps {
   office: string;
   budgetAllocated: number;
   budgetAlreadyPlanned: number;
+  currentDocument: PpmpDocument | null;
+  ppmpId?: number;
+  ppmpStatus?: string;
+  preparedById?: string;
   onUpdateQuantity: (productId: number, qty: number) => void;
   onUpdateDescription: (productId: number, desc: string) => void;
   onUpdateEstimatedUnitCost: (productId: number, cost: number) => void;
   onRemoveItem: (productId: number) => void;
   onUpdateMetadata: (key: string, val: any) => void;
+  onDocumentChange: (doc: PpmpDocument | null) => void;
   onSaveDraft: () => void;
   onCancel: () => void;
   isSaving: boolean;
@@ -37,11 +43,16 @@ export default function PPMPDraftCart({
   office,
   budgetAllocated,
   budgetAlreadyPlanned,
+  currentDocument,
+  ppmpId,
+  ppmpStatus,
+  preparedById,
   onUpdateQuantity,
   onUpdateDescription,
   onUpdateEstimatedUnitCost,
   onRemoveItem,
   onUpdateMetadata,
+  onDocumentChange,
   onSaveDraft,
   onCancel,
   isSaving,
@@ -345,6 +356,20 @@ export default function PPMPDraftCart({
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Document Upload */}
+          <div style={{ borderTop: "1px solid var(--border)", paddingTop: "1rem" }}>
+            <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--text-primary)", display: "block", marginBottom: "0.5rem" }}>
+              PPMP Document (Optional)
+            </span>
+            <PpmpDocumentUpload
+              ppmpId={ppmpId}
+              ppmpStatus={ppmpStatus}
+              preparedById={preparedById}
+              currentDocument={currentDocument}
+              onDocumentChange={onDocumentChange}
+            />
           </div>
 
           {/* Action buttons */}

@@ -387,6 +387,10 @@ model Ppmp {
   procurementSchedule String?
   remarks             String?
   attachments         String?
+  documentUrl         String?
+  documentName        String?
+  documentSize        Int?
+  documentUploadedAt  DateTime?
   status              PpmpStatus        @default(Draft)
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt

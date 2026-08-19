@@ -14,11 +14,11 @@ Implemented the complete End User procurement workflow: PPMP creation, interacti
 
 ### Workflow
 
-1. **PPMP** — End User creates/submits a Project Procurement Management Plan via an interactive marketplace planner. Approved PPMPs can be converted directly to Purchase Requests.
+1. **PPMP** — End User creates/submits a Project Procurement Management Plan via an interactive marketplace planner. Approved PPMPs can be converted directly to Purchase Requests. An optional official document (PDF/Excel, max 10MB) can be attached and stored in Supabase Storage.
 2. **Product Catalog** — Browse 2,700+ catalog products with search and category filter. Add items to a PR cart with quantity and estimated unit cost.
 3. **Purchase Request** — Items from the catalog cart are auto-populated into the PR document. PRs are linked to PPMPs and can be created directly or from converted PPMPs.
 4. **Supplier Quotations (AOQ)** — After Procurement Office verification, a Pre-Canvass is initiated with exactly 3 suppliers. End Users track quotation response status in real time.
-5. **Package Review** — A completeness checklist validates: PPMP linked, PR created, items added, 3 supplier quotations received. Submit to Procurement Office when all requirements are met.
+5. **Package Review** — A completeness checklist validates: PPMP linked (with document badge), PR created, items added, 3 supplier quotations received. PPMP document is viewable/downloadable from the checklist. Submit to Procurement Office when all requirements are met.
 6. **Submission** — Submit the complete procurement package. Status transitions to `PendingProcurementReview`.
 
 ### Files Created
@@ -33,6 +33,8 @@ Implemented the complete End User procurement workflow: PPMP creation, interacti
 | `src/app/dashboard/end-user/quotations/page.tsx` | Supplier quotations server page |
 | `src/app/dashboard/end-user/quotations/QuotationsClient.tsx` | Quotations tracking client |
 | `src/app/dashboard/end-user/pr/new/NewPrPageClient.tsx` | PR client that reads localStorage cart items |
+| `src/components/ppmp/PpmpDocumentUpload.tsx` | PPMP document upload component (Supabase Storage) |
+| `scripts/setup-storage-bucket.ts` | Supabase Storage bucket setup for `ppmp-documents` |
 
 ### Security Hardening
 

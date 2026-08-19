@@ -5,6 +5,7 @@ import { ProductListItem } from "@/features/catalog/server/queries";
 import EmptyState from "@/components/ui/EmptyState";
 import PPMPMarketplace from "@/components/ppmp/PPMPMarketplace";
 import PPMPDraftCart, { DraftItem } from "@/components/ppmp/PPMPDraftCart";
+import { type PpmpDocument } from "@/components/ppmp/PpmpDocumentUpload";
 import {
   createPpmpAction,
   submitPpmpAction,
@@ -41,6 +42,7 @@ export default function PPMPDashboardClient({
   const [projectTitle, setProjectTitle] = useState("");
   const [fundingSource, setFundingSource] = useState("GAA 2026");
   const [editingPpmpId, setEditingPpmpId] = useState<number | null>(null);
+  const [currentDocument, setCurrentDocument] = useState<PpmpDocument | null>(null);
 
   const [addProductDialogItem, setAddProductDialogItem] = useState<ProductListItem | null>(null);
   const [addQuantity, setAddQuantity] = useState<number>(1);
@@ -144,6 +146,7 @@ export default function PPMPDashboardClient({
     setPpmpNumber("");
     setProjectTitle("");
     setEditingPpmpId(null);
+    setCurrentDocument(null);
     setMessage("");
     setErrorMsg("");
     setActiveTab("list");
@@ -170,6 +173,10 @@ export default function PPMPDashboardClient({
         fiscalYear: 2026,
         estimatedBudget: currentDraftTotal,
         preparedById: userId,
+        documentUrl: currentDocument?.url || null,
+        documentName: currentDocument?.name || null,
+        documentSize: currentDocument?.size || null,
+        documentUploadedAt: currentDocument?.uploadedAt || null,
         items: cartItems.map((item) => ({
           productId: item.product.id,
           generalDescription: item.description || item.product.name,
@@ -187,6 +194,7 @@ export default function PPMPDashboardClient({
         setPpmpNumber("");
         setProjectTitle("");
         setEditingPpmpId(null);
+        setCurrentDocument(null);
         setActiveTab("list");
         // Reload list
         window.location.reload();
@@ -226,6 +234,16 @@ export default function PPMPDashboardClient({
     setPpmpNumber(ppmp.ppmpNumber);
     setProjectTitle(ppmp.projectTitle);
     setFundingSource(ppmp.fundingSource);
+    setCurrentDocument(
+      ppmp.documentUrl
+        ? {
+            url: ppmp.documentUrl,
+            name: ppmp.documentName || "PPMP Document",
+            size: ppmp.documentSize || 0,
+            uploadedAt: ppmp.documentUploadedAt || new Date().toISOString(),
+          }
+        : null
+    );
     
     // Map items
     const mappedItems: DraftItem[] = ppmp.items.map((item: any) => {
@@ -571,7 +589,20 @@ export default function PPMPDashboardClient({
                   return (
                     <tr key={ppmp.id} style={{ borderBottom: "1px solid var(--border)", verticalAlign: "middle" }}>
                       <td style={{ padding: "1.25rem 1.5rem", fontWeight: 700, color: "var(--accent)" }}>
-                        {ppmp.ppmpNumber}
+                        <span style={{ display: "flex", alignItems: "center", gap: "0.4rem" }}>
+                          {ppmp.ppmpNumber}
+                          {ppmp.documentUrl && (
+                            <a
+                              href={ppmp.documentUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={ppmp.documentName || "View PPMP document"}
+                              style={{ color: "var(--accent)", display: "flex" }}
+                            >
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg>
+                            </a>
+                          )}
+                        </span>
                       </td>
                       <td style={{ padding: "1.25rem 1.5rem", fontWeight: 600, color: "var(--text-primary)" }}>
                         {ppmp.projectTitle}
@@ -773,11 +804,16 @@ export default function PPMPDashboardClient({
               office={office}
               budgetAllocated={budgetAllocated}
               budgetAlreadyPlanned={budgetAlreadyPlanned}
+              currentDocument={currentDocument}
+              ppmpId={editingPpmpId || undefined}
+              ppmpStatus="Draft"
+              preparedById={userId}
               onUpdateQuantity={handleUpdateQuantity}
               onUpdateDescription={handleUpdateDescription}
               onUpdateEstimatedUnitCost={handleUpdateEstimatedUnitCost}
               onRemoveItem={handleRemoveItem}
               onUpdateMetadata={handleUpdateMetadata}
+              onDocumentChange={setCurrentDocument}
               onSaveDraft={handleSaveDraft}
               onCancel={handleCancel}
               isSaving={isPending}

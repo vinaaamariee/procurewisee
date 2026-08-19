@@ -25,6 +25,10 @@ interface CreatePpmpInput {
   remarks?: string;
   attachments?: string;
   preparedById?: string;
+  documentUrl?: string | null;
+  documentName?: string | null;
+  documentSize?: number | null;
+  documentUploadedAt?: string | null;
   items: PpmpItemInput[];
 }
 
@@ -91,6 +95,10 @@ export async function createPpmpAction(input: CreatePpmpInput) {
             remarks: input.remarks || null,
             attachments: input.attachments || null,
             preparedById: input.preparedById || null,
+            documentUrl: input.documentUrl ?? undefined,
+            documentName: input.documentName ?? undefined,
+            documentSize: input.documentSize ?? undefined,
+            documentUploadedAt: input.documentUploadedAt ? new Date(input.documentUploadedAt) : undefined,
           },
         });
 
@@ -121,6 +129,10 @@ export async function createPpmpAction(input: CreatePpmpInput) {
             attachments: input.attachments || null,
             status: PpmpStatus.Draft,
             preparedById: input.preparedById || null,
+            documentUrl: input.documentUrl || null,
+            documentName: input.documentName || null,
+            documentSize: input.documentSize || null,
+            documentUploadedAt: input.documentUploadedAt ? new Date(input.documentUploadedAt) : null,
           },
         });
       }
@@ -381,5 +393,41 @@ export async function getPpmpList(filters?: { department?: string; status?: Ppmp
   } catch (error) {
     console.error("Error fetching PPMPs:", error);
     return [];
+  }
+}
+
+export async function updatePpmpDocumentAction(
+  ppmpId: number,
+  documentUrl: string | null,
+  documentName: string | null,
+  documentSize: number | null,
+  documentUploadedAt: string | null
+) {
+  try {
+    const { profile } = await requireRole("End User");
+
+    const ppmp = await prisma.ppmp.findUnique({ where: { id: ppmpId } });
+    if (!ppmp) throw new Error("PPMP not found.");
+    if (ppmp.preparedById !== profile.id) {
+      throw new Error("Not authorized to modify this PPMP document.");
+    }
+    if (ppmp.status !== PpmpStatus.Draft && ppmp.status !== PpmpStatus.Returned) {
+      throw new Error("PPMP document can only be updated when status is Draft or Returned.");
+    }
+
+    await prisma.ppmp.update({
+      where: { id: ppmpId },
+      data: {
+        documentUrl,
+        documentName,
+        documentSize,
+        documentUploadedAt: documentUploadedAt ? new Date(documentUploadedAt) : null,
+      },
+    });
+
+    revalidatePath("/dashboard/end-user/ppmp");
+    return { success: true };
+  } catch (error: any) {
+    return { error: error.message };
   }
 }
