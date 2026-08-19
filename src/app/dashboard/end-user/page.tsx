@@ -2,7 +2,7 @@ import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import ActivityFeed from "@/components/dashboard/ActivityFeed";
-import { AlertTriangle, CheckCircle2, FileText, PlusCircle, CornerUpLeft, BookOpen } from "lucide-react";
+import { AlertTriangle, CheckCircle2, FileText, PlusCircle, CornerUpLeft, BookOpen, ClipboardList, FileCheck2, ShoppingCart } from "lucide-react";
 import StatusBadge from "@/components/ui/StatusBadge";
 
 export const metadata = { title: "End User Dashboard — ProcureWise" };
@@ -78,6 +78,21 @@ export default async function EndUserDashboard() {
     console.error("[EndUserDashboard] Failed to fetch PRs:", error);
   }
 
+  // Fetch PPMPs for this user
+  let ppmps: Awaited<ReturnType<typeof prisma.ppmp.findMany>> = [];
+  try {
+    ppmps = await prisma.ppmp.findMany({
+      where: { preparedById: profile.id },
+      orderBy: { updatedAt: "desc" },
+    });
+  } catch (error) {
+    console.error("[EndUserDashboard] Failed to fetch PPMPs:", error);
+  }
+
+  const ppmpDraftCount = ppmps.filter((p) => p.status === "Draft").length;
+  const ppmpSubmittedCount = ppmps.filter((p) => p.status === "Submitted").length;
+  const ppmpApprovedCount = ppmps.filter((p) => p.status === "Approved").length;
+
   // Calculate lifecycle counts
   const draftCount = prs.filter((p) => p.status === "Draft").length;
   const pendingCount = prs.filter((p) =>
@@ -115,6 +130,7 @@ export default async function EndUserDashboard() {
           <span>&bull; <strong className="text-warning">{pendingCount}</strong> Pending Procurement Verification</span>
           <span>&bull; <strong className="text-error">{returnedCount}</strong> Returned</span>
           <span>&bull; <strong className="text-success">{approvedCount}</strong> Verified</span>
+          <span>&bull; <strong className="text-info">{ppmpDraftCount + ppmpSubmittedCount}</strong> PPMPs Active</span>
         </div>
       </div>
 
@@ -351,6 +367,14 @@ export default async function EndUserDashboard() {
             <h2 className="text-xs font-bold uppercase tracking-wider text-base-content/50 text-left">Quick Actions</h2>
             <div className="space-y-2">
               <Link
+                href="/dashboard/end-user/ppmp"
+                className="w-full btn btn-outline rounded-md font-bold text-xs flex items-center justify-center gap-2 py-2 border-base-300 text-base-content hover:bg-base-200"
+              >
+                <ClipboardList className="h-4.5 w-4.5" />
+                PPMP
+              </Link>
+
+              <Link
                 href="/dashboard/end-user/pr/new"
                 className="w-full btn btn-primary rounded-md text-white font-bold text-xs flex items-center justify-center gap-2 py-2"
               >
@@ -367,7 +391,23 @@ export default async function EndUserDashboard() {
               </Link>
 
               <Link
-                href="/dashboard/catalog"
+                href="/dashboard/end-user/package-review"
+                className="w-full btn btn-outline rounded-md font-bold text-xs flex items-center justify-center gap-2 py-2 border-base-300 text-base-content hover:bg-base-200"
+              >
+                <FileCheck2 className="h-4.5 w-4.5" />
+                Package Review
+              </Link>
+
+              <Link
+                href="/dashboard/end-user/quotations"
+                className="w-full btn btn-outline rounded-md font-bold text-xs flex items-center justify-center gap-2 py-2 border-base-300 text-base-content hover:bg-base-200"
+              >
+                <ShoppingCart className="h-4.5 w-4.5" />
+                Supplier Quotations
+              </Link>
+
+              <Link
+                href="/dashboard/end-user/catalog"
                 className="w-full btn btn-outline rounded-md font-bold text-xs flex items-center justify-center gap-2 py-2 border-base-300 text-base-content hover:bg-base-200"
               >
                 <BookOpen className="h-4.5 w-4.5" />

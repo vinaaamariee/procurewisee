@@ -168,19 +168,21 @@ export default function DashboardSidebar({ role }: { role: string }) {
       {
         title: "PROCUREMENT",
         items: [
+          { label: "PPMP", href: "/dashboard/end-user/ppmp", icon: ClipboardList },
           { label: "Purchase Requests", href: "/dashboard/end-user/pr", icon: FileText },
+          { label: "Package Review", href: "/dashboard/end-user/package-review", icon: FileCheck2 },
         ],
       },
       {
         title: "SUPPLIERS",
         items: [
-          { label: "Evaluations", href: "/dashboard/end-user/evaluation", icon: Star },
+          { label: "Supplier Quotations", href: "/dashboard/end-user/quotations", icon: ShoppingCart },
         ],
       },
       {
         title: "CATALOG",
         items: [
-          { label: "Product Catalog", href: "/dashboard/catalog", icon: BookOpen },
+          { label: "Product Catalog", href: "/dashboard/end-user/catalog", icon: BookOpen },
         ],
       },
     ],

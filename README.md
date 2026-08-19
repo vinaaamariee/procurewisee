@@ -6,6 +6,53 @@
 
 ---
 
+## 📦 End User Workflow — PPMP, PR, Catalog, AOQ & Package Review
+
+**Date**: August 2026
+
+Implemented the complete End User procurement workflow: PPMP creation, interactive Product Catalog with cart, Purchase Request creation, Supplier Quotation (AOQ) tracking, and Package Review with submission to Procurement Office.
+
+### Workflow
+
+1. **PPMP** — End User creates/submits a Project Procurement Management Plan via an interactive marketplace planner. Approved PPMPs can be converted directly to Purchase Requests.
+2. **Product Catalog** — Browse 2,700+ catalog products with search and category filter. Add items to a PR cart with quantity and estimated unit cost.
+3. **Purchase Request** — Items from the catalog cart are auto-populated into the PR document. PRs are linked to PPMPs and can be created directly or from converted PPMPs.
+4. **Supplier Quotations (AOQ)** — After Procurement Office verification, a Pre-Canvass is initiated with exactly 3 suppliers. End Users track quotation response status in real time.
+5. **Package Review** — A completeness checklist validates: PPMP linked, PR created, items added, 3 supplier quotations received. Submit to Procurement Office when all requirements are met.
+6. **Submission** — Submit the complete procurement package. Status transitions to `PendingProcurementReview`.
+
+### Files Created
+
+| File | Purpose |
+|------|---------|
+| `src/app/dashboard/end-user/ppmp/page.tsx` | Authenticated PPMP server page |
+| `src/app/dashboard/end-user/catalog/page.tsx` | Interactive catalog server page |
+| `src/app/dashboard/end-user/catalog/EndUserCatalogClient.tsx` | Catalog client with search, filter, cart, add-to-PR dialog |
+| `src/app/dashboard/end-user/package-review/page.tsx` | Package review server page |
+| `src/app/dashboard/end-user/package-review/PackageReviewClient.tsx` | Package review client with checklist and submit |
+| `src/app/dashboard/end-user/quotations/page.tsx` | Supplier quotations server page |
+| `src/app/dashboard/end-user/quotations/QuotationsClient.tsx` | Quotations tracking client |
+| `src/app/dashboard/end-user/pr/new/NewPrPageClient.tsx` | PR client that reads localStorage cart items |
+
+### Security Hardening
+
+- **PPMP actions**: Re-enabled `requireRole("End User")` on `createPpmpAction`, `submitPpmpAction`, `deletePpmpAction`, `convertPpmpToPrAction` (were commented out)
+- **PR creation**: Added `requireRole("End User")` to `createPrFromCartAction`
+- **PR item updates**: Added ownership check to `updatePrItemAction` — End Users can only edit their own PRs
+- **PR draft deletion**: Added role whitelist to `deletePrDraftAction`
+- **PPMP list**: Added row-level filtering to `getPpmpList` — End Users see only their own PPMPs
+
+### UI Fixes
+
+- Removed duplicate header from `PPMPDashboardClient` (layout already provides header)
+- Removed inline `maxWidth`/`padding` from `PPMPDashboardClient` root div (layout constrains)
+
+### Build Verification
+
+`npx prisma validate` ✅ | `npx prisma generate` ✅ | `npx next build` ✅ (all routes compile, 0 errors)
+
+---
+
 ## 📦 Supplier Quotations / AOQ — End User Page
 
 **Date**: August 2026

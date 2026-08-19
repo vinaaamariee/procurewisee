@@ -269,7 +269,7 @@ export default function PPMPDashboardClient({
   };
 
   return (
-    <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "2rem", display: "flex", flexDirection: "column", gap: "2rem", fontFamily: '"Inter", sans-serif' }}>
+    <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       
       {addProductDialogItem && (
         <div
@@ -482,50 +482,38 @@ export default function PPMPDashboardClient({
         </div>
       )}
       
-      {/* Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "1rem" }}>
-        <div>
-          <h1 style={{ fontSize: "1.875rem", fontWeight: 800, color: "var(--text-primary)", margin: 0, letterSpacing: "-0.5px" }}>
-            Project Procurement Management Plan (PPMP)
-          </h1>
-          <p style={{ marginTop: "0.25rem", fontSize: "0.85rem", color: "var(--text-secondary)", margin: 0 }}>
-            Prepare, monitor, and submit your annual procurement requirements linked to the live catalog.
-          </p>
-        </div>
-
-        {/* Tab switcher */}
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <button
-            onClick={() => setActiveTab("list")}
-            style={{
-              padding: "0.6rem 1.2rem",
-              borderRadius: "999px",
-              border: "1px solid var(--border)",
-              cursor: "pointer",
-              background: activeTab === "list" ? "var(--accent)" : "var(--surface)",
-              color: activeTab === "list" ? "white" : "var(--text-secondary)",
-              fontSize: "0.8rem",
-              fontWeight: 700,
-            }}
-          >
-            📋 Planning Logs
-          </button>
-          <button
-            onClick={() => setActiveTab("create")}
-            style={{
-              padding: "0.6rem 1.2rem",
-              borderRadius: "999px",
-              border: "1px solid var(--border)",
-              cursor: "pointer",
-              background: activeTab === "create" ? "var(--accent)" : "var(--surface)",
-              color: activeTab === "create" ? "white" : "var(--text-secondary)",
-              fontSize: "0.8rem",
-              fontWeight: 700,
-            }}
-          >
-            🛒 Marketplace Planner {cartItems.length > 0 && `(${cartItems.length})`}
-          </button>
-        </div>
+      {/* Tab switcher */}
+      <div style={{ display: "flex", gap: "0.5rem" }}>
+        <button
+          onClick={() => setActiveTab("list")}
+          style={{
+            padding: "0.6rem 1.2rem",
+            borderRadius: "999px",
+            border: "1px solid var(--border)",
+            cursor: "pointer",
+            background: activeTab === "list" ? "var(--accent)" : "var(--surface)",
+            color: activeTab === "list" ? "white" : "var(--text-secondary)",
+            fontSize: "0.8rem",
+            fontWeight: 700,
+          }}
+        >
+          📋 Planning Logs
+        </button>
+        <button
+          onClick={() => setActiveTab("create")}
+          style={{
+            padding: "0.6rem 1.2rem",
+            borderRadius: "999px",
+            border: "1px solid var(--border)",
+            cursor: "pointer",
+            background: activeTab === "create" ? "var(--accent)" : "var(--surface)",
+            color: activeTab === "create" ? "white" : "var(--text-secondary)",
+            fontSize: "0.8rem",
+            fontWeight: 700,
+          }}
+        >
+          🛒 Marketplace Planner {cartItems.length > 0 && `(${cartItems.length})`}
+        </button>
       </div>
 
       {/* Notifications */}

@@ -1,6 +1,6 @@
 import { requireRole } from '@/lib/auth/get-user-profile';
 import { prisma } from '@/lib/prisma';
-import PRDocument from '@/components/pr/PRDocument';
+import NewPrPageClient from './NewPrPageClient';
 import Link from 'next/link';
 import SectionHeader from '@/components/ui/SectionHeader';
 import Card from '@/components/ui/Card';
@@ -8,21 +8,32 @@ import Card from '@/components/ui/Card';
 export const metadata = { title: 'Create Purchase Request — ProcureWise' };
 
 export default async function NewPrPage() {
-  // Enforce End User role
   await requireRole('End User');
 
   let catalogProducts: any[] = [];
+  let ppmps: any[] = [];
   let fetchError: string | null = null;
 
   try {
-    const rawCatalogProducts = await prisma.catalogProduct.findMany({
-      where: { isActive: true },
-      orderBy: { name: 'asc' },
-      include: {
-        category: true,
-        unit: true,
-      },
-    });
+    const { profile } = await requireRole('End User');
+
+    const [rawCatalogProducts, rawPpmps] = await Promise.all([
+      prisma.catalogProduct.findMany({
+        where: { isActive: true },
+        orderBy: { name: 'asc' },
+        include: {
+          category: true,
+          unit: true,
+        },
+      }),
+      prisma.ppmp.findMany({
+        where: {
+          preparedById: profile.id,
+          status: { in: ['Approved', 'Submitted'] },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+    ]);
 
     catalogProducts = rawCatalogProducts.map((p) => ({
       id: p.id,
@@ -32,8 +43,16 @@ export default async function NewPrPage() {
       description: p.description,
       unitOfMeasure: p.unit.abbreviation,
     }));
+
+    ppmps = rawPpmps.map((p) => ({
+      id: p.id,
+      ppmpNumber: p.ppmpNumber,
+      projectTitle: p.projectTitle,
+      estimatedBudget: Number(p.estimatedBudget),
+      status: p.status,
+    }));
   } catch (error: any) {
-    console.error('[DATABASE FETCH ERROR] Failed to load catalog data for New PR page:', error);
+    console.error('[DATABASE FETCH ERROR] Failed to load data for New PR page:', error);
     fetchError = error.message || String(error);
   }
 
@@ -45,18 +64,18 @@ export default async function NewPrPage() {
             <span className="text-2xl">⚠️</span>
             <h2 className="text-xl font-bold">Database Connection Error</h2>
           </div>
-          <p className="text-sm text-[var(--text-primary)] mt-4">
-            The system was unable to fetch catalog products for the Purchase Request page.
+          <p className="text-sm text-base-content mt-4">
+            The system was unable to load data for the Purchase Request page.
           </p>
-          <div className="mt-4 rounded-xl border border-red-200 dark:border-red-800 bg-white dark:bg-slate-900 p-4">
-            <pre className="text-xs text-red-600 dark:text-red-400 whitespace-pre-wrap break-all">
+          <div className="mt-4 rounded-xl border border-red-200 bg-white p-4">
+            <pre className="text-xs text-red-600 whitespace-pre-wrap break-all">
               {fetchError}
             </pre>
           </div>
           <div className="flex gap-3 mt-6">
             <Link
               href="/dashboard/end-user/pr"
-              className="rounded-xl bg-[#7B1E1E] px-5 py-2 text-sm font-bold text-white hover:opacity-90"
+              className="rounded-xl bg-primary px-5 py-2 text-sm font-bold text-white hover:opacity-90"
             >
               Back to PR Tracker
             </Link>
@@ -68,11 +87,10 @@ export default async function NewPrPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6 p-4 sm:p-6">
-      {/* Page Header */}
       <div className="space-y-2 print:hidden">
         <Link
           href="/dashboard/end-user/pr"
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-semibold text-[var(--text-primary)] transition hover:bg-[var(--surface-hover)]"
+          className="inline-flex items-center gap-2 rounded-xl border border-base-300 bg-base-100 px-4 py-2 text-sm font-semibold text-base-content transition hover:bg-base-200"
         >
           ← Back to PR Tracker
         </Link>
@@ -82,8 +100,7 @@ export default async function NewPrPage() {
         />
       </div>
 
-      {/* Official Digital Purchase Request Document Form */}
-      <PRDocument mode="create" catalogProducts={catalogProducts} />
+      <NewPrPageClient catalogProducts={catalogProducts} ppmps={ppmps} />
     </div>
   );
 }

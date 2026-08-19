@@ -32,6 +32,7 @@ interface CreatePrInput {
 
 export async function createPrFromCartAction(input: CreatePrInput) {
   try {
+    await requireRole("End User");
     const totalCost = input.items.reduce((sum, item) => sum + (item.quantity * item.estimatedUnitCost), 0);
 
     // Retrieve authenticated user info if not explicitly passed
@@ -548,6 +549,7 @@ export async function updatePrItemAction(
   }
 ) {
   try {
+    const { profile } = await getAuthenticatedUser();
     const result = await prisma.$transaction(async (tx) => {
       // 1. Get current item and PR
       const item = await tx.purchaseRequestItem.findUnique({
@@ -555,6 +557,11 @@ export async function updatePrItemAction(
         include: { pr: true }
       });
       if (!item) throw new Error("Item not found");
+
+      // Ownership check: End Users can only edit their own PRs
+      if (profile.role === "End User" && item.pr.requestedById !== profile.id) {
+        throw new Error("You can only edit items in your own Purchase Requests.");
+      }
 
       // Check if PR is in auditable status
       if (item.pr.status !== "Submitted" && item.pr.status !== "UnderReview" && item.pr.status !== "Draft" && item.pr.status !== "ReturnedForRevision") {
@@ -842,6 +849,9 @@ export async function resubmitPrAction(id: number, updatedItems: PrItemInput[]) 
 export async function deletePrDraftAction(id: number) {
   try {
     const { profile } = await getAuthenticatedUser();
+    if (!["End User", "Procurement Officer", "Administrative Approver"].includes(profile.role)) {
+      return { success: false, error: "Unauthorized role for this action." };
+    }
     const pr = await prisma.purchaseRequest.findUnique({ where: { id } });
 
     if (!pr) return { success: false, error: "Purchase Request not found." };
