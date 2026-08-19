@@ -6,6 +6,29 @@
 
 ---
 
+## 📦 Supplier Quotations / AOQ — End User Page
+
+**Date**: August 2026
+
+Added a Supplier Quotations / AOQ page for End Users to track quotation responses from suppliers for their Purchase Requests. This page shows the status of the pre-canvass process and how many of the required three quotations have been submitted.
+
+### What Was Built
+
+- **Server Page** (`src/app/dashboard/end-user/quotations/page.tsx`): Fetches all non-Draft/Cancelled PRs for the authenticated End User with pre-canvass, suppliers, responses, and abstract data. Serializes data for client rendering.
+- **Client Component** (`src/app/dashboard/end-user/quotations/QuotationsClient.tsx`): Two-panel layout — PR list sidebar with quotation status indicators (✅ 3+ quotations / ⚠️ pending), and a detail panel with:
+  - **AOQ Status Summary**: Pre-Canvass number, quotation count badge, and warning if fewer than 3 quotations received
+  - **Supplier Response Cards**: Each supplier card shows name, quotation status (Submitted/Awaiting), quotation number, received date, and quoted total amount
+  - **Abstract Indicator**: Shows when AOQ abstract has been generated
+
+### Files Created
+
+| File | Purpose |
+|------|---------|
+| `src/app/dashboard/end-user/quotations/page.tsx` | Server component with PR data fetching and serialization |
+| `src/app/dashboard/end-user/quotations/QuotationsClient.tsx` | Client component with PR list, quotation detail, and supplier response cards |
+
+---
+
 ## 📦 Procurement Package Review
 
 **Date**: August 2026
