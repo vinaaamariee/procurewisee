@@ -25,7 +25,7 @@ const defaultActions = [
       "Prepare your Project Procurement Management Plan for budget allocation.",
     href: "/end-user/ppmp",
     buttonLabel: "Start Planning",
-    color: "#D4A017",
+    color: "var(--secondary)",
     bgColor: "rgba(212, 160, 23, 0.08)",
   },
   {
@@ -35,8 +35,8 @@ const defaultActions = [
       "File a purchase request for items needed by your department or office.",
     href: "/end-user",
     buttonLabel: "Submit PR",
-    color: "#059669",
-    bgColor: "rgba(5, 150, 105, 0.08)",
+    color: "var(--secondary)",
+    bgColor: "var(--secondary-dim)",
   },
   {
     icon: Search,
@@ -72,7 +72,7 @@ export default function QuickActions({
   return (
     <section aria-labelledby="quick-access-heading">
       <div className="mb-8 text-center">
-        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#D4A017]">
+        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--secondary)]">
           Workflow Shortcuts
         </p>
         <h2
@@ -106,7 +106,7 @@ export default function QuickActions({
                 </div>
 
                 {/* Content */}
-                <h3 className="text-lg font-semibold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-red-400 transition-colors">
+                <h3 className="text-lg font-semibold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-[var(--accent)] transition-colors">
                   {action.title}
                 </h3>
                 <p className="mt-2 text-sm text-[#6B7280] dark:text-slate-400 leading-relaxed">

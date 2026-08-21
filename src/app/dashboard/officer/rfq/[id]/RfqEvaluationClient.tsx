@@ -375,7 +375,7 @@ export default function RfqEvaluationClient({
 
                 <div>
                   <span className="text-[var(--text-muted)] font-medium block">Submission Deadline</span>
-                  <span className="font-bold text-red-650 mt-0.5 block">
+                  <span className="font-bold text-[var(--accent)] mt-0.5 block">
                     {rfq.deadlineDate
                       ? new Date(rfq.deadlineDate).toLocaleDateString('en-PH', {
                           month: 'long',
@@ -539,12 +539,12 @@ export default function RfqEvaluationClient({
           {/* Decision Actions */}
           <Card className="p-6 space-y-4">
             {successMsg && (
-              <div className="text-sm font-semibold text-emerald-600">
+              <div className="text-sm font-semibold text-[var(--accent)]">
                 {successMsg}
               </div>
             )}
             {errorMsg && (
-              <div className="text-sm font-semibold text-red-600">
+              <div className="text-sm font-semibold text-[var(--accent)]">
                 {errorMsg}
               </div>
             )}

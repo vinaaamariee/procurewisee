@@ -101,7 +101,7 @@ export default function PRPrintDocument({ pr, printAreaId = 'prPrintArea' }: PRP
               {/* Summary row */}
               <tr className="font-black text-xs">
                 <td colSpan={5} className="p-2 text-right uppercase">Total Estimated Budget:</td>
-                <td className="p-2 text-right tabular-nums text-red-700">₱{Number(pr.totalCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                <td className="p-2 text-right tabular-nums text-[var(--accent)]">₱{Number(pr.totalCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
               </tr>
             </tbody>
           </table>

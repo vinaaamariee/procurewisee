@@ -67,7 +67,7 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
       key: 'returned',
       label: 'Returned for Revision',
       count: prs.filter(pr => ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status)).length,
-      color: '#dc2626',
+      color: 'var(--accent)',
       bg: 'rgba(220, 38, 38, 0.08)',
     },
     {
@@ -272,10 +272,10 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
                           pr.status === 'Rejected' ? 'rgba(127, 29, 29, 0.1)' :
                           pr.status === 'UnderReview' ? 'rgba(217, 119, 6, 0.1)' : 'rgba(30, 58, 138, 0.08)',
                         color: 
-                          pr.status === 'Approved' || pr.status === 'Received' ? '#10b981' :
-                          ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? '#ef4444' :
+                          pr.status === 'Approved' || pr.status === 'Received' ? 'var(--secondary)' :
+                          ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'var(--accent)' :
                           pr.status === 'Rejected' ? '#7f1d1d' :
-                          pr.status === 'UnderReview' ? '#d97706' : 'var(--accent)',
+                          pr.status === 'UnderReview' ? 'var(--secondary)' : 'var(--accent)',
                       }}>
                         {['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'Returned for Revision' :
                          pr.status === 'UnderReview' ? 'Under Review' : pr.status}

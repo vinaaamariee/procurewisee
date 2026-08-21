@@ -58,7 +58,7 @@ export default function RecommendationReason({ individualScores }: Recommendatio
     <div className="space-y-1.5">
       {justifications.map((item, idx) => (
         <div key={idx} className="flex items-start gap-2 text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-          <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+          <CheckCircle2 className="h-4 w-4 text-[var(--accent)] mt-0.5 shrink-0" />
           <span>{item}</span>
         </div>
       ))}

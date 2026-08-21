@@ -31,11 +31,11 @@ const categoryIconMap: Record<string, typeof Monitor> = {
 
 const accentColors = [
   { color: "#7B1E1E", bg: "rgba(123, 30, 30, 0.08)" },
-  { color: "#D4A017", bg: "rgba(212, 160, 23, 0.08)" },
-  { color: "#059669", bg: "rgba(5, 150, 105, 0.08)" },
+  { color: "var(--secondary)", bg: "rgba(212, 160, 23, 0.08)" },
+  { color: "var(--secondary)", bg: "var(--secondary-dim)" },
   { color: "#6366f1", bg: "rgba(99, 102, 241, 0.08)" },
-  { color: "#d97706", bg: "rgba(217, 119, 6, 0.08)" },
-  { color: "#0891b2", bg: "rgba(8, 145, 178, 0.08)" },
+  { color: "var(--secondary)", bg: "var(--secondary-dim)" },
+  { color: "var(--secondary)", bg: "var(--secondary-dim)" },
 ];
 
 export default function CategoryGrid({
@@ -49,7 +49,7 @@ export default function CategoryGrid({
     <section aria-labelledby="categories-heading">
       {/* Section header */}
       <div className="mb-8 text-center">
-        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#D4A017]">
+        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--secondary)]">
           Explore Catalog
         </p>
         <h2
@@ -85,7 +85,7 @@ export default function CategoryGrid({
 
               {/* Content */}
               <div className="min-w-0 flex-1">
-                <h3 className="truncate text-base font-semibold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-red-400 transition-colors">
+                <h3 className="truncate text-base font-semibold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-[var(--accent)] transition-colors">
                   {cat.category}
                 </h3>
                 <p className="mt-1 text-xs text-[#6B7280] dark:text-slate-400 font-medium">

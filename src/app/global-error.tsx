@@ -21,9 +21,9 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body className="min-h-screen bg-[#0D0E12] text-slate-100 flex items-center justify-center p-6 font-sans">
-        <div className="max-w-2xl w-full bg-[#141519] border border-red-500/30 rounded-2xl p-8 shadow-2xl space-y-6">
-          <div className="flex items-center gap-3 border-b border-red-500/20 pb-4">
-            <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 text-xl font-bold">
+        <div className="max-w-2xl w-full bg-[#141519] border border-[var(--border-accent)] rounded-2xl p-8 shadow-2xl space-y-6">
+          <div className="flex items-center gap-3 border-b border-[var(--border-accent)] pb-4">
+            <div className="w-10 h-10 rounded-xl bg-[var(--accent-glass)] border border-[var(--border-accent)] flex items-center justify-center text-[var(--accent)] text-xl font-bold">
               ⚠️
             </div>
             <div>
@@ -44,7 +44,7 @@ export default function GlobalError({
                 ? 'Database authentication failed. The database server rejected the credentials in DATABASE_URL.'
                 : 'A critical server error occurred while rendering the application.'}
             </p>
-            <div className="p-3.5 bg-red-950/50 border border-red-800/40 rounded-xl text-red-300 font-mono text-[11px] overflow-x-auto whitespace-pre-wrap break-all">
+            <div className="p-3.5 bg-[var(--accent-glass)] border border-[var(--border-accent)] rounded-xl text-[var(--accent)] font-mono text-[11px] overflow-x-auto whitespace-pre-wrap break-all">
               {error.message || 'Unknown Server Exception'}
             </div>
           </div>

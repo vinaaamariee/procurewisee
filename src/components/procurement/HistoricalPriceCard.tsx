@@ -88,7 +88,7 @@ export default function HistoricalPriceCard({
           </span>
           <span
             className="text-lg font-bold tabular-nums"
-            style={{ color: lowestPrice ? "var(--green)" : "var(--text-muted)" }}
+            style={{ color: lowestPrice ? "var(--secondary)" : "var(--text-muted)" }}
           >
             {lowestPrice ? formatCurrency(lowestPrice) : "—"}
           </span>

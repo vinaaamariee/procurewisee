@@ -57,16 +57,16 @@ export default function RecommendationPanel({
 
   const confidenceColor =
     topRecommendation.confidenceLabel === "High"
-      ? "var(--green)"
+      ? "var(--accent)"
       : topRecommendation.confidenceLabel === "Medium"
-      ? "var(--yellow)"
+      ? "var(--secondary)"
       : "var(--accent)";
 
   const trendColor =
     forecastInfo.forecastTrend === "increasing"
       ? "var(--accent)"
       : forecastInfo.forecastTrend === "decreasing"
-      ? "var(--green)"
+      ? "var(--secondary)"
       : "var(--text-secondary)";
 
   return (
@@ -142,8 +142,8 @@ export default function RecommendationPanel({
                 <span
                   className="font-bold px-1.5 py-0.5 rounded"
                   style={{
-                    color: forecastInfo.expectedChange.startsWith("+") ? "var(--accent)" : "var(--green)",
-                    backgroundColor: forecastInfo.expectedChange.startsWith("+") ? "rgba(239, 68, 68, 0.05)" : "rgba(34, 197, 94, 0.05)",
+                    color: forecastInfo.expectedChange.startsWith("+") ? "var(--accent)" : "var(--secondary)",
+                    backgroundColor: forecastInfo.expectedChange.startsWith("+") ? "var(--accent-glass)" : "var(--secondary-dim)",
                   }}
                 >
                   {forecastInfo.expectedChange}
@@ -166,12 +166,12 @@ export default function RecommendationPanel({
 
           <div className="space-y-3 pt-2">
             {poMsg && (
-              <div className="p-3 text-xs bg-green-500/10 border border-green-500/20 text-green-700 font-semibold rounded-xl leading-relaxed">
+              <div className="p-3 text-xs bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] font-semibold rounded-xl leading-relaxed">
                 {poMsg}
               </div>
             )}
             {errorMsg && (
-              <div className="p-3 text-xs bg-red-500/10 border border-red-500/20 text-red-700 font-semibold rounded-xl leading-relaxed">
+              <div className="p-3 text-xs bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] font-semibold rounded-xl leading-relaxed">
                 {errorMsg}
               </div>
             )}

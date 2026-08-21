@@ -125,7 +125,7 @@ export default async function PublicPPMPPage({ searchParams }: PageProps) {
             </div>
             <Link
               href="/end-user/ppmp"
-              className="text-xs font-bold text-[#7e191b] hover:text-[#962124] no-underline border border-[#7e191b]/20 px-3 py-1.5 rounded-lg transition hover:bg-red-50"
+              className="text-xs font-bold text-[#7e191b] hover:text-[#962124] no-underline border border-[#7e191b]/20 px-3 py-1.5 rounded-lg transition hover:bg-[var(--accent-glass)]"
             >
               Change Department
             </Link>

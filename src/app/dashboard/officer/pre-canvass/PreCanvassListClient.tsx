@@ -58,12 +58,12 @@ function formatDate(dateStr: string) {
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; icon: any }> = {
     Draft: { bg: "bg-gray-100", text: "text-gray-700", icon: Clock },
-    SuppliersSelected: { bg: "bg-blue-100", text: "text-blue-700", icon: Users },
+    SuppliersSelected: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Users },
     Sent: { bg: "bg-yellow-100", text: "text-yellow-700", icon: Send },
-    PartiallyResponded: { bg: "bg-orange-100", text: "text-orange-700", icon: Clock },
-    FullyResponded: { bg: "bg-green-100", text: "text-green-700", icon: CheckCircle2 },
-    Closed: { bg: "bg-purple-100", text: "text-purple-700", icon: CheckCircle2 },
-    Cancelled: { bg: "bg-red-100", text: "text-red-700", icon: XCircle },
+    PartiallyResponded: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Clock },
+    FullyResponded: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: CheckCircle2 },
+    Closed: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]", icon: CheckCircle2 },
+    Cancelled: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]", icon: XCircle },
   };
 
   const c = config[status] || config.Draft;
@@ -158,7 +158,7 @@ export default function PreCanvassListClient({
           { label: "Total", value: preCanvasses.length, color: "text-base-content" },
           { label: "Draft", value: preCanvasses.filter((p) => p.status === "Draft").length, color: "text-gray-600" },
           { label: "Sent", value: preCanvasses.filter((p) => p.status === "Sent" || p.status === "PartiallyResponded" || p.status === "FullyResponded").length, color: "text-yellow-600" },
-          { label: "Completed", value: preCanvasses.filter((p) => p.status === "Closed").length, color: "text-green-600" },
+          { label: "Completed", value: preCanvasses.filter((p) => p.status === "Closed").length, color: "text-[var(--secondary)]" },
         ].map((stat) => (
           <div
             key={stat.label}

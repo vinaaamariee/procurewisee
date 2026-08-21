@@ -31,24 +31,24 @@ export default function PrWorkflowTimeline({
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Draft":
-        return { label: "Draft", cls: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 border-gray-300", icon: FileEdit };
+        return { label: "Draft", cls: "bg-[var(--surface-hover)] text-[var(--text-secondary)] border-[var(--border)]", icon: FileEdit };
       case "PendingProcurementReview":
       case "Pending Procurement Review":
       case "UnderReview":
       case "Under Review":
       case "Submitted":
-        return { label: "Pending Procurement Verification", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300", icon: Clock };
+        return { label: "Pending Procurement Verification", cls: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]", icon: Clock };
       case "Returned":
       case "ReturnedForRevision":
       case "Returned for Revision":
-        return { label: "Returned", cls: "bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-300", icon: AlertTriangle };
+        return { label: "Returned", cls: "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]", icon: AlertTriangle };
       case "Approved":
-        return { label: "Verified", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-300", icon: CheckCircle2 };
+        return { label: "Verified", cls: "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]", icon: CheckCircle2 };
       case "ConvertedToRfq":
       case "Converted to RFQ":
-        return { label: "Converted to RFQ", cls: "bg-blue-100 text-blue-800 dark:bg-blue-950/60 dark:text-blue-300 border-blue-300", icon: CheckCircle2 };
+        return { label: "Converted to RFQ", cls: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]", icon: CheckCircle2 };
       default:
-        return { label: status, cls: "bg-gray-100 text-gray-700 border-gray-300", icon: Clock };
+        return { label: status, cls: "bg-[var(--surface-hover)] text-[var(--text-secondary)] border-[var(--border)]", icon: Clock };
     }
   };
 
@@ -102,7 +102,7 @@ export default function PrWorkflowTimeline({
 
                 {/* Preserved Return Comment or Remarks */}
                 {entry.remarks && (
-                  <div className="mt-2 rounded-lg border border-red-200 bg-red-50/70 p-3 dark:border-red-900/40 dark:bg-red-950/30 text-xs text-red-900 dark:text-red-200">
+                  <div className="mt-2 rounded-lg border border-[var(--border-accent)] bg-[var(--accent-glass)] p-3 dark:border-[var(--border-accent)] dark:bg-[var(--accent-glass)] text-xs text-[var(--accent)] dark:text-[var(--accent)]">
                     <span className="font-bold block mb-0.5">Procurement Staff Reason / Return Remark:</span>
                     <p className="italic leading-relaxed whitespace-pre-wrap">{entry.remarks}</p>
                   </div>

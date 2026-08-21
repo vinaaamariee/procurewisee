@@ -229,7 +229,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                         {product.category}
                       </span>
                       {!product.isActive && (
-                        <span className="text-[9px] font-black text-red-600 bg-red-50 border border-red-200 rounded px-2 py-0.5 uppercase tracking-wide">
+                        <span className="text-[9px] font-black text-[var(--accent)] bg-[var(--accent-glass)] border border-[var(--border-accent)] rounded px-2 py-0.5 uppercase tracking-wide">
                           Currently Unavailable
                         </span>
                       )}
@@ -330,7 +330,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
             <p className="text-xs text-gray-500 mb-6 font-medium">Please specify the routing credentials below.</p>
 
             {errorMessage && (
-              <div className="bg-red-50 border border-red-200 text-red-800 rounded-lg p-3 text-xs mb-4 font-semibold">
+              <div className="bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] rounded-lg p-3 text-xs mb-4 font-semibold">
                 {errorMessage}
               </div>
             )}
@@ -369,7 +369,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                 />
               </div>
 
-              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-[11px] leading-relaxed text-[#ca8a04]">
+              <div className="bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-lg p-4 text-[11px] leading-relaxed text-[#ca8a04]">
                 <strong>BSC Budget Control Policy:</strong> Requisitions are immediately routed and checked against department annual allocations. A secure tracking token is provided upon submission.
               </div>
 

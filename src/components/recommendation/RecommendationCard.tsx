@@ -33,14 +33,14 @@ function getTrendConfig(trend: string) {
         icon: TrendingUp,
         label: "Increasing",
         color: "var(--accent)",
-        bgColor: "rgba(239, 68, 68, 0.08)",
+        bgColor: "var(--accent-glass)",
       };
     case "decreasing":
       return {
         icon: TrendingDown,
         label: "Decreasing",
-        color: "var(--green)",
-        bgColor: "rgba(34, 197, 94, 0.08)",
+        color: "var(--secondary)",
+        bgColor: "var(--accent-glass)",
       };
     case "stable":
       return {
@@ -62,12 +62,12 @@ function getTrendConfig(trend: string) {
 function getConfidenceColor(label: string) {
   switch (label) {
     case "High":
-      return { color: "var(--green)", bgColor: "rgba(34, 197, 94, 0.08)" };
+      return { color: "var(--accent)", bgColor: "var(--accent-glass)" };
     case "Medium":
-      return { color: "var(--yellow)", bgColor: "rgba(202, 138, 4, 0.08)" };
+      return { color: "var(--secondary)", bgColor: "var(--secondary-dim)" };
     case "Low":
     default:
-      return { color: "var(--accent)", bgColor: "rgba(239, 68, 68, 0.08)" };
+      return { color: "var(--accent)", bgColor: "var(--accent-glass)" };
   }
 }
 
@@ -184,7 +184,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
           <div className="rounded-xl border p-4 space-y-3.5 bg-muted/5" style={{ borderColor: "var(--border)" }}>
             <div className="flex justify-between items-center pb-2 border-b" style={{ borderColor: "var(--border)" }}>
               <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Recommendation Confidence</span>
-              <span className="text-sm font-black text-green-600">{confidence}%</span>
+              <span className="text-sm font-black text-[var(--accent)]">{confidence}%</span>
             </div>
             <div className="space-y-2">
               <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">Top Reasons Summary</span>
@@ -208,7 +208,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
 
                   return list.map((line, idx) => (
                     <div key={idx} className="flex items-start gap-1.5 text-xs font-semibold leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
+                      <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]" />
                       <span>{line}</span>
                     </div>
                   ));
@@ -260,7 +260,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
                     className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${topSupplier.individualScores.deliveryScore}%`,
-                      background: "var(--yellow)",
+                      background: "var(--secondary)",
                     }}
                   />
                 </div>
@@ -282,7 +282,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
                     className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${topSupplier.individualScores.reliabilityScore}%`,
-                      background: "var(--green)",
+                      background: "var(--accent)",
                     }}
                   />
                 </div>
@@ -304,7 +304,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
                     className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${topSupplier.individualScores.complianceScore}%`,
-                      background: "rgb(59, 130, 246)",
+                      background: "var(--secondary)",
                     }}
                   />
                 </div>
@@ -325,7 +325,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
                     className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${topSupplier.individualScores.historicalPerformanceScore}%`,
-                      background: "rgb(168, 85, 247)",
+                      background: "rgba(123, 30, 30, 0.4)",
                     }}
                   />
                 </div>
@@ -396,8 +396,8 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
                 <span
                   className="font-bold px-2 py-0.5 rounded-md"
                   style={{
-                    color: expectedChange.startsWith("+") ? "var(--accent)" : "var(--green)",
-                    background: expectedChange.startsWith("+") ? "rgba(239, 68, 68, 0.06)" : "rgba(34, 197, 94, 0.06)",
+                    color: expectedChange.startsWith("+") ? "var(--accent)" : "var(--secondary)",
+                    background: expectedChange.startsWith("+") ? "var(--accent-glass)" : "var(--secondary-dim)",
                   }}
                 >
                   {expectedChange}
@@ -413,17 +413,17 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
                   className="px-1.5 py-0.5 rounded text-[9px] font-extrabold shrink-0"
                   style={{
                     color:
-                      forecastTrend === "increasing"
-                        ? "var(--accent)"
-                        : forecastTrend === "decreasing"
-                        ? "var(--green)"
-                        : "var(--text-secondary)",
+                        forecastTrend === "increasing"
+                          ? "var(--accent)"
+                          : forecastTrend === "decreasing"
+                          ? "var(--secondary)"
+                          : "var(--text-secondary)",
                     backgroundColor:
                       forecastTrend === "increasing"
-                        ? "rgba(239, 68, 68, 0.05)"
+                        ? "rgba(123, 30, 30, 0.05)"
                         : forecastTrend === "decreasing"
-                        ? "rgba(34, 197, 94, 0.05)"
-                        : "rgba(107, 114, 128, 0.05)",
+                        ? "rgba(123, 30, 30, 0.05)"
+                        : "rgba(123, 30, 30, 0.05)",
                   }}
                 >
                   {forecastTrend === "increasing" ? "BUY NOW" : forecastTrend === "decreasing" ? "WAIT FOR PRICE" : "MONITOR MARKET"}

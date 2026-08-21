@@ -122,9 +122,9 @@ export default function PmrRegisterClient({ initialPmrs, offices }: PmrRegisterC
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {(
           [
-            { label: "Active Records", value: counts.Active, cls: "text-emerald-700 dark:text-emerald-300" },
+            { label: "Active Records", value: counts.Active, cls: "text-[var(--accent)] dark:text-[var(--secondary)]" },
             { label: "Archived", value: counts.Archived, cls: "text-base-content/70" },
-            { label: "Cancelled", value: counts.Cancelled, cls: "text-red-700 dark:text-red-300" },
+            { label: "Cancelled", value: counts.Cancelled, cls: "text-[var(--accent)] dark:text-[var(--accent)]" },
           ] as const
         ).map((s) => (
           <div key={s.label} className="rounded-md border border-base-300 bg-base-100 p-4 flex items-center justify-between">

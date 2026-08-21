@@ -201,7 +201,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
       {toastMsg && (
         <div style={{
           position: 'fixed', top: '2rem', right: '2rem', zIndex: 1000,
-          backgroundColor: '#10b981', color: '#fff', padding: '1rem 2rem',
+          backgroundColor: 'var(--secondary)', color: '#fff', padding: '1rem 2rem',
           borderRadius: '0.75rem', fontWeight: 700, fontSize: '0.9rem',
           boxShadow: '0 10px 25px rgba(16, 185, 129, 0.3)',
           animation: 'slideIn 0.3s ease-out'
@@ -233,10 +233,10 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                 pr.status === 'Rejected' ? 'rgba(127, 29, 29, 0.1)' :
                 pr.status === 'UnderReview' ? 'rgba(217, 119, 6, 0.1)' : 'rgba(30, 58, 138, 0.08)',
               color: 
-                pr.status === 'Approved' || pr.status === 'Received' ? '#10b981' :
-                ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? '#ef4444' :
+                pr.status === 'Approved' || pr.status === 'Received' ? 'var(--secondary)' :
+                ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'var(--accent)' :
                 pr.status === 'Rejected' ? '#7f1d1d' :
-                pr.status === 'UnderReview' ? '#d97706' : 'var(--accent)',
+                pr.status === 'UnderReview' ? 'var(--secondary)' : 'var(--accent)',
             }}>
               {['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'Returned for Revision' :
                pr.status === 'UnderReview' ? 'Under Review' : pr.status}
@@ -283,7 +283,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                 disabled={isPending}
                 style={{
                   padding: '0.6rem 1.4rem', borderRadius: '0.75rem', border: 'none',
-                  background: 'linear-gradient(90deg, #10b981, #059669)', color: '#fff',
+                  background: 'linear-gradient(90deg, var(--accent), #5a1515)', color: '#fff',
                   fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer',
                   boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)'
                 }}
@@ -295,7 +295,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                 disabled={isPending}
                 style={{
                   padding: '0.6rem 1.4rem', borderRadius: '0.75rem', border: '1px solid rgba(239, 68, 68, 0.2)',
-                  background: 'rgba(239, 68, 68, 0.05)', color: '#ef4444',
+                  background: 'var(--accent-glass)', color: 'var(--accent)',
                   fontWeight: 700, fontSize: '0.8rem', cursor: 'pointer'
                 }}
               >
@@ -318,7 +318,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
       </div>
 
       {errorMsg && (
-        <div style={{ padding: '0.75rem 1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: '#dc2626', fontSize: '0.85rem', fontWeight: 600 }}>
+        <div style={{ padding: '0.75rem 1rem', borderRadius: '0.5rem', backgroundColor: 'rgba(239, 68, 68, 0.1)', color: 'var(--accent)', fontSize: '0.85rem', fontWeight: 600 }}>
           ⚠️ {errorMsg}
         </div>
       )}
@@ -334,7 +334,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
             <div style={{
               background: "rgba(255,255,255,0.9)",
               borderLeft: `5px solid ${
-                pr.status === "Approved" || pr.status === "Received" ? "#10b981" : "#ef4444"
+                pr.status === "Approved" || pr.status === "Received" ? "var(--secondary)" : "var(--accent)"
               }`,
               borderRadius: '1.25rem',
               padding: '1.5rem',
@@ -355,7 +355,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                   backgroundColor: 
                     pr.status === 'Approved' || pr.status === 'Received' ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
                   color: 
-                    pr.status === 'Approved' || pr.status === 'Received' ? '#10b981' : '#ef4444'
+                    pr.status === 'Approved' || pr.status === 'Received' ? 'var(--secondary)' : 'var(--accent)'
                 }}>
                   {['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? "Returned for Revision" : pr.status}
                 </span>
@@ -475,11 +475,11 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                 </div>
                 <div style={{ borderTop: `1px solid ${theme.border}`, paddingTop: '0.75rem' }}>
                   <span style={{ display: 'block', fontSize: '0.75rem', color: theme.textSecondary, fontWeight: 500 }}>Remaining Balance</span>
-                  <span style={{ fontSize: '1.25rem', fontWeight: 800, color: remainingBudget >= pr.totalCost ? '#047857' : '#dc2626' }}>
+                  <span style={{ fontSize: '1.25rem', fontWeight: 800, color: remainingBudget >= pr.totalCost ? '#047857' : 'var(--accent)' }}>
                     ₱{remainingBudget.toLocaleString('en-PH')}
                   </span>
                   {remainingBudget < pr.totalCost && (
-                    <div style={{ color: '#dc2626', fontSize: '0.75rem', fontWeight: 600, marginTop: '0.25rem' }}>
+                    <div style={{ color: 'var(--accent)', fontSize: '0.75rem', fontWeight: 600, marginTop: '0.25rem' }}>
                       ⚠️ Requisition total exceeds remaining department balance.
                     </div>
                   )}
@@ -506,10 +506,10 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                   <div style={{
                     position: 'absolute', left: '-1.85rem', top: '3px', width: 12, height: 12, borderRadius: '50%',
                     backgroundColor: 
-                      history.status === 'Approved' ? '#10b981' :
-                      ['ReturnedForRevision', 'Returned for Revision'].includes(history.status) ? '#ef4444' :
+                      history.status === 'Approved' ? 'var(--secondary)' :
+                      ['ReturnedForRevision', 'Returned for Revision'].includes(history.status) ? 'var(--accent)' :
                       history.status === 'Rejected' ? '#7f1d1d' :
-                      history.status === 'UnderReview' ? '#d97706' : 'var(--accent)',
+                      history.status === 'UnderReview' ? 'var(--secondary)' : 'var(--accent)',
                     border: '3px solid #fff',
                     boxShadow: '0 0 0 1px rgba(0,0,0,0.1)'
                   }} />
@@ -575,7 +575,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <label style={{ fontSize: '0.75rem', fontWeight: 700, color: theme.textSecondary, textTransform: 'uppercase' }}>
-                Remarks / Justification {(modalType === 'return' || modalType === 'reject') && <span style={{ color: '#ef4444' }}>*</span>}
+                Remarks / Justification {(modalType === 'return' || modalType === 'reject') && <span style={{ color: 'var(--accent)' }}>*</span>}
               </label>
               <textarea
                 placeholder={modalType === 'approve' ? 'Optional approval notes...' : 'Specify reasons (specs incorrect, budget mismatch, etc.)...'}
@@ -589,7 +589,7 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                 }}
               />
               {modalError && (
-                <span style={{ fontSize: '0.75rem', color: '#ef4444', fontWeight: 600 }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--accent)', fontWeight: 600 }}>
                   ⚠️ {modalError}
                 </span>
               )}
@@ -609,8 +609,8 @@ export default function PrReviewClient({ pr: initialPr, deptBudget }: PrReviewCl
                 onClick={handleModalSubmit}
                 style={{
                   padding: '0.5rem 1.5rem', borderRadius: '0.5rem', border: 'none',
-                  background: modalType === 'approve' ? 'linear-gradient(90deg, #10b981, #059669)' :
-                             modalType === 'return' ? '#ef4444' : '#7f1d1d',
+                  background: modalType === 'approve' ? 'linear-gradient(90deg, var(--accent), #5a1515)' :
+                             modalType === 'return' ? 'var(--accent)' : '#7f1d1d',
                   color: '#fff', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer'
                 }}
               >

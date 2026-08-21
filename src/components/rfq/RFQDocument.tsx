@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useTransition } from 'react';
 import RFQHeader from './RFQHeader';
@@ -196,14 +196,14 @@ export default function RFQDocument({
 
       {/* Alert Notifications */}
       {errorMsg && (
-        <div className="max-w-[800px] mx-auto mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
+        <div className="max-w-[800px] mx-auto mb-4 p-3.5 rounded-xl bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
           <span>⚠️</span>
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="max-w-[800px] mx-auto mb-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
+        <div className="max-w-[800px] mx-auto mb-4 p-3.5 rounded-xl bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
           <span>✅</span>
           <span>{successMsg}</span>
         </div>

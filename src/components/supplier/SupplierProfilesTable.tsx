@@ -98,9 +98,9 @@ export default function SupplierProfilesTable({
 
   // Helper to color quality compliance
   const getQualityStyle = (rate: number) => {
-    if (rate >= 90) return { color: 'var(--green)', bg: 'var(--green-dim)', label: 'Excellent' };
-    if (rate >= 80) return { color: '#f59e0b', bg: 'rgba(245,158,11,0.08)', label: 'Good' };
-    return { color: '#ef4444', bg: 'var(--red-dim)', label: 'Poor' };
+    if (rate >= 90) return { color: 'var(--secondary)', bg: 'var(--green-dim)', label: 'Excellent' };
+    if (rate >= 80) return { color: 'var(--secondary)', bg: 'rgba(245,158,11,0.08)', label: 'Good' };
+    return { color: 'var(--accent)', bg: 'var(--accent-glass)', label: 'Poor' };
   };
 
   return (
@@ -110,14 +110,14 @@ export default function SupplierProfilesTable({
       {errorMsg && (
         <div style={{
           padding: '1rem 1.25rem', borderRadius: 12,
-          background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)',
-          color: '#ef4444', fontSize: '0.85rem', fontWeight: 500,
+          background: 'var(--accent-glass)', border: '1px solid rgba(239,68,68,0.2)',
+          color: 'var(--accent)', fontSize: '0.85rem', fontWeight: 500,
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}>
           <span>⚠️ {errorMsg}</span>
           <button 
             onClick={() => setErrorMsg(null)} 
-            style={{ background: 'transparent', border: 'none', color: '#ef4444', cursor: 'pointer', fontWeight: 700 }}
+            style={{ background: 'transparent', border: 'none', color: 'var(--accent)', cursor: 'pointer', fontWeight: 700 }}
           >
             ✕
           </button>
@@ -276,7 +276,7 @@ export default function SupplierProfilesTable({
                         borderRadius: 999,
                         background: supplier.isVerified ? 'var(--green-dim)' : 'var(--bg-dark)',
                         border: '1px solid var(--border)',
-                        color: supplier.isVerified ? 'var(--green)' : 'var(--text-muted)',
+                        color: supplier.isVerified ? 'var(--secondary)' : 'var(--text-muted)',
                         fontSize: '0.75rem',
                         fontWeight: 700,
                         textTransform: 'uppercase',
@@ -337,9 +337,9 @@ export default function SupplierProfilesTable({
                           style={{
                             padding: '0.5rem 1rem',
                             borderRadius: 8,
-                            background: supplier.isVerified ? 'var(--red-dim)' : 'var(--green-dim)',
+                            background: supplier.isVerified ? 'var(--accent-glass)' : 'var(--green-dim)',
                             border: '1px solid var(--border)',
-                            color: supplier.isVerified ? '#ef4444' : 'var(--green)',
+                            color: supplier.isVerified ? 'var(--accent)' : 'var(--secondary)',
                             fontSize: '0.78rem',
                             fontWeight: 700,
                             cursor: updatingId === supplier.id ? 'not-allowed' : 'pointer',

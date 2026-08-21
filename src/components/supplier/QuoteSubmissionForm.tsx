@@ -253,8 +253,8 @@ export default function QuoteSubmissionForm({
       {errorMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)',
-          color: '#ef4444', fontSize: '0.875rem', fontWeight: 500
+          background: 'var(--accent-glass)', border: '1px solid rgba(239,68,68,0.2)',
+          color: 'var(--accent)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ⚠️ {errorMsg}
         </div>
@@ -264,7 +264,7 @@ export default function QuoteSubmissionForm({
         <div style={{
           padding: '1rem', borderRadius: 12,
           background: 'var(--green-dim)', border: '1px solid var(--border)',
-          color: 'var(--green)', fontSize: '0.875rem', fontWeight: 500
+          color: 'var(--secondary)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ✅ {successMsg}
         </div>
@@ -322,7 +322,7 @@ export default function QuoteSubmissionForm({
         }}>
           <div>• Please offer your best and final price for the item/s listed below.</div>
           <div>• <strong>Price Evaluation Mode</strong>: The default mode shall be on a <strong>LOT BASIS</strong> (otherwise item-by-item).</div>
-          <div>• <strong>Limit Budget (ABC)</strong>: <span style={{ color: '#ef4444', fontWeight: 700 }}>₱{limitBudget.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</span>. Quotes above this limit may be automatically disqualified.</div>
+          <div>• <strong>Limit Budget (ABC)</strong>: <span style={{ color: 'var(--accent)', fontWeight: 700 }}>₱{limitBudget.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</span>. Quotes above this limit may be automatically disqualified.</div>
           <div>• In case an item is unavailable or out of stock, toggle availability to <strong>No (None)</strong>.</div>
         </div>
 
@@ -361,7 +361,7 @@ export default function QuoteSubmissionForm({
               style={{
                 padding: '0.5rem 1rem', borderRadius: 8,
                 background: 'var(--green-dim)', border: '1px solid var(--border)',
-                color: 'var(--green)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+                color: 'var(--secondary)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '0.4rem'
               }}
             >
@@ -401,7 +401,7 @@ export default function QuoteSubmissionForm({
                 return (
                   <tr key={item.id} style={{
                     borderBottom: '1px solid var(--border)',
-                    background: entry.isAvailable ? 'transparent' : 'var(--red-dim)',
+                    background: entry.isAvailable ? 'transparent' : 'var(--accent-glass)',
                     color: entry.isAvailable ? 'var(--text-primary)' : 'var(--text-muted)',
                     transition: 'all 0.2s'
                   }}>
@@ -417,9 +417,9 @@ export default function QuoteSubmissionForm({
                         onClick={() => handleAvailabilityToggle(item.id, !entry.isAvailable)}
                         style={{
                           padding: '0.25rem 0.5rem', borderRadius: 6,
-                          background: entry.isAvailable ? 'var(--green-dim)' : 'var(--red-dim)',
+                          background: entry.isAvailable ? 'var(--green-dim)' : 'var(--accent-glass)',
                           border: '1px solid var(--border)',
-                          color: entry.isAvailable ? 'var(--green)' : '#ef4444',
+                          color: entry.isAvailable ? 'var(--secondary)' : 'var(--accent)',
                           fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer',
                         }}
                       >
@@ -441,7 +441,7 @@ export default function QuoteSubmissionForm({
                         }}
                       />
                     </td>
-                    <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, fontFamily: 'monospace', color: entry.isAvailable ? 'var(--green)' : 'var(--text-muted)' }}>
+                    <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, fontFamily: 'monospace', color: entry.isAvailable ? 'var(--secondary)' : 'var(--text-muted)' }}>
                       {entry.isAvailable ? `₱${rowTotal.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'}
                     </td>
                   </tr>
@@ -453,10 +453,10 @@ export default function QuoteSubmissionForm({
                 <td colSpan={6} style={{ padding: '1.25rem 1rem', textAlign: 'right', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
                   Total Bid Amount:
                 </td>
-                <td style={{ padding: '1.25rem 1rem', textAlign: 'right', fontSize: '1rem', color: totalQuotedAmount > limitBudget ? '#ef4444' : 'var(--green)', fontFamily: 'monospace' }}>
+                <td style={{ padding: '1.25rem 1rem', textAlign: 'right', fontSize: '1rem', color: totalQuotedAmount > limitBudget ? 'var(--accent)' : 'var(--secondary)', fontFamily: 'monospace' }}>
                   ₱{totalQuotedAmount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   {totalQuotedAmount > limitBudget && (
-                    <div style={{ fontSize: '0.65rem', color: '#ef4444', fontWeight: 600, marginTop: '0.25rem' }}>
+                    <div style={{ fontSize: '0.65rem', color: 'var(--accent)', fontWeight: 600, marginTop: '0.25rem' }}>
                       Exceeds ABC Budget Limit!
                     </div>
                   )}

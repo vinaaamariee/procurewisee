@@ -90,7 +90,7 @@ export default function SupplierRankingTable({ rankings, weights }: SupplierRank
                             <span className="font-semibold">{priceCont}</span>
                           </div>
                           <div className="h-1.5 w-full bg-muted-foreground/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-red-800 rounded-full" style={{ width: `${s.individualScores.priceScore}%` }} />
+                            <div className="h-full bg-[var(--accent)] rounded-full" style={{ width: `${s.individualScores.priceScore}%` }} />
                           </div>
                         </div>
                         {/* Delivery */}
@@ -100,7 +100,7 @@ export default function SupplierRankingTable({ rankings, weights }: SupplierRank
                             <span className="font-semibold">{deliveryCont}</span>
                           </div>
                           <div className="h-1.5 w-full bg-muted-foreground/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-amber-600 rounded-full" style={{ width: `${s.individualScores.deliveryScore}%` }} />
+                            <div className="h-full bg-[var(--secondary)] rounded-full" style={{ width: `${s.individualScores.deliveryScore}%` }} />
                           </div>
                         </div>
                         {/* Reliability */}
@@ -110,7 +110,7 @@ export default function SupplierRankingTable({ rankings, weights }: SupplierRank
                             <span className="font-semibold">{reliabilityCont}</span>
                           </div>
                           <div className="h-1.5 w-full bg-muted-foreground/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-emerald-600 rounded-full" style={{ width: `${s.individualScores.reliabilityScore}%` }} />
+                            <div className="h-full rounded-full" style={{ width: `${s.individualScores.reliabilityScore}%`, background: 'rgba(123,30,30,0.55)' }} />
                           </div>
                         </div>
                         {/* Compliance */}
@@ -120,7 +120,7 @@ export default function SupplierRankingTable({ rankings, weights }: SupplierRank
                             <span className="font-semibold">{complianceCont}</span>
                           </div>
                           <div className="h-1.5 w-full bg-muted-foreground/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-blue-600 rounded-full" style={{ width: `${s.individualScores.complianceScore}%` }} />
+                            <div className="h-full rounded-full" style={{ width: `${s.individualScores.complianceScore}%`, background: 'rgba(166,118,29,0.75)' }} />
                           </div>
                         </div>
                         {/* Historical */}
@@ -130,7 +130,7 @@ export default function SupplierRankingTable({ rankings, weights }: SupplierRank
                             <span className="font-semibold">{historicalCont}</span>
                           </div>
                           <div className="h-1.5 w-full bg-muted-foreground/10 rounded-full overflow-hidden">
-                            <div className="h-full bg-purple-600 rounded-full" style={{ width: `${s.individualScores.historicalPerformanceScore}%` }} />
+                            <div className="h-full rounded-full" style={{ width: `${s.individualScores.historicalPerformanceScore}%`, background: 'rgba(123,30,30,0.35)' }} />
                           </div>
                         </div>
                       </div>

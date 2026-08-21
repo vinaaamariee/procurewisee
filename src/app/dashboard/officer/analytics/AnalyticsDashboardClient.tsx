@@ -469,14 +469,14 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
       {/* ── Executive Summary Panel Card (Section 7) ── */}
       <div className="rounded-2xl border p-5 space-y-3 no-print" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
         <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-          <Sparkles className="h-4.5 w-4.5 text-amber-500" />
+          <Sparkles className="h-4.5 w-4.5 text-[var(--secondary)]" />
           Executive Analytics Summary
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1.5 text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
           <div>• Annual procurement spend grew by <span className="font-extrabold text-slate-800 dark:text-slate-200">8.2%</span> relative to last fiscal averages.</div>
           <div>• Budget utilization stands at <span className="font-extrabold text-slate-800 dark:text-slate-200">{filteredData.utilizationRate.toFixed(1)}%</span> ({filteredData.budgetHealth}).</div>
           <div>• Office Supplies category shows the highest historical price variance.</div>
-          <div>• Recommended savings identify <span className="font-extrabold text-green-600">{formatCurrency(filteredData.totalSavings)}</span> in cost buffers.</div>
+          <div>• Recommended savings identify <span className="font-extrabold text-[var(--secondary)]">{formatCurrency(filteredData.totalSavings)}</span> in cost buffers.</div>
           <div>• Top Performing Supplier: <span className="font-extrabold text-[#ca8a04]">{initialData.kpis.topSupplierName}</span> (Lowest Risk).</div>
           <div>• Forecasting model evaluation confidence is registered as <span className="font-extrabold text-slate-800 dark:text-slate-200">High</span>.</div>
         </div>
@@ -645,9 +645,9 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                 <h3 className="text-sm font-extrabold" style={{ color: "var(--text-primary)" }}>Utilization Tiers</h3>
               </div>
               <span className={`px-2 py-0.5 rounded text-[10px] font-extrabold uppercase ${
-                filteredData.budgetHealth === "Critical" ? "bg-red-500/10 text-red-600 animate-pulse border border-red-500/20" :
-                filteredData.budgetHealth === "Watch" ? "bg-amber-500/10 text-amber-600 border border-amber-500/20" :
-                "bg-green-500/10 text-green-600 border border-green-500/20"
+                filteredData.budgetHealth === "Critical" ? "bg-[var(--accent-glass)] text-[var(--accent)] animate-pulse border border-[var(--border-accent)]" :
+                filteredData.budgetHealth === "Watch" ? "bg-[var(--secondary-dim)] text-[var(--secondary)] border border-[var(--border-accent)]" :
+                "bg-[var(--secondary-dim)] text-[var(--secondary)] border border-[var(--border-accent)]"
               }`}>
                 {filteredData.budgetHealth}
               </span>
@@ -677,7 +677,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                     style={{
                       width: `${Math.min(100, filteredData.utilizationRate)}%`,
                       backgroundColor: filteredData.budgetHealth === "Critical" ? "var(--accent)" :
-                                       filteredData.budgetHealth === "Watch" ? "#d97706" : "var(--green)",
+                                       filteredData.budgetHealth === "Watch" ? "var(--secondary)" : "var(--secondary)",
                     }}
                   />
                 </div>
@@ -746,9 +746,9 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                     <div>
                       <span className="text-xs font-bold block" style={{ color: "var(--text-primary)" }}>{s.name}</span>
                       <span className={`inline-block px-1.5 py-0.2 text-[8px] font-black uppercase rounded mt-0.5 ${
-                        s.riskGroup === "LOW" ? "bg-green-500/10 text-green-600 border border-green-500/20" :
-                        s.riskGroup === "MEDIUM" ? "bg-amber-500/10 text-amber-600 border border-amber-500/20" :
-                        "bg-red-500/10 text-red-600 border border-red-500/20"
+                        s.riskGroup === "LOW" ? "bg-[var(--secondary-dim)] text-[var(--secondary)] border border-[var(--border-accent)]" :
+                        s.riskGroup === "MEDIUM" ? "bg-[var(--secondary-dim)] text-[var(--secondary)] border border-[var(--border-accent)]" :
+                        "bg-[var(--accent-glass)] text-[var(--accent)] border border-[var(--border-accent)]"
                       }`}>
                         Risk: {s.riskGroup}
                       </span>
@@ -838,18 +838,18 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
               <div className="space-y-1 pl-0 md:pl-6 pt-4 md:pt-0">
                 <span className="text-[10px] text-muted-foreground block">MCDM Recommended Supplier Award</span>
                 <span className="text-sm font-extrabold block truncate" style={{ color: "var(--accent)" }}>{initialData.scenario.recommendedSupplier}</span>
-                <span className="text-lg font-black text-green-600 block">{formatCurrency(initialData.scenario.recommendedCost)}</span>
+                <span className="text-lg font-black text-[var(--secondary)] block">{formatCurrency(initialData.scenario.recommendedCost)}</span>
               </div>
 
               {/* Potential savings */}
               <div className="space-y-2 pl-0 md:pl-6 pt-4 md:pt-0">
                 <span className="text-[10px] text-muted-foreground block">Potential Procurement Savings</span>
-                <span className="text-xl font-black text-green-600 block">+{formatCurrency(initialData.scenario.savings)}</span>
+                <span className="text-xl font-black text-[var(--secondary)] block">+{formatCurrency(initialData.scenario.savings)}</span>
                 
                 {/* Recommendation Stability (Section 9) */}
                 <div className="flex items-center gap-1.5 pt-1">
                   <span className="text-[9px] text-muted-foreground">MCDM Model Stability:</span>
-                  <span className="inline-block px-1.5 py-0.2 bg-green-500/10 border border-green-500/20 text-green-600 font-extrabold rounded text-[8px] uppercase">
+                  <span className="inline-block px-1.5 py-0.2 bg-[var(--secondary-dim)] border border-[var(--border-accent)] text-[var(--secondary)] font-extrabold rounded text-[8px] uppercase">
                     {initialData.scenario.stabilityLabel}
                   </span>
                 </div>
@@ -869,8 +869,8 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                 <svg viewBox={`0 0 ${priceChart.width} ${priceChart.height}`} className="w-full h-auto">
                   <defs>
                     <linearGradient id="priceGradF3" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#059669" stopOpacity="0.15" />
-                      <stop offset="100%" stopColor="#059669" stopOpacity="0" />
+                      <stop offset="0%" stopColor="var(--secondary)" stopOpacity="0.15" />
+                      <stop offset="100%" stopColor="var(--secondary)" stopOpacity="0" />
                     </linearGradient>
                   </defs>
                   
@@ -880,14 +880,14 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                   ))}
 
                   {/* Historical Solid Line */}
-                  <path d={priceChart.solidPathD} fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" />
+                  <path d={priceChart.solidPathD} fill="none" stroke="var(--secondary)" strokeWidth="2.5" strokeLinecap="round" />
 
                   {/* Dashed Forecast Line (Section 6) */}
-                  <path d={priceChart.forecastPathD} fill="none" stroke="#059669" strokeWidth="2.5" strokeDasharray="4,4" strokeLinecap="round" />
+                  <path d={priceChart.forecastPathD} fill="none" stroke="var(--secondary)" strokeWidth="2.5" strokeDasharray="4,4" strokeLinecap="round" />
 
                   {/* Data Points */}
                   {priceChart.points.map((p, idx) => (
-                    <circle key={idx} cx={p.x} cy={p.y} r="3.5" fill="#fff" stroke="#059669" strokeWidth="1.5" />
+                    <circle key={idx} cx={p.x} cy={p.y} r="3.5" fill="#fff" stroke="var(--secondary)" strokeWidth="1.5" />
                   ))}
 
                   {/* X Labels */}
@@ -917,9 +917,9 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                   </div>
                   <div className="text-right">
                     <span className={`inline-block px-1.5 py-0.2 rounded text-[8px] font-black uppercase ${
-                      f.confidenceLabel === "High" ? "bg-green-500/10 text-green-600 border border-green-500/20" :
-                      f.confidenceLabel === "Medium" ? "bg-amber-500/10 text-amber-600 border border-amber-500/20" :
-                      "bg-red-500/10 text-red-600 border border-red-500/20"
+                      f.confidenceLabel === "High" ? "bg-[var(--secondary-dim)] text-[var(--secondary)] border border-[var(--border-accent)]" :
+                      f.confidenceLabel === "Medium" ? "bg-[var(--secondary-dim)] text-[var(--secondary)] border border-[var(--border-accent)]" :
+                      "bg-[var(--accent-glass)] text-[var(--accent)] border border-[var(--border-accent)]"
                     }`}>
                       Confidence: {f.confidenceLabel}
                     </span>
@@ -956,7 +956,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <div className="rounded-2xl border p-5 flex flex-col justify-between" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
               <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">Completed Procurements</span>
               <div>
-                <span className="text-3xl font-black text-green-600">{initialData.kpis.completedCount} POs</span>
+                <span className="text-3xl font-black text-[var(--secondary)]">{initialData.kpis.completedCount} POs</span>
                 <p className="text-xs text-muted-foreground mt-1">Delivered or closed contracts</p>
               </div>
             </div>

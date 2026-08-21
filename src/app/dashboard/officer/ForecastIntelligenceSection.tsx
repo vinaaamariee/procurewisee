@@ -16,7 +16,7 @@ export default async function ForecastIntelligenceSection() {
     accentLight: 'var(--accent-light)',
     textPrimary: 'var(--text-primary)',
     textSecondary: 'var(--text-secondary)',
-    green: '#10b981',
+    green: 'var(--secondary)',
     shadow: '0 4px 24px rgba(30,58,138,0.07)',
   };
 
@@ -49,7 +49,7 @@ export default async function ForecastIntelligenceSection() {
                 forecastData.expectedToIncrease.slice(0, 3).map(p => (
                   <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem' }}>
                     <span style={{ fontWeight: 600, color: v.textPrimary }}>{p.name}</span>
-                    <span style={{ fontWeight: 800, color: '#dc2626', background: 'rgba(239, 68, 68, 0.05)', padding: '0.1rem 0.4rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '2px' }}>
+                    <span style={{ fontWeight: 800, color: 'var(--accent)', background: 'var(--accent-glass)', padding: '0.1rem 0.4rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '2px' }}>
                       <TrendingUp style={{ width: 10, height: 10 }} /> +{p.changePct.toFixed(1)}%
                     </span>
                   </div>

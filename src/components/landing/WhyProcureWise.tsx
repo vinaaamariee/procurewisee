@@ -21,7 +21,7 @@ const features = [
     title: "Historical Prices",
     description:
       "Track price trends across suppliers over time to identify cost-saving opportunities.",
-    color: "#D4A017",
+    color: "var(--secondary)",
     bg: "rgba(212, 160, 23, 0.08)",
   },
   {
@@ -29,8 +29,8 @@ const features = [
     title: "Decision Support",
     description:
       "MCDM-powered best-value recommendations balancing price, delivery, and reliability.",
-    color: "#059669",
-    bg: "rgba(5, 150, 105, 0.08)",
+    color: "var(--secondary)",
+    bg: "var(--secondary-dim)",
   },
   {
     icon: FileSearch,
@@ -45,16 +45,16 @@ const features = [
     title: "Transparent Procurement",
     description:
       "Full visibility into procurement workflows for compliance and accountability.",
-    color: "#0891b2",
-    bg: "rgba(8, 145, 178, 0.08)",
+    color: "var(--secondary)",
+    bg: "var(--secondary-dim)",
   },
   {
     icon: ScrollText,
     title: "Audit Logs",
     description:
       "Immutable, timestamped audit trail for every procurement action and decision.",
-    color: "#d97706",
-    bg: "rgba(217, 119, 6, 0.08)",
+    color: "var(--secondary)",
+    bg: "var(--secondary-dim)",
   },
 ];
 
@@ -63,7 +63,7 @@ export default function WhyProcureWise() {
     <section id="about" aria-labelledby="why-procurewise-heading">
       {/* Section header */}
       <div className="mb-6">
-        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#D4A017]">
+        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--secondary)]">
           Platform Highlights
         </p>
         <h2

@@ -1,13 +1,19 @@
 # 🏛️ ProcureWise
 
-## Strict Maroon-and-Gold Palette Correction
+## Full System-Wide Maroon & Gold Brand Palette Unification
 
 **Date**: August 21, 2026
 
-- Removed the theme toggle from the public landing page and locked the page to the light institutional theme.
-- Removed the full-color college logo from the landing header, hero, and footer because the asset introduced blue.
-- Replaced cool blue-gray neutrals with warm paper and charcoal neutrals.
-- Collapsed all semantic and compatibility colors to exact maroon `#7B1E1E` or gold `#A6761D`; no pink, blue, green, or orange UI accents remain in the shared theme.
+- **Strict Color Policy Enforcement**: Refactored 80+ components and pages across the entire codebase to strictly use Maroon (`#7B1E1E`, `var(--accent)`) and Gold (`#A6761D`, `var(--secondary)`) exclusively, alongside neutral paper, text, and border tokens.
+- **Removed Off-Brand Palette Leaks**: Systematically eliminated all legacy Tailwind utility colors and raw hex codes (including emerald, green, blue, indigo, purple, orange, amber, and red) across:
+  - Recommendation Engine & Scoring Breakdown cards
+  - Purchase Request (PR), RFQ, PO, AOQ, and PMR documents & table grids
+  - Workflow status badges, timelines, and audit trails
+  - Activity timelines, user avatars, and notifications
+  - Supplier pre-canvass client, quote submission forms, and profile tables
+  - Global Search, marketplace product catalog, and navigation bars
+  - Analytics and dashboard metrics
+- **Design Tokens**: Standardized on CSS variables (`var(--accent)`, `var(--secondary)`, `var(--accent-glass)`, `var(--secondary-dim)`, `var(--border-accent)`) to maintain brand consistency and ease of future maintenance.
 
 ## Focused Maroon-and-Gold Landing Page
 

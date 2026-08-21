@@ -43,11 +43,11 @@ export default function ReviewPrModal({
         <div className="flex items-center justify-between border-b border-[var(--border)] pb-4">
           <div className="flex items-center gap-3">
             {mode === "approve" ? (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]">
                 <CheckCircle className="h-6 w-6" />
               </div>
             ) : (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 text-red-600 dark:bg-red-950/60 dark:text-red-400">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--accent)]">
                 <AlertCircle className="h-6 w-6" />
               </div>
             )}
@@ -77,9 +77,9 @@ export default function ReviewPrModal({
         {/* Content Body */}
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === "approve" ? (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 p-4 dark:border-emerald-900/50 dark:bg-emerald-950/30 text-emerald-900 dark:text-emerald-200 text-sm space-y-2">
+            <div className="rounded-xl border border-[var(--border-accent)] bg-[var(--accent-glass)]/70 p-4 dark:border-[var(--border-accent)] dark:bg-[var(--accent-glass)] text-[var(--text-primary)] dark:text-[var(--secondary)] text-sm space-y-2">
               <p className="font-semibold">Approve Purchase Request?</p>
-              <p className="text-xs text-emerald-700 dark:text-emerald-300 leading-relaxed">
+              <p className="text-xs text-[var(--accent)] dark:text-[var(--secondary)] leading-relaxed">
                 This Purchase Request has passed Procurement Office validation and will become eligible for RFQ generation. The document will be locked from further End User modifications.
               </p>
             </div>
@@ -88,8 +88,8 @@ export default function ReviewPrModal({
               <div
                 className={`rounded-xl border p-3.5 text-xs ${
                   mode === "reject"
-                    ? "border-red-200 bg-red-50/70 dark:border-red-900/50 dark:bg-red-950/30 text-red-800 dark:text-red-300"
-                    : "border-amber-200 bg-amber-50/70 dark:border-amber-900/50 dark:bg-amber-950/30 text-amber-800 dark:text-amber-300"
+                    ? "border-[var(--border-accent)] bg-[var(--accent-glass)] dark:border-[var(--border-accent)] dark:bg-[var(--accent-glass)] text-[var(--accent)] dark:text-[var(--accent)]"
+                    : "border-[var(--border-accent)] bg-[var(--secondary-dim)]/70 dark:border-[var(--border-accent)] dark:bg-[var(--secondary-dim)] text-[var(--secondary)] dark:text-[var(--secondary)]"
                 }`}
               >
                 {mode === "reject"
@@ -99,7 +99,7 @@ export default function ReviewPrModal({
               <div>
                 <label className="block text-xs font-bold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
                   {mode === "reject" ? "Reason for Rejection" : "Reason for Returning"}{" "}
-                  <span className="text-red-500">*</span>
+                  <span className="text-[var(--accent)]">*</span>
                 </label>
                 <textarea
                   rows={4}
@@ -121,7 +121,7 @@ export default function ReviewPrModal({
           )}
 
           {error && (
-            <div className="rounded-xl bg-red-50 p-3 text-xs font-medium text-red-700 dark:bg-red-950/50 dark:text-red-300">
+            <div className="rounded-xl bg-[var(--accent-glass)] p-3 text-xs font-medium text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--accent)]">
               {error}
             </div>
           )}

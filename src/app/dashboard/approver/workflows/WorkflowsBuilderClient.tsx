@@ -243,13 +243,13 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
         </div>
 
         {errorMsg && (
-          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#dc2626", fontSize: "0.8rem", fontWeight: 600 }}>
+          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "var(--accent)", fontSize: "0.8rem", fontWeight: 600 }}>
             ⚠️ {errorMsg}
           </div>
         )}
 
         {successMsg && (
-          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "#059669", fontSize: "0.8rem", fontWeight: 600 }}>
+          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "var(--secondary)", fontSize: "0.8rem", fontWeight: 600 }}>
             ✅ {successMsg}
           </div>
         )}
@@ -290,7 +290,7 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
                       {step.parallel && (
                         <>
                           <span>•</span>
-                          <span style={{ color: "#3b82f6", fontWeight: 700 }}>Parallel Verification</span>
+                          <span style={{ color: "var(--secondary)", fontWeight: 700 }}>Parallel Verification</span>
                         </>
                       )}
                     </div>
@@ -302,7 +302,7 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
                   disabled={isProcessing}
                   style={{
                     padding: "0.35rem 0.75rem", borderRadius: "0.35rem", border: "none",
-                    background: "rgba(239, 68, 68, 0.08)", color: "#ef4444",
+                    background: "var(--accent-glass)", color: "var(--accent)",
                     fontWeight: 700, fontSize: "0.72rem", cursor: "pointer"
                   }}
                 >

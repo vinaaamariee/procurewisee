@@ -12,7 +12,7 @@ const fmtDate = (d: Date) =>
   d.toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" });
 
 const philGepsTone: Record<string, string> = {
-  Registered: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
+  Registered: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]",
   Expired: "bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-300",
   "Not Registered": "bg-base-200 text-base-content/60 dark:bg-base-300/50",
 };
@@ -194,7 +194,7 @@ export default async function SuppliersPage() {
                     </td>
                     <td className="py-3 px-3">
                       {supplier.isVerified ? (
-                        <span className="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300">
+                        <span className="inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-bold bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]">
                           Verified
                         </span>
                       ) : (

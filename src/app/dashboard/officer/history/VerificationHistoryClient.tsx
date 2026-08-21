@@ -258,11 +258,11 @@ export default function VerificationHistoryClient({ initialPrs, basePath = "/das
                     <td className="py-3 px-3 whitespace-nowrap">
                       <span className={`inline-flex items-center rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
                         getActionTaken(p.status) === "Verified"
-                          ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300"
+                          ? "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]"
                           : getActionTaken(p.status).startsWith("Returned")
-                          ? "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300"
+                          ? "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]"
                           : getActionTaken(p.status) === "Rejected"
-                          ? "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300"
+                          ? "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--accent)]"
                           : "bg-base-200 text-base-content/70"
                       }`}>
                         {getActionTaken(p.status)}

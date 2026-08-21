@@ -183,7 +183,7 @@ export default function PRItemUpload({ onItemsParsed, disabled }: PRItemUploadPr
 
       <div
         className={`relative border-2 border-dashed rounded-lg p-4 text-center cursor-pointer transition ${
-          isDragging ? "border-[var(--accent)] bg-red-50/50" : "border-[var(--border)] hover:border-[var(--accent)]"
+          isDragging ? "border-[var(--accent)] bg-[var(--accent-glass)]" : "border-[var(--border)] hover:border-[var(--accent)]"
         } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
@@ -220,15 +220,15 @@ export default function PRItemUpload({ onItemsParsed, disabled }: PRItemUploadPr
 
       {summary && (
         <div className={`rounded-lg border p-3 text-xs space-y-1 ${
-          summary.invalid > 0 ? "border-amber-300 bg-amber-50" : "border-emerald-300 bg-emerald-50"
+          summary.invalid > 0 ? "border-[var(--border-accent)] bg-[var(--secondary-dim)]" : "border-[var(--border-accent)] bg-[var(--accent-glass)]"
         }`}>
           <div className="font-bold flex items-center gap-3">
             <span>📊 Total Items: {summary.total}</span>
-            <span className="text-emerald-700">✅ Imported: {summary.success}</span>
-            {summary.invalid > 0 && <span className="text-amber-700">⚠️ Invalid: {summary.invalid}</span>}
+            <span className="text-[var(--accent)]">✅ Imported: {summary.success}</span>
+            {summary.invalid > 0 && <span className="text-[var(--secondary)]">⚠️ Invalid: {summary.invalid}</span>}
           </div>
           {summary.errors.map((err, idx) => (
-            <div key={idx} className="text-amber-800 text-[11px]">
+            <div key={idx} className="text-[var(--secondary)] text-[11px]">
               Row {err.row} [{err.column}]: {err.message}
             </div>
           ))}

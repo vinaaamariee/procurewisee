@@ -57,7 +57,7 @@ export default function ApproveButton({ recommId }: ApproveButtonProps) {
         {isPending ? 'Approving...' : 'Approve'}
       </button>
       {errorMsg && (
-        <span style={{ fontSize: '0.75rem', color: '#ef4444', fontWeight: 600 }}>
+        <span style={{ fontSize: '0.75rem', color: 'var(--accent)', fontWeight: 600 }}>
           {errorMsg}
         </span>
       )}

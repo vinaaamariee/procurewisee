@@ -226,7 +226,7 @@ export default function PpmpDocumentUpload({
                 alignItems: "center",
               }}
             >
-              <X size={12} style={{ color: "#ef4444" }} />
+              <X size={12} style={{ color: "var(--accent)" }} />
             </button>
           )}
         </div>
@@ -285,7 +285,7 @@ export default function PpmpDocumentUpload({
         )}
       </div>
       {error && (
-        <p style={{ fontSize: "0.7rem", color: "#ef4444", marginTop: "0.35rem" }}>{error}</p>
+        <p style={{ fontSize: "0.7rem", color: "var(--accent)", marginTop: "0.35rem" }}>{error}</p>
       )}
     </div>
   );

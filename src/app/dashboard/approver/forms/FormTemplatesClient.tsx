@@ -266,13 +266,13 @@ export default function FormTemplatesClient({ initialTemplates }: FormTemplatesC
               </div>
 
               {errorMsg && (
-                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#dc2626", fontSize: "0.8rem", fontWeight: 600 }}>
+                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "var(--accent)", fontSize: "0.8rem", fontWeight: 600 }}>
                   ⚠️ {errorMsg}
                 </div>
               )}
 
               {successMsg && (
-                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "#059669", fontSize: "0.8rem", fontWeight: 600 }}>
+                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "var(--secondary)", fontSize: "0.8rem", fontWeight: 600 }}>
                   ✅ {successMsg}
                 </div>
               )}
@@ -300,7 +300,7 @@ export default function FormTemplatesClient({ initialTemplates }: FormTemplatesC
                           <button
                             onClick={() => handleDeleteField(idx)}
                             disabled={isProcessing}
-                            style={{ padding: "0.25rem 0.5rem", borderRadius: "0.25rem", border: "none", background: "rgba(239,68,68,0.1)", color: "#ef4444", fontWeight: 700, cursor: "pointer" }}
+                            style={{ padding: "0.25rem 0.5rem", borderRadius: "0.25rem", border: "none", background: "rgba(239,68,68,0.1)", color: "var(--accent)", fontWeight: 700, cursor: "pointer" }}
                           >
                             Delete
                           </button>
@@ -416,7 +416,7 @@ export default function FormTemplatesClient({ initialTemplates }: FormTemplatesC
                 {fields.map((f, idx) => (
                   <div key={idx} style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
                     <label style={{ fontSize: "0.82rem", fontWeight: 700, color: theme.textMain }}>
-                      {f.label} {f.required && <span style={{ color: "#ef4444" }}>*</span>}
+                      {f.label} {f.required && <span style={{ color: "var(--accent)" }}>*</span>}
                     </label>
                     
                     {f.type === "text" && (

@@ -155,7 +155,7 @@ export default function RFQItemsTable({
           <button
             type="button"
             onClick={handleAddItem}
-            className="inline-flex items-center gap-1 text-xs font-sans font-bold text-[#7B1E1E] hover:underline bg-amber-50 border border-amber-300 px-2.5 py-1 rounded print:hidden"
+            className="inline-flex items-center gap-1 text-xs font-sans font-bold text-[#7B1E1E] hover:underline bg-[var(--secondary-dim)] border border-[var(--border-accent)] px-2.5 py-1 rounded print:hidden"
           >
             <span>+ Add Line Item</span>
           </button>
@@ -204,7 +204,7 @@ export default function RFQItemsTable({
                         required
                         value={item.quantity}
                         onChange={(e) => handleItemFieldChange(item.id, 'quantity', e.target.value)}
-                        className="w-full text-center font-semibold bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
+                        className="w-full text-center font-semibold bg-[var(--secondary-dim)]/50 border border-slate-300 rounded p-1 text-xs"
                       />
                     )}
                   </td>
@@ -220,7 +220,7 @@ export default function RFQItemsTable({
                         value={item.unit}
                         onChange={(e) => handleItemFieldChange(item.id, 'unit', e.target.value)}
                         placeholder="pcs, reams"
-                        className="w-full text-center bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
+                        className="w-full text-center bg-[var(--secondary-dim)]/50 border border-slate-300 rounded p-1 text-xs"
                       />
                     )}
                   </td>
@@ -271,7 +271,7 @@ export default function RFQItemsTable({
                         value={item.particulars}
                         onChange={(e) => handleItemFieldChange(item.id, 'particulars', e.target.value)}
                         placeholder="Detailed item particulars and specifications..."
-                        className="w-full p-1.5 text-xs bg-amber-50/50 border border-slate-300 rounded font-serif text-slate-900 resize-y"
+                        className="w-full p-1.5 text-xs bg-[var(--secondary-dim)]/50 border border-slate-300 rounded font-serif text-slate-900 resize-y"
                       />
                     )}
                   </td>
@@ -288,7 +288,7 @@ export default function RFQItemsTable({
                         value={item.unitCost || ''}
                         onChange={(e) => handleItemFieldChange(item.id, 'unitCost', e.target.value)}
                         placeholder="0.00"
-                        className="w-full text-right font-semibold bg-amber-50/50 border border-slate-300 rounded p-1 text-xs"
+                        className="w-full text-right font-semibold bg-[var(--secondary-dim)]/50 border border-slate-300 rounded p-1 text-xs"
                       />
                     )}
                   </td>
@@ -306,7 +306,7 @@ export default function RFQItemsTable({
                         onClick={() => handleDeleteItem(item.id)}
                         disabled={items.length === 1}
                         title="Delete line item"
-                        className={`p-1 rounded text-red-600 hover:bg-red-50 ${items.length === 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
+                        className={`p-1 rounded text-[var(--accent)] hover:bg-[var(--accent-glass)] ${items.length === 1 ? 'opacity-30 cursor-not-allowed' : 'cursor-pointer'
                           }`}
                       >
                         🗑️

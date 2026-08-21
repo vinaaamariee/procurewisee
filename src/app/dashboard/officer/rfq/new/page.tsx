@@ -57,15 +57,15 @@ export default async function NewRfqPage({ searchParams }: PageProps) {
     if (fetchError) {
       return (
         <div className="max-w-3xl mx-auto space-y-6 mt-16 p-4">
-          <Card className="p-8 border-red-500/20 bg-red-50 dark:bg-red-900/20">
-            <div className="flex items-center gap-3 text-red-600 dark:text-red-400">
+          <Card className="p-8 border-[var(--border-accent)] bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)]">
+            <div className="flex items-center gap-3 text-[var(--accent)] dark:text-[var(--accent)]">
               <span className="text-2xl">⚠️</span>
               <h2 className="text-xl font-bold">Database Connection Error</h2>
             </div>
             <p className="text-sm text-[var(--text-primary)] mt-4">
               Unable to load Approved Purchase Requests from the database. Please try again.
             </p>
-            <pre className="text-xs text-red-600 dark:text-red-400 whitespace-pre-wrap break-all mt-4 p-4 border border-red-200 dark:border-red-800 bg-white dark:bg-slate-900 rounded-xl">
+            <pre className="text-xs text-[var(--accent)] dark:text-[var(--accent)] whitespace-pre-wrap break-all mt-4 p-4 border border-[var(--border-accent)] dark:border-red-800 bg-white dark:bg-slate-900 rounded-xl">
               {fetchError}
             </pre>
           </Card>
@@ -267,8 +267,8 @@ export default async function NewRfqPage({ searchParams }: PageProps) {
   if (fetchError) {
     return (
       <div className="max-w-3xl mx-auto space-y-6 mt-16 p-4">
-        <Card className="p-8 border-red-500/20 bg-red-50 dark:bg-red-900/20">
-          <div className="flex items-center gap-3 text-red-600 dark:text-red-400">
+        <Card className="p-8 border-[var(--border-accent)] bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)]">
+          <div className="flex items-center gap-3 text-[var(--accent)] dark:text-[var(--accent)]">
             <span className="text-2xl">⚠️</span>
             <h2 className="text-xl font-bold">Error Pre-populating RFQ</h2>
           </div>

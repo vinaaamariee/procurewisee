@@ -59,16 +59,16 @@ export default async function NewPrPage() {
   if (fetchError) {
     return (
       <div className="max-w-3xl mx-auto space-y-6 mt-16">
-        <Card className="p-8 border-red-500/20 bg-red-50 dark:bg-red-900/20">
-          <div className="flex items-center gap-3 text-red-600 dark:text-red-400">
+        <Card className="p-8 border-[var(--border-accent)] bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)]">
+          <div className="flex items-center gap-3 text-[var(--accent)] dark:text-[var(--accent)]">
             <span className="text-2xl">⚠️</span>
             <h2 className="text-xl font-bold">Database Connection Error</h2>
           </div>
           <p className="text-sm text-base-content mt-4">
             The system was unable to load data for the Purchase Request page.
           </p>
-          <div className="mt-4 rounded-xl border border-red-200 bg-white p-4">
-            <pre className="text-xs text-red-600 whitespace-pre-wrap break-all">
+          <div className="mt-4 rounded-xl border border-[var(--border-accent)] bg-white p-4">
+            <pre className="text-xs text-[var(--accent)] whitespace-pre-wrap break-all">
               {fetchError}
             </pre>
           </div>

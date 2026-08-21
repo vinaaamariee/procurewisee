@@ -24,27 +24,27 @@ function getTrendConfig(trend: "increasing" | "decreasing" | "stable") {
         label: "↑ Increasing",
         description: "Prices are projected to rise.",
         color: "var(--accent)",
-        bgColor: "rgba(239, 68, 68, 0.08)",
+        bgColor: "var(--accent-glass)",
         recommendation: "Purchase Now",
         recommendationDetail:
           "Prices are trending upward. Procuring now may save costs before the next increase.",
         recIcon: ShoppingCart,
-        recColor: "var(--green)",
-        recBg: "rgba(34, 197, 94, 0.08)",
+        recColor: "var(--secondary)",
+        recBg: "var(--accent-glass)",
       };
     case "decreasing":
       return {
         icon: TrendingDown,
         label: "↓ Decreasing",
         description: "Prices are projected to fall.",
-        color: "var(--green)",
-        bgColor: "rgba(34, 197, 94, 0.08)",
+        color: "var(--secondary)",
+        bgColor: "var(--accent-glass)",
         recommendation: "Delay Purchase",
         recommendationDetail:
           "Prices are trending downward. Waiting may allow procurement at a lower cost.",
         recIcon: Clock,
         recColor: "var(--accent)",
-        recBg: "rgba(239, 68, 68, 0.08)",
+        recBg: "var(--accent-glass)",
       };
     case "stable":
     default:
@@ -167,7 +167,7 @@ export default function ForecastCard({ forecast, currentPrice }: ForecastCardPro
               </span>
               <span
                 className="text-xs font-semibold"
-                style={{ color: priceDelta >= 0 ? "var(--accent)" : "var(--green)" }}
+                style={{ color: priceDelta >= 0 ? "var(--accent)" : "var(--secondary)" }}
               >
                 {priceDelta >= 0 ? "+" : ""}
                 {formatCurrency(priceDelta)} ({priceDeltaPct >= 0 ? "+" : ""}

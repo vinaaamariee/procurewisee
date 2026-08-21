@@ -166,7 +166,7 @@ export default async function SupplierDetailPage({ params }: PageProps) {
     if (prev !== null) {
       if (s.score > prev) {
         arrow = "▲";
-        arrowClass = "text-emerald-600";
+        arrowClass = "text-[var(--accent)]";
       } else if (s.score < prev) {
         arrow = "▼";
         arrowClass = "text-rose-600";
@@ -202,21 +202,21 @@ export default async function SupplierDetailPage({ params }: PageProps) {
           value={score.label}
           desc="Across all Procurement Office evaluations"
           Icon={Star}
-          accentClass="bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300"
+          accentClass="bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]"
         />
         <MiniStat
           label="Last Evaluation Date"
           value={lastEval}
           desc="Most recent supplier evaluation"
           Icon={FileText}
-          accentClass="bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
+          accentClass="bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]"
         />
         <MiniStat
           label="Number of Awards"
           value={awardsCount}
           desc="Approved recommendations"
           Icon={Building2}
-          accentClass="bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300"
+          accentClass="bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]"
         />
         <MiniStat
           label="Quality Compliance"

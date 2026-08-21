@@ -251,7 +251,7 @@ export default function ReportsExporterClient({
               disabled={isDownloading !== null}
               style={{
                 width: "100%", padding: "0.65rem", borderRadius: "0.75rem", border: "none",
-                background: isCurrent ? "#059669" : `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`,
+                background: isCurrent ? "var(--secondary)" : `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`,
                 color: "#fff", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
                 marginTop: "auto", boxShadow: "0 4px 12px rgba(126, 25, 27, 0.15)",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem"

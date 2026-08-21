@@ -341,13 +341,13 @@ export default function PrDetailsClient({ initialPr, budgets, officerId, canVeri
       case "Submitted":
       case "UnderReview":
       case "Under Review":
-        return { label: "Pending Procurement Verification", cls: "bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300" };
+        return { label: "Pending Procurement Verification", cls: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)] border-[var(--border-accent)]" };
       case "Returned":
       case "ReturnedForRevision":
       case "Returned for Revision":
-        return { label: "Returned", cls: "bg-red-100 text-red-800 dark:bg-red-950/60 dark:text-red-300 border-red-300" };
+        return { label: "Returned", cls: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--accent)] border-[var(--border-accent)]" };
       case "Approved":
-        return { label: "Verified", cls: "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-300 border-emerald-350" };
+        return { label: "Verified", cls: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)] border-emerald-350" };
       default:
         return { label: status, cls: "bg-gray-100 text-gray-700 border-gray-300" };
     }
@@ -500,13 +500,13 @@ export default function PrDetailsClient({ initialPr, budgets, officerId, canVeri
           </div>
 
           {errorMsg && (
-            <div className="rounded-xl bg-red-50 p-3 text-xs font-semibold text-red-700 dark:bg-red-950/50 dark:text-red-300">
+            <div className="rounded-xl bg-[var(--accent-glass)] p-3 text-xs font-semibold text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--accent)]">
               ⚠️ {errorMsg}
             </div>
           )}
 
           {successMsg && (
-            <div className="rounded-xl bg-emerald-50 p-3 text-xs font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
+            <div className="rounded-xl bg-[var(--accent-glass)] p-3 text-xs font-semibold text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]">
               ✅ {successMsg}
             </div>
           )}

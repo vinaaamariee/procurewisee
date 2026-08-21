@@ -218,7 +218,7 @@ export default function POItemUpload({ onItemsParsed, disabled }: POItemUploadPr
       {/* Drop zone */}
       <div
         className={`relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-          isDragging ? "border-[var(--accent)] bg-red-50" : "border-[var(--border)] hover:border-[var(--accent)]"
+          isDragging ? "border-[var(--accent)] bg-[var(--accent-glass)]" : "border-[var(--border)] hover:border-[var(--accent)]"
         } ${disabled ? "opacity-50 pointer-events-none" : ""}`}
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
@@ -257,29 +257,29 @@ export default function POItemUpload({ onItemsParsed, disabled }: POItemUploadPr
       {/* Summary */}
       {summary && (
         <div className={`rounded-lg border p-3 space-y-2 text-xs ${
-          summary.invalid > 0 ? "border-amber-300 bg-amber-50" : "border-emerald-300 bg-emerald-50"
+          summary.invalid > 0 ? "border-[var(--border-accent)] bg-[var(--secondary-dim)]" : "border-[var(--border-accent)] bg-[var(--accent-glass)]"
         }`}>
           <div className="flex items-center gap-4 font-semibold">
             <span>📊 {summary.total} Items Parsed</span>
-            <span className="text-emerald-700">✅ {summary.success} Successful</span>
+            <span className="text-[var(--accent)]">✅ {summary.success} Successful</span>
             {summary.invalid > 0 && (
-              <span className="text-amber-700">⚠️ {summary.invalid} Invalid</span>
+              <span className="text-[var(--secondary)]">⚠️ {summary.invalid} Invalid</span>
             )}
           </div>
           {summary.errors.length > 0 && (
             <div className="space-y-1">
               {summary.errors.slice(0, 3).map((err, i) => (
-                <div key={i} className="text-amber-800">
+                <div key={i} className="text-[var(--secondary)]">
                   Row {err.row} [{err.column}]: {err.message}
                 </div>
               ))}
               {summary.errors.length > 3 && (
-                <div className="text-amber-700">…and {summary.errors.length - 3} more errors</div>
+                <div className="text-[var(--secondary)]">…and {summary.errors.length - 3} more errors</div>
               )}
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); downloadErrorReport(summary.errors); }}
-                className="mt-1 text-xs font-semibold text-amber-800 underline"
+                className="mt-1 text-xs font-semibold text-[var(--secondary)] underline"
               >
                 ⬇️ Download Error Report
               </button>

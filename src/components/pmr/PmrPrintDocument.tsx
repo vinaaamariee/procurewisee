@@ -111,7 +111,7 @@ export default function PmrPrintDocument({ pmr, printAreaId = 'pmrPrintArea' }: 
               )}
               <tr className="font-black text-xs">
                 <td colSpan={5} className="p-2 text-right uppercase">Total Cost:</td>
-                <td className="p-2 text-right tabular-nums text-red-700">₱{Number(pmr.totalCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                <td className="p-2 text-right tabular-nums text-[var(--accent)]">₱{Number(pmr.totalCost).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
               </tr>
             </tbody>
           </table>

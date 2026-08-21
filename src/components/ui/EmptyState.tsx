@@ -47,7 +47,7 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" />
         </linearGradient>
         <linearGradient id="pr-badge" x1="68" y1="64" x2="104" y2="100" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#10b981" /><stop offset="1" stopColor="#059669" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
       </defs>
     </svg>
@@ -67,7 +67,7 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
       <path d="M46 24 L60 16 L74 24 L74 36 L60 44 L46 36Z" fill="url(#po-tag)" opacity="0.7" />
       <defs>
         <linearGradient id="po-bg" x1="4" y1="4" x2="116" y2="116" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#3b82f6" /><stop offset="1" stopColor="#7c3aed" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--accent)" />
         </linearGradient>
         <linearGradient id="po-box" x1="22" y1="35" x2="98" y2="85" gradientUnits="userSpaceOnUse">
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" />
@@ -76,7 +76,7 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" />
         </linearGradient>
         <linearGradient id="po-tag" x1="46" y1="16" x2="74" y2="44" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#f59e0b" /><stop offset="1" stopColor="#d97706" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
       </defs>
     </svg>
@@ -101,7 +101,7 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" />
         </linearGradient>
         <linearGradient id="rfq-bolt" x1="54" y1="40" x2="66" y2="56" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#f59e0b" /><stop offset="1" stopColor="#d97706" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
         <linearGradient id="rfq-wave" x1="28" y1="84" x2="92" y2="84" gradientUnits="userSpaceOnUse">
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" />
@@ -117,19 +117,19 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
       <path d="M60 28L64.7 43.2H80.6L68 51.4L72.7 66.5L60 58.3L47.3 66.5L52 51.4L39.4 43.2H55.3L60 28Z" fill="url(#ev-star-inner)" opacity="0.9" />
       <rect x="30" y="80" width="60" height="6" rx="3" fill="url(#ev-bar)" opacity="0.3" />
       <rect x="30" y="80" width="36" height="6" rx="3" fill="url(#ev-bar)" opacity="0.75" />
-      <circle cx="30" cy="83" r="4" fill="#f59e0b" opacity="0.9" />
+      <circle cx="30" cy="83" r="4" fill="var(--secondary)" opacity="0.9" />
       <defs>
         <linearGradient id="ev-bg" x1="4" y1="4" x2="116" y2="116" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#f59e0b" /><stop offset="1" stopColor="#d97706" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
         <linearGradient id="ev-star" x1="35" y1="24" x2="85" y2="70" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#fbbf24" /><stop offset="1" stopColor="#f59e0b" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
         <linearGradient id="ev-star-inner" x1="39" y1="28" x2="81" y2="67" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#fde68a" /><stop offset="1" stopColor="#fbbf24" />
+          <stop stopColor="#c8982a" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
         <linearGradient id="ev-bar" x1="30" y1="83" x2="90" y2="83" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#f59e0b" /><stop offset="1" stopColor="#d97706" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
       </defs>
     </svg>
@@ -161,7 +161,7 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" opacity="0.7" />
         </linearGradient>
         <linearGradient id="rp-line" x1="33" y1="36" x2="82" y2="36" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#f59e0b" /><stop offset="1" stopColor="#10b981" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
       </defs>
     </svg>
@@ -179,16 +179,16 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
       <rect x="48" y="59" width="24" height="4" rx="2" fill="currentColor" opacity="0.2" />
       <rect x="36" y="70" width="8" height="8" rx="2" fill="currentColor" opacity="0.15" />
       <rect x="48" y="72" width="36" height="4" rx="2" fill="currentColor" opacity="0.2" />
-      <path d="M76 68 L82 74 L92 60" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M76 68 L82 74 L92 60" stroke="var(--secondary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
       <defs>
         <linearGradient id="pp-bg" x1="4" y1="4" x2="116" y2="116" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#10b981" /><stop offset="1" stopColor="#059669" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
         <linearGradient id="pp-card" x1="28" y1="20" x2="92" y2="96" gradientUnits="userSpaceOnUse">
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" />
         </linearGradient>
         <linearGradient id="pp-check" x1="36" y1="44" x2="44" y2="52" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#10b981" /><stop offset="1" stopColor="#059669" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
       </defs>
     </svg>
@@ -206,7 +206,7 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
       <rect x="47" y="78" width="26" height="16" rx="2" fill="white" opacity="0.2" />
       <defs>
         <linearGradient id="sp-bg" x1="4" y1="4" x2="116" y2="116" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#3b82f6" /><stop offset="1" stopColor="#1d4ed8" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
         <linearGradient id="sp-building" x1="24" y1="38" x2="96" y2="94" gradientUnits="userSpaceOnUse">
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" />
@@ -263,7 +263,7 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" />
         </linearGradient>
         <linearGradient id="dp-flag" x1="60" y1="22" x2="70" y2="28" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#f59e0b" /><stop offset="1" stopColor="#d97706" />
+          <stop stopColor="var(--secondary)" /><stop offset="1" stopColor="var(--secondary)" />
         </linearGradient>
       </defs>
     </svg>
@@ -277,7 +277,7 @@ const illustrations: Record<EmptyStateProps['preset'], React.ReactNode> = {
       <rect x="34" y="48" width="40" height="3" rx="1.5" fill="currentColor" opacity="0.2" />
       <rect x="34" y="56" width="46" height="3" rx="1.5" fill="currentColor" opacity="0.2" />
       <circle cx="84" cy="84" r="20" fill="white" opacity="0.1" />
-      <path d="M76 84l5 5 10-10" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M76 84l5 5 10-10" stroke="var(--secondary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
       <defs>
         <linearGradient id="au-bg" x1="4" y1="4" x2="116" y2="116" gradientUnits="userSpaceOnUse">
           <stop stopColor="#7e191b" /><stop offset="1" stopColor="#c4a035" />

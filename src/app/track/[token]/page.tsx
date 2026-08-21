@@ -125,27 +125,27 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
     switch (status) {
       // Requisition statuses
       case "Pending":
-        return { label: "Under PO Review", bg: "bg-amber-100 text-amber-800 border-amber-25" };
+        return { label: "Under PO Review", bg: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]" };
       case "Approved":
-        return { label: "Approved", bg: "bg-green-100 text-green-800 border-green-25" };
+        return { label: "Approved", bg: "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]" };
       case "Rejected":
-        return { label: "Rejected", bg: "bg-red-100 text-red-800 border-red-25" };
+        return { label: "Rejected", bg: "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]" };
       case "Completed":
-        return { label: "Canvass Completed", bg: "bg-indigo-100 text-indigo-800 border-indigo-25" };
+        return { label: "Canvass Completed", bg: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]" };
       // PR statuses
       case "Draft":
-        return { label: "Draft Requisition", bg: "bg-gray-100 text-gray-800 border-gray-200" };
+        return { label: "Draft Requisition", bg: "bg-[var(--surface-hover)] text-[var(--text-secondary)] border-[var(--border)]" };
       case "Submitted":
-        return { label: "Submitted for Approval", bg: "bg-blue-100 text-blue-800 border-blue-200" };
+        return { label: "Submitted for Approval", bg: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]" };
       case "UnderReview":
-        return { label: "Under Administrative Review", bg: "bg-amber-100 text-amber-800 border-amber-200" };
+        return { label: "Under Administrative Review", bg: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]" };
       case "ReturnedForRevision":
       case "Returned for Revision":
-        return { label: "Returned for Revision", bg: "bg-red-50 text-red-700 border-red-200" };
+        return { label: "Returned for Revision", bg: "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]" };
       case "Received":
-        return { label: "Received (Procurement Hub)", bg: "bg-indigo-100 text-indigo-800 border-indigo-25" };
+        return { label: "Received (Procurement Hub)", bg: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]" };
       default:
-        return { label: status, bg: "bg-gray-100 text-gray-800 border-gray-200" };
+        return { label: status, bg: "bg-[var(--surface-hover)] text-[var(--text-secondary)] border-[var(--border)]" };
     }
   };
 
@@ -184,14 +184,14 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
             </span>
             <h2 className="text-3xl font-black text-gray-900 font-mono tracking-tight mt-1">{requisition.trackingCode}</h2>
             {isPr && prData.trackingNumber && (
-              <p className="text-xs font-bold text-indigo-700 mt-1">Official PROC No: {prData.trackingNumber}</p>
+              <p className="text-xs font-bold text-[var(--secondary)] mt-1">Official PROC No: {prData.trackingNumber}</p>
             )}
             <div className="flex gap-2.5 items-center mt-3">
               <span className={`text-xs font-bold px-3 py-1 rounded-full border ${statusConfig.bg}`}>
                 {statusConfig.label}
               </span>
               {requisition.rejectionCount > 0 && (
-                <span className="text-xs font-bold bg-red-50 text-red-700 border border-red-200 px-3 py-1 rounded-full">
+                <span className="text-xs font-bold bg-[var(--accent-glass)] text-[var(--accent)] border border-[var(--border-accent)] px-3 py-1 rounded-full">
                   Rejections: {requisition.rejectionCount}
                 </span>
               )}
@@ -218,14 +218,14 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
                   {/* Timeline Dot */}
                   <div className={`absolute -left-[31px] top-1.5 w-4 h-4 rounded-full border-2 ${
                     idx === 0 
-                      ? isNegative ? 'bg-red-600 border-red-25' : 'bg-green-600 border-green-25'
+                       ? isNegative ? 'bg-[var(--accent)] border-[var(--border-accent)]' : 'bg-[var(--secondary)] border-[var(--border-accent)]'
                       : 'bg-gray-300 border-white'
                   }`} />
                   
                   <div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <h4 className="text-sm font-bold text-gray-900">
-                        Status: <span className={isNegative ? 'text-red-600' : 'text-slate-800'}>{itemConfig.label}</span>
+                        Status: <span className={isNegative ? 'text-[var(--accent)]' : 'text-[var(--text-primary)]'}>{itemConfig.label}</span>
                       </h4>
                       <span className="text-[10px] text-gray-400">
                         {new Date(historyItem.createdAt).toLocaleString("en-PH")}
@@ -234,8 +234,8 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
                     {historyItem.remarks && (
                       <div className={`mt-2 text-xs p-3 rounded-lg border leading-relaxed ${
                         isNegative
-                          ? 'bg-red-50 text-red-800 border-red-100' 
-                          : 'bg-gray-50 text-gray-700 border-gray-100'
+                          ? 'bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]' 
+                          : 'bg-[var(--surface-hover)] text-[var(--text-secondary)] border-[var(--border)]'
                       }`}>
                         <strong>Remarks/Feedback:</strong> {historyItem.remarks}
                         {historyItem.changedBy && (

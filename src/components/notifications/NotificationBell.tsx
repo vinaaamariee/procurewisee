@@ -106,7 +106,7 @@ export default function NotificationBell({ currentUser }: NotificationBellProps)
           transition: 'all 0.2s ease',
           outline: 'none',
         }}
-        className="hover:bg-gray-50 dark:hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-amber-500"
+        className="hover:bg-[var(--surface-hover)] focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
         title="Notifications"
       >
         <Bell size={18} />
@@ -115,7 +115,7 @@ export default function NotificationBell({ currentUser }: NotificationBellProps)
             position: 'absolute',
             top: '-2px',
             right: '-2px',
-            background: '#dc2626',
+            background: 'var(--accent)',
             color: '#fff',
             fontSize: '0.65rem',
             fontWeight: 800,
@@ -214,7 +214,7 @@ export default function NotificationBell({ currentUser }: NotificationBellProps)
                     cursor: item.isRead ? 'default' : 'pointer',
                     transition: 'all 0.15s ease'
                   }}
-                  className={item.isRead ? '' : 'hover:bg-red-500/5'}
+                  className={item.isRead ? '' : 'hover:bg-[var(--accent-glass)]'}
                 >
                   {/* Left status icon */}
                   <div style={{

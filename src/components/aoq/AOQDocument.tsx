@@ -233,7 +233,7 @@ export default function AOQDocument({
                             <td
                               key={q.supplierId}
                               className={`border border-black p-1 text-right font-mono ${
-                                isLowest ? 'bg-emerald-100 text-emerald-800 font-bold' : ''
+                                isLowest ? 'bg-[var(--accent-glass)] text-[var(--accent)] font-bold' : ''
                               }`}
                             >
                               {price !== undefined && price > 0
@@ -258,7 +258,7 @@ export default function AOQDocument({
                         <td
                           key={q.supplierId}
                           className={`border border-black p-2 text-right font-mono text-xs ${
-                            isLowestTotal ? 'bg-emerald-200 text-emerald-900' : ''
+                            isLowestTotal ? 'bg-[var(--secondary-dim)] text-[var(--text-primary)]' : ''
                           }`}
                         >
                           {total > 0

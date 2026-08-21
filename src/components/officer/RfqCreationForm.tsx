@@ -241,8 +241,8 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
       {errorMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)',
-          color: '#ef4444', fontSize: '0.875rem', fontWeight: 500
+          background: 'var(--accent-glass)', border: '1px solid rgba(239,68,68,0.2)',
+          color: 'var(--accent)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ⚠️ {errorMsg}
         </div>
@@ -252,7 +252,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
         <div style={{
           padding: '1rem', borderRadius: 12,
           background: 'var(--green-dim)', border: '1px solid var(--border)',
-          color: 'var(--green)', fontSize: '0.875rem', fontWeight: 500
+          color: 'var(--secondary)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ✅ {successMsg}
         </div>
@@ -426,7 +426,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
                 style={{
                   width: '100%', padding: '0.6rem 0.8rem 0.6rem 1.8rem', borderRadius: 8,
                   background: 'var(--bg-deep)', border: '1px solid var(--border)',
-                  color: 'var(--green)', fontSize: '0.85rem', fontWeight: 700,
+                  color: 'var(--secondary)', fontSize: '0.85rem', fontWeight: 700,
                 }}
               />
             </div>
@@ -607,8 +607,8 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
                         disabled={items.length === 1}
                         style={{
                           padding: '0.4rem', borderRadius: 6,
-                          background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)',
-                          color: '#ef4444', fontSize: '0.75rem', cursor: items.length === 1 ? 'not-allowed' : 'pointer',
+                          background: 'var(--accent-glass)', border: '1px solid rgba(239,68,68,0.2)',
+                          color: 'var(--accent)', fontSize: '0.75rem', cursor: items.length === 1 ? 'not-allowed' : 'pointer',
                           opacity: items.length === 1 ? 0.4 : 1, transition: 'all 0.2s'
                         }}
                         title="Delete this row"

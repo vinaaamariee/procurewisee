@@ -98,13 +98,13 @@ function formatDate(dateStr: string | null) {
 
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string }> = {
-    Draft: { bg: "bg-gray-100", text: "text-gray-700" },
-    SuppliersSelected: { bg: "bg-blue-100", text: "text-blue-700" },
-    Sent: { bg: "bg-yellow-100", text: "text-yellow-700" },
-    PartiallyResponded: { bg: "bg-orange-100", text: "text-orange-700" },
-    FullyResponded: { bg: "bg-green-100", text: "text-green-700" },
-    Closed: { bg: "bg-purple-100", text: "text-purple-700" },
-    Cancelled: { bg: "bg-red-100", text: "text-red-700" },
+    Draft: { bg: "bg-[var(--surface-hover)]", text: "text-[var(--text-secondary)]" },
+    SuppliersSelected: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]" },
+    Sent: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]" },
+    PartiallyResponded: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]" },
+    FullyResponded: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]" },
+    Closed: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]" },
+    Cancelled: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]" },
   };
 
   const c = config[status] || config.Draft;
@@ -277,7 +277,7 @@ export default function SupplierPreCanvassClient({
         </h2>
         {pendingResponses.length === 0 ? (
           <div className="text-center py-8">
-            <CheckCircle2 className="mx-auto h-12 w-12 text-green-300" />
+            <CheckCircle2 className="mx-auto h-12 w-12 text-[var(--accent)]" />
             <p className="mt-2 text-sm text-base-content/50">
               No pending pre-canvass requests
             </p>
@@ -340,7 +340,7 @@ export default function SupplierPreCanvassClient({
             {submittedResponses.map((pcs) => (
               <div
                 key={pcs.id}
-                className="rounded-lg border border-green-200 bg-green-50 p-4"
+                className="rounded-lg border border-[var(--border-accent)] bg-[var(--accent-glass)] p-4"
               >
                 <div className="flex items-center justify-between mb-2">
                   <div>
@@ -351,7 +351,7 @@ export default function SupplierPreCanvassClient({
                       PR: {pcs.preCanvass.purchaseRequest.prNumber}
                     </div>
                   </div>
-                  <span className="inline-flex items-center gap-1 rounded-full bg-green-100 text-green-700 px-2.5 py-1 text-[10px] font-bold uppercase">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[var(--accent-glass)] text-[var(--accent)] px-2.5 py-1 text-[10px] font-bold uppercase">
                     <CheckCircle2 className="h-3 w-3" />
                     Submitted
                   </span>
@@ -457,7 +457,7 @@ export default function SupplierPreCanvassClient({
                           <tr
                             key={prItem.id}
                             className={
-                              formItem?.isAvailable ? "" : "bg-red-50/50"
+                              formItem?.isAvailable ? "" : "bg-[var(--accent-glass)]"
                             }
                           >
                             <td className="px-3 py-2">

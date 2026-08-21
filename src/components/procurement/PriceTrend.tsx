@@ -75,7 +75,7 @@ export default function PriceTrend({ trendData }: PriceTrendProps) {
           
           <div className="mt-2 flex items-center gap-1.5 font-extrabold text-xl">
             {trendDirection === "increasing" && (
-              <span className="flex items-center gap-1 text-[var(--green)]" style={{ color: "var(--green)" }}>
+              <span className="flex items-center gap-1 text-[var(--secondary)]" style={{ color: "var(--secondary)" }}>
                 <ArrowUpRight className="h-5 w-5" />
                 ↑ increasing
               </span>

@@ -34,11 +34,11 @@ const DAY_MS = 1000 * 60 * 60 * 24;
 type StageTone = "blue" | "violet" | "amber" | "rose" | "emerald";
 
 const stageTone: Record<StageTone, string> = {
-  blue: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
+  blue: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]",
   violet: "bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300",
-  amber: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
+  amber: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]",
   rose: "bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-300",
-  emerald: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
+  emerald: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]",
 };
 
 type ActionItem = {
@@ -123,8 +123,8 @@ function deriveStage(
 
 function priorityOf(days: number) {
   if (days >= 5) return { label: "High", cls: "text-rose-600 dark:text-rose-400" };
-  if (days >= 2) return { label: "Medium", cls: "text-amber-600 dark:text-amber-400" };
-  return { label: "Low", cls: "text-emerald-600 dark:text-emerald-400" };
+  if (days >= 2) return { label: "Medium", cls: "text-[var(--secondary)] dark:text-[var(--secondary)]" };
+  return { label: "Low", cls: "text-[var(--accent)] dark:text-[var(--secondary)]" };
 }
 
 const fmtDate = (iso: string) =>
@@ -258,17 +258,17 @@ const STAFF_ACTION_TYPES = [
 ];
 
 const ACTIVITY_META: Record<string, { label: string; icon: any; tone: string }> = {
-  CREATE_PMR: { label: "PMR Recorded", icon: ClipboardCheck, tone: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300" },
-  UPDATE_PMR: { label: "PMR Updated", icon: ClipboardCheck, tone: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300" },
+  CREATE_PMR: { label: "PMR Recorded", icon: ClipboardCheck, tone: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]" },
+  UPDATE_PMR: { label: "PMR Updated", icon: ClipboardCheck, tone: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]" },
   CREATE_RFQ: { label: "RFQ Generated", icon: FileText, tone: "bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300" },
   CONVERT_PR_TO_RFQ: { label: "RFQ Generated", icon: FileText, tone: "bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300" },
   PUBLISH_RFQ: { label: "RFQ Distributed", icon: Send, tone: "bg-sky-50 text-sky-700 dark:bg-sky-900/20 dark:text-sky-300" },
   CLOSE_RFQ: { label: "RFQ Closed", icon: Lock, tone: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300" },
-  APPROVE_RECOMMENDATION: { label: "BAC Resolution Created", icon: Award, tone: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300" },
+  APPROVE_RECOMMENDATION: { label: "BAC Resolution Created", icon: Award, tone: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]" },
   SUBMIT_SUPPLIER_EVALUATION: { label: "Supplier Evaluation Submitted", icon: Star, tone: "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300" },
-  CREATE_PO: { label: "Purchase Order Generated", icon: ShoppingCart, tone: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300" },
-  UPDATE_PO: { label: "Purchase Order Updated", icon: ShoppingCart, tone: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300" },
-  STATUS_CHANGE_PO: { label: "Purchase Order Status Updated", icon: ShoppingCart, tone: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300" },
+  CREATE_PO: { label: "Purchase Order Generated", icon: ShoppingCart, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
+  UPDATE_PO: { label: "Purchase Order Updated", icon: ShoppingCart, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
+  STATUS_CHANGE_PO: { label: "Purchase Order Status Updated", icon: ShoppingCart, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
   CREATE_RECEIPT: { label: "Delivery Received", icon: Truck, tone: "bg-teal-50 text-teal-700 dark:bg-teal-900/20 dark:text-teal-300" },
 };
 
@@ -359,7 +359,7 @@ export default async function ProcurementStaffDashboard() {
       desc: "Verified PRs awaiting PMR recording",
       href: "/dashboard/officer/pr",
       Icon: FileCheck2,
-      accentClass: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
+      accentClass: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]",
     },
     {
       label: "Open RFQs",
@@ -375,7 +375,7 @@ export default async function ProcurementStaffDashboard() {
       desc: "Approved awards awaiting PO generation",
       href: "/dashboard/officer/po",
       Icon: ShoppingCart,
-      accentClass: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
+      accentClass: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]",
     },
     {
       label: "Active Suppliers",
@@ -383,7 +383,7 @@ export default async function ProcurementStaffDashboard() {
       desc: "Registered suppliers",
       href: "/dashboard/officer/suppliers",
       Icon: Building2,
-      accentClass: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
+      accentClass: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]",
     },
   ];
 
@@ -490,7 +490,7 @@ export default async function ProcurementStaffDashboard() {
         <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-4">
           <div className="flex items-center justify-between border-b border-base-200 pb-3 text-left">
             <div className="flex items-center gap-2">
-              <Bell className="h-5 w-5 text-amber-600" />
+              <Bell className="h-5 w-5 text-[var(--secondary)]" />
               <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Notifications</h3>
             </div>
           </div>

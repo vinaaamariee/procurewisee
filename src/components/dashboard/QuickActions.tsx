@@ -71,9 +71,9 @@ export default function QuickActions() {
 
         const styles: Record<string, string> = {
           primary:
-            "bg-amber-400 text-slate-950 border-amber-300 hover:bg-amber-300 hover:shadow-md hover:-translate-y-0.5 font-extrabold rounded-lg",
+            "bg-[var(--secondary)] text-slate-950 border-[var(--border-accent)] hover:bg-[var(--secondary-dark,#8a621a)] hover:shadow-md hover:-translate-y-0.5 font-extrabold rounded-lg",
           white:
-            "bg-white text-slate-900 border-white hover:bg-slate-100 hover:text-blue-950 hover:shadow-md hover:-translate-y-0.5 rounded-lg",
+            "bg-white text-slate-900 border-white hover:bg-slate-100 hover:text-[var(--text-primary)] hover:shadow-md hover:-translate-y-0.5 rounded-lg",
         };
 
         return (

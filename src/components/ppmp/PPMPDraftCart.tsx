@@ -262,7 +262,7 @@ export default function PPMPDraftCart({
                         style={{
                           background: "none",
                           border: "none",
-                          color: "#ef4444",
+                          color: "var(--accent)",
                           cursor: "pointer",
                           fontWeight: 700,
                           fontSize: "0.75rem",

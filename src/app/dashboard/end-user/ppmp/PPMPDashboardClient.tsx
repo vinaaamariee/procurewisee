@@ -537,12 +537,12 @@ export default function PPMPDashboardClient({
 
       {/* Notifications */}
       {message && (
-        <div style={{ padding: "1rem", borderRadius: "0.75rem", background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.2)", color: "#059669", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "1rem", borderRadius: "0.75rem", background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.2)", color: "var(--secondary)", fontSize: "0.85rem", fontWeight: 600 }}>
           {message}
         </div>
       )}
       {errorMsg && (
-        <div style={{ padding: "1rem", borderRadius: "0.75rem", background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.2)", color: "#ef4444", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "1rem", borderRadius: "0.75rem", background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.2)", color: "var(--accent)", fontSize: "0.85rem", fontWeight: 600 }}>
           {errorMsg}
         </div>
       )}
@@ -629,11 +629,11 @@ export default function PPMPDashboardClient({
                                 : "rgba(107, 114, 128, 0.1)",
                             color:
                               ppmp.status === "Approved"
-                                ? "#059669"
+                                ? "var(--secondary)"
                                 : ppmp.status === "Submitted"
                                 ? "#b88a1b"
                                 : ppmp.status === "Returned"
-                                ? "#ef4444"
+                                ? "var(--accent)"
                                 : "var(--text-secondary)",
                           }}
                         >
@@ -656,7 +656,7 @@ export default function PPMPDashboardClient({
                             {ppmp.status === "Submitted" ? "●" : "○"} Under Review
                           </span>
                           <span style={{ color: "var(--text-muted)" }}>→</span>
-                          <span style={{ color: timelineStep >= 3 ? "#10b981" : "var(--text-muted)" }}>
+                          <span style={{ color: timelineStep >= 3 ? "var(--secondary)" : "var(--text-muted)" }}>
                             {timelineStep >= 3 ? "●" : "○"} Approved
                           </span>
                           <span style={{ color: "var(--text-muted)" }}>→</span>
@@ -751,7 +751,7 @@ export default function PPMPDashboardClient({
                                 padding: "0.35rem 0.75rem",
                                 borderRadius: "6px",
                                 border: "none",
-                                backgroundColor: "#ef4444",
+                                backgroundColor: "var(--accent)",
                                 color: "white",
                                 cursor: "pointer",
                                 fontSize: "0.75rem",

@@ -94,9 +94,9 @@ export default function DeliveriesClient({ initialPos, initialReceipts }: Delive
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         {(
           [
-            { label: "Pending Delivery", value: counts.pending, cls: "text-amber-700 dark:text-amber-300", Icon: Truck },
-            { label: "Partial Deliveries", value: counts.partial, cls: "text-blue-700 dark:text-blue-300", Icon: PackageCheck },
-            { label: "Delivered", value: counts.delivered, cls: "text-emerald-700 dark:text-emerald-300", Icon: PackageCheck },
+            { label: "Pending Delivery", value: counts.pending, cls: "text-[var(--secondary)] dark:text-[var(--secondary)]", Icon: Truck },
+            { label: "Partial Deliveries", value: counts.partial, cls: "text-[var(--secondary)] dark:text-[var(--secondary)]", Icon: PackageCheck },
+            { label: "Delivered", value: counts.delivered, cls: "text-[var(--accent)] dark:text-[var(--secondary)]", Icon: PackageCheck },
             { label: "Acknowledgement Receipts", value: counts.receipts, cls: "text-primary", Icon: ReceiptText },
           ] as const
         ).map((s) => (

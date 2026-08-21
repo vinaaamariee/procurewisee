@@ -59,13 +59,13 @@ const ALL_STATUSES = ["All", "Draft", "Pending Approval", "Approved", "Sent to S
 
 const STATUS_BADGE_COLORS: Record<string, string> = {
   Draft: "bg-slate-100 text-slate-600 border-slate-200",
-  "Pending Approval": "bg-amber-100 text-amber-700 border-amber-200",
-  Approved: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  "Pending Approval": "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]",
+  Approved: "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]",
   "Sent to Supplier": "bg-violet-100 text-violet-700 border-violet-200",
   "Partially Delivered": "bg-cyan-100 text-cyan-700 border-cyan-200",
-  Delivered: "bg-blue-100 text-blue-700 border-blue-200",
-  Completed: "bg-green-100 text-green-700 border-green-200",
-  Cancelled: "bg-red-100 text-red-600 border-red-200",
+  Delivered: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]",
+  Completed: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]",
+  Cancelled: "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]",
   Closed: "bg-gray-100 text-gray-600 border-gray-200",
 };
 
@@ -169,7 +169,7 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
         >
           Approved Awards ({awards.length})
           {awards.length > 0 && (
-            <span className="absolute -top-1 -right-1 bg-amber-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+            <span className="absolute -top-1 -right-1 bg-[var(--secondary-dim)]0 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
               {awards.length}
             </span>
           )}
@@ -178,13 +178,13 @@ export default function PoDraftingClient({ pendingAwards, initialPos }: PoDrafti
 
       {/* Alerts */}
       {errorMsg && (
-        <Card className="p-4 border-red-500/20 bg-red-50 dark:bg-red-900/20">
-          <span className="text-sm font-semibold text-red-600">⚠ {errorMsg}</span>
+        <Card className="p-4 border-[var(--border-accent)] bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)]">
+          <span className="text-sm font-semibold text-[var(--accent)]">⚠ {errorMsg}</span>
         </Card>
       )}
       {successMsg && (
-        <Card className="p-4 border-emerald-500/20 bg-emerald-50 dark:bg-emerald-900/20">
-          <span className="text-sm font-semibold text-emerald-600">✅ {successMsg}</span>
+        <Card className="p-4 border-[var(--border-accent)] bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)]">
+          <span className="text-sm font-semibold text-[var(--accent)]">✅ {successMsg}</span>
         </Card>
       )}
 

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useTransition } from 'react';
 import DocumentLayout from '@/components/documents/DocumentLayout';
@@ -112,7 +112,7 @@ export default function AcknowledgementReceiptDocument({
     <div className="relative pb-24">
       {/* Print CSS — delegated to DocumentLayout */}
       {errorMsg && (
-        <div className="max-w-[800px] mx-auto mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 print:hidden">
+        <div className="max-w-[800px] mx-auto mb-4 p-3 rounded-xl bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold flex items-center gap-2 print:hidden">
           ⚠️ {errorMsg}
         </div>
       )}
@@ -168,10 +168,10 @@ export default function AcknowledgementReceiptDocument({
 
             {/* Status summary */}
             <div className="mb-3 flex gap-4 text-[10px] print:hidden">
-              <span className="px-2 py-1 bg-emerald-100 text-emerald-700 rounded font-semibold">
+              <span className="px-2 py-1 bg-[var(--accent-glass)] text-[var(--accent)] rounded font-semibold">
                 ✓ Acknowledged: {acknowledgedCount}
               </span>
-              <span className="px-2 py-1 bg-amber-100 text-amber-700 rounded font-semibold">
+              <span className="px-2 py-1 bg-[var(--secondary-dim)] text-[var(--secondary)] rounded font-semibold">
                 ○ Pending: {logs.length - acknowledgedCount}
               </span>
             </div>
@@ -199,7 +199,7 @@ export default function AcknowledgementReceiptDocument({
                 {logs.map((log, idx) => (
                   <tr
                     key={log.id}
-                    className={log.acknowledged ? 'bg-emerald-50' : 'bg-white'}
+                    className={log.acknowledged ? 'bg-[var(--accent-glass)]' : 'bg-white'}
                   >
                     <td className="border border-black p-2 text-center font-mono">
                       {String(idx + 1).padStart(2, '0')}
@@ -238,8 +238,8 @@ export default function AcknowledgementReceiptDocument({
                         disabled={isPending}
                         className={`w-7 h-7 rounded-full border-2 font-bold text-sm transition-all ${
                           log.acknowledged
-                            ? 'bg-emerald-500 border-emerald-600 text-white'
-                            : 'bg-white border-slate-400 text-slate-400 hover:border-emerald-400'
+                            ? 'bg-[var(--accent)] border-[var(--border-accent)] text-white'
+                            : 'bg-[var(--surface)] border-[var(--border)] text-[var(--text-secondary)] hover:border-[var(--border-accent)]'
                         }`}
                         title={log.acknowledged ? 'Mark as not acknowledged' : 'Mark as acknowledged'}
                       >

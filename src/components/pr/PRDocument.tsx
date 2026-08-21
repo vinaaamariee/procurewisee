@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useTransition } from 'react';
 import PRGeneralInformation, { PRGeneralInfo } from './PRGeneralInformation';
@@ -188,14 +188,14 @@ export default function PRDocument({
     <div className="pr-print-root relative pb-24">
       {/* Alert Banners — screen only */}
       {errorMsg && (
-        <div className="mx-auto mb-4 p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
+        <div className="mx-auto mb-4 p-3.5 rounded-xl bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
           <span>⚠️</span>
           <span>{errorMsg}</span>
         </div>
       )}
 
       {successMsg && (
-        <div className="mx-auto mb-4 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
+        <div className="mx-auto mb-4 p-3.5 rounded-xl bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold flex items-center gap-2 print:hidden shadow-sm">
           <span>✅</span>
           <span>{successMsg}</span>
         </div>

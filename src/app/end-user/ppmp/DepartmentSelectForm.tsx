@@ -59,7 +59,7 @@ export default function DepartmentSelectForm({ departments }: DepartmentSelectFo
         )}
       </div>
 
-      <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 text-xs leading-relaxed text-[#ca8a04]">
+      <div className="bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-lg p-4 text-xs leading-relaxed text-[#ca8a04]">
         <strong>BSC Planning Policy:</strong> PPMP plans are validated against annual departmental budget allocations. No login is required to prepare and save these plans, but all submissions are subject to budget audits.
       </div>
 

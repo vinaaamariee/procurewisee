@@ -163,13 +163,13 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
           </h3>
 
           {errorMsg && (
-            <div style={{ padding: '0.75rem', borderRadius: 8, background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', fontSize: '0.8rem' }}>
+            <div style={{ padding: '0.75rem', borderRadius: 8, background: 'var(--accent-glass)', border: '1px solid rgba(239,68,68,0.2)', color: 'var(--accent)', fontSize: '0.8rem' }}>
               {errorMsg}
             </div>
           )}
 
           {successMsg && (
-            <div style={{ padding: '0.75rem', borderRadius: 8, background: 'var(--green-dim)', border: '1px solid var(--border)', color: 'var(--green)', fontSize: '0.8rem' }}>
+            <div style={{ padding: '0.75rem', borderRadius: 8, background: 'var(--green-dim)', border: '1px solid var(--border)', color: 'var(--secondary)', fontSize: '0.8rem' }}>
               {successMsg}
             </div>
           )}
@@ -324,7 +324,7 @@ export default function CatalogManager({ products }: CatalogManagerProps) {
                       <button
                         onClick={() => handleDelete(p.id, p.name)}
                         disabled={!p.isActive}
-                        style={{ padding: '0.3rem 0.6rem', borderRadius: 6, background: 'var(--red-dim)', border: '1px solid rgba(239,68,68,0.2)', color: '#ef4444', fontSize: '0.75rem', cursor: p.isActive ? 'pointer' : 'not-allowed', opacity: p.isActive ? 1 : 0.5 }}
+                        style={{ padding: '0.3rem 0.6rem', borderRadius: 6, background: 'var(--accent-glass)', border: '1px solid rgba(239,68,68,0.2)', color: 'var(--accent)', fontSize: '0.75rem', cursor: p.isActive ? 'pointer' : 'not-allowed', opacity: p.isActive ? 1 : 0.5 }}
                       >
                         Deactivate
                       </button>

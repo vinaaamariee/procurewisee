@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import DocumentLayout from '@/components/documents/DocumentLayout';
@@ -224,12 +224,12 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
     <div className="relative">
       {/* Screen-only feedback */}
       {errorMsg && (
-        <div className="max-w-[900px] mx-auto mb-3 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-semibold print:hidden">
+        <div className="max-w-[900px] mx-auto mb-3 p-3 rounded-xl bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold print:hidden">
           ⚠️ {errorMsg}
         </div>
       )}
       {successMsg && (
-        <div className="max-w-[900px] mx-auto mb-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold print:hidden">
+        <div className="max-w-[900px] mx-auto mb-3 p-3 rounded-xl bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold print:hidden">
           {successMsg}
         </div>
       )}
@@ -494,7 +494,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                           type="button"
                           onClick={() => handleDeleteItem(item.id)}
                           title="Remove item"
-                          className="text-red-500 hover:text-red-700 text-sm font-bold leading-none"
+                          className="text-[var(--accent)] hover:text-[var(--accent)] text-sm font-bold leading-none"
                         >
                           ×
                         </button>
@@ -510,7 +510,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                       <button
                         type="button"
                         onClick={handleAddItem}
-                        className="w-full text-xs text-[var(--accent)] font-semibold hover:bg-red-50 py-1 rounded transition"
+                        className="w-full text-xs text-[var(--accent)] font-semibold hover:bg-[var(--accent-glass)] py-1 rounded transition"
                       >
                         + Add Item
                       </button>
@@ -664,7 +664,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="px-6 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:opacity-90 transition shadow-md disabled:opacity-50"
+            className="px-6 py-2.5 rounded-xl bg-[var(--accent)] text-white text-sm font-bold hover:opacity-90 transition shadow-md disabled:opacity-50"
           >
             {isSaving ? 'Saving…' : '💾 Save PO'}
           </button>

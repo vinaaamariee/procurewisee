@@ -35,7 +35,7 @@ const pillars = [
     title: "Official BSC Digital Forms",
     description:
       "Standardized digital paper layouts for PR (Appendix 60), RFQ (Annex D), Ack Receipt (Annex E), AOQ (Annex F), and PO (Appendix 61) with official institutional letterheads.",
-    color: "#D4A017",
+    color: "var(--secondary)",
     bg: "rgba(212, 160, 23, 0.08)",
   },
   {
@@ -43,8 +43,8 @@ const pillars = [
     title: "RA 9184 & COA Compliance",
     description:
       "Strict audit trails, role-based approval controls (Requisitioner, Officer, Approver), and digital signatures per Republic Act 9184 IRR.",
-    color: "#059669",
-    bg: "rgba(5, 150, 105, 0.08)",
+    color: "var(--secondary)",
+    bg: "var(--secondary-dim)",
   },
   {
     icon: BarChart3,
@@ -71,17 +71,17 @@ export default function AboutPage() {
       <main className="flex-1">
         {/* ── Hero Banner ── */}
         <section className="relative overflow-hidden bg-gradient-to-r from-[#7B1E1E] via-[#5E1414] to-[#3B0A0A] py-16 lg:py-24 text-white">
-          <div className="absolute inset-0 bg-[radial-[#D4A017]/10_1px,transparent_1px] [background-size:24px_24px] opacity-30" />
+          <div className="absolute inset-0 bg-[radial-[var(--secondary-dim)]_1px,transparent_1px] [background-size:24px_24px] opacity-30" />
           
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="max-w-3xl space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-[#D4A017]/40 bg-[#D4A017]/10 px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#D4A017] backdrop-blur-md">
+              <div className="inline-flex items-center gap-2 rounded-full border border-[var(--border-accent)] bg-[var(--secondary-dim)] px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[var(--secondary)] backdrop-blur-md">
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Batanes State College System</span>
               </div>
 
               <h1 className="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl text-white leading-tight">
-                About <span className="text-[#D4A017]">ProcureWise</span>
+                About <span className="text-[var(--secondary)]">ProcureWise</span>
               </h1>
 
               <p className="text-base sm:text-lg text-slate-200 leading-relaxed">
@@ -91,7 +91,7 @@ export default function AboutPage() {
               <div className="flex flex-wrap gap-4 pt-2">
                 <Link
                   href="/catalog"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#D4A017] px-6 py-3 text-xs font-bold text-[#111827] hover:bg-[#b88a10] transition-all shadow-md hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-xs font-bold text-[#111827] hover:bg-[#b88a10] transition-all shadow-md hover:-translate-y-0.5"
                 >
                   <Package className="h-4 w-4" />
                   <span>Browse Procurement Catalog</span>
@@ -114,7 +114,7 @@ export default function AboutPage() {
           {/* Overview & Mission */}
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#7B1E1E] dark:text-[#D4A017]">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#7B1E1E] dark:text-[var(--secondary)]">
                 <Building2 className="h-4 w-4" />
                 <span>Institutional Vision</span>
               </div>
@@ -130,7 +130,7 @@ export default function AboutPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                 {institutionalGoals.map((goal, idx) => (
                   <div key={idx} className="flex items-start gap-2.5">
-                    <CheckCircle2 className="h-4 w-4 text-[#059669] flex-shrink-0 mt-0.5" />
+                    <CheckCircle2 className="h-4 w-4 text-[var(--secondary)] flex-shrink-0 mt-0.5" />
                     <span className="text-xs text-gray-700 dark:text-slate-300 font-medium">
                       {goal}
                     </span>
@@ -142,7 +142,7 @@ export default function AboutPage() {
             {/* Stats / Highlight Box */}
             <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
               <div className="flex items-center gap-3 border-b border-gray-100 dark:border-slate-800 pb-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#7B1E1E]/10 text-[#7B1E1E] dark:text-red-400">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#7B1E1E]/10 text-[#7B1E1E] dark:text-[var(--accent)]">
                   <Award className="h-6 w-6" />
                 </div>
                 <div>
@@ -157,15 +157,15 @@ export default function AboutPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-800 text-center">
-                  <div className="text-2xl font-black text-[#7B1E1E] dark:text-red-400">100%</div>
+                  <div className="text-2xl font-black text-[#7B1E1E] dark:text-[var(--accent)]">100%</div>
                   <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Paperless Canvas</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-800 text-center">
-                  <div className="text-2xl font-black text-[#D4A017]">MCDM</div>
+                  <div className="text-2xl font-black text-[var(--secondary)]">MCDM</div>
                   <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Recommendation</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-800 text-center">
-                  <div className="text-2xl font-black text-[#059669]">E2E</div>
+                  <div className="text-2xl font-black text-[var(--secondary)]">E2E</div>
                   <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Audit Trail</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-800 text-center">
@@ -179,7 +179,7 @@ export default function AboutPage() {
           {/* Key System Pillars */}
           <div className="space-y-8">
             <div className="text-center max-w-2xl mx-auto space-y-2">
-              <p className="text-xs font-bold uppercase tracking-widest text-[#D4A017]">
+              <p className="text-xs font-bold uppercase tracking-widest text-[var(--secondary)]">
                 Technical Capabilities
               </p>
               <h2 className="text-3xl font-bold text-[#111827] dark:text-white">
@@ -226,7 +226,7 @@ export default function AboutPage() {
             <div className="flex flex-wrap gap-3 shrink-0">
               <Link
                 href="/catalog"
-                className="px-5 py-2.5 rounded-xl bg-[#D4A017] text-slate-950 text-xs font-bold hover:bg-[#b88a1b] transition shadow-md"
+                className="px-5 py-2.5 rounded-xl bg-[var(--secondary)] text-slate-950 text-xs font-bold hover:bg-[#b88a1b] transition shadow-md"
               >
                 Browse Catalog
               </Link>

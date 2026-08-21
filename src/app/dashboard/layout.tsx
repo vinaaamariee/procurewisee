@@ -94,7 +94,7 @@ export default async function DashboardLayout({
               <form action={signout}>
                 <button
                   type="submit"
-                  className="rounded-xl border border-red-500/20 hover:border-red-500/30 px-3.5 py-1.5 text-xs font-bold text-red-500 transition hover:bg-red-50 dark:hover:bg-red-950/20 active:scale-[0.97]"
+                  className="rounded-xl border border-[var(--border-accent)] hover:border-[var(--border-accent)] px-3.5 py-1.5 text-xs font-bold text-[var(--accent)] transition hover:bg-[var(--accent-glass)] dark:hover:bg-red-950/20 active:scale-[0.97]"
                 >
                   <span className="hidden sm:inline">Sign Out</span><span className="sm:hidden">Out</span>
                 </button>

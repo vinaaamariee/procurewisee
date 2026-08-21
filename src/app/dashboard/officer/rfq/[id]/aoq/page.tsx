@@ -83,7 +83,7 @@ export default async function AOQPage({ params }: PageProps) {
       </div>
 
       {rfq.quotes.length === 0 && (
-        <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-sm font-semibold print:hidden">
+        <div className="p-4 rounded-xl bg-[var(--secondary-dim)] border border-[var(--border-accent)] text-[var(--secondary)] text-sm font-semibold print:hidden">
           ⚠️ No supplier quotes yet. The comparison matrix will populate once bids are submitted.
           Publish the RFQ to receive bids.
         </div>

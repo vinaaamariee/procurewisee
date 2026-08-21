@@ -205,7 +205,7 @@ export default async function ProcurementOfficerIIDashboard() {
       desc: "PRs awaiting compliance verification",
       href: "/dashboard/approver/pr",
       Icon: FileCheck2,
-      accentClass: "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-300",
+      accentClass: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]",
     },
     {
       label: "Returned for Compliance",
@@ -213,7 +213,7 @@ export default async function ProcurementOfficerIIDashboard() {
       desc: "Sent back to End Users for corrections",
       href: "/dashboard/approver/pr",
       Icon: Undo2,
-      accentClass: "bg-red-50 text-red-700 dark:bg-red-900/20 dark:text-red-300",
+      accentClass: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--accent)]",
     },
     {
       label: "Verified Today",
@@ -221,7 +221,7 @@ export default async function ProcurementOfficerIIDashboard() {
       desc: "Approved and forwarded to Procurement Staff",
       href: "/dashboard/approver/history",
       Icon: CalendarCheck2,
-      accentClass: "bg-emerald-50 text-emerald-700 dark:bg-emerald-900/20 dark:text-emerald-300",
+      accentClass: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]",
     },
     {
       label: "Pending Deliveries",
@@ -229,7 +229,7 @@ export default async function ProcurementOfficerIIDashboard() {
       desc: "POs not yet delivered",
       href: "/dashboard/approver/deliveries",
       Icon: Truck,
-      accentClass: "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300",
+      accentClass: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]",
     },
   ];
 
@@ -259,19 +259,19 @@ export default async function ProcurementOfficerIIDashboard() {
             label: "Pending Delivery",
             value: stats.pendingDeliveries,
             desc: "POs not yet delivered",
-            accent: "border-amber-300/60 text-amber-700 dark:text-amber-300",
+            accent: "border-[var(--border-accent)]/60 text-[var(--secondary)] dark:text-[var(--secondary)]",
           },
           {
             label: "Partial Deliveries",
             value: stats.partialDeliveries,
             desc: "POs with partial receipt",
-            accent: "border-blue-300/60 text-blue-700 dark:text-blue-300",
+            accent: "border-[var(--border-accent)] text-[var(--secondary)] dark:text-[var(--secondary)]",
           },
           {
             label: "Delivered",
             value: stats.deliveredCount,
             desc: "Completed deliveries",
-            accent: "border-emerald-300/60 text-emerald-700 dark:text-emerald-300",
+            accent: "border-[var(--border-accent)]/60 text-[var(--accent)] dark:text-[var(--secondary)]",
           },
         ].map((d) => (
           <Link
@@ -294,7 +294,7 @@ export default async function ProcurementOfficerIIDashboard() {
         <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-4">
           <div className="flex items-center justify-between border-b border-base-200 pb-3 text-left">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-600" />
+              <AlertTriangle className="h-5 w-5 text-[var(--secondary)]" />
               <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Procurement Alerts</h3>
             </div>
             <Link href="/dashboard/approver/pr" className="text-xs font-bold text-primary hover:underline">
@@ -310,7 +310,7 @@ export default async function ProcurementOfficerIIDashboard() {
               <Link key={pr.id} href={`/dashboard/approver/pr/${pr.id}`} className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-bold text-primary">{pr.prNumber}</span>
-                  <span className="text-[10px] font-bold text-amber-700 dark:text-amber-300">
+                  <span className="text-[10px] font-bold text-[var(--secondary)] dark:text-[var(--secondary)]">
                     {pr.daysPending}d pending
                   </span>
                 </div>
@@ -322,7 +322,7 @@ export default async function ProcurementOfficerIIDashboard() {
               <Link key={po.id} href="/dashboard/approver/deliveries" className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-bold text-primary">{po.poNumber}</span>
-                  <span className="text-[10px] font-bold text-red-700 dark:text-red-300">Overdue delivery</span>
+                  <span className="text-[10px] font-bold text-[var(--accent)] dark:text-[var(--accent)]">Overdue delivery</span>
                 </div>
                 <p className="text-xs text-base-content/70 mt-1">{po.supplier.companyName}</p>
                 <p className="text-[10px] text-base-content/50 mt-0.5">
@@ -337,7 +337,7 @@ export default async function ProcurementOfficerIIDashboard() {
         <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-4">
           <div className="flex items-center justify-between border-b border-base-200 pb-3 text-left">
             <div className="flex items-center gap-2">
-              <CalendarCheck2 className="h-5 w-5 text-emerald-600" />
+              <CalendarCheck2 className="h-5 w-5 text-[var(--accent)]" />
               <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Recent Verification Activity</h3>
             </div>
             <Link href="/dashboard/approver/history" className="text-xs font-bold text-primary hover:underline">
@@ -350,7 +350,7 @@ export default async function ProcurementOfficerIIDashboard() {
               <Link key={pr.id} href={`/dashboard/approver/pr/${pr.id}`} className="block rounded-md border border-base-200 bg-base-200/40 p-3 hover:bg-base-200 transition-colors text-left">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs font-bold text-primary">{pr.prNumber}</span>
-                  <span className="text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                  <span className="text-[10px] font-bold text-[var(--accent)] dark:text-[var(--secondary)]">
                     {pr.approvedAt ? new Date(pr.approvedAt).toLocaleDateString("en-PH", { month: "short", day: "numeric", year: "numeric" }) : "—"}
                   </span>
                 </div>
@@ -419,10 +419,10 @@ export default async function ProcurementOfficerIIDashboard() {
 
               const confidenceColorClass =
                 snapshot.confidenceLabel === "High"
-                  ? "text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                  ? "text-[var(--accent)] bg-[var(--accent-glass)] border-[var(--border-accent)]"
                   : snapshot.confidenceLabel === "Medium"
-                  ? "text-amber-600 dark:text-amber-400 bg-amber-500/10 border-amber-500/20"
-                  : "text-blue-600 dark:text-blue-400 bg-blue-500/10 border-blue-500/20";
+                  ? "text-[var(--secondary)] bg-[var(--secondary-dim)] border-[var(--border-accent)]"
+                  : "text-[var(--secondary)] bg-[var(--secondary-dim)] border-[var(--border-accent)]";
 
               return (
                 <div
@@ -529,7 +529,7 @@ export default async function ProcurementOfficerIIDashboard() {
                         <div className="space-y-2">
                           {snapshot.reason.split("\n").map((line: string, idx: number) => (
                             <div key={idx} className="flex items-start gap-2 text-xs text-[var(--text-primary)]">
-                              <CheckCircle2 className="h-4.5 w-4.5 text-emerald-500 mt-0.5 shrink-0" />
+                              <CheckCircle2 className="h-4.5 w-4.5 text-[var(--accent)] mt-0.5 shrink-0" />
                               <span>{line.replace(/^•\s*/, "")}</span>
                             </div>
                           ))}
@@ -545,14 +545,14 @@ export default async function ProcurementOfficerIIDashboard() {
                           <div>Average: <strong className="text-[var(--text-primary)]">{snapshot.historicalAvgPrice ? formatCurrency(snapshot.historicalAvgPrice) : "N/A"}</strong></div>
                           <div>Lowest: <strong className="text-[var(--text-primary)]">{snapshot.historicalMinPrice ? formatCurrency(snapshot.historicalMinPrice) : "N/A"}</strong></div>
                           <div>Latest: <strong className="text-[var(--text-primary)]">{snapshot.historicalLatestPrice ? formatCurrency(snapshot.historicalLatestPrice) : "N/A"}</strong></div>
-                          <div>Forecast: <strong className={snapshot.forecastTrend === "increasing" ? "text-[var(--accent)]" : "text-emerald-600"}>
+                          <div>Forecast: <strong className={snapshot.forecastTrend === "increasing" ? "text-[var(--accent)]" : "text-[var(--accent)]"}>
                             {snapshot.forecastTrend ? snapshot.forecastTrend.toUpperCase() : "UNKNOWN"}
                           </strong></div>
                         </div>
                         {snapshot.expectedChange && (
                           <div className="flex items-center justify-between text-xs border-t border-[var(--border)] pt-2 mt-2">
                             <span className="text-[var(--text-muted)]">Expected Change:</span>
-                            <span className={`font-bold ${snapshot.expectedChange.startsWith("+") ? "text-[var(--accent)]" : "text-emerald-600"}`}>
+                            <span className={`font-bold ${snapshot.expectedChange.startsWith("+") ? "text-[var(--accent)]" : "text-[var(--accent)]"}`}>
                               {snapshot.expectedChange}
                             </span>
                           </div>

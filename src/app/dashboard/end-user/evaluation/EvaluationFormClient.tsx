@@ -221,12 +221,12 @@ export default function EvaluationFormClient({
   return (
     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       {errorMsg && (
-        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(239,68,68,0.1)", color: "#dc2626", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(239,68,68,0.1)", color: "var(--accent)", fontSize: "0.85rem", fontWeight: 600 }}>
           ⚠️ {errorMsg}
         </div>
       )}
       {successMsg && (
-        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(16,185,129,0.1)", color: "#059669", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(16,185,129,0.1)", color: "var(--secondary)", fontSize: "0.85rem", fontWeight: 600 }}>
           ✅ {successMsg}
         </div>
       )}

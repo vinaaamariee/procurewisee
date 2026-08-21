@@ -143,12 +143,12 @@ function formatDate(dateStr: string | null) {
 function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; icon: any }> = {
     Draft: { bg: "bg-gray-100", text: "text-gray-700", icon: Clock },
-    SuppliersSelected: { bg: "bg-blue-100", text: "text-blue-700", icon: Users },
+    SuppliersSelected: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Users },
     Sent: { bg: "bg-yellow-100", text: "text-yellow-700", icon: Send },
-    PartiallyResponded: { bg: "bg-orange-100", text: "text-orange-700", icon: Clock },
-    FullyResponded: { bg: "bg-green-100", text: "text-green-700", icon: CheckCircle2 },
-    Closed: { bg: "bg-purple-100", text: "text-purple-700", icon: CheckCircle2 },
-    Cancelled: { bg: "bg-red-100", text: "text-red-700", icon: XCircle },
+    PartiallyResponded: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Clock },
+    FullyResponded: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: CheckCircle2 },
+    Closed: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]", icon: CheckCircle2 },
+    Cancelled: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]", icon: XCircle },
   };
 
   const c = config[status] || config.Draft;
@@ -167,10 +167,10 @@ function StatusBadge({ status }: { status: string }) {
 function ResponseStatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string }> = {
     Pending: { bg: "bg-gray-100", text: "text-gray-600" },
-    Invited: { bg: "bg-blue-100", text: "text-blue-600" },
-    Submitted: { bg: "bg-green-100", text: "text-green-600" },
-    Declined: { bg: "bg-red-100", text: "text-red-600" },
-    NoResponse: { bg: "bg-orange-100", text: "text-orange-600" },
+    Invited: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]" },
+    Submitted: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]" },
+    Declined: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]" },
+    NoResponse: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]" },
   };
 
   const c = config[status] || config.Pending;
@@ -556,7 +556,7 @@ export default function PreCanvassDetailClient({
                               <span className="text-base-content/60 truncate max-w-[120px]">
                                 {prItem?.description || `Item ${item.prItemId}`}
                               </span>
-                              <span className={`font-bold ${item.isAvailable ? "text-green-600" : "text-red-500"}`}>
+                              <span className={`font-bold ${item.isAvailable ? "text-[var(--secondary)]" : "text-[var(--accent)]"}`}>
                                 {item.isAvailable ? formatCurrency(item.unitPrice) : "N/A"}
                               </span>
                             </div>
@@ -628,7 +628,7 @@ export default function PreCanvassDetailClient({
                           {supplier.reliabilityRating?.toFixed(1) || "N/A"}
                         </div>
                         {supplier.isVerified && (
-                          <span className="text-[9px] text-green-600 font-bold">Verified</span>
+                          <span className="text-[9px] text-[var(--secondary)] font-bold">Verified</span>
                         )}
                       </div>
                     </div>
@@ -683,7 +683,7 @@ export default function PreCanvassDetailClient({
                           {sp.supplierName}
                         </th>
                       ))}
-                      <th className="px-3 py-2 text-right text-xs font-bold text-green-600">Lowest</th>
+                      <th className="px-3 py-2 text-right text-xs font-bold text-[var(--secondary)]">Lowest</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-base-300">
@@ -708,9 +708,9 @@ export default function PreCanvassDetailClient({
                                 ? "text-base-content/30"
                                 : sp.isAvailable
                                 ? sp.unitPrice === comp.lowestPrice
-                                  ? "text-green-600 font-bold"
+                                  ? "text-[var(--secondary)] font-bold"
                                   : ""
-                                : "text-red-500"
+                                : "text-[var(--accent)]"
                             }`}
                           >
                             {!sp.responded
@@ -720,7 +720,7 @@ export default function PreCanvassDetailClient({
                               : "N/A"}
                           </td>
                         ))}
-                        <td className="px-3 py-2 text-right text-xs font-bold text-green-600 tabular-nums">
+                        <td className="px-3 py-2 text-right text-xs font-bold text-[var(--secondary)] tabular-nums">
                           {comp.lowestPrice ? formatCurrency(comp.lowestPrice) : "—"}
                         </td>
                       </tr>
@@ -766,7 +766,7 @@ export default function PreCanvassDetailClient({
             .filter((s) => s.respondedAt)
             .map((s) => (
               <div key={s.id} className="flex items-center gap-3">
-                <div className="w-2 h-2 rounded-full bg-green-500" />
+                <div className="w-2 h-2 rounded-full bg-[var(--secondary)]" />
                 <div className="text-xs">
                   <span className="font-bold">{s.companyName}</span> responded on{" "}
                   {formatDate(s.respondedAt)}
@@ -775,7 +775,7 @@ export default function PreCanvassDetailClient({
             ))}
           {preCanvass.abstract && (
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-purple-500" />
+              <div className="w-2 h-2 rounded-full bg-[var(--accent)]" />
               <div className="text-xs">
                 <span className="font-bold">AOQ Generated</span> on{" "}
                 {formatDate(preCanvass.abstract.generatedAt)}

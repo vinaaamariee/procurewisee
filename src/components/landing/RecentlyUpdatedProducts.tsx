@@ -38,7 +38,7 @@ export default function RecentlyUpdatedProducts({
       {/* Section header */}
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#D4A017]">
+          <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[var(--secondary)]">
             Fresh Listings
           </p>
           <h2
@@ -54,7 +54,7 @@ export default function RecentlyUpdatedProducts({
 
         <Link
           href="/catalog"
-          className="hidden shrink-0 items-center gap-1.5 text-xs font-bold text-[#7B1E1E] dark:text-red-400 hover:underline sm:inline-flex"
+          className="hidden shrink-0 items-center gap-1.5 text-xs font-bold text-[#7B1E1E] dark:text-[var(--accent)] hover:underline sm:inline-flex"
         >
           <span>View Catalog</span>
           <ArrowRight className="h-4 w-4" />
@@ -75,7 +75,7 @@ export default function RecentlyUpdatedProducts({
               {/* Top Banner */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#7B1E1E]/10 dark:bg-[#7B1E1E]/20 px-3 py-1 text-[10px] font-bold text-[#7B1E1E] dark:text-red-400 uppercase tracking-wide">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#7B1E1E]/10 dark:bg-[#7B1E1E]/20 px-3 py-1 text-[10px] font-bold text-[#7B1E1E] dark:text-[var(--accent)] uppercase tracking-wide">
                     <Tag className="h-3 w-3" />
                     {product.category}
                   </span>
@@ -85,7 +85,7 @@ export default function RecentlyUpdatedProducts({
                   </span>
                 </div>
 
-                <h3 className="line-clamp-2 text-base font-bold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-red-300 transition-colors leading-snug">
+                <h3 className="line-clamp-2 text-base font-bold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-[var(--accent)] transition-colors leading-snug">
                   {product.name}
                 </h3>
 
@@ -116,7 +116,7 @@ export default function RecentlyUpdatedProducts({
       <div className="mt-6 text-center sm:hidden">
         <Link
           href="/catalog"
-          className="inline-flex items-center gap-1 text-sm font-bold text-[#7B1E1E] dark:text-red-400"
+          className="inline-flex items-center gap-1 text-sm font-bold text-[#7B1E1E] dark:text-[var(--accent)]"
         >
           <span>View All Products</span>
           <ArrowRight className="h-4 w-4" />

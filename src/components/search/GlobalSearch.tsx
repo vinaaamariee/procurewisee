@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Search, Loader2 } from 'lucide-react';
@@ -102,7 +102,7 @@ export default function GlobalSearch() {
           outline: 'none',
           transition: 'all 0.15s ease',
         }}
-        className="hover:border-amber-500/50 hover:bg-gray-50 dark:hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-amber-500 md:w-48 justify-between"
+        className="hover:border-[var(--border-accent)] hover:bg-gray-50 dark:hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-[var(--accent)] md:w-48 justify-between"
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
           <Search size={14} />
@@ -279,7 +279,7 @@ function GroupSection({ title, items, icon, onSelect }: GroupSectionProps) {
               transition: 'background 0.15s ease',
               outline: 'none',
             }}
-            className="hover:bg-red-500/5 group focus-visible:bg-red-500/5"
+            className="hover:bg-[var(--accent-glass)] group focus-visible:bg-[var(--accent-glass)]"
           >
             <span style={{ fontSize: '1rem' }}>{icon}</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.1rem', flexGrow: 1 }}>

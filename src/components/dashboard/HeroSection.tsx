@@ -74,7 +74,7 @@ export default async function HeroSection() {
                 color: "rgba(255,255,255,0.9)",
               }}
             >
-              <Zap className="h-3 w-3 text-amber-300" />
+              <Zap className="h-3 w-3 text-[var(--secondary)]" />
               Procurement Staff Portal
             </span>
           </div>

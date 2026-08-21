@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { Save, Send, Printer, FileDown, Eye, Edit3, ArrowLeft } from 'lucide-react';
@@ -55,7 +55,7 @@ export default function RFQActions({
           <button
             type="button"
             onClick={() => setIsReadOnly(!isReadOnly)}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/80 text-xs font-semibold text-amber-300 hover:bg-slate-700 transition"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/80 text-xs font-semibold text-[var(--secondary)] hover:bg-slate-700 transition"
           >
             {isReadOnly ? (
               <>
@@ -77,7 +77,7 @@ export default function RFQActions({
           onClick={handlePrint}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/80 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition"
         >
-          <Printer className="w-3.5 h-3.5 text-blue-400" />
+          <Printer className="w-3.5 h-3.5 text-[var(--secondary)]" />
           <span>Print</span>
         </button>
 
@@ -87,7 +87,7 @@ export default function RFQActions({
           onClick={handlePrint}
           className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-700 bg-slate-800/80 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition"
         >
-          <FileDown className="w-3.5 h-3.5 text-emerald-400" />
+          <FileDown className="w-3.5 h-3.5 text-[var(--secondary)]" />
           <span className="hidden sm:inline">Export PDF</span>
         </button>
 
@@ -99,7 +99,7 @@ export default function RFQActions({
             onClick={onSaveDraft}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-slate-600 bg-slate-800 text-xs font-semibold text-white hover:bg-slate-700 transition disabled:opacity-50"
           >
-            <Save className="w-3.5 h-3.5 text-amber-400" />
+            <Save className="w-3.5 h-3.5 text-[var(--secondary)]" />
             <span>Save Draft</span>
           </button>
         )}

@@ -131,7 +131,7 @@ export default function RecentRFQTable({
               const rawDeadline = rfq.deadlineDate ?? rfq.closingDate;
               const deadline = rawDeadline ? new Date(rawDeadline) : null;
               let remainingLabel = '—';
-              let remainingClass = 'text-emerald-600';
+              let remainingClass = 'text-[var(--accent)]';
 
               if (deadline && !isNaN(deadline.getTime())) {
                 const now = new Date();
@@ -141,19 +141,19 @@ export default function RecentRFQTable({
 
                 if (diffDays < 0) {
                   remainingLabel = 'Expired';
-                  remainingClass = 'text-red-600';
+                  remainingClass = 'text-[var(--accent)]';
                 } else if (diffDays === 0) {
                   remainingLabel = 'Expiring Today';
-                  remainingClass = 'text-red-600';
+                  remainingClass = 'text-[var(--accent)]';
                 } else if (diffDays === 1) {
                   remainingLabel = '1 Day Remaining';
-                  remainingClass = 'text-red-600';
+                  remainingClass = 'text-[var(--accent)]';
                 } else if (diffDays <= 5) {
                   remainingLabel = `${diffDays} Days Remaining`;
-                  remainingClass = 'text-amber-600';
+                  remainingClass = 'text-[var(--secondary)]';
                 } else {
                   remainingLabel = `${diffDays} Days Remaining`;
-                  remainingClass = 'text-emerald-600';
+                  remainingClass = 'text-[var(--accent)]';
                 }
               }
 

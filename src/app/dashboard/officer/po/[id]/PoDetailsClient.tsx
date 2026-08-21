@@ -60,23 +60,23 @@ interface PoDetailsClientProps {
 
 // Status workflow: what button appears next for each status
 const STATUS_TRANSITIONS: Record<string, { label: string; nextStatus: string; color: string }> = {
-  Draft: { label: "Submit for Approval", nextStatus: "Pending Approval", color: "#2563eb" },
-  "Pending Approval": { label: "Approve & Sign", nextStatus: "Approved", color: "#059669" },
-  Approved: { label: "Mark as Sent to Supplier", nextStatus: "Sent to Supplier", color: "#7c3aed" },
-  "Sent to Supplier": { label: "Mark as Delivered", nextStatus: "Delivered", color: "#0891b2" },
-  Delivered: { label: "Mark as Completed", nextStatus: "Completed", color: "#059669" },
+  Draft: { label: "Submit for Approval", nextStatus: "Pending Approval", color: "var(--secondary)" },
+  "Pending Approval": { label: "Approve & Sign", nextStatus: "Approved", color: "var(--secondary)" },
+  Approved: { label: "Mark as Sent to Supplier", nextStatus: "Sent to Supplier", color: "var(--accent)" },
+  "Sent to Supplier": { label: "Mark as Delivered", nextStatus: "Delivered", color: "var(--secondary)" },
+  Delivered: { label: "Mark as Completed", nextStatus: "Completed", color: "var(--secondary)" },
 };
 
 const STATUS_COLORS: Record<string, string> = {
   Draft: "#6b7280",
-  "Pending Approval": "#d97706",
-  Approved: "#059669",
-  "Sent to Supplier": "#7c3aed",
-  "Partially Delivered": "#0891b2",
-  Delivered: "#0891b2",
-  Completed: "#059669",
+  "Pending Approval": "var(--secondary)",
+  Approved: "var(--secondary)",
+  "Sent to Supplier": "var(--accent)",
+  "Partially Delivered": "var(--secondary)",
+  Delivered: "var(--secondary)",
+  Completed: "var(--secondary)",
   Closed: "#374151",
-  Cancelled: "#ef4444",
+  Cancelled: "var(--accent)",
 };
 
 export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
@@ -246,12 +246,12 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
       {/* Main document — 2/3 width */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-2">
         {errorMsg && (
-          <div className="no-print p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold">
+          <div className="no-print p-3 rounded-lg bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold">
             ⚠️ {errorMsg}
           </div>
         )}
         {successMsg && (
-          <div className="no-print p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-semibold">
+          <div className="no-print p-3 rounded-lg bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold">
             ✅ {successMsg}
           </div>
         )}
@@ -325,8 +325,8 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
             onClick={handleDownloadPdf}
             style={{
               width: "100%", padding: "0.65rem", borderRadius: "0.5rem",
-              border: `1px solid #7c3aed40`, background: "#7c3aed10",
-              color: "#7c3aed", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
+              border: `1px solid #7B1E1E40`, background: "#7B1E1E10",
+              color: "var(--accent)", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
             }}
           >
             📄 Download PDF
@@ -355,8 +355,8 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
               disabled={isProcessing}
               style={{
                 width: "100%", padding: "0.55rem", borderRadius: "0.5rem",
-                border: "1px solid #ef444440", background: "transparent",
-                color: "#ef4444", fontWeight: 700, fontSize: "0.75rem", cursor: "pointer",
+                border: "1px solid #7B1E1E40", background: "transparent",
+                color: "var(--accent)", fontWeight: 700, fontSize: "0.75rem", cursor: "pointer",
                 opacity: isProcessing ? 0.6 : 1,
               }}
             >
@@ -378,7 +378,7 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", fontSize: "0.78rem" }}>
             <div style={{ display: "flex", gap: "8px" }}>
-              <span style={{ color: "#10b981" }}>✓</span>
+              <span style={{ color: "var(--secondary)" }}>✓</span>
               <div>
                 <div style={{ fontWeight: 700, color: theme.textMain }}>PO Created</div>
                 <div style={{ color: theme.textMuted }}>{new Date(po.createdAt).toLocaleString()}</div>
@@ -386,7 +386,7 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
             </div>
             {po.rfq && (
               <div style={{ display: "flex", gap: "8px" }}>
-                <span style={{ color: "#10b981" }}>✓</span>
+                <span style={{ color: "var(--secondary)" }}>✓</span>
                 <div>
                   <div style={{ fontWeight: 700, color: theme.textMain }}>From RFQ</div>
                   <div style={{ color: theme.textMuted }}>{po.rfq.rfqNumber} — {po.rfq.title}</div>
@@ -395,7 +395,7 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
             )}
             {po.status !== "Draft" && (
               <div style={{ display: "flex", gap: "8px" }}>
-                <span style={{ color: "#10b981" }}>✓</span>
+                <span style={{ color: "var(--secondary)" }}>✓</span>
                 <div>
                   <div style={{ fontWeight: 700, color: theme.textMain }}>Status: {po.status}</div>
                   <div style={{ color: theme.textMuted }}>Workflow updated.</div>

@@ -97,11 +97,11 @@ function MarketplaceHeader({
         <div className="flex items-center justify-between gap-4 h-16">
           {/* Brand */}
           <div className="flex items-center gap-3 shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#0B3B6E] to-[#1a5ba8] flex items-center justify-center shadow-md">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7B1E1E] to-[#1a5ba8] flex items-center justify-center shadow-md">
               <Package className="w-4.5 h-4.5 text-white" />
             </div>
             <div className="hidden sm:block">
-              <p className="text-[13px] font-black text-[#0B3B6E] dark:text-white leading-tight tracking-tight">
+              <p className="text-[13px] font-black text-[var(--accent)] dark:text-white leading-tight tracking-tight">
                 ProcureWise
               </p>
               <p className="text-[9px] text-gray-400 uppercase tracking-widest font-bold leading-tight">
@@ -113,7 +113,7 @@ function MarketplaceHeader({
           {/* Search */}
           <div className="flex-1 max-w-xl hidden md:block">
             <div className="relative group">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[#0B3B6E] transition-colors" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[var(--accent)] transition-colors" />
               <input
                 type="text"
                 placeholder="Search catalog items, brands, specifications…"
@@ -135,7 +135,7 @@ function MarketplaceHeader({
             >
               <ShoppingCart className="w-4.5 h-4.5 text-gray-600 dark:text-slate-300" />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[#D4A017] text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white dark:border-slate-950">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[var(--secondary)] text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white dark:border-slate-950">
                   {cartCount}
                 </span>
               )}
@@ -144,7 +144,7 @@ function MarketplaceHeader({
             {userProfile ? (
               <a
                 href={dashboardHref}
-                className="flex items-center gap-2 bg-[#0B3B6E] hover:bg-[#0a3260] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
+                className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[#5a1515] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Dashboard</span>
@@ -152,7 +152,7 @@ function MarketplaceHeader({
             ) : (
               <a
                 href="/login"
-                className="flex items-center gap-2 bg-[#0B3B6E] hover:bg-[#0a3260] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
+                className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[#5a1515] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Sign In</span>
@@ -167,29 +167,29 @@ function MarketplaceHeader({
 
 function HeroSection() {
   return (
-    <section className="bg-gradient-to-br from-[#0B3B6E] via-[#0d4a8a] to-[#1a5ba8] text-white">
+    <section className="bg-gradient-to-br from-[#7B1E1E] via-[#9b2626] to-[#A6761D] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left */}
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-xs font-semibold backdrop-blur-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D4A017] animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[var(--secondary)] animate-pulse" />
               Procurement Management Information System
             </div>
             <h1 className="text-4xl lg:text-5xl font-black leading-tight tracking-tight">
               Good Morning 👋
-              <span className="block text-2xl lg:text-3xl font-bold text-blue-200 mt-2">
+              <span className="block text-2xl lg:text-3xl font-bold text-white/80 mt-2">
                 Welcome to ProcureWise
               </span>
             </h1>
-            <p className="text-blue-100 text-base lg:text-lg leading-relaxed max-w-lg">
+            <p className="text-white/80 text-base lg:text-lg leading-relaxed max-w-lg">
               Digitizing Procurement Planning, Market Scoping, Canvassing and
               Decision Support for Batanes State College.
             </p>
             <div className="flex flex-wrap gap-3 pt-2">
               <Link
                 href="/catalog"
-                className="inline-flex items-center gap-2 bg-[#D4A017] hover:bg-[#c49315] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg shadow-md"
+                className="inline-flex items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--secondary-dark,#8a621a)] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg shadow-md"
               >
                 <Package className="w-4 h-4" />
                 Browse Catalog
@@ -208,24 +208,22 @@ function HeroSection() {
           <div className="hidden lg:block">
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 space-y-5">
               <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-xl bg-[#D4A017]/20 flex items-center justify-center">
-                  <BarChart3 className="w-5 h-5 text-[#D4A017]" />
+                <div className="w-10 h-10 rounded-xl bg-[var(--secondary)]/20 flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-[var(--secondary)]" />
                 </div>
                 <div>
                   <p className="font-bold text-sm">Procurement at a Glance</p>
-                  <p className="text-blue-200 text-xs">Live system statistics</p>
+                  <p className="text-white/70 text-xs">Live system statistics</p>
                 </div>
               </div>
               {[
-                { label: "Active RFQs", value: "3", color: "#D4A017" },
-                { label: "Pending PRs", value: "12", color: "#34d399" },
-                { label: "Catalog Items", value: "2,713", color: "#60a5fa" },
+                { label: "Catalog Items", value: "2,713", color: "#A6761D" },
               ].map((stat) => (
                 <div
                   key={stat.label}
                   className="flex items-center justify-between bg-white/5 rounded-xl p-3.5 border border-white/10"
                 >
-                  <span className="text-blue-100 text-sm font-medium">{stat.label}</span>
+                  <span className="text-white/80 text-sm font-medium">{stat.label}</span>
                   <span className="font-black text-lg" style={{ color: stat.color }}>
                     {stat.value}
                   </span>
@@ -247,7 +245,7 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
       desc: "Explore the procurement catalog with detailed specs and supplier pricing.",
       href: "/catalog",
       cta: "View Catalog →",
-      color: "#0B3B6E",
+      color: "var(--accent)",
       bg: "rgba(11,59,110,0.06)",
     },
     {
@@ -256,7 +254,7 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
       desc: "Prepare your Project Procurement Management Plan for budget allocation.",
       href: "/dashboard/end-user/ppmp",
       cta: "Start Planning →",
-      color: "#D4A017",
+      color: "var(--secondary)",
       bg: "rgba(212,160,23,0.06)",
     },
     {
@@ -265,7 +263,7 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
       desc: "File a purchase request for items needed by your department or office.",
       href: "/dashboard/end-user/pr",
       cta: "Submit PR →",
-      color: "#059669",
+      color: "var(--secondary)",
       bg: "rgba(5,150,105,0.06)",
     },
     {
@@ -282,7 +280,7 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
   return (
     <section className="py-12">
       <div className="text-center mb-8">
-        <p className="text-xs font-bold uppercase tracking-widest text-[#D4A017] mb-2">
+        <p className="text-xs font-bold uppercase tracking-widest text-[var(--secondary)] mb-2">
           Quick Access
         </p>
         <h2 className="text-2xl font-black text-gray-900 dark:text-white">
@@ -409,7 +407,7 @@ function FilterToolbar({
             onClick={() => setViewMode("grid")}
             className={`p-1.5 rounded-md transition-colors ${
               viewMode === "grid"
-                ? "bg-white dark:bg-slate-700 text-[#0B3B6E] shadow-sm"
+                ? "bg-white dark:bg-slate-700 text-[var(--accent)] shadow-sm"
                 : "text-gray-400"
             }`}
             aria-label="Grid view"
@@ -420,7 +418,7 @@ function FilterToolbar({
             onClick={() => setViewMode("list")}
             className={`p-1.5 rounded-md transition-colors ${
               viewMode === "list"
-                ? "bg-white dark:bg-slate-700 text-[#0B3B6E] shadow-sm"
+                ? "bg-white dark:bg-slate-700 text-[var(--accent)] shadow-sm"
                 : "text-gray-400"
             }`}
             aria-label="List view"
@@ -436,7 +434,7 @@ function FilterToolbar({
           </span>
           <button
             onClick={onReset}
-            className="text-[10px] text-gray-400 hover:text-[#0B3B6E] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
+            className="text-[10px] text-gray-400 hover:text-[var(--accent)] font-bold uppercase tracking-wider transition-colors whitespace-nowrap"
           >
             Reset
           </button>
@@ -450,12 +448,12 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) 
   return (
     <div className="group bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between relative overflow-hidden">
       {/* Accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#0B3B6E] to-[#D4A017] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#7B1E1E] to-[#A6761D] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       <div className="space-y-4">
         {/* Badge + SKU */}
         <div className="flex items-center justify-between">
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[#0B3B6E] bg-[#0B3B6E]/08 dark:bg-[#0B3B6E]/20 rounded-full px-2.5 py-1 uppercase tracking-wide">
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-[var(--accent)] bg-[var(--accent)]/08 dark:bg-[var(--accent)]/20 rounded-full px-2.5 py-1 uppercase tracking-wide">
             <Tag className="w-2.5 h-2.5" />
             {p.category}
           </span>
@@ -466,7 +464,7 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) 
 
         {/* Name + Brand */}
         <div>
-          <h3 className="font-bold text-sm leading-snug text-gray-900 dark:text-white group-hover:text-[#0B3B6E] dark:group-hover:text-blue-300 transition-colors">
+          <h3 className="font-bold text-sm leading-snug text-gray-900 dark:text-white group-hover:text-[var(--accent)] dark:group-hover:text-[var(--secondary)] transition-colors">
             {p.name}
           </h3>
           <p className="text-[11px] text-gray-400 font-semibold mt-0.5 flex items-center gap-1">
@@ -503,13 +501,13 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) 
           </div>
           <div className="text-right">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Unit</p>
-            <p className="text-sm font-bold text-[#D4A017]">{p.unitOfMeasure}</p>
+            <p className="text-sm font-bold text-[var(--secondary)]">{p.unitOfMeasure}</p>
           </div>
         </div>
 
         <button
           onClick={() => onAdd(p)}
-          className="w-full bg-[#0B3B6E] hover:bg-[#0a3260] active:scale-[0.98] text-white py-2.5 rounded-xl text-xs font-bold transition-all duration-200 shadow-sm tracking-wide"
+          className="w-full bg-[var(--accent)] hover:bg-[#5a1515] active:scale-[0.98] text-white py-2.5 rounded-xl text-xs font-bold transition-all duration-200 shadow-sm tracking-wide"
         >
           + Add to Requisition
         </button>
@@ -522,18 +520,18 @@ function ProductListItem({ p, onAdd }: { p: Product; onAdd: (p: Product) => void
   return (
     <div className="group bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col md:flex-row gap-5 relative overflow-hidden">
       {/* Left accent */}
-      <div className="absolute top-0 bottom-0 left-0 w-0.5 bg-gradient-to-b from-[#0B3B6E] to-[#D4A017] opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
+      <div className="absolute top-0 bottom-0 left-0 w-0.5 bg-gradient-to-b from-[#7B1E1E] to-[#A6761D] opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
 
       <div className="flex-1 space-y-2 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#0B3B6E] bg-[#0B3B6E]/08 dark:bg-[#0B3B6E]/20 rounded-full px-2.5 py-1 uppercase tracking-wide">
+          <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[var(--accent)] bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)] rounded-full px-2.5 py-1 uppercase tracking-wide">
             <Tag className="w-2.5 h-2.5" />
             {p.category}
           </span>
           <span className="text-[10px] font-mono text-gray-400">{p.sku}</span>
         </div>
 
-        <h3 className="font-bold text-base text-gray-900 dark:text-white leading-snug group-hover:text-[#0B3B6E] dark:group-hover:text-blue-300 transition-colors">
+        <h3 className="font-bold text-base text-gray-900 dark:text-white leading-snug group-hover:text-[var(--accent)] dark:group-hover:text-[var(--secondary)] transition-colors">
           {p.name}
         </h3>
         <p className="text-xs text-gray-400 font-semibold flex items-center gap-2">
@@ -553,12 +551,12 @@ function ProductListItem({ p, onAdd }: { p: Product; onAdd: (p: Product) => void
       <div className="md:w-44 shrink-0 flex flex-col justify-between items-end border-t md:border-t-0 md:border-l border-gray-100 dark:border-slate-800 pt-4 md:pt-0 md:pl-5 gap-4">
         <div className="text-right">
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Enter during PR</p>
-          <p className="text-xs text-[#D4A017] font-semibold">per {p.unitOfMeasure}</p>
+          <p className="text-xs text-[var(--secondary)] font-semibold">per {p.unitOfMeasure}</p>
         </div>
 
         <button
           onClick={() => onAdd(p)}
-          className="w-full bg-[#0B3B6E] hover:bg-[#0a3260] active:scale-[0.98] text-white py-2 rounded-xl text-xs font-bold transition-all duration-200 shadow-sm tracking-wide"
+          className="w-full bg-[var(--accent)] hover:bg-[#5a1515] active:scale-[0.98] text-white py-2 rounded-xl text-xs font-bold transition-all duration-200 shadow-sm tracking-wide"
         >
           + Add to Requisition
         </button>
@@ -595,8 +593,8 @@ function CartDrawer({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-[#0B3B6E]/08 dark:bg-[#0B3B6E]/20 flex items-center justify-center">
-              <ShoppingCart className="w-4.5 h-4.5 text-[#0B3B6E]" />
+            <div className="w-9 h-9 rounded-xl bg-[var(--accent)]/08 dark:bg-[var(--accent)]/20 flex items-center justify-center">
+              <ShoppingCart className="w-4.5 h-4.5 text-[var(--accent)]" />
             </div>
             <div>
               <h2 className="font-bold text-sm text-gray-900 dark:text-white">Requisition Cart</h2>
@@ -681,7 +679,7 @@ function CartDrawer({
             <button
               onClick={onCheckout}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-[#0B3B6E] hover:bg-[#0a3260] disabled:opacity-60 text-white py-3.5 rounded-xl font-bold text-sm transition-all duration-200 shadow-md hover:shadow-lg"
+              className="w-full flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[#5a1515] disabled:opacity-60 text-white py-3.5 rounded-xl font-bold text-sm transition-all duration-200 shadow-md hover:shadow-lg"
             >
               {loading ? (
                 "Loading…"
@@ -748,7 +746,7 @@ function CheckoutModal({
 
         <form onSubmit={onSubmit} className="px-6 py-5 space-y-5">
           {errorMessage && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 rounded-xl p-3.5 text-xs font-semibold">
+            <div className="bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)] border border-[var(--border-accent)] dark:border-[var(--border-accent)] text-[var(--accent)] dark:text-[var(--accent)] rounded-xl p-3.5 text-xs font-semibold">
               {errorMessage}
             </div>
           )}
@@ -863,7 +861,7 @@ function CheckoutModal({
           </div>
 
           {/* Policy note */}
-          <div className="bg-[#D4A017]/08 dark:bg-[#D4A017]/10 border border-[#D4A017]/25 rounded-xl p-4 text-xs text-[#b88a10] dark:text-[#f5c842] leading-relaxed font-medium">
+          <div className="bg-[var(--secondary)]/08 dark:bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-xl p-4 text-xs text-[var(--secondary)] dark:text-[#f5c842] leading-relaxed font-medium">
             <strong>Budget Check Policy:</strong> Generates a Purchase Request Draft and allocates estimates
             against department budget allocations automatically. Revisions are logged asynchronously.
           </div>
@@ -881,7 +879,7 @@ function CheckoutModal({
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-[#0B3B6E] hover:bg-[#0a3260] disabled:opacity-60 text-white py-3 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+              className="flex-1 bg-[var(--accent)] hover:bg-[#5a1515] disabled:opacity-60 text-white py-3 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
             >
               {loading ? "Generating…" : "Submit Purchase Request"}
             </button>
@@ -908,8 +906,8 @@ function SuccessModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div className="bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-8 shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
         {/* Icon */}
-        <div className="w-20 h-20 bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center mx-auto">
-          <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+        <div className="w-20 h-20 bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)] rounded-2xl flex items-center justify-center mx-auto">
+          <CheckCircle2 className="w-10 h-10 text-[var(--accent)]" />
         </div>
 
         <div className="space-y-2">
@@ -917,9 +915,9 @@ function SuccessModal({
             Requisition Submitted!
           </h3>
           {prNumber && (
-            <div className="inline-flex items-center gap-2 bg-[#0B3B6E]/08 dark:bg-[#0B3B6E]/20 rounded-xl px-4 py-2">
-              <FileText className="w-4 h-4 text-[#0B3B6E]" />
-              <span className="font-black text-sm text-[#0B3B6E] dark:text-blue-300">
+            <div className="inline-flex items-center gap-2 bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)] rounded-xl px-4 py-2">
+              <FileText className="w-4 h-4 text-[var(--accent)]" />
+              <span className="font-black text-sm text-[var(--accent)] dark:text-[var(--secondary)]">
                 {prNumber}
               </span>
             </div>
@@ -938,7 +936,7 @@ function SuccessModal({
           </button>
           <button
             onClick={onDashboard}
-            className="flex-1 bg-[#0B3B6E] hover:bg-[#0a3260] text-white py-3 rounded-xl font-bold text-sm transition-all duration-200 shadow-sm"
+            className="flex-1 bg-[var(--accent)] hover:bg-[#5a1515] text-white py-3 rounded-xl font-bold text-sm transition-all duration-200 shadow-sm"
           >
             Go to Dashboard
           </button>
@@ -1170,7 +1168,7 @@ export default function MarketplaceClient({
         {/* Section title */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-widest text-[#D4A017] mb-1">
+            <p className="text-xs font-bold uppercase tracking-widest text-[var(--secondary)] mb-1">
               Explore Catalog
             </p>
             <h2 className="text-2xl font-black text-gray-900 dark:text-white">

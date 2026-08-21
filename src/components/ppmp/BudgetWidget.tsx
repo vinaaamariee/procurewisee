@@ -41,7 +41,7 @@ export default function BudgetWidget({
             padding: "0.25rem 0.5rem",
             borderRadius: "6px",
             background: isOverBudget ? "rgba(220, 38, 38, 0.1)" : "rgba(16, 185, 129, 0.1)",
-            color: isOverBudget ? "#ef4444" : "#10b981",
+            color: isOverBudget ? "var(--accent)" : "var(--secondary)",
           }}
         >
           {isOverBudget ? "Over Budget" : "Within Limit"}
@@ -84,7 +84,7 @@ export default function BudgetWidget({
             style={{
               fontSize: "1.2rem",
               fontWeight: 800,
-              color: isOverBudget ? "#ef4444" : "#10b981",
+              color: isOverBudget ? "var(--accent)" : "var(--secondary)",
             }}
           >
             ₱{remaining.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -95,7 +95,7 @@ export default function BudgetWidget({
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", fontWeight: 700 }}>
           <span style={{ color: "var(--text-secondary)" }}>Budget Utilization</span>
-          <span style={{ color: isOverBudget ? "#ef4444" : "var(--text-primary)" }}>
+          <span style={{ color: isOverBudget ? "var(--accent)" : "var(--text-primary)" }}>
             {utilization.toFixed(1)}%
           </span>
         </div>
@@ -112,7 +112,7 @@ export default function BudgetWidget({
             style={{
               width: `${Math.min(utilization, 100)}%`,
               height: "100%",
-              backgroundColor: isOverBudget ? "#ef4444" : "#b88a1b",
+              backgroundColor: isOverBudget ? "var(--accent)" : "#b88a1b",
               borderRadius: "999px",
               transition: "width 0.3s ease",
             }}

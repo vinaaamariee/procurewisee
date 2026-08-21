@@ -9,10 +9,10 @@ function StatusDot({ ok = true }: { ok?: boolean }) {
       aria-hidden="true"
     >
       <span
-        className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 ${ok ? "bg-emerald-500" : "bg-red-500"}`}
+        className={`absolute inline-flex h-full w-full animate-ping rounded-full opacity-60 ${ok ? "bg-[var(--accent)]" : "bg-[var(--accent-glass)]0"}`}
       />
       <span
-        className={`relative inline-flex h-2 w-2 rounded-full ${ok ? "bg-emerald-500" : "bg-red-500"}`}
+        className={`relative inline-flex h-2 w-2 rounded-full ${ok ? "bg-[var(--accent)]" : "bg-[var(--accent-glass)]0"}`}
       />
     </span>
   );
@@ -90,7 +90,7 @@ export default function Footer() {
             style={{
               background: "rgba(16,185,129,0.07)",
               borderColor: "rgba(16,185,129,0.25)",
-              color: "#059669",
+              color: "var(--secondary)",
             }}
           >
             <ShieldCheck className="h-3 w-3" />
@@ -101,7 +101,7 @@ export default function Footer() {
             className="flex items-center gap-1.5 text-xs"
             style={{ color: "var(--text-muted)" }}
           >
-            Built with <Heart className="h-3.5 w-3.5 fill-red-500 text-red-500" /> by the ProcureWise Team
+            Built with <Heart className="h-3.5 w-3.5 fill-red-500 text-[var(--accent)]" /> by the ProcureWise Team
           </div>
         </div>
 

@@ -56,7 +56,7 @@ export default function TrackingForm() {
       </div>
 
       {errorMsg && (
-        <div className="p-3 text-xs font-semibold text-red-600 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/30 rounded-xl">
+        <div className="p-3 text-xs font-semibold text-[var(--accent)] bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)] border border-[var(--border-accent)] dark:border-[var(--border-accent)] rounded-xl">
           ⚠️ {errorMsg}
         </div>
       )}
