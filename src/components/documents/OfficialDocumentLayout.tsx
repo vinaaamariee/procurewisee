@@ -219,7 +219,7 @@ export default function OfficialDocumentLayout({
             display: block;
             width: 100%;
             margin-top: 2rem;
-            border-top: 1px solid #e2e8f0;
+            border-top: 1px solid #E5E7EB;
             padding-top: 1rem;
           }
         }

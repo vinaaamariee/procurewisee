@@ -23,9 +23,9 @@ export default async function SupplierProfilesPage() {
 
   // Brand Colors mapped from your Login Page design
   const theme = {
-    crimson: '#7e191b',
-    gold: '#dcb353',
-    goldDark: '#b88a1b',
+    crimson: '#7B1E1E',
+    gold: '#A6761D',
+    goldDark: '#A6761D',
     dark: '#111827',
     textMain: '#1f2937',
     textMuted: '#6b7280',

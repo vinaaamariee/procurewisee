@@ -487,7 +487,7 @@ export default function PPMPDashboardClient({
                   padding: "0.6rem",
                   borderRadius: "8px",
                   border: "none",
-                  background: "#7e191b",
+                  background: "#7B1E1E",
                   color: "white",
                   cursor: "pointer",
                   fontWeight: 700,
@@ -537,12 +537,12 @@ export default function PPMPDashboardClient({
 
       {/* Notifications */}
       {message && (
-        <div style={{ padding: "1rem", borderRadius: "0.75rem", background: "rgba(16, 185, 129, 0.1)", border: "1px solid rgba(16, 185, 129, 0.2)", color: "var(--secondary)", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "1rem", borderRadius: "0.75rem", background: "rgba(123, 30, 30, 0.1)", border: "1px solid rgba(123, 30, 30, 0.2)", color: "var(--secondary)", fontSize: "0.85rem", fontWeight: 600 }}>
           {message}
         </div>
       )}
       {errorMsg && (
-        <div style={{ padding: "1rem", borderRadius: "0.75rem", background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.2)", color: "var(--accent)", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "1rem", borderRadius: "0.75rem", background: "rgba(123, 30, 30, 0.1)", border: "1px solid rgba(123, 30, 30, 0.2)", color: "var(--accent)", fontSize: "0.85rem", fontWeight: 600 }}>
           {errorMsg}
         </div>
       )}
@@ -621,17 +621,17 @@ export default function PPMPDashboardClient({
                             fontWeight: 700,
                             backgroundColor:
                               ppmp.status === "Approved"
-                                ? "rgba(16, 185, 129, 0.1)"
+                                ? "rgba(123, 30, 30, 0.1)"
                                 : ppmp.status === "Submitted"
-                                ? "rgba(220, 179, 83, 0.1)"
+                                ? "rgba(166, 118, 29, 0.1)"
                                 : ppmp.status === "Returned"
-                                ? "rgba(239, 68, 68, 0.1)"
-                                : "rgba(107, 114, 128, 0.1)",
+                                ? "rgba(123, 30, 30, 0.1)"
+                                : "rgba(123, 30, 30, 0.1)",
                             color:
                               ppmp.status === "Approved"
                                 ? "var(--secondary)"
                                 : ppmp.status === "Submitted"
-                                ? "#b88a1b"
+                                ? "#A6761D"
                                 : ppmp.status === "Returned"
                                 ? "var(--accent)"
                                 : "var(--text-secondary)",
@@ -660,7 +660,7 @@ export default function PPMPDashboardClient({
                             {timelineStep >= 3 ? "●" : "○"} Approved
                           </span>
                           <span style={{ color: "var(--text-muted)" }}>→</span>
-                          <span style={{ color: timelineStep >= 4 ? "#8b5cf6" : "var(--text-muted)" }}>
+                          <span style={{ color: timelineStep >= 4 ? "#7B1E1E" : "var(--text-muted)" }}>
                             {timelineStep >= 4 ? "●" : "○"} Converted to PR
                           </span>
                         </div>
@@ -674,7 +674,7 @@ export default function PPMPDashboardClient({
                                 padding: "0.25rem 0.6rem",
                                 borderRadius: "6px",
                                 border: "none",
-                                background: "#b88a1b",
+                                background: "#A6761D",
                                 color: "white",
                                 fontSize: "0.65rem",
                                 fontWeight: 700,
@@ -689,7 +689,7 @@ export default function PPMPDashboardClient({
                         {hasPr && prRecord && (
                           <div style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.25rem" }}>
                             <span style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>
-                              PR Generated: <strong style={{ color: "#8b5cf6" }}>{prRecord.prNumber}</strong>
+                              PR Generated: <strong style={{ color: "#7B1E1E" }}>{prRecord.prNumber}</strong>
                             </span>
                             <Link
                               href="/dashboard/end-user/pr"
@@ -697,12 +697,12 @@ export default function PPMPDashboardClient({
                                 display: "inline-block",
                                 padding: "0.2rem 0.5rem",
                                 borderRadius: "4px",
-                                border: "1px solid #8b5cf6",
-                                color: "#8b5cf6",
+                                border: "1px solid #7B1E1E",
+                                color: "#7B1E1E",
                                 fontSize: "0.6rem",
                                 fontWeight: 700,
                                 textDecoration: "none",
-                                background: "rgba(139, 92, 246, 0.05)",
+                                background: "rgba(123, 30, 30, 0.05)",
                               }}
                             >
                               View Purchase Request
@@ -721,7 +721,7 @@ export default function PPMPDashboardClient({
                                 padding: "0.35rem 0.75rem",
                                 borderRadius: "6px",
                                 border: "none",
-                                backgroundColor: "#7e191b",
+                                backgroundColor: "#7B1E1E",
                                 color: "white",
                                 cursor: "pointer",
                                 fontSize: "0.75rem",

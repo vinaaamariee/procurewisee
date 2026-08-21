@@ -36,7 +36,7 @@ const pillars = [
     description:
       "Standardized digital paper layouts for PR (Appendix 60), RFQ (Annex D), Ack Receipt (Annex E), AOQ (Annex F), and PO (Appendix 61) with official institutional letterheads.",
     color: "var(--secondary)",
-    bg: "rgba(212, 160, 23, 0.08)",
+    bg: "rgba(166, 118, 29, 0.08)",
   },
   {
     icon: ShieldCheck,
@@ -51,8 +51,8 @@ const pillars = [
     title: "Historical Price Tracking",
     description:
       "ARIMA-powered price forecasting and historical price trends derived from historical Small Value Procurement (SVP) workbooks.",
-    color: "#6366f1",
-    bg: "rgba(99, 102, 241, 0.08)",
+    color: "#7B1E1E",
+    bg: "rgba(123, 30, 30, 0.08)",
   },
 ];
 
@@ -65,12 +65,12 @@ const institutionalGoals = [
 
 export default function AboutPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#F7F8FA] via-[#F3F4F6] to-[#F7F8FA] dark:bg-slate-950 text-[#111827] dark:text-slate-100 font-sans">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#FAF9F6] via-[#F3F4F6] to-[#FAF9F6] dark:bg-slate-950 text-[#111827] dark:text-slate-100 font-sans">
       <Header />
 
       <main className="flex-1">
         {/* ── Hero Banner ── */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-[#7B1E1E] via-[#5E1414] to-[#3B0A0A] py-16 lg:py-24 text-white">
+        <section className="relative overflow-hidden bg-gradient-to-r from-[#7B1E1E] via-[#5A1515] to-[#5A1515] py-16 lg:py-24 text-white">
           <div className="absolute inset-0 bg-[radial-[var(--secondary-dim)]_1px,transparent_1px] [background-size:24px_24px] opacity-30" />
           
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -91,7 +91,7 @@ export default function AboutPage() {
               <div className="flex flex-wrap gap-4 pt-2">
                 <Link
                   href="/catalog"
-                  className="inline-flex items-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-xs font-bold text-[#111827] hover:bg-[#b88a10] transition-all shadow-md hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-xs font-bold text-[#111827] hover:bg-[#A6761D] transition-all shadow-md hover:-translate-y-0.5"
                 >
                   <Package className="h-4 w-4" />
                   <span>Browse Procurement Catalog</span>
@@ -169,7 +169,7 @@ export default function AboutPage() {
                   <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Audit Trail</div>
                 </div>
                 <div className="p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-800 text-center">
-                  <div className="text-2xl font-black text-[#6366f1]">24/7</div>
+                  <div className="text-2xl font-black text-[#7B1E1E]">24/7</div>
                   <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Public Tracking</div>
                 </div>
               </div>
@@ -216,7 +216,7 @@ export default function AboutPage() {
           </div>
 
           {/* Bottom Call to Action */}
-          <div className="bg-gradient-to-r from-[#7B1E1E] to-[#5E1414] rounded-3xl p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="bg-gradient-to-r from-[#7B1E1E] to-[#5A1515] rounded-3xl p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
             <div className="space-y-2 text-center sm:text-left">
               <h3 className="text-xl font-black">Ready to explore ProcureWise?</h3>
               <p className="text-xs text-slate-200">
@@ -226,7 +226,7 @@ export default function AboutPage() {
             <div className="flex flex-wrap gap-3 shrink-0">
               <Link
                 href="/catalog"
-                className="px-5 py-2.5 rounded-xl bg-[var(--secondary)] text-slate-950 text-xs font-bold hover:bg-[#b88a1b] transition shadow-md"
+                className="px-5 py-2.5 rounded-xl bg-[var(--secondary)] text-slate-950 text-xs font-bold hover:bg-[#A6761D] transition shadow-md"
               >
                 Browse Catalog
               </Link>

@@ -179,9 +179,9 @@ export default function EvaluationFormClient({
   };
 
   const theme = {
-    crimson: "#7e191b",
-    gold: "#dcb353",
-    goldDark: "#b88a1b",
+    crimson: "#7B1E1E",
+    gold: "#A6761D",
+    goldDark: "#A6761D",
     textMain: "var(--text-primary, #1f2937)",
     textMuted: "var(--text-muted, #6b7280)",
     glassBg: "var(--surface, rgba(255,255,255,0.75))",
@@ -221,12 +221,12 @@ export default function EvaluationFormClient({
   return (
     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
       {errorMsg && (
-        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(239,68,68,0.1)", color: "var(--accent)", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(123, 30, 30, 0.1)", color: "var(--accent)", fontSize: "0.85rem", fontWeight: 600 }}>
           ⚠️ {errorMsg}
         </div>
       )}
       {successMsg && (
-        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(16,185,129,0.1)", color: "var(--secondary)", fontSize: "0.85rem", fontWeight: 600 }}>
+        <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", background: "rgba(123, 30, 30, 0.1)", color: "var(--secondary)", fontSize: "0.85rem", fontWeight: 600 }}>
           ✅ {successMsg}
         </div>
       )}
@@ -404,7 +404,7 @@ export default function EvaluationFormClient({
                   color: "#fff", fontWeight: 700, fontSize: "0.85rem",
                   cursor: isSubmitting ? "not-allowed" : "pointer",
                   opacity: isSubmitting ? 0.7 : 1,
-                  boxShadow: "0 4px 12px rgba(126,25,27,0.25)", transition: "all 0.2s",
+                  boxShadow: "0 4px 12px rgba(123, 30, 30, 0.25)", transition: "all 0.2s",
                 }}
               >
                 {isSubmitting ? "Submitting…" : "✍️ Submit Evaluation"}

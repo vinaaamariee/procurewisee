@@ -114,7 +114,7 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
           {categoryId && (
             <Link
               href="/catalog"
-              className="text-xs font-bold text-[#7e191b] dark:text-[#facc15] hover:underline"
+              className="text-xs font-bold text-[#7B1E1E] dark:text-[#A6761D] hover:underline"
             >
               Clear Filter
             </Link>

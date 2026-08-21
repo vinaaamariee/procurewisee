@@ -69,7 +69,7 @@ export default function HelpSection() {
               </div>
               <Link
                 href="/login"
-                className="btn btn-sm btn-primary rounded-lg bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold flex-shrink-0"
+                className="btn btn-sm btn-primary rounded-lg bg-[#7B1E1E] hover:bg-[#7B1E1E] text-white border-none font-bold flex-shrink-0"
               >
                 <LogIn className="h-3.5 w-3.5" />
                 <span>Sign In</span>

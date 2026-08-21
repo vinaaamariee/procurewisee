@@ -29,8 +29,8 @@ export default function ApproveButton({ recommId }: ApproveButtonProps) {
 
   // Theme colors matching the dashboard
   const theme = {
-    crimson: '#7e191b',
-    goldDark: '#b88a1b',
+    crimson: '#7B1E1E',
+    goldDark: '#A6761D',
   };
 
   return (
@@ -49,7 +49,7 @@ export default function ApproveButton({ recommId }: ApproveButtonProps) {
           color: 'white',
           fontSize: '0.85rem',
           fontWeight: 600,
-          boxShadow: isPending ? 'none' : `0 4px 12px rgba(184, 138, 27, 0.25)`,
+          boxShadow: isPending ? 'none' : `0 4px 12px rgba(166, 118, 29, 0.25)`,
           opacity: isPending ? 0.7 : 1,
           transition: 'all 0.2s ease',
         }}

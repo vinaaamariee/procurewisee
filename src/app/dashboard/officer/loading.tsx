@@ -4,7 +4,7 @@ export default function Loading() {
   const v = {
     surface: 'var(--surface)',
     border: 'var(--border)',
-    shadow: '0 4px 24px rgba(30,58,138,0.07)',
+    shadow: '0 4px 24px rgba(123, 30, 30, 0.07)',
   };
 
   return (

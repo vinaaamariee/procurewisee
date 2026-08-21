@@ -335,7 +335,7 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
           <>
             {/* Returned Banner Alert */}
             {isReturned && (
-              <div className="rounded-2xl border border-[var(--border-accent)] bg-[var(--accent-glass)] p-5 dark:border-[var(--border-accent)] dark:bg-[var(--accent-glass)] text-red-950 dark:text-red-100 space-y-3 shadow-xs">
+              <div className="rounded-2xl border border-[var(--border-accent)] bg-[var(--accent-glass)] p-5 dark:border-[var(--border-accent)] dark:bg-[var(--accent-glass)] text-[var(--accent)] dark:text-[var(--secondary)] space-y-3 shadow-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-[var(--accent)] dark:text-[var(--accent)] font-bold text-base">
                     <AlertTriangle className="h-5 w-5 shrink-0" />

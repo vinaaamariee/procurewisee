@@ -26,7 +26,7 @@ const defaultActions = [
     href: "/end-user/ppmp",
     buttonLabel: "Start Planning",
     color: "var(--secondary)",
-    bgColor: "rgba(212, 160, 23, 0.08)",
+    bgColor: "rgba(166, 118, 29, 0.08)",
   },
   {
     icon: FileText,
@@ -45,8 +45,8 @@ const defaultActions = [
       "Track the status of your procurement request using your tracking code.",
     href: "/track",
     buttonLabel: "Track Now",
-    color: "#6366f1",
-    bgColor: "rgba(99, 102, 241, 0.08)",
+    color: "#7B1E1E",
+    bgColor: "rgba(123, 30, 30, 0.08)",
   },
 ];
 

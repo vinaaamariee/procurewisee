@@ -22,7 +22,7 @@ const features = [
     description:
       "Track price trends across suppliers over time to identify cost-saving opportunities.",
     color: "var(--secondary)",
-    bg: "rgba(212, 160, 23, 0.08)",
+    bg: "rgba(166, 118, 29, 0.08)",
   },
   {
     icon: BrainCircuit,
@@ -37,8 +37,8 @@ const features = [
     title: "Automated Canvassing",
     description:
       "Streamlined RFQ management and automated canvas abstract generation.",
-    color: "#6366f1",
-    bg: "rgba(99, 102, 241, 0.08)",
+    color: "#7B1E1E",
+    bg: "rgba(123, 30, 30, 0.08)",
   },
   {
     icon: Shield,

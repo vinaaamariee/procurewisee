@@ -23,8 +23,8 @@ export default function Error({
     error.message?.includes('Can\'t reach database server');
 
   return (
-    <div className="min-h-screen bg-[#0D0E12] text-slate-100 flex items-center justify-center p-6 font-sans">
-      <div className="max-w-2xl w-full bg-[#141519] border border-[var(--border-accent)] rounded-2xl p-8 shadow-2xl space-y-6">
+    <div className="min-h-screen bg-[#181411] text-slate-100 flex items-center justify-center p-6 font-sans">
+      <div className="max-w-2xl w-full bg-[#181411] border border-[var(--border-accent)] rounded-2xl p-8 shadow-2xl space-y-6">
         <div className="flex items-center gap-3 border-b border-[var(--border-accent)] pb-4">
           <div className="w-10 h-10 rounded-xl bg-[var(--accent-glass)] border border-[var(--border-accent)] flex items-center justify-center text-[var(--accent)] text-xl font-bold">
             ⚠️
@@ -85,7 +85,7 @@ export default function Error({
         <div className="flex items-center gap-3 pt-2">
           <button
             onClick={() => reset()}
-            className="px-4 py-2 rounded-xl bg-[#7B1E1E] text-white text-xs font-bold hover:bg-[#922424] transition cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#7B1E1E] text-white text-xs font-bold hover:bg-[#7B1E1E] transition cursor-pointer"
           >
             🔄 Reload / Try Again
           </button>

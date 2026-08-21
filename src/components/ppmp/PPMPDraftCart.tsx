@@ -399,7 +399,7 @@ export default function PPMPDraftCart({
                 padding: "0.6rem",
                 borderRadius: "8px",
                 border: "none",
-                background: isCartEmpty ? "var(--text-muted)" : "#7e191b",
+                background: isCartEmpty ? "var(--text-muted)" : "#7B1E1E",
                 color: "white",
                 cursor: isCartEmpty ? "not-allowed" : "pointer",
                 fontWeight: 700,

@@ -241,7 +241,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
       {errorMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'var(--accent-glass)', border: '1px solid rgba(239,68,68,0.2)',
+          background: 'var(--accent-glass)', border: '1px solid rgba(123, 30, 30, 0.2)',
           color: 'var(--accent)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ⚠️ {errorMsg}
@@ -339,8 +339,8 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
         {/* Manual Override Justification Section (appears only when overridden) */}
         {isManualOverride && (
           <div style={{
-            background: 'rgba(126, 25, 27, 0.03)',
-            border: '1px dashed rgba(126, 25, 27, 0.2)',
+            background: 'rgba(123, 30, 30, 0.03)',
+            border: '1px dashed rgba(123, 30, 30, 0.2)',
             borderRadius: 12,
             padding: '1.25rem',
             display: 'flex',
@@ -348,7 +348,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
             gap: '1rem',
             marginTop: '-0.5rem',
           }}>
-            <h4 style={{ margin: 0, fontSize: '0.8rem', fontWeight: 800, color: '#7e191b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <h4 style={{ margin: 0, fontSize: '0.8rem', fontWeight: 800, color: '#7B1E1E', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               ⚠️ Sequence Override Justification (Audited)
             </h4>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }} className="grid grid-cols-1 md:grid-cols-3">
@@ -607,7 +607,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
                         disabled={items.length === 1}
                         style={{
                           padding: '0.4rem', borderRadius: 6,
-                          background: 'var(--accent-glass)', border: '1px solid rgba(239,68,68,0.2)',
+                          background: 'var(--accent-glass)', border: '1px solid rgba(123, 30, 30, 0.2)',
                           color: 'var(--accent)', fontSize: '0.75rem', cursor: items.length === 1 ? 'not-allowed' : 'pointer',
                           opacity: items.length === 1 ? 0.4 : 1, transition: 'all 0.2s'
                         }}

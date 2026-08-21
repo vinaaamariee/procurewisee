@@ -89,7 +89,7 @@ export default async function UnauthorizedPage({ searchParams }: PageProps) {
               {/* Back to Dashboard */}
               <a
                 href={dashboardLink}
-                className="btn btn-primary w-full text-white font-bold bg-[#7B1E1E] hover:bg-[#601717] border-none shadow-sm text-sm rounded-xl flex items-center justify-center gap-2"
+                className="btn btn-primary w-full text-white font-bold bg-[#7B1E1E] hover:bg-[#7B1E1E] border-none shadow-sm text-sm rounded-xl flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Back to Dashboard</span>

@@ -26,18 +26,18 @@ export default async function PublicPPMPPage({ searchParams }: PageProps) {
     return (
       <div className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] flex flex-col">
         {/* Header */}
-        <header className="sticky top-0 z-50 bg-[#FAF9F6] border-b-2 border-[#ca8a04]/25 shadow-sm">
+        <header className="sticky top-0 z-50 bg-[#FAF9F6] border-b-2 border-[#A6761D]/25 shadow-sm">
           <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 no-underline">
-              <div className="w-11 h-11 rounded-lg bg-gradient-to-tr from-[#7e191b] to-[#ca8a04] flex items-center justify-center text-white font-black text-sm shadow-md">
+              <div className="w-11 h-11 rounded-lg bg-gradient-to-tr from-[#7B1E1E] to-[#A6761D] flex items-center justify-center text-white font-black text-sm shadow-md">
                 PW
               </div>
               <div>
-                <h1 className="text-xl font-extrabold text-[#7e191b] tracking-tight">PROCUREWISE</h1>
+                <h1 className="text-xl font-extrabold text-[#7B1E1E] tracking-tight">PROCUREWISE</h1>
                 <p className="text-[10px] text-gray-500 uppercase tracking-widest">Batanes State College • Internal Procurement</p>
               </div>
             </Link>
-            <div className="bg-[#ca8a04]/10 border border-[#ca8a04]/30 rounded-full px-4 py-1.5 text-xs text-[#ca8a04] font-bold">
+            <div className="bg-[#A6761D]/10 border border-[#A6761D]/30 rounded-full px-4 py-1.5 text-xs text-[#A6761D] font-bold">
               Public PPMP Planner
             </div>
           </div>
@@ -46,7 +46,7 @@ export default async function PublicPPMPPage({ searchParams }: PageProps) {
         {/* Selection Interface */}
         <main className="flex-1 flex items-center justify-center p-6">
           <div className="bg-white border border-[#E7E5E0] rounded-2xl max-w-xl w-full p-8 shadow-xl">
-            <h2 className="text-2xl font-black text-[#7e191b] mb-2 tracking-tight text-center">
+            <h2 className="text-2xl font-black text-[#7B1E1E] mb-2 tracking-tight text-center">
               Create & Manage PPMP
             </h2>
             <p className="text-sm text-gray-500 mb-8 text-center leading-relaxed">
@@ -106,14 +106,14 @@ export default async function PublicPPMPPage({ searchParams }: PageProps) {
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-[#FAF9F6] border-b border-[#ca8a04]/25 shadow-sm">
+      <header className="sticky top-0 z-50 bg-[#FAF9F6] border-b border-[#A6761D]/25 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
           <Link href="/end-user/ppmp" className="flex items-center gap-3 no-underline">
-            <div className="w-11 h-11 rounded-lg bg-gradient-to-tr from-[#7e191b] to-[#ca8a04] flex items-center justify-center text-white font-black text-sm shadow-md">
+            <div className="w-11 h-11 rounded-lg bg-gradient-to-tr from-[#7B1E1E] to-[#A6761D] flex items-center justify-center text-white font-black text-sm shadow-md">
               PW
             </div>
             <div>
-              <h1 className="text-xl font-extrabold text-[#7e191b] tracking-tight">PROCUREWISE</h1>
+              <h1 className="text-xl font-extrabold text-[#7B1E1E] tracking-tight">PROCUREWISE</h1>
               <p className="text-[10px] text-gray-500 uppercase tracking-widest">
                 Batanes State College • Internal Procurement
               </p>
@@ -121,11 +121,11 @@ export default async function PublicPPMPPage({ searchParams }: PageProps) {
           </Link>
           <div className="flex items-center gap-4">
             <div className="text-xs font-bold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-lg border">
-              Planning for: <span className="text-[#ca8a04]">{selectedDepartment}</span>
+              Planning for: <span className="text-[#A6761D]">{selectedDepartment}</span>
             </div>
             <Link
               href="/end-user/ppmp"
-              className="text-xs font-bold text-[#7e191b] hover:text-[#962124] no-underline border border-[#7e191b]/20 px-3 py-1.5 rounded-lg transition hover:bg-[var(--accent-glass)]"
+              className="text-xs font-bold text-[#7B1E1E] hover:text-[#7B1E1E] no-underline border border-[#7B1E1E]/20 px-3 py-1.5 rounded-lg transition hover:bg-[var(--accent-glass)]"
             >
               Change Department
             </Link>

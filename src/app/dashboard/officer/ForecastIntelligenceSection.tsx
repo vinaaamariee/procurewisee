@@ -6,7 +6,7 @@ export default async function ForecastIntelligenceSection() {
   const forecastData = await getForecastingIntelligence();
 
   const theme = {
-    goldDark: '#b88a1b',
+    goldDark: '#A6761D',
   };
 
   const v = {
@@ -17,7 +17,7 @@ export default async function ForecastIntelligenceSection() {
     textPrimary: 'var(--text-primary)',
     textSecondary: 'var(--text-secondary)',
     green: 'var(--secondary)',
-    shadow: '0 4px 24px rgba(30,58,138,0.07)',
+    shadow: '0 4px 24px rgba(123, 30, 30, 0.07)',
   };
 
   return (
@@ -70,7 +70,7 @@ export default async function ForecastIntelligenceSection() {
                 forecastData.expectedToDecrease.slice(0, 3).map(p => (
                   <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem' }}>
                     <span style={{ fontWeight: 600, color: v.textPrimary }}>{p.name}</span>
-                    <span style={{ fontWeight: 800, color: v.green, background: 'rgba(16, 185, 129, 0.05)', padding: '0.1rem 0.4rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '2px' }}>
+                    <span style={{ fontWeight: 800, color: v.green, background: 'rgba(123, 30, 30, 0.05)', padding: '0.1rem 0.4rem', borderRadius: '4px', display: 'flex', alignItems: 'center', gap: '2px' }}>
                       <TrendingDown style={{ width: 10, height: 10 }} /> {p.changePct.toFixed(1)}%
                     </span>
                   </div>
@@ -101,7 +101,7 @@ export default async function ForecastIntelligenceSection() {
             </span>
           </div>
 
-          <div style={{ background: 'rgba(30,58,138,0.05)', border: `1px solid rgba(30,58,138,0.12)`, borderRadius: '0.75rem', padding: '0.75rem 1rem', display: 'flex', alignItems: 'start', gap: '0.5rem' }}>
+          <div style={{ background: 'rgba(123, 30, 30, 0.05)', border: `1px solid rgba(123, 30, 30, 0.12)`, borderRadius: '0.75rem', padding: '0.75rem 1rem', display: 'flex', alignItems: 'start', gap: '0.5rem' }}>
             <Sparkles style={{ width: 16, height: 16, color: theme.goldDark, flexShrink: 0, marginTop: '2px' }} />
             <p style={{ fontSize: '0.75rem', color: v.textPrimary, margin: 0, lineHeight: 1.4 }}>
               <strong>Decision Tip:</strong> Procuring products marked with <strong>BUY NOW</strong> immediately avoids upcoming price spikes. Deferring items marked with <strong>WAIT FOR PRICE DROP</strong> captures upcoming savings.

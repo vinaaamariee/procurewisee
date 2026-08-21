@@ -32,9 +32,9 @@ export default async function SupplierScorecardPage() {
   const scorecard = await getSupplierScorecard(supplierId);
 
   const theme = {
-    crimson: "#7e191b",
-    gold: "#dcb353",
-    goldDark: "#b88a1b",
+    crimson: "#7B1E1E",
+    gold: "#A6761D",
+    goldDark: "#A6761D",
     textMain: "#1f2937",
     textMuted: "#6b7280",
     glassBg: "rgba(255, 255, 255, 0.75)",
@@ -91,11 +91,11 @@ export default async function SupplierScorecardPage() {
         }}>
           <span style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px" }}>Quality Compliance Rate</span>
           <div>
-            <div style={{ fontSize: "3rem", fontWeight: 900, color: "#10b981", lineHeight: 1 }}>
+            <div style={{ fontSize: "3rem", fontWeight: 900, color: "#7B1E1E", lineHeight: 1 }}>
               {scorecard.qualityComplianceRate.toFixed(1)}%
             </div>
             <div style={{ width: "100%", height: "8px", background: "rgba(0,0,0,0.06)", borderRadius: "999px", overflow: "hidden", marginTop: "1rem" }}>
-              <div style={{ width: `${scorecard.qualityComplianceRate}%`, height: "100%", background: "#10b981", borderRadius: "999px" }} />
+              <div style={{ width: `${scorecard.qualityComplianceRate}%`, height: "100%", background: "#7B1E1E", borderRadius: "999px" }} />
             </div>
           </div>
           <span style={{ fontSize: "0.75rem", color: theme.textMuted }}>Adherence to required goods specifications</span>
@@ -109,11 +109,11 @@ export default async function SupplierScorecardPage() {
         }}>
           <span style={{ fontSize: "0.75rem", fontWeight: 800, color: theme.textMuted, textTransform: "uppercase", letterSpacing: "0.5px" }}>On-Time Delivery Rate</span>
           <div>
-            <div style={{ fontSize: "3rem", fontWeight: 900, color: "#3b82f6", lineHeight: 1 }}>
+            <div style={{ fontSize: "3rem", fontWeight: 900, color: "#7B1E1E", lineHeight: 1 }}>
               {scorecard.onTimeDeliveryRate.toFixed(1)}%
             </div>
             <div style={{ width: "100%", height: "8px", background: "rgba(0,0,0,0.06)", borderRadius: "999px", overflow: "hidden", marginTop: "1rem" }}>
-              <div style={{ width: `${scorecard.onTimeDeliveryRate}%`, height: "100%", background: "#3b82f6", borderRadius: "999px" }} />
+              <div style={{ width: `${scorecard.onTimeDeliveryRate}%`, height: "100%", background: "#7B1E1E", borderRadius: "999px" }} />
             </div>
           </div>
           <span style={{ fontSize: "0.75rem", color: theme.textMuted }}>Adherence to contract delivery lead-times</span>

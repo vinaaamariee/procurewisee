@@ -330,12 +330,12 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
               {/* Card 2 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
                 <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Cost Savings (vs Avg)</div>
-                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#166534", marginTop: "3px" }}>{formatCurrency(filteredData.totalSavings)}</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#7B1E1E", marginTop: "3px" }}>{formatCurrency(filteredData.totalSavings)}</div>
               </div>
               {/* Card 3 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
                 <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Budget Utilization</div>
-                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#0b2d5c", marginTop: "3px" }}>{filteredData.utilizationRate.toFixed(1)}%</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#7B1E1E", marginTop: "3px" }}>{filteredData.utilizationRate.toFixed(1)}%</div>
               </div>
               {/* Card 4 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
@@ -345,7 +345,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
               {/* Card 5 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
                 <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Inflation Forecast</div>
-                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#b7202e", marginTop: "3px" }}>{formatCurrency(initialData.kpis.forecastedIncreaseNextMonth)}</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#7B1E1E", marginTop: "3px" }}>{formatCurrency(initialData.kpis.forecastedIncreaseNextMonth)}</div>
               </div>
               {/* Card 6 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
@@ -377,7 +377,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{s.awardCount} POs</td>
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{s.onTimeRate}%</td>
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{(s.reliability * 20).toFixed(0)}/100</td>
-                    <td style={{ padding: "6px 10px", textAlign: "center", border: "1px solid #d1d5db", fontWeight: "bold", color: s.riskGroup === "LOW" ? "#166534" : "#991b1b" }}>{s.riskGroup}</td>
+                    <td style={{ padding: "6px 10px", textAlign: "center", border: "1px solid #d1d5db", fontWeight: "bold", color: s.riskGroup === "LOW" ? "#7B1E1E" : "#7B1E1E" }}>{s.riskGroup}</td>
                   </tr>
                 ))}
               </tbody>
@@ -405,7 +405,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                     <td style={{ padding: "6px 10px", border: "1px solid #d1d5db", color: "#1f2937" }}>{f.productName}</td>
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(f.currentPrice)}</td>
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(f.forecastPrice)}</td>
-                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db", fontWeight: "semibold", color: f.changeLabel.includes("+") ? "#991b1b" : "#166534" }}>{f.changeLabel}</td>
+                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db", fontWeight: "semibold", color: f.changeLabel.includes("+") ? "#7B1E1E" : "#7B1E1E" }}>{f.changeLabel}</td>
                     <td style={{ padding: "6px 10px", textAlign: "center", border: "1px solid #d1d5db" }}>{f.confidenceLabel} ({f.confidence}%)</td>
                   </tr>
                 ))}
@@ -459,7 +459,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
           <button
             onClick={handlePrintPDF}
             className="flex items-center gap-2 py-2 px-4 rounded-xl text-white font-bold text-xs hover:opacity-90 transition cursor-pointer"
-            style={{ background: "linear-gradient(135deg, var(--accent) 0%, #a82025 100%)" }}
+            style={{ background: "linear-gradient(135deg, var(--accent) 0%, #7B1E1E 100%)" }}
           >
             <Printer className="h-4 w-4" /> Print PDF Report
           </button>
@@ -477,7 +477,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
           <div>• Budget utilization stands at <span className="font-extrabold text-slate-800 dark:text-slate-200">{filteredData.utilizationRate.toFixed(1)}%</span> ({filteredData.budgetHealth}).</div>
           <div>• Office Supplies category shows the highest historical price variance.</div>
           <div>• Recommended savings identify <span className="font-extrabold text-[var(--secondary)]">{formatCurrency(filteredData.totalSavings)}</span> in cost buffers.</div>
-          <div>• Top Performing Supplier: <span className="font-extrabold text-[#ca8a04]">{initialData.kpis.topSupplierName}</span> (Lowest Risk).</div>
+          <div>• Top Performing Supplier: <span className="font-extrabold text-[#A6761D]">{initialData.kpis.topSupplierName}</span> (Lowest Risk).</div>
           <div>• Forecasting model evaluation confidence is registered as <span className="font-extrabold text-slate-800 dark:text-slate-200">High</span>.</div>
         </div>
       </div>
@@ -502,7 +502,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={fiscalYear}
               onChange={(e) => setFiscalYear(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#ca8a04] outline-none"
+              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
             >
               <option value="All">All Years</option>
               <option value="2026">2026</option>
@@ -515,7 +515,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#ca8a04] outline-none"
+              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
             >
               <option value="All">All Departments</option>
               {departments.map((dept) => <option key={dept} value={dept}>{dept}</option>)}
@@ -527,7 +527,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#ca8a04] outline-none"
+              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
             >
               <option value="All">All Categories</option>
               {categories.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
@@ -539,7 +539,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={supplier}
               onChange={(e) => setSupplier(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#ca8a04] outline-none"
+              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
             >
               <option value="All">All Suppliers</option>
               {suppliersList.map((sup) => <option key={sup} value={sup}>{sup}</option>)}
@@ -551,7 +551,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#ca8a04] outline-none"
+              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
             >
               <option value="All">All History</option>
               <option value="Last 3 Months">Last 3 Months</option>
@@ -948,7 +948,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <div className="rounded-2xl border p-5 flex flex-col justify-between" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
               <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">E2E Procurement Cycle</span>
               <div>
-                <span className="text-3xl font-black text-[#ca8a04]">{initialData.kpis.avgCycleDays} Days</span>
+                <span className="text-3xl font-black text-[#A6761D]">{initialData.kpis.avgCycleDays} Days</span>
                 <p className="text-xs text-muted-foreground mt-1">Average request submission to PO creation time</p>
               </div>
             </div>

@@ -51,12 +51,12 @@ export default function AuthBranding({ size = 88 }: AuthBrandingProps) {
 
       {/* Gold divider */}
       <div className="mt-4 flex items-center justify-center gap-2">
-        <span className="h-px w-10" style={{ backgroundColor: "#C89B3C" }} />
+        <span className="h-px w-10" style={{ backgroundColor: "#A6761D" }} />
         <span
           className="block w-1.5 h-1.5 rotate-45"
-          style={{ backgroundColor: "#C89B3C" }}
+          style={{ backgroundColor: "#A6761D" }}
         />
-        <span className="h-px w-10" style={{ backgroundColor: "#C89B3C" }} />
+        <span className="h-px w-10" style={{ backgroundColor: "#A6761D" }} />
       </div>
     </div>
   );

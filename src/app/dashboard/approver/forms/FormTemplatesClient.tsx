@@ -154,9 +154,9 @@ export default function FormTemplatesClient({ initialTemplates }: FormTemplatesC
   };
 
   const theme = {
-    crimson: "#7e191b",
-    gold: "#dcb353",
-    goldDark: "#b88a1b",
+    crimson: "#7B1E1E",
+    gold: "#A6761D",
+    goldDark: "#A6761D",
     textMain: "#1f2937",
     textMuted: "#6b7280",
     glassBg: "rgba(255, 255, 255, 0.75)",
@@ -186,7 +186,7 @@ export default function FormTemplatesClient({ initialTemplates }: FormTemplatesC
                   style={{
                     width: "100%", textAlign: "left", padding: "0.75rem 1rem", borderRadius: "0.75rem",
                     border: active ? `1.5px solid ${theme.crimson}` : "1px solid rgba(0,0,0,0.06)",
-                    background: active ? "rgba(126, 25, 27, 0.04)" : "#fff",
+                    background: active ? "rgba(123, 30, 30, 0.04)" : "#fff",
                     cursor: "pointer", transition: "all 0.2s", display: "flex", flexDirection: "column"
                   }}
                 >
@@ -266,13 +266,13 @@ export default function FormTemplatesClient({ initialTemplates }: FormTemplatesC
               </div>
 
               {errorMsg && (
-                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "var(--accent)", fontSize: "0.8rem", fontWeight: 600 }}>
+                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(123, 30, 30, 0.1)", color: "var(--accent)", fontSize: "0.8rem", fontWeight: 600 }}>
                   ⚠️ {errorMsg}
                 </div>
               )}
 
               {successMsg && (
-                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "var(--secondary)", fontSize: "0.8rem", fontWeight: 600 }}>
+                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(123, 30, 30, 0.1)", color: "var(--secondary)", fontSize: "0.8rem", fontWeight: 600 }}>
                   ✅ {successMsg}
                 </div>
               )}
@@ -300,7 +300,7 @@ export default function FormTemplatesClient({ initialTemplates }: FormTemplatesC
                           <button
                             onClick={() => handleDeleteField(idx)}
                             disabled={isProcessing}
-                            style={{ padding: "0.25rem 0.5rem", borderRadius: "0.25rem", border: "none", background: "rgba(239,68,68,0.1)", color: "var(--accent)", fontWeight: 700, cursor: "pointer" }}
+                            style={{ padding: "0.25rem 0.5rem", borderRadius: "0.25rem", border: "none", background: "rgba(123, 30, 30, 0.1)", color: "var(--accent)", fontWeight: 700, cursor: "pointer" }}
                           >
                             Delete
                           </button>

@@ -144,22 +144,22 @@ export default function SupplierPoClient({ initialPos, supplierId }: SupplierPoC
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Draft":
-        return { bg: "rgba(107, 114, 128, 0.1)", text: "#6b7280" };
+        return { bg: "rgba(123, 30, 30, 0.1)", text: "#6b7280" };
       case "Approved":
-        return { bg: "rgba(59, 130, 246, 0.1)", text: "#3b82f6" };
+        return { bg: "rgba(123, 30, 30, 0.1)", text: "#7B1E1E" };
       case "Delivered":
-        return { bg: "rgba(16, 185, 129, 0.1)", text: "#10b981" };
+        return { bg: "rgba(123, 30, 30, 0.1)", text: "#7B1E1E" };
       case "Closed":
-        return { bg: "rgba(79, 70, 229, 0.1)", text: "#4f46e5" };
+        return { bg: "rgba(123, 30, 30, 0.1)", text: "#7B1E1E" };
       default:
         return { bg: "rgba(0, 0, 0, 0.05)", text: "#000" };
     }
   };
 
   const theme = {
-    crimson: "#7e191b",
-    gold: "#dcb353",
-    goldDark: "#b88a1b",
+    crimson: "#7B1E1E",
+    gold: "#A6761D",
+    goldDark: "#A6761D",
     textMain: "#1f2937",
     textMuted: "#6b7280",
     glassBg: "rgba(255, 255, 255, 0.75)",
@@ -192,7 +192,7 @@ export default function SupplierPoClient({ initialPos, supplierId }: SupplierPoC
                   style={{
                     width: "100%", textAlign: "left", padding: "1rem", borderRadius: "0.75rem",
                     border: active ? `1px solid ${theme.crimson}` : "1px solid rgba(0,0,0,0.06)",
-                    background: active ? "rgba(126, 25, 27, 0.04)" : "rgba(255,255,255,0.6)",
+                    background: active ? "rgba(123, 30, 30, 0.04)" : "rgba(255,255,255,0.6)",
                     cursor: "pointer", transition: "all 0.2s", display: "flex", flexDirection: "column", gap: "0.4rem"
                   }}
                 >
@@ -243,13 +243,13 @@ export default function SupplierPoClient({ initialPos, supplierId }: SupplierPoC
               </div>
 
               {errorMsg && (
-                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#dc2626", fontSize: "0.8rem", fontWeight: 600 }}>
+                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(123, 30, 30, 0.1)", color: "#7B1E1E", fontSize: "0.8rem", fontWeight: 600 }}>
                   ⚠️ {errorMsg}
                 </div>
               )}
 
               {successMsg && (
-                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "#059669", fontSize: "0.8rem", fontWeight: 600 }}>
+                <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(123, 30, 30, 0.1)", color: "#7B1E1E", fontSize: "0.8rem", fontWeight: 600 }}>
                   ✅ {successMsg}
                 </div>
               )}
@@ -319,7 +319,7 @@ export default function SupplierPoClient({ initialPos, supplierId }: SupplierPoC
                     }}>
                       <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginBottom: "0.25rem" }}>
                         <strong>{receipt.receiptNumber}</strong>
-                        <span style={{ color: "#10b981", fontWeight: 700 }}>{receipt.deliveryStatus}</span>
+                        <span style={{ color: "#7B1E1E", fontWeight: 700 }}>{receipt.deliveryStatus}</span>
                       </div>
                       <div style={{ fontSize: "0.78rem", color: theme.textMuted }}>
                         Received by: <strong>{receipt.receivedBy}</strong> on {new Date(receipt.dateReceived).toLocaleDateString()}
@@ -405,7 +405,7 @@ export default function SupplierPoClient({ initialPos, supplierId }: SupplierPoC
                           width: "100%", padding: "0.7rem", borderRadius: "0.5rem", border: "none",
                           background: `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`, color: "#fff",
                           fontWeight: 700, fontSize: "0.82rem", cursor: "pointer",
-                          boxShadow: "0 4px 12px rgba(126, 25, 27, 0.2)"
+                          boxShadow: "0 4px 12px rgba(123, 30, 30, 0.2)"
                         }}
                       >
                         {isSubmitting ? "Submitting..." : "🚛 File Acknowledgement Receipt"}

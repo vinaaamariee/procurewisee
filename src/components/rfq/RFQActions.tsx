@@ -110,7 +110,7 @@ export default function RFQActions({
             type="button"
             disabled={isPending}
             onClick={onPublish}
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#7B1E1E] text-xs font-bold text-white hover:bg-[#922424] transition shadow-md disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#7B1E1E] text-xs font-bold text-white hover:bg-[#7B1E1E] transition shadow-md disabled:opacity-50"
           >
             <Send className="w-3.5 h-3.5" />
             <span>{isPending ? 'Processing...' : 'Publish RFQ'}</span>

@@ -1,5 +1,15 @@
 # 🏛️ ProcureWise
 
+## Strict Maroon & Gold Enforcement — Whole-System Color Audit
+
+**Date**: August 21, 2026
+
+- **Zero-Tolerance Palette Audit**: Ran a codebase-wide sweep (grep + automated refactor script) over every `.tsx`, `.ts`, and `.css` file under `src/`. 95 files were normalized in this pass; the system now contains **only** Maroon (`#7B1E1E`, hover `#5A1515`) and Gold (`#A6761D`) as chromatic colors plus neutral paper/text/border tokens.
+- **Tailwind Utility Migration**: All chromatic utility classes (`bg-blue-*`, `text-emerald-*`, `bg-amber-*`, `text-violet-*`, `border-rose-*`, etc.) were mapped to brand tokens — cool chromatics to `var(--accent)` / `var(--accent-glass)` / `var(--border-accent)`, warm ambers/oranges/yellows to `var(--secondary)` / `var(--secondary-dim)`. Dark-mode variants now pair `var(--accent)` on light surfaces with `var(--secondary)` text for WCAG AA contrast.
+- **Raw Hex & rgba() Normalization**: Every off-brand hex (navies `#0B3B6E`/`#1A5BA8`, emeralds `#10B981`/`#059669`, violets `#8B5CF6`/`#6366F1`, generic ambers `#F59E0B`/`#DCB353`, off-brand reds `#7E191B`/`#991B1B`/`#DC2626`) was collapsed onto canonical brand values. Chromatic `rgba()` fills (status tints, chart bars, shadows) were hue-classified and re-encoded as maroon `rgba(123,30,30,α)` or gold `rgba(166,118,29,α)`; achromatic black/white overlays were preserved as neutrals.
+- **SVG & Illustration Gradients**: The EmptyState illustration library and document headers now use only maroon→gold linear gradients.
+- **Verification Checklist Passed**: grep confirms zero occurrences of `bg-blue-`, `text-blue-`, `bg-green-`, `text-emerald-`, `bg-amber-`, `text-purple-`, `#0B3B6E`, `#10b981`, `#059669`. `tsc --noEmit`, `eslint`, and `next build` all pass.
+
 ## Full System-Wide Maroon & Gold Brand Palette Unification
 
 **Date**: August 21, 2026

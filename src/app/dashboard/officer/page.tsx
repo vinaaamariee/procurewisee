@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import { startTimer } from "@/lib/performance-logger";
@@ -27,18 +27,15 @@ import {
   BookOpen,
 } from "lucide-react";
 
-export const metadata = { title: "Procurement Staff Dashboard — ProcureWise" };
+export const metadata = { title: "Procurement Staff Dashboard â€” ProcureWise" };
 
 const DAY_MS = 1000 * 60 * 60 * 24;
 
-type StageTone = "blue" | "violet" | "amber" | "rose" | "emerald";
+type StageTone = "gold" | "maroon";
 
 const stageTone: Record<StageTone, string> = {
-  blue: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]",
-  violet: "bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300",
-  amber: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]",
-  rose: "bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-300",
-  emerald: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]",
+  maroon: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]",
+  gold: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]",
 };
 
 type ActionItem = {
@@ -70,7 +67,7 @@ function deriveStage(
       activity: drafting ? "Finalize Purchase Order" : "Manage Purchase Order",
       action: "View PO",
       href: `/dashboard/officer/po/${po.id}`,
-      tone: "emerald",
+      tone: "maroon",
     };
   }
 
@@ -80,7 +77,7 @@ function deriveStage(
       activity: "Record the verified PR into the PMR register",
       action: "Record PMR",
       href: pmrId ? `/dashboard/officer/pmr/${pmrId}` : "/dashboard/officer/pmr",
-      tone: "blue",
+      tone: "gold",
     };
   }
 
@@ -91,7 +88,7 @@ function deriveStage(
         activity: "Publish and distribute the RFQ to suppliers",
         action: "Distribute RFQ",
         href: `/dashboard/officer/rfq/${rfq.id}`,
-        tone: "violet",
+        tone: "maroon",
       };
     case "Published":
     case "Closed":
@@ -100,7 +97,7 @@ function deriveStage(
         activity: "Forward the canvass documents to the BAC",
         action: "Transmit to BAC",
         href: "/dashboard/officer/transmittals",
-        tone: "amber",
+        tone: "gold",
       };
     case "Evaluated":
       return {
@@ -108,7 +105,7 @@ function deriveStage(
         activity: "Generate the Purchase Order from the approved award",
         action: "Generate PO",
         href: "/dashboard/officer/po",
-        tone: "emerald",
+        tone: "maroon",
       };
     default:
       return {
@@ -116,13 +113,13 @@ function deriveStage(
         activity: "Manage the RFQ document",
         action: "Open RFQ",
         href: `/dashboard/officer/rfq/${rfq.id}`,
-        tone: "violet",
+        tone: "maroon",
       };
   }
 }
 
 function priorityOf(days: number) {
-  if (days >= 5) return { label: "High", cls: "text-rose-600 dark:text-rose-400" };
+  if (days >= 5) return { label: "High", cls: "text-[var(--accent)] dark:text-[var(--secondary)]" };
   if (days >= 2) return { label: "Medium", cls: "text-[var(--secondary)] dark:text-[var(--secondary)]" };
   return { label: "Low", cls: "text-[var(--accent)] dark:text-[var(--secondary)]" };
 }
@@ -260,16 +257,16 @@ const STAFF_ACTION_TYPES = [
 const ACTIVITY_META: Record<string, { label: string; icon: any; tone: string }> = {
   CREATE_PMR: { label: "PMR Recorded", icon: ClipboardCheck, tone: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]" },
   UPDATE_PMR: { label: "PMR Updated", icon: ClipboardCheck, tone: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]" },
-  CREATE_RFQ: { label: "RFQ Generated", icon: FileText, tone: "bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300" },
-  CONVERT_PR_TO_RFQ: { label: "RFQ Generated", icon: FileText, tone: "bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300" },
-  PUBLISH_RFQ: { label: "RFQ Distributed", icon: Send, tone: "bg-sky-50 text-sky-700 dark:bg-sky-900/20 dark:text-sky-300" },
+  CREATE_RFQ: { label: "RFQ Generated", icon: FileText, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
+  CONVERT_PR_TO_RFQ: { label: "RFQ Generated", icon: FileText, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
+  PUBLISH_RFQ: { label: "RFQ Distributed", icon: Send, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
   CLOSE_RFQ: { label: "RFQ Closed", icon: Lock, tone: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300" },
   APPROVE_RECOMMENDATION: { label: "BAC Resolution Created", icon: Award, tone: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]" },
-  SUBMIT_SUPPLIER_EVALUATION: { label: "Supplier Evaluation Submitted", icon: Star, tone: "bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300" },
+  SUBMIT_SUPPLIER_EVALUATION: { label: "Supplier Evaluation Submitted", icon: Star, tone: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]" },
   CREATE_PO: { label: "Purchase Order Generated", icon: ShoppingCart, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
   UPDATE_PO: { label: "Purchase Order Updated", icon: ShoppingCart, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
   STATUS_CHANGE_PO: { label: "Purchase Order Status Updated", icon: ShoppingCart, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
-  CREATE_RECEIPT: { label: "Delivery Received", icon: Truck, tone: "bg-teal-50 text-teal-700 dark:bg-teal-900/20 dark:text-teal-300" },
+  CREATE_RECEIPT: { label: "Delivery Received", icon: Truck, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
 };
 
 function extractRef(newState: unknown): string | null {
@@ -367,7 +364,7 @@ export default async function ProcurementStaffDashboard() {
       desc: "Solicitations currently published",
       href: "/dashboard/officer/rfq",
       Icon: FileText,
-      accentClass: "bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300",
+      accentClass: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]",
     },
     {
       label: "Pending Purchase Orders",
@@ -462,7 +459,7 @@ export default async function ProcurementStaffDashboard() {
                     </div>
                     <p className="text-xs text-base-content/80 font-medium mt-1 line-clamp-1">{item.title}</p>
                     <p className="text-[10px] text-base-content/50 mt-0.5">
-                      {item.office} · Due {fmtDate(item.dueDate)} ·{" "}
+                      {item.office} Â· Due {fmtDate(item.dueDate)} Â·{" "}
                       <span className={`font-bold ${priority.cls}`}>{priority.label}</span> priority
                     </p>
                   </div>
@@ -547,8 +544,8 @@ export default async function ProcurementStaffDashboard() {
                 <div className={i < activity.length - 1 ? "pb-3" : ""}>
                   <p className="text-xs font-bold text-base-content">{a.label}</p>
                   <p className="text-[10px] text-base-content/50 mt-0.5">
-                    {a.ref ? `${a.ref} · ` : ""}
-                    {a.user} · {a.time}
+                    {a.ref ? `${a.ref} Â· ` : ""}
+                    {a.user} Â· {a.time}
                   </p>
                 </div>
               </li>
@@ -585,8 +582,8 @@ export default async function ProcurementStaffDashboard() {
 
           <div className="rounded-md bg-base-200/60 px-3 py-2.5">
             <p className="text-[10px] font-semibold text-base-content/60 leading-relaxed">
-              Full pipeline: Verified PR → PMR → RFQ → Supplier Evaluation → BAC → Notice of
-              Award → Purchase Order → Delivery.
+              Full pipeline: Verified PR â†’ PMR â†’ RFQ â†’ Supplier Evaluation â†’ BAC â†’ Notice of
+              Award â†’ Purchase Order â†’ Delivery.
             </p>
           </div>
         </div>

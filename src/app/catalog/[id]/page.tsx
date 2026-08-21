@@ -103,7 +103,7 @@ export default async function ProductDetailPage({ params }: ProductPageProps) {
               className="relative flex h-72 items-center justify-center"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(126,25,27,0.05) 0%, rgba(202,138,4,0.05) 100%)",
+                  "linear-gradient(135deg, rgba(123, 30, 30, 0.05) 0%, rgba(166, 118, 29, 0.05) 100%)",
               }}
             >
               <Package

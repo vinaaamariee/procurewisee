@@ -47,14 +47,14 @@ function getTrendConfig(trend: string) {
         icon: Minus,
         label: "Stable",
         color: "var(--text-secondary)",
-        bgColor: "rgba(107, 114, 128, 0.08)",
+        bgColor: "rgba(123, 30, 30, 0.08)",
       };
     default:
       return {
         icon: HelpCircle,
         label: "Unknown",
         color: "var(--text-muted)",
-        bgColor: "rgba(156, 163, 175, 0.08)",
+        bgColor: "rgba(123, 30, 30, 0.08)",
       };
   }
 }
@@ -80,7 +80,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
       >
         <div
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-          style={{ background: "rgba(107,114,128,0.1)" }}
+          style={{ background: "rgba(123, 30, 30, 0.1)" }}
         >
           <AlertCircle className="h-5 w-5" style={{ color: "var(--text-muted)" }} />
         </div>
@@ -126,15 +126,15 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
         className="flex flex-col gap-4 border-b px-6 py-5 sm:flex-row sm:items-center sm:justify-between"
         style={{
           borderColor: "var(--border)",
-          background: "linear-gradient(135deg, rgba(126,25,27,0.04) 0%, rgba(202,138,4,0.04) 100%)",
+          background: "linear-gradient(135deg, rgba(123, 30, 30, 0.04) 0%, rgba(166, 118, 29, 0.04) 100%)",
         }}
       >
         <div className="flex items-center gap-3">
           <div
             className="flex h-11 w-11 items-center justify-center rounded-xl shadow-inner"
             style={{
-              background: "rgba(126, 25, 27, 0.08)",
-              border: "1px solid rgba(126, 25, 27, 0.15)",
+              background: "rgba(123, 30, 30, 0.08)",
+              border: "1px solid rgba(123, 30, 30, 0.15)",
             }}
           >
             <Sparkles className="h-5 w-5" style={{ color: "var(--accent)" }} />

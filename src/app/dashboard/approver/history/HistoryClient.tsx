@@ -46,36 +46,36 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
       key: 'pending',
       label: 'Pending',
       count: prs.filter(pr => pr.status === 'Submitted').length,
-      color: '#1e3a8a',
-      bg: 'rgba(30, 58, 138, 0.08)',
+      color: '#7B1E1E',
+      bg: 'rgba(123, 30, 30, 0.08)',
     },
     {
       key: 'under_review',
       label: 'Under Review',
       count: prs.filter(pr => pr.status === 'UnderReview').length,
-      color: '#b45309',
-      bg: 'rgba(180, 83, 9, 0.08)',
+      color: '#A6761D',
+      bg: 'rgba(166, 118, 29, 0.08)',
     },
     {
       key: 'approved',
       label: 'Verified',
       count: prs.filter(pr => pr.status === 'Approved' || pr.status === 'Received').length,
-      color: '#047857',
-      bg: 'rgba(4, 120, 87, 0.08)',
+      color: '#7B1E1E',
+      bg: 'rgba(123, 30, 30, 0.08)',
     },
     {
       key: 'returned',
       label: 'Returned for Revision',
       count: prs.filter(pr => ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status)).length,
       color: 'var(--accent)',
-      bg: 'rgba(220, 38, 38, 0.08)',
+      bg: 'rgba(123, 30, 30, 0.08)',
     },
     {
       key: 'rejected',
       label: 'Rejected',
       count: prs.filter(pr => pr.status === 'Rejected').length,
-      color: '#7f1d1d',
-      bg: 'rgba(127, 29, 29, 0.08)',
+      color: '#7B1E1E',
+      bg: 'rgba(123, 30, 30, 0.08)',
     },
   ];
 
@@ -109,8 +109,8 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
 
   // Color constants
   const theme = {
-    crimson: '#7e191b',
-    goldDark: '#b88a1b',
+    crimson: '#7B1E1E',
+    goldDark: '#A6761D',
     surface: 'var(--surface)',
     border: 'var(--border)',
     textPrimary: 'var(--text-primary)',
@@ -267,14 +267,14 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
                         fontSize: '0.75rem',
                         fontWeight: 700,
                         backgroundColor: 
-                          pr.status === 'Approved' || pr.status === 'Received' ? 'rgba(16, 185, 129, 0.1)' :
-                          ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'rgba(239, 68, 68, 0.1)' :
-                          pr.status === 'Rejected' ? 'rgba(127, 29, 29, 0.1)' :
-                          pr.status === 'UnderReview' ? 'rgba(217, 119, 6, 0.1)' : 'rgba(30, 58, 138, 0.08)',
+                          pr.status === 'Approved' || pr.status === 'Received' ? 'rgba(123, 30, 30, 0.1)' :
+                          ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'rgba(123, 30, 30, 0.1)' :
+                          pr.status === 'Rejected' ? 'rgba(123, 30, 30, 0.1)' :
+                          pr.status === 'UnderReview' ? 'rgba(166, 118, 29, 0.1)' : 'rgba(123, 30, 30, 0.08)',
                         color: 
                           pr.status === 'Approved' || pr.status === 'Received' ? 'var(--secondary)' :
                           ['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'var(--accent)' :
-                          pr.status === 'Rejected' ? '#7f1d1d' :
+                          pr.status === 'Rejected' ? '#7B1E1E' :
                           pr.status === 'UnderReview' ? 'var(--secondary)' : 'var(--accent)',
                       }}>
                         {['ReturnedForRevision', 'Returned for Revision'].includes(pr.status) ? 'Returned for Revision' :
@@ -305,7 +305,7 @@ export default function HistoryClient({ prs }: HistoryClientProps) {
                         fontSize: '0.75rem',
                         textDecoration: 'none',
                         borderRadius: '0.5rem',
-                        boxShadow: '0 2px 6px rgba(126,25,27,0.15)',
+                        boxShadow: '0 2px 6px rgba(123, 30, 30, 0.15)',
                         transition: 'opacity 0.2s'
                       }} className="hover:opacity-90">
                         {activeTab === 'pending' || activeTab === 'under_review' ? 'Review PR' : 'View Details'}

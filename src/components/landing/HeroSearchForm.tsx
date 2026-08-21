@@ -37,7 +37,7 @@ export default function HeroSearchForm() {
       </div>
       <button
         type="submit"
-        className="flex-shrink-0 rounded-xl sm:rounded-full bg-[#7B1E1E] hover:bg-[#5E1414] active:scale-[0.98] px-7 py-3 text-xs sm:text-sm font-bold text-white shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
+        className="flex-shrink-0 rounded-xl sm:rounded-full bg-[#7B1E1E] hover:bg-[#5A1515] active:scale-[0.98] px-7 py-3 text-xs sm:text-sm font-bold text-white shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer"
       >
         Search Catalog
       </button>

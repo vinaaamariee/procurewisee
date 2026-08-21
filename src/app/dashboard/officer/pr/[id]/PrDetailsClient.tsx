@@ -347,7 +347,7 @@ export default function PrDetailsClient({ initialPr, budgets, officerId, canVeri
       case "Returned for Revision":
         return { label: "Returned", cls: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--accent)] border-[var(--border-accent)]" };
       case "Approved":
-        return { label: "Verified", cls: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)] border-emerald-350" };
+        return { label: "Verified", cls: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)] border-[var(--accent)]" };
       default:
         return { label: status, cls: "bg-gray-100 text-gray-700 border-gray-300" };
     }

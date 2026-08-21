@@ -31,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         className="relative flex h-44 items-center justify-center overflow-hidden"
         style={{
           background:
-            "linear-gradient(135deg, rgba(126,25,27,0.06) 0%, rgba(202,138,4,0.06) 100%)",
+            "linear-gradient(135deg, rgba(123, 30, 30, 0.06) 0%, rgba(166, 118, 29, 0.06) 100%)",
         }}
       >
         {product.imageUrl ? (
@@ -117,7 +117,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <Link
               href={`/end-user/ppmp?add_product=${product.id}`}
               className="flex items-center justify-center gap-1 py-2 px-3 rounded-lg text-white font-bold text-[10px] hover:opacity-90 transition duration-150 cursor-pointer"
-              style={{ background: "linear-gradient(135deg, var(--accent) 0%, #1e40af 100%)" }}
+              style={{ background: "linear-gradient(135deg, var(--accent) 0%, #7B1E1E 100%)" }}
             >
               Add to PPMP
             </Link>

@@ -97,7 +97,7 @@ function MarketplaceHeader({
         <div className="flex items-center justify-between gap-4 h-16">
           {/* Brand */}
           <div className="flex items-center gap-3 shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7B1E1E] to-[#1a5ba8] flex items-center justify-center shadow-md">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7B1E1E] to-[#7B1E1E] flex items-center justify-center shadow-md">
               <Package className="w-4.5 h-4.5 text-white" />
             </div>
             <div className="hidden sm:block">
@@ -119,7 +119,7 @@ function MarketplaceHeader({
                 placeholder="Search catalog items, brands, specifications…"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm outline-none focus:border-[#0B3B6E] focus:ring-2 focus:ring-[#0B3B6E]/10 transition-all placeholder:text-gray-400"
+                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm outline-none focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/10 transition-all placeholder:text-gray-400"
               />
             </div>
           </div>
@@ -167,7 +167,7 @@ function MarketplaceHeader({
 
 function HeroSection() {
   return (
-    <section className="bg-gradient-to-br from-[#7B1E1E] via-[#9b2626] to-[#A6761D] text-white">
+    <section className="bg-gradient-to-br from-[#7B1E1E] via-[#7B1E1E] to-[#A6761D] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left */}
@@ -189,7 +189,7 @@ function HeroSection() {
             <div className="flex flex-wrap gap-3 pt-2">
               <Link
                 href="/catalog"
-                className="inline-flex items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--secondary-dark,#8a621a)] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg shadow-md"
+                className="inline-flex items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--secondary-dark,#A6761D)] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg shadow-md"
               >
                 <Package className="w-4 h-4" />
                 Browse Catalog
@@ -246,7 +246,7 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
       href: "/catalog",
       cta: "View Catalog →",
       color: "var(--accent)",
-      bg: "rgba(11,59,110,0.06)",
+      bg: "rgba(123, 30, 30, 0.06)",
     },
     {
       icon: ClipboardList,
@@ -255,7 +255,7 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
       href: "/dashboard/end-user/ppmp",
       cta: "Start Planning →",
       color: "var(--secondary)",
-      bg: "rgba(212,160,23,0.06)",
+      bg: "rgba(166, 118, 29, 0.06)",
     },
     {
       icon: FileText,
@@ -264,7 +264,7 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
       href: "/dashboard/end-user/pr",
       cta: "Submit PR →",
       color: "var(--secondary)",
-      bg: "rgba(5,150,105,0.06)",
+      bg: "rgba(123, 30, 30, 0.06)",
     },
     {
       icon: MapPin,
@@ -272,8 +272,8 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
       desc: "Track the status of your procurement request using your tracking code.",
       href: "/track",
       cta: "Track Now →",
-      color: "#6366f1",
-      bg: "rgba(99,102,241,0.06)",
+      color: "#7B1E1E",
+      bg: "rgba(123, 30, 30, 0.06)",
     },
   ];
 
@@ -348,7 +348,7 @@ function FilterToolbar({
             placeholder="Search…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:border-[#0B3B6E] transition"
+            className="w-full pl-9 pr-3 py-2 text-xs bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:border-[#7B1E1E] transition"
           />
         </div>
 
@@ -356,7 +356,7 @@ function FilterToolbar({
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="flex-1 min-w-[130px] max-w-[200px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#0B3B6E] cursor-pointer transition"
+          className="flex-1 min-w-[130px] max-w-[200px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#7B1E1E] cursor-pointer transition"
         >
           <option value="">All Categories</option>
           {categories.map((c: string) => (
@@ -368,7 +368,7 @@ function FilterToolbar({
         <select
           value={selectedBrand}
           onChange={(e) => setSelectedBrand(e.target.value)}
-          className="flex-1 min-w-[120px] max-w-[180px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#0B3B6E] cursor-pointer transition"
+          className="flex-1 min-w-[120px] max-w-[180px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#7B1E1E] cursor-pointer transition"
         >
           <option value="">All Brands</option>
           {brands.map((b: string) => (
@@ -380,7 +380,7 @@ function FilterToolbar({
         <select
           value={selectedSupplier}
           onChange={(e) => setSelectedSupplier(e.target.value)}
-          className="flex-1 min-w-[140px] max-w-[220px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#0B3B6E] cursor-pointer transition"
+          className="flex-1 min-w-[140px] max-w-[220px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#7B1E1E] cursor-pointer transition"
         >
           <option value="">All Suppliers</option>
           {suppliers.map((s: any) => (
@@ -395,7 +395,7 @@ function FilterToolbar({
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#0B3B6E] cursor-pointer transition"
+          className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#7B1E1E] cursor-pointer transition"
         >
           <option value="popularity">Popularity</option>
           <option value="newest">Newest Added</option>
@@ -717,7 +717,7 @@ function CheckoutModal({
   onSubmit: (e: React.FormEvent) => void;
 }) {
   const inputClass =
-    "w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-[#0B3B6E] focus:ring-2 focus:ring-[#0B3B6E]/10 transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500";
+    "w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/10 transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500";
   const labelClass =
     "block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5";
 
@@ -861,7 +861,7 @@ function CheckoutModal({
           </div>
 
           {/* Policy note */}
-          <div className="bg-[var(--secondary)]/08 dark:bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-xl p-4 text-xs text-[var(--secondary)] dark:text-[#f5c842] leading-relaxed font-medium">
+          <div className="bg-[var(--secondary)]/08 dark:bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-xl p-4 text-xs text-[var(--secondary)] dark:text-[#A6761D] leading-relaxed font-medium">
             <strong>Budget Check Policy:</strong> Generates a Purchase Request Draft and allocates estimates
             against department budget allocations automatically. Revisions are logged asynchronously.
           </div>
@@ -1147,7 +1147,7 @@ export default function MarketplaceClient({
   // Render
   // ─────────────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#F7F8FA] dark:bg-slate-950 text-gray-900 dark:text-white font-sans">
+    <div className="min-h-screen bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white font-sans">
       {/* Header */}
       <MarketplaceHeader
         searchQuery={searchQuery}

@@ -40,7 +40,7 @@ export default function BudgetWidget({
             fontWeight: 700,
             padding: "0.25rem 0.5rem",
             borderRadius: "6px",
-            background: isOverBudget ? "rgba(220, 38, 38, 0.1)" : "rgba(16, 185, 129, 0.1)",
+            background: isOverBudget ? "rgba(123, 30, 30, 0.1)" : "rgba(123, 30, 30, 0.1)",
             color: isOverBudget ? "var(--accent)" : "var(--secondary)",
           }}
         >
@@ -112,7 +112,7 @@ export default function BudgetWidget({
             style={{
               width: `${Math.min(utilization, 100)}%`,
               height: "100%",
-              backgroundColor: isOverBudget ? "var(--accent)" : "#b88a1b",
+              backgroundColor: isOverBudget ? "var(--accent)" : "#A6761D",
               borderRadius: "999px",
               transition: "width 0.3s ease",
             }}

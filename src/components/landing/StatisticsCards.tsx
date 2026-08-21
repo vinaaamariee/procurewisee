@@ -74,7 +74,7 @@ export default function StatisticsCards({
                   )}
                 </div>
 
-                <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--accent)] dark:text-[var(--secondary)] bg-[var(--accent-glass)] dark:bg-emerald-950/40 rounded-full px-2.5 py-1">
+                <div className="flex items-center gap-1 text-[11px] font-bold text-[var(--accent)] dark:text-[var(--secondary)] bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)] rounded-full px-2.5 py-1">
                   <TrendingUp className="h-3 w-3" />
                   <span>{stat.trend || "Live"}</span>
                 </div>

@@ -159,18 +159,18 @@ export default function EndUserClient({ products }: EndUserClientProps) {
   return (
     <div className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] flex flex-col">
       {/* Header Banner */}
-      <header className="sticky top-0 z-50 bg-[#FAF9F6] border-b-2 border-[#ca8a04]/25 shadow-sm">
+      <header className="sticky top-0 z-50 bg-[#FAF9F6] border-b-2 border-[#A6761D]/25 shadow-sm">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-lg bg-gradient-to-tr from-[#7e191b] to-[#ca8a04] flex items-center justify-center text-white font-black text-sm">
+            <div className="w-11 h-11 rounded-lg bg-gradient-to-tr from-[#7B1E1E] to-[#A6761D] flex items-center justify-center text-white font-black text-sm">
               PW
             </div>
             <div>
-              <h1 className="text-xl font-extrabold text-[#7e191b] tracking-tight">PROCUREWISE</h1>
+              <h1 className="text-xl font-extrabold text-[#7B1E1E] tracking-tight">PROCUREWISE</h1>
               <p className="text-[10px] text-gray-500 uppercase tracking-widest">Batanes State College • Internal Procurement</p>
             </div>
           </div>
-          <div className="bg-[#ca8a04]/10 border border-[#ca8a04]/30 rounded-full px-4 py-1.5 text-xs text-[#ca8a04] font-bold">
+          <div className="bg-[#A6761D]/10 border border-[#A6761D]/30 rounded-full px-4 py-1.5 text-xs text-[#A6761D] font-bold">
             Frictionless Requisition Client
           </div>
         </div>
@@ -182,7 +182,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
         <section className="lg:col-span-2 space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-4">
             <div>
-              <h2 className="text-2xl font-extrabold text-[#7e191b]">Office Supplies Catalog</h2>
+              <h2 className="text-2xl font-extrabold text-[#7B1E1E]">Office Supplies Catalog</h2>
               <p className="text-sm text-gray-500">Request supplies for your department.</p>
             </div>
 
@@ -193,12 +193,12 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                 placeholder="Search supplies..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-[#ca8a04] bg-white transition w-full md:w-48"
+                className="border border-gray-300 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-[#A6761D] bg-white transition w-full md:w-48"
               />
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-[#ca8a04] bg-white transition cursor-pointer"
+                className="border border-gray-300 rounded-lg px-3 py-1.5 text-xs outline-none focus:border-[#A6761D] bg-white transition cursor-pointer"
               >
                 <option value="">All Categories</option>
                 {categories.map(cat => (
@@ -225,7 +225,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                 >
                   <div className="space-y-2">
                     <div className="flex justify-between items-start">
-                      <span className="text-[10px] font-bold text-[#ca8a04] bg-[#ca8a04]/10 rounded px-2 py-0.5 uppercase">
+                      <span className="text-[10px] font-bold text-[#A6761D] bg-[#A6761D]/10 rounded px-2 py-0.5 uppercase">
                         {product.category}
                       </span>
                       {!product.isActive && (
@@ -247,7 +247,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                       onClick={() => addToCart(product)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
                         product.isActive 
-                          ? 'bg-[#7e191b] hover:bg-[#962124] text-white' 
+                          ? 'bg-[#7B1E1E] hover:bg-[#7B1E1E] text-white' 
                           : 'bg-gray-100 text-gray-400 cursor-not-allowed'
                       }`}
                     >
@@ -313,7 +313,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
               </div>
               <button
                 onClick={() => setIsCheckoutOpen(true)}
-                className="w-full bg-[#7e191b] hover:bg-[#962124] text-white py-2.5 rounded-lg font-bold text-xs transition uppercase tracking-wider"
+                className="w-full bg-[#7B1E1E] hover:bg-[#7B1E1E] text-white py-2.5 rounded-lg font-bold text-xs transition uppercase tracking-wider"
               >
                 Proceed to Request Submission
               </button>
@@ -326,7 +326,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
       {isCheckoutOpen && (
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white border border-[#E7E5E0] rounded-xl max-w-md w-full p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
-            <h3 className="text-xl font-bold text-[#7e191b] mb-1">Department Requisition</h3>
+            <h3 className="text-xl font-bold text-[#7B1E1E] mb-1">Department Requisition</h3>
             <p className="text-xs text-gray-500 mb-6 font-medium">Please specify the routing credentials below.</p>
 
             {errorMessage && (
@@ -342,7 +342,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                   type="text" required 
                   value={formData.name} 
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full border border-gray-300 rounded-lg p-2.5 text-xs outline-none focus:border-[#ca8a04] bg-[#FAF9F6] transition"
+                  className="w-full border border-gray-300 rounded-lg p-2.5 text-xs outline-none focus:border-[#A6761D] bg-[#FAF9F6] transition"
                   placeholder="E.g., Dr. Juan Dela Cruz"
                 />
               </div>
@@ -353,7 +353,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                   type="text" required 
                   value={formData.department} 
                   onChange={(e) => setFormData({...formData, department: e.target.value})}
-                  className="w-full border border-gray-300 rounded-lg p-2.5 text-xs outline-none focus:border-[#ca8a04] bg-[#FAF9F6] transition"
+                  className="w-full border border-gray-300 rounded-lg p-2.5 text-xs outline-none focus:border-[#A6761D] bg-[#FAF9F6] transition"
                   placeholder="E.g., College of Arts and Sciences"
                 />
               </div>
@@ -364,12 +364,12 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                   type="email" required 
                   value={formData.email} 
                   onChange={(e) => setFormData({...formData, email: e.target.value})}
-                  className="w-full border border-gray-300 rounded-lg p-2.5 text-xs outline-none focus:border-[#ca8a04] bg-[#FAF9F6] transition"
+                  className="w-full border border-gray-300 rounded-lg p-2.5 text-xs outline-none focus:border-[#A6761D] bg-[#FAF9F6] transition"
                   placeholder="E.g., juandelacruz@bsc.edu.ph"
                 />
               </div>
 
-              <div className="bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-lg p-4 text-[11px] leading-relaxed text-[#ca8a04]">
+              <div className="bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-lg p-4 text-[11px] leading-relaxed text-[#A6761D]">
                 <strong>BSC Budget Control Policy:</strong> Requisitions are immediately routed and checked against department annual allocations. A secure tracking token is provided upon submission.
               </div>
 
@@ -385,7 +385,7 @@ export default function EndUserClient({ products }: EndUserClientProps) {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-[#7e191b] hover:bg-[#962124] text-white py-2.5 rounded-lg text-xs font-bold transition uppercase tracking-wider flex items-center justify-center"
+                  className="flex-1 bg-[#7B1E1E] hover:bg-[#7B1E1E] text-white py-2.5 rounded-lg text-xs font-bold transition uppercase tracking-wider flex items-center justify-center"
                 >
                   {loading ? "Filing PR..." : "Submit Requisition"}
                 </button>

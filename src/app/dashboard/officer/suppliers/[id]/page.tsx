@@ -169,7 +169,7 @@ export default async function SupplierDetailPage({ params }: PageProps) {
         arrowClass = "text-[var(--accent)]";
       } else if (s.score < prev) {
         arrow = "▼";
-        arrowClass = "text-rose-600";
+        arrowClass = "text-[var(--accent)]";
       }
     }
     return { ...s, arrow, arrowClass };
@@ -223,7 +223,7 @@ export default async function SupplierDetailPage({ params }: PageProps) {
           value={`${qualityCompliance}%`}
           desc="Historical quality compliance rate"
           Icon={ShoppingCart}
-          accentClass="bg-violet-50 text-violet-700 dark:bg-violet-900/20 dark:text-violet-300"
+          accentClass="bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]"
         />
       </div>
 

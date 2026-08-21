@@ -17,14 +17,14 @@
   left: 0; 
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #7B1E1E 0 34%, #D4A017 34% 67%, #B7202E 67% 100%);
+  background: linear-gradient(90deg, #7B1E1E 0 34%, #A6761D 34% 67%, #7B1E1E 67% 100%);
   z-index: 50;
 }
 
 /* --- Left Panel --- */
 .leftPanel {
   width: 50%;
-  background: linear-gradient(135deg, #74171B 0%, #4B0B0E 100%);
+  background: linear-gradient(135deg, #7B1E1E 0%, #5A1515 100%);
   position: relative;
   padding: 3.5rem;
   display: flex;
@@ -83,7 +83,7 @@
 }
 
 .logoW {
-  color: #D4A017;
+  color: #A6761D;
 }
 
 .logoTitle {
@@ -96,7 +96,7 @@
 }
 
 .logoSubtitle {
-  color: #D4A017;
+  color: #A6761D;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.2px;
@@ -163,7 +163,7 @@
 
 .cardHeader h2 {
   font-size: 12px;
-  color: #D4A017;
+  color: #A6761D;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -276,8 +276,8 @@
 }
 
 .submitButton:hover {
-  background: #5E1414;
-  border-color: #5E1414;
+  background: #5A1515;
+  border-color: #5A1515;
   transform: translateY(-1px);
 }
 
@@ -306,14 +306,14 @@
 }
 
 .alertError {
-  border-color: rgba(183, 32, 46, 0.2);
-  background-color: rgba(183, 32, 46, 0.03);
+  border-color: rgba(123, 30, 30, 0.2);
+  background-color: rgba(123, 30, 30, 0.03);
   color: var(--alert);
 }
 
 .alertSuccess {
-  border-color: rgba(37, 108, 62, 0.2);
-  background-color: rgba(37, 108, 62, 0.03);
+  border-color: rgba(123, 30, 30, 0.2);
+  background-color: rgba(123, 30, 30, 0.03);
   color: var(--green);
 }
 
@@ -378,24 +378,24 @@
 
 /* --- Dark Mode overrides --- */
 :global(.dark) .loginCard {
-  background-color: #161D2C;
-  border-color: #2A3345;
+  background-color: #211B17;
+  border-color: #2B241F;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
 }
 
 :global(.dark) .inputField {
-  background-color: #0E1420;
-  border-color: #2A3345;
-  color: #EEF1F6;
+  background-color: #181411;
+  border-color: #2B241F;
+  color: #FAF9F6;
 }
 
 :global(.dark) .inputField:focus {
-  border-color: #D4A017;
-  box-shadow: 0 0 0 4px rgba(212, 160, 23, 0.15);
+  border-color: #A6761D;
+  box-shadow: 0 0 0 4px rgba(166, 118, 29, 0.15);
 }
 
 :global(.dark) .forgotPassword:hover {
-  color: #D4A017;
+  color: #A6761D;
 }
 
 :global(.dark) .submitButton {
@@ -404,8 +404,8 @@
 }
 
 :global(.dark) .submitButton:hover {
-  background: #952929;
-  border-color: #952929;
+  background: #7B1E1E;
+  border-color: #7B1E1E;
 }
 
 /* --- Responsive Layout --- */

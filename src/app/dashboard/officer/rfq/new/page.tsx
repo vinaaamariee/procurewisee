@@ -65,7 +65,7 @@ export default async function NewRfqPage({ searchParams }: PageProps) {
             <p className="text-sm text-[var(--text-primary)] mt-4">
               Unable to load Approved Purchase Requests from the database. Please try again.
             </p>
-            <pre className="text-xs text-[var(--accent)] dark:text-[var(--accent)] whitespace-pre-wrap break-all mt-4 p-4 border border-[var(--border-accent)] dark:border-red-800 bg-white dark:bg-slate-900 rounded-xl">
+            <pre className="text-xs text-[var(--accent)] dark:text-[var(--accent)] whitespace-pre-wrap break-all mt-4 p-4 border border-[var(--border-accent)] dark:border-[var(--accent)] bg-white dark:bg-slate-900 rounded-xl">
               {fetchError}
             </pre>
           </Card>

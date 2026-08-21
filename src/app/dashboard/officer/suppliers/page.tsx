@@ -13,7 +13,7 @@ const fmtDate = (d: Date) =>
 
 const philGepsTone: Record<string, string> = {
   Registered: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]",
-  Expired: "bg-rose-50 text-rose-700 dark:bg-rose-900/20 dark:text-rose-300",
+  Expired: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]",
   "Not Registered": "bg-base-200 text-base-content/60 dark:bg-base-300/50",
 };
 

@@ -20,7 +20,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
         <div className="max-w-md p-6 bg-white rounded-xl shadow-sm border border-[#E7E5E0] text-center">
-          <h1 className="text-xl font-bold text-[#7e191b] mb-2">Too Many Requests</h1>
+          <h1 className="text-xl font-bold text-[#7B1E1E] mb-2">Too Many Requests</h1>
           <p className="text-sm text-gray-600">
             You&apos;ve made too many tracking lookups. Please wait a minute and try again.
           </p>
@@ -157,17 +157,17 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
       <header className="bg-white border-b border-[#E7E5E0] shadow-sm">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/end-user" className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#7e191b] to-[#ca8a04] flex items-center justify-center text-white font-black text-xs">
+            <Link href="/end-user" className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#7B1E1E] to-[#A6761D] flex items-center justify-center text-white font-black text-xs">
               PW
             </Link>
             <div>
-              <h1 className="text-lg font-black text-[#7e191b]">ProcureWise Tracking</h1>
+              <h1 className="text-lg font-black text-[#7B1E1E]">ProcureWise Tracking</h1>
               <p className="text-[9px] text-gray-500 uppercase tracking-widest">Batanes State College</p>
             </div>
           </div>
           <Link 
             href="/" 
-            className="text-xs font-bold text-[#7e191b] border border-[#7e191b]/30 rounded-lg px-3 py-1.5 hover:bg-[#7e191b]/5 transition"
+            className="text-xs font-bold text-[#7B1E1E] border border-[#7B1E1E]/30 rounded-lg px-3 py-1.5 hover:bg-[#7B1E1E]/5 transition"
           >
             ← Back to Homepage
           </Link>
@@ -207,7 +207,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
 
         {/* Process History Logs */}
         <section className="bg-white border border-[#E7E5E0] rounded-xl p-6 shadow-sm">
-          <h3 className="text-lg font-bold text-[#7e191b] border-b pb-3 mb-6">Status Log & Remarks History</h3>
+          <h3 className="text-lg font-bold text-[#7B1E1E] border-b pb-3 mb-6">Status Log & Remarks History</h3>
 
           <div className="relative border-l-2 border-gray-200 pl-6 ml-3 space-y-6">
             {requisition.statusHistory.map((historyItem: any, idx: number) => {
@@ -288,8 +288,8 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
                 </tr>
               ))}
               <tr className="bg-gray-50 font-bold">
-                <td colSpan={3} className="p-4 text-right text-[#7e191b] uppercase">Estimated Grand Total Value</td>
-                <td className="p-4 text-right text-base text-[#7e191b] font-black">₱{itemsTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                <td colSpan={3} className="p-4 text-right text-[#7B1E1E] uppercase">Estimated Grand Total Value</td>
+                <td className="p-4 text-right text-base text-[#7B1E1E] font-black">₱{itemsTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
               </tr>
             </tbody>
           </table>

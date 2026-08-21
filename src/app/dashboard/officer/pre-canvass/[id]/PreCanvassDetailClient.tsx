@@ -144,7 +144,7 @@ function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; icon: any }> = {
     Draft: { bg: "bg-gray-100", text: "text-gray-700", icon: Clock },
     SuppliersSelected: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Users },
-    Sent: { bg: "bg-yellow-100", text: "text-yellow-700", icon: Send },
+    Sent: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Send },
     PartiallyResponded: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Clock },
     FullyResponded: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: CheckCircle2 },
     Closed: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]", icon: CheckCircle2 },
@@ -624,7 +624,7 @@ export default function PreCanvassDetailClient({
                       </div>
                       <div className="text-right">
                         <div className="flex items-center gap-1 text-xs">
-                          <Star className="h-3 w-3 text-yellow-500" />
+                          <Star className="h-3 w-3 text-[var(--secondary)]" />
                           {supplier.reliabilityRating?.toFixed(1) || "N/A"}
                         </div>
                         {supplier.isVerified && (
@@ -756,7 +756,7 @@ export default function PreCanvassDetailClient({
           </div>
           {preCanvass.sentAt && (
             <div className="flex items-center gap-3">
-              <div className="w-2 h-2 rounded-full bg-yellow-500" />
+              <div className="w-2 h-2 rounded-full bg-[var(--secondary)]" />
               <div className="text-xs">
                 <span className="font-bold">Sent to Suppliers</span> on {formatDate(preCanvass.sentAt)}
               </div>

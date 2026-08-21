@@ -23,10 +23,10 @@ export const ROLE_LABELS: Record<UserRole, string> = {
 };
 
 export const ROLE_COLORS: Record<UserRole, { bg: string; text: string; border: string }> = {
-  'Procurement Officer':    { bg: 'rgba(123,30,30,0.15)',  text: '#7B1E1E', border: 'rgba(123,30,30,0.3)'  },
-  'Administrative Approver': { bg: 'rgba(166,118,29,0.15)', text: '#A6761D', border: 'rgba(166,118,29,0.3)'  },
-  'Supplier':               { bg: 'rgba(166,118,29,0.15)', text: '#A6761D', border: 'rgba(166,118,29,0.3)'  },
-  'End User':               { bg: 'rgba(123,30,30,0.15)',  text: '#7B1E1E', border: 'rgba(123,30,30,0.3)'   },
+  'Procurement Officer':    { bg: 'rgba(123, 30, 30, 0.15)',  text: '#7B1E1E', border: 'rgba(123, 30, 30, 0.3)'  },
+  'Administrative Approver': { bg: 'rgba(166, 118, 29, 0.15)', text: '#A6761D', border: 'rgba(166, 118, 29, 0.3)'  },
+  'Supplier':               { bg: 'rgba(166, 118, 29, 0.15)', text: '#A6761D', border: 'rgba(166, 118, 29, 0.3)'  },
+  'End User':               { bg: 'rgba(123, 30, 30, 0.15)',  text: '#7B1E1E', border: 'rgba(123, 30, 30, 0.3)'   },
 };
 
 export const ROLE_HOME: Record<UserRole, string> = {

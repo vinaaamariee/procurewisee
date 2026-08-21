@@ -30,7 +30,7 @@ export default async function HeroSection() {
       style={{
         background: `linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 60%, color-mix(in srgb, var(--accent) 80%, var(--secondary)) 100%)`,
         borderColor: "var(--border-accent)",
-        boxShadow: "0 8px 40px rgba(11,45,92,0.18)",
+        boxShadow: "0 8px 40px rgba(123, 30, 30, 0.18)",
       }}
     >
       {/* Decorative grid overlay */}

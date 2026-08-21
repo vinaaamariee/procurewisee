@@ -28,7 +28,7 @@ export default function CatalogPreviewSection() {
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link
                   href="/catalog"
-                  className="btn btn-primary btn-md rounded-xl bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold shadow-md px-6"
+                  className="btn btn-primary btn-md rounded-xl bg-[#7B1E1E] hover:bg-[#7B1E1E] text-white border-none font-bold shadow-md px-6"
                 >
                   <Search className="h-4 w-4" />
                   <span>Browse Public Catalog</span>

@@ -51,7 +51,7 @@ export default function SolicitationBoardClient({ rfqs }: { rfqs: SolicitationRf
     <div className="rounded-md border border-base-300 bg-base-100 p-5 shadow-none space-y-4">
       <div className="flex items-center justify-between border-b border-base-200 pb-3 text-left">
         <div className="flex items-center gap-2">
-          <FileText className="h-5 w-5 text-violet-600" />
+          <FileText className="h-5 w-5 text-[var(--accent)]" />
           <h3 className="text-sm font-bold text-base-content uppercase tracking-wider">Solicitation Board</h3>
         </div>
         <Link href="/dashboard/officer/rfq/new" className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline">
@@ -110,7 +110,7 @@ export default function SolicitationBoardClient({ rfqs }: { rfqs: SolicitationRf
                   <div className="flex items-center gap-1.5">
                     <StatusBadge status={rfq.status} />
                     {expiredIds.has(rfq.id) && (
-                      <span className="inline-flex items-center rounded-full bg-rose-50 px-2.5 py-1 text-[10px] font-bold text-rose-700 dark:bg-rose-900/20 dark:text-rose-300">
+                      <span className="inline-flex items-center rounded-full bg-[var(--accent-glass)] px-2.5 py-1 text-[10px] font-bold text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]">
                         Expired
                       </span>
                     )}

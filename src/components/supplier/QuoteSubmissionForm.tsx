@@ -253,7 +253,7 @@ export default function QuoteSubmissionForm({
       {errorMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'var(--accent-glass)', border: '1px solid rgba(239,68,68,0.2)',
+          background: 'var(--accent-glass)', border: '1px solid rgba(123, 30, 30, 0.2)',
           color: 'var(--accent)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ⚠️ {errorMsg}

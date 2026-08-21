@@ -219,8 +219,8 @@ export default function PpmpDocumentUpload({
               style={{
                 padding: "0.3rem",
                 borderRadius: "4px",
-                border: "1px solid #fecaca",
-                background: "rgba(239,68,68,0.05)",
+                border: "1px solid var(--accent-glass)",
+                background: "rgba(123, 30, 30, 0.05)",
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
@@ -254,7 +254,7 @@ export default function PpmpDocumentUpload({
           padding: "1.25rem",
           textAlign: "center",
           cursor: "pointer",
-          background: dragOver ? "rgba(126,25,27,0.03)" : "transparent",
+          background: dragOver ? "rgba(123, 30, 30, 0.03)" : "transparent",
           transition: "all 0.15s",
         }}
       >

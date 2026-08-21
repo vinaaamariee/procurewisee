@@ -33,7 +33,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
       {/* Layer 1 - solid maroon background (hardcoded gradient, per design spec) */}
       <div
         className="absolute inset-0"
-        style={{ background: "linear-gradient(180deg, #842222 0%, #701919 100%)" }}
+        style={{ background: "linear-gradient(180deg, #7B1E1E 0%, #7B1E1E 100%)" }}
       />
 
       {/* Layer 2 - BSC logo watermark (no blur/rotation/shadow) */}
@@ -76,12 +76,12 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
 
         {/* Gold divider with diamond */}
         <div className="flex items-center justify-center gap-3">
-          <span className="h-px w-12" style={{ backgroundColor: "#C89B3C" }} />
+          <span className="h-px w-12" style={{ backgroundColor: "#A6761D" }} />
           <span
             className="block w-2 h-2 rotate-45"
-            style={{ backgroundColor: "#C89B3C" }}
+            style={{ backgroundColor: "#A6761D" }}
           />
-          <span className="h-px w-12" style={{ backgroundColor: "#C89B3C" }} />
+          <span className="h-px w-12" style={{ backgroundColor: "#A6761D" }} />
         </div>
 
         {/* Description */}

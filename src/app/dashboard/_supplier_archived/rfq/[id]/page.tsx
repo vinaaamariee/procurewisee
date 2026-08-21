@@ -54,9 +54,9 @@ export default async function RfqDetailPage({ params }: { params: Params }) {
 
   // Brand Colors mapped from your Login Page design
   const theme = {
-    crimson: '#7e191b',
-    gold: '#dcb353',
-    goldDark: '#b88a1b',
+    crimson: '#7B1E1E',
+    gold: '#A6761D',
+    goldDark: '#A6761D',
     textMain: '#1f2937',
     textMuted: '#6b7280',
     glassBg: 'rgba(255, 255, 255, 0.7)',
@@ -146,7 +146,7 @@ export default async function RfqDetailPage({ params }: { params: Params }) {
         {/* Supplier Identity Badge */}
         <div style={{ 
           display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.25rem',
-          backgroundColor: 'rgba(220, 179, 83, 0.1)', border: `1px solid rgba(220, 179, 83, 0.3)`,
+          backgroundColor: 'rgba(166, 118, 29, 0.1)', border: `1px solid rgba(166, 118, 29, 0.3)`,
           borderRadius: '1rem', boxShadow: '0 2px 10px rgba(0,0,0,0.02)'
         }}>
           <div style={{ width: '32px', height: '32px', borderRadius: '50%', background: `linear-gradient(135deg, ${theme.gold}, ${theme.goldDark})`, color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.8rem' }}>

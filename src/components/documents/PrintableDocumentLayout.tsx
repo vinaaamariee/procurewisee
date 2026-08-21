@@ -69,7 +69,7 @@ export default function PrintableDocumentLayout({
                 display: block !important;
                 visibility: visible !important;
                 width: 100% !important;
-                border-top: 1px solid #cbd5e1 !important;
+                border-top: 1px solid #D1D5DB !important;
                 margin-top: 20px !important;
               }
               
@@ -94,7 +94,7 @@ export default function PrintableDocumentLayout({
               footer.bsc-print-footer-fallback {
                 display: block !important;
                 visibility: visible !important;
-                border-top: 1px solid #cbd5e1 !important;
+                border-top: 1px solid #D1D5DB !important;
                 margin-top: 8mm !important;
               }
               

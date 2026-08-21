@@ -101,9 +101,9 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
   };
 
   const theme = {
-    crimson: "#7e191b",
-    gold: "#dcb353",
-    goldDark: "#b88a1b",
+    crimson: "#7B1E1E",
+    gold: "#A6761D",
+    goldDark: "#A6761D",
     textMain: "#1f2937",
     textMuted: "#6b7280",
     glassBg: "rgba(255, 255, 255, 0.75)",
@@ -132,7 +132,7 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
                 style={{
                   width: "100%", padding: "0.75rem", borderRadius: "0.75rem",
                   border: selectedModule === mod ? `1.5px solid ${theme.crimson}` : "1px solid rgba(0,0,0,0.06)",
-                  background: selectedModule === mod ? "rgba(126, 25, 27, 0.04)" : "#fff",
+                  background: selectedModule === mod ? "rgba(123, 30, 30, 0.04)" : "#fff",
                   color: selectedModule === mod ? theme.crimson : theme.textMain,
                   fontWeight: 700, fontSize: "0.85rem", cursor: "pointer", textAlign: "left", transition: "all 0.2s"
                 }}
@@ -243,13 +243,13 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
         </div>
 
         {errorMsg && (
-          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "var(--accent)", fontSize: "0.8rem", fontWeight: 600 }}>
+          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(123, 30, 30, 0.1)", color: "var(--accent)", fontSize: "0.8rem", fontWeight: 600 }}>
             ⚠️ {errorMsg}
           </div>
         )}
 
         {successMsg && (
-          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(16, 185, 129, 0.1)", color: "var(--secondary)", fontSize: "0.8rem", fontWeight: 600 }}>
+          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(123, 30, 30, 0.1)", color: "var(--secondary)", fontSize: "0.8rem", fontWeight: 600 }}>
             ✅ {successMsg}
           </div>
         )}

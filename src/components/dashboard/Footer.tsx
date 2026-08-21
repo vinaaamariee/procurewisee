@@ -88,8 +88,8 @@ export default function Footer() {
           <span
             className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest"
             style={{
-              background: "rgba(16,185,129,0.07)",
-              borderColor: "rgba(16,185,129,0.25)",
+              background: "rgba(123, 30, 30, 0.07)",
+              borderColor: "rgba(123, 30, 30, 0.25)",
               color: "var(--secondary)",
             }}
           >
@@ -101,7 +101,7 @@ export default function Footer() {
             className="flex items-center gap-1.5 text-xs"
             style={{ color: "var(--text-muted)" }}
           >
-            Built with <Heart className="h-3.5 w-3.5 fill-red-500 text-[var(--accent)]" /> by the ProcureWise Team
+            Built with <Heart className="h-3.5 w-3.5 fill-[var(--accent)] text-[var(--accent)]" /> by the ProcureWise Team
           </div>
         </div>
 

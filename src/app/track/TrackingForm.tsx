@@ -47,7 +47,7 @@ export default function TrackingForm() {
             placeholder="E.g., PR-2026-F982C9"
             value={trackingCode}
             onChange={(e) => setTrackingCode(e.target.value)}
-            className="w-full pl-4 pr-11 py-3 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:border-[#ca8a04] bg-[#FAF9F6] dark:bg-slate-900 text-xs transition text-gray-900 dark:text-white"
+            className="w-full pl-4 pr-11 py-3 border border-gray-300 dark:border-slate-700 rounded-xl outline-none focus:border-[#A6761D] bg-[#FAF9F6] dark:bg-slate-900 text-xs transition text-gray-900 dark:text-white"
           />
           <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
             <Search className="h-4 w-4" />
@@ -64,7 +64,7 @@ export default function TrackingForm() {
       <button
         type="submit"
         disabled={loading || !trackingCode.trim()}
-        className="w-full bg-[#7e191b] hover:bg-[#962124] disabled:bg-gray-400 text-white py-3 rounded-xl font-bold text-xs transition uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
+        className="w-full bg-[#7B1E1E] hover:bg-[#7B1E1E] disabled:bg-gray-400 text-white py-3 rounded-xl font-bold text-xs transition uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-md"
       >
         {loading ? (
           <>

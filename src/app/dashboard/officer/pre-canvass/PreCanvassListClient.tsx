@@ -59,7 +59,7 @@ function StatusBadge({ status }: { status: string }) {
   const config: Record<string, { bg: string; text: string; icon: any }> = {
     Draft: { bg: "bg-gray-100", text: "text-gray-700", icon: Clock },
     SuppliersSelected: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Users },
-    Sent: { bg: "bg-yellow-100", text: "text-yellow-700", icon: Send },
+    Sent: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Send },
     PartiallyResponded: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: Clock },
     FullyResponded: { bg: "bg-[var(--secondary-dim)]", text: "text-[var(--secondary)]", icon: CheckCircle2 },
     Closed: { bg: "bg-[var(--accent-glass)]", text: "text-[var(--accent)]", icon: CheckCircle2 },
@@ -157,7 +157,7 @@ export default function PreCanvassListClient({
         {[
           { label: "Total", value: preCanvasses.length, color: "text-base-content" },
           { label: "Draft", value: preCanvasses.filter((p) => p.status === "Draft").length, color: "text-gray-600" },
-          { label: "Sent", value: preCanvasses.filter((p) => p.status === "Sent" || p.status === "PartiallyResponded" || p.status === "FullyResponded").length, color: "text-yellow-600" },
+          { label: "Sent", value: preCanvasses.filter((p) => p.status === "Sent" || p.status === "PartiallyResponded" || p.status === "FullyResponded").length, color: "text-[var(--secondary)]" },
           { label: "Completed", value: preCanvasses.filter((p) => p.status === "Closed").length, color: "text-[var(--secondary)]" },
         ].map((stat) => (
           <div
