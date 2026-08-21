@@ -1,10 +1,10 @@
-import Image from 'next/image';
+﻿import Image from 'next/image';
 import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
 import { ROLE_HOME, ROLE_LABELS } from '@/types/auth';
 import { signout } from '@/app/actions/auth';
 import { Lock, ShieldAlert, UserCheck, LogOut, ArrowLeft } from 'lucide-react';
 
-export const metadata = { title: '403 Access Denied — ProcureWise' };
+export const metadata = { title: '403 Access Denied â€” ProcureWise' };
 
 interface PageProps {
   searchParams: Promise<{ required?: string }>;
@@ -21,23 +21,23 @@ export default async function UnauthorizedPage({ searchParams }: PageProps) {
   return (
     <div
       data-theme="bsc"
-      className="min-h-screen flex flex-col items-center justify-center bg-base-200 text-base-content selection:bg-[#7B1E1E]/20 p-4 sm:p-6 relative overflow-hidden"
+      className="min-h-screen flex flex-col items-center justify-center bg-base-200 text-base-content selection:bg-[#800000]/20 p-4 sm:p-6 relative overflow-hidden"
     >
       {/* Background radial glow accents */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-[#7B1E1E]/5 blur-3xl" />
-        <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[#A6761D]/5 blur-3xl" />
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-[#800000]/5 blur-3xl" />
+        <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-[#D4AF37]/5 blur-3xl" />
       </div>
 
       <div className="relative z-10 w-full max-w-md">
         {/* daisyUI Card component */}
         <div className="card bg-base-100 shadow-xl border border-base-200 overflow-hidden rounded-2xl">
           {/* Maroon/gold accent top bar */}
-          <div className="h-1.5 bg-gradient-to-r from-[#7B1E1E] via-[#A6761D] to-[#7B1E1E]" />
+          <div className="h-1.5 bg-gradient-to-r from-[#800000] via-[#D4AF37] to-[#800000]" />
 
           <div className="card-body p-7 sm:p-9 space-y-6 text-center">
             {/* Lock Icon */}
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#7B1E1E]/10 text-[#7B1E1E] mx-auto border border-[#7B1E1E]/20 shadow-sm">
+            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-[#800000]/10 text-[#800000] mx-auto border border-[#800000]/20 shadow-sm">
               <Lock className="h-7 w-7" />
             </div>
 
@@ -46,7 +46,7 @@ export default async function UnauthorizedPage({ searchParams }: PageProps) {
               <span className="badge badge-outline border-error/30 text-error text-[10px] font-extrabold uppercase tracking-widest px-3 py-2.5">
                 403 Access Denied
               </span>
-              <h1 className="text-2xl font-black text-[#7B1E1E] tracking-tight leading-none pt-1">
+              <h1 className="text-2xl font-black text-[#800000] tracking-tight leading-none pt-1">
                 Access Restricted
               </h1>
               <p className="text-xs sm:text-sm text-base-content/70 leading-relaxed font-normal">
@@ -62,7 +62,7 @@ export default async function UnauthorizedPage({ searchParams }: PageProps) {
                   Current Role
                 </span>
                 <div className="flex items-center gap-1.5 text-xs sm:text-sm font-extrabold text-base-content">
-                  <UserCheck className="h-4 w-4 text-[#A6761D] flex-shrink-0" />
+                  <UserCheck className="h-4 w-4 text-[var(--secondary-strong)] flex-shrink-0" />
                   <span className="truncate">{ROLE_LABELS[profile.role] || profile.role}</span>
                 </div>
               </div>
@@ -89,7 +89,7 @@ export default async function UnauthorizedPage({ searchParams }: PageProps) {
               {/* Back to Dashboard */}
               <a
                 href={dashboardLink}
-                className="btn btn-primary w-full text-white font-bold bg-[#7B1E1E] hover:bg-[#7B1E1E] border-none shadow-sm text-sm rounded-xl flex items-center justify-center gap-2"
+                className="btn btn-primary w-full text-white font-bold bg-[#800000] hover:bg-[#800000] border-none shadow-sm text-sm rounded-xl flex items-center justify-center gap-2"
               >
                 <ArrowLeft className="h-4 w-4" />
                 <span>Back to Dashboard</span>
@@ -121,7 +121,7 @@ export default async function UnauthorizedPage({ searchParams }: PageProps) {
             />
           </div>
           <p className="text-[11px] text-base-content/40 font-medium text-center">
-            © {new Date().getFullYear()} Batanes State College · Powered by ProcureWise
+            Â© {new Date().getFullYear()} Batanes State College Â· Powered by ProcureWise
           </p>
         </div>
       </div>

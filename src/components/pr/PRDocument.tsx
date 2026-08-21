@@ -205,18 +205,18 @@ export default function PRDocument({
       <div id="pr-document-container" className="w-full">
         <div
           id="pr-document"
-          className="w-full bg-white text-slate-950 border border-black p-4 sm:p-6 font-serif text-xs leading-snug"
+          className="w-full bg-white text-gray-950 border border-black p-4 sm:p-6 font-serif text-xs leading-snug"
         >
           <OfficialDocumentLayout
             printAreaId="pr-document"
           >
             {/* Document Title & Reference Number */}
             <div className="text-center mb-3">
-              <h1 className="text-xl font-bold uppercase tracking-wider text-slate-950 font-serif">
+              <h1 className="text-xl font-bold uppercase tracking-wider text-gray-950 font-serif">
                 PURCHASE REQUEST
               </h1>
               {info.prNumber && (
-                <p className="text-xs font-mono font-bold mt-1 text-slate-700">
+                <p className="text-xs font-mono font-bold mt-1 text-gray-700">
                   Ref No: {info.prNumber}
                 </p>
               )}

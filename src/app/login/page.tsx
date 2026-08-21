@@ -56,7 +56,7 @@ export default function LoginPage() {
     <Suspense fallback={
       <div className="flex min-h-screen items-center justify-center bg-base-200" data-theme="bsc">
         <div className="flex flex-col items-center gap-3">
-          <span className="loading loading-spinner loading-lg text-[#7B1E1E]"></span>
+          <span className="loading loading-spinner loading-lg text-[#800000]"></span>
           <span className="text-xs font-bold text-base-content/60 uppercase tracking-widest">
             Loading BSC Portal...
           </span>

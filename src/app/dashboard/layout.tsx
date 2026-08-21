@@ -1,4 +1,4 @@
-import { signout } from "@/app/actions/auth";
+﻿import { signout } from "@/app/actions/auth";
 import { getAuthenticatedUser } from "@/lib/auth/get-user-profile";
 import { ROLE_HOME, ROLE_LABELS } from "@/types/auth";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -40,7 +40,7 @@ export default async function DashboardLayout({
                 </span>
                 <span
                   className="text-lg font-black tracking-tight"
-                  style={{ color: "var(--secondary)", fontFamily: "var(--font-display)" }}
+                  style={{ color: 'var(--secondary-strong)', fontFamily: "var(--font-display)" }}
                 >
                   W
                 </span>
@@ -114,7 +114,7 @@ export default async function DashboardLayout({
             color: "var(--text-muted)",
           }}
         >
-          ProcureWise v1.0 | © 2026 Batanes State College
+          ProcureWise v1.0 | Â© 2026 Batanes State College
         </footer>
       </div>
     </div>

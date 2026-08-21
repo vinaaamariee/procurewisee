@@ -210,7 +210,7 @@ export default function NotificationBell({ currentUser }: NotificationBellProps)
                     display: 'flex',
                     gap: '0.75rem',
                     alignItems: 'flex-start',
-                    background: item.isRead ? 'transparent' : 'rgba(123, 30, 30, 0.03)',
+                    background: item.isRead ? 'transparent' : 'rgba(128, 0, 0, 0.03)',
                     cursor: item.isRead ? 'default' : 'pointer',
                     transition: 'all 0.15s ease'
                   }}
@@ -221,7 +221,7 @@ export default function NotificationBell({ currentUser }: NotificationBellProps)
                     width: '28px',
                     height: '28px',
                     borderRadius: '50%',
-                    background: item.isRead ? 'rgba(0,0,0,0.03)' : 'rgba(123, 30, 30, 0.08)',
+                    background: item.isRead ? 'rgba(0,0,0,0.03)' : 'rgba(128, 0, 0, 0.08)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

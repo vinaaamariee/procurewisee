@@ -29,7 +29,7 @@ function getTrendConfig(trend: "increasing" | "decreasing" | "stable") {
         recommendationDetail:
           "Prices are trending upward. Procuring now may save costs before the next increase.",
         recIcon: ShoppingCart,
-        recColor: "var(--secondary)",
+        recColor: 'var(--secondary-strong)',
         recBg: "var(--accent-glass)",
       };
     case "decreasing":
@@ -37,7 +37,7 @@ function getTrendConfig(trend: "increasing" | "decreasing" | "stable") {
         icon: TrendingDown,
         label: "↓ Decreasing",
         description: "Prices are projected to fall.",
-        color: "var(--secondary)",
+        color: 'var(--secondary-strong)',
         bgColor: "var(--accent-glass)",
         recommendation: "Delay Purchase",
         recommendationDetail:
@@ -53,13 +53,13 @@ function getTrendConfig(trend: "increasing" | "decreasing" | "stable") {
         label: "→ Stable",
         description: "Prices are projected to remain steady.",
         color: "var(--text-secondary)",
-        bgColor: "rgba(123, 30, 30, 0.08)",
+        bgColor: "rgba(128, 0, 0, 0.08)",
         recommendation: "Monitor",
         recommendationDetail:
           "Prices are stable. Proceed based on your procurement schedule.",
         recIcon: Sparkles,
         recColor: "var(--text-secondary)",
-        recBg: "rgba(123, 30, 30, 0.08)",
+        recBg: "rgba(128, 0, 0, 0.08)",
       };
   }
 }
@@ -76,7 +76,7 @@ export default function ForecastCard({ forecast, currentPrice }: ForecastCardPro
       >
         <div
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-          style={{ background: "rgba(123, 30, 30, 0.1)" }}
+          style={{ background: "rgba(128, 0, 0, 0.1)" }}
         >
           <AlertCircle className="h-5 w-5" style={{ color: "var(--text-muted)" }} />
         </div>

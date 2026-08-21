@@ -72,14 +72,14 @@ export default async function AOQPage({ params }: PageProps) {
   return (
     <div className="space-y-6">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-slate-500 print:hidden">
+      <div className="flex items-center gap-2 text-sm text-gray-500 print:hidden">
         <Link href="/dashboard/officer" className="hover:underline">Dashboard</Link>
         <span>/</span>
         <Link href={`/dashboard/officer/rfq/${rfqId}`} className="hover:underline">
           RFQ {rfq.rfqNumber}
         </Link>
         <span>/</span>
-        <span className="text-slate-800 font-semibold">Abstract of Quotation (Annex F)</span>
+        <span className="text-gray-800 font-semibold">Abstract of Quotation (Annex F)</span>
       </div>
 
       {rfq.quotes.length === 0 && (

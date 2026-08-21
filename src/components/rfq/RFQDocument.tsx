@@ -213,7 +213,7 @@ export default function RFQDocument({
       <div id="rfq-document-container" className="w-full flex justify-center">
         <div
           id="rfq-document"
-          className="w-full max-w-[800px] min-h-[1056px] bg-white text-black shadow-xl border border-slate-400 p-6 sm:p-10 font-sans text-xs leading-snug rounded-none"
+          className="w-full max-w-[800px] min-h-[1056px] bg-white text-black shadow-xl border border-gray-400 p-6 sm:p-10 font-sans text-xs leading-snug rounded-none"
         >
           <DocumentLayout
             title="REQUEST FOR PRICE QUOTATION"

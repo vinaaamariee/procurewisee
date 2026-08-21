@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useMemo, useState, useEffect } from "react";
 import {
@@ -18,16 +18,16 @@ interface AnalyticsDashboardClientProps {
 }
 
 function formatCurrency(amount: number) {
-  return `₱${amount.toLocaleString("en-PH", {
+  return `â‚±${amount.toLocaleString("en-PH", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })}`;
 }
 
 function formatShortCurrency(amount: number) {
-  if (amount >= 1000000) return `₱${(amount / 1000000).toFixed(1)}M`;
-  if (amount >= 1000) return `₱${(amount / 1000).toFixed(1)}K`;
-  return `₱${amount.toLocaleString("en-PH", { maximumFractionDigits: 0 })}`;
+  if (amount >= 1000000) return `â‚±${(amount / 1000000).toFixed(1)}M`;
+  if (amount >= 1000) return `â‚±${(amount / 1000).toFixed(1)}K`;
+  return `â‚±${amount.toLocaleString("en-PH", { maximumFractionDigits: 0 })}`;
 }
 
 // Spoke angle calculations for the radar chart (5 axes)
@@ -44,7 +44,7 @@ const RADAR_AXES = [
 export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashboardClientProps) {
   const [activeTab, setActiveTab] = useState<"overview" | "suppliers" | "market" | "performance">("overview");
 
-  // ─── Filter States (Section 8) ───
+  // â”€â”€â”€ Filter States (Section 8) â”€â”€â”€
   const [fiscalYear, setFiscalYear] = useState("All");
   const [department, setDepartment] = useState("All");
   const [category, setCategory] = useState("All");
@@ -98,7 +98,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
     setTimeRange("All");
   };
 
-  // ─── Client-side Dynamic Filtering ───
+  // â”€â”€â”€ Client-side Dynamic Filtering â”€â”€â”€
   const filteredData = useMemo(() => {
     let spendMultiplier = 1;
     let savingsMultiplier = 1;
@@ -162,7 +162,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
     };
   }, [department, category, supplier, timeRange, initialData]);
 
-  // ─── Radar Chart Coordinates ───
+  // â”€â”€â”€ Radar Chart Coordinates â”€â”€â”€
   const activeSupplier = initialData.suppliers.topAwarded[selectedSupplierIdx] || initialData.suppliers.topAwarded[0];
   
   const radarPoints = useMemo(() => {
@@ -254,7 +254,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
     return { points, solidPathD, forecastPathD, yTicks, width, height };
   }, [initialData.historical.monthlyTrend]);
 
-  // ─── Excel Exporter ───
+  // â”€â”€â”€ Excel Exporter â”€â”€â”€
   const handleExportExcel = () => {
     const kpiData = [
       { Metric: "Total Annual Spend", Value: formatCurrency(filteredData.totalSpent) },
@@ -304,7 +304,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
       <DocumentLayout title="EXECUTIVE PROCUREMENT ANALYTICS REPORT" printAreaId="printArea">
         <div id="printArea" className="hidden print:block font-sans" style={{ padding: "0 10px", color: "#1f2937", backgroundColor: "#ffffff" }}>
           {/* Metadata Sub-Header */}
-          <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1.5px solid #7b1e1e", paddingBottom: "8px", marginBottom: "15px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1.5px solid #800000", paddingBottom: "8px", marginBottom: "15px" }}>
             <div style={{ fontSize: "10px", color: "#4b5563" }}>
               <strong>Date:</strong> {generationTime}<br />
               <strong>Entity:</strong> Batanes State College
@@ -317,7 +317,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
 
           {/* Section I: Executive Summary Key Metrics */}
           <div style={{ pageBreakInside: "avoid", marginBottom: "20px" }}>
-            <h3 style={{ fontSize: "12px", fontWeight: "bold", color: "#7b1e1e", borderBottom: "1px solid #e5e7eb", paddingBottom: "3px", marginBottom: "10px", textTransform: "uppercase" }}>
+            <h3 style={{ fontSize: "12px", fontWeight: "bold", color: "#800000", borderBottom: "1px solid #e5e7eb", paddingBottom: "3px", marginBottom: "10px", textTransform: "uppercase" }}>
               I. Executive Summary Key Metrics
             </h3>
             
@@ -325,17 +325,17 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
               {/* Card 1 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
                 <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Total Annual Spend</div>
-                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#7b1e1e", marginTop: "3px" }}>{formatCurrency(filteredData.totalSpent)}</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#800000", marginTop: "3px" }}>{formatCurrency(filteredData.totalSpent)}</div>
               </div>
               {/* Card 2 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
                 <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Cost Savings (vs Avg)</div>
-                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#7B1E1E", marginTop: "3px" }}>{formatCurrency(filteredData.totalSavings)}</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#800000", marginTop: "3px" }}>{formatCurrency(filteredData.totalSavings)}</div>
               </div>
               {/* Card 3 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
                 <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Budget Utilization</div>
-                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#7B1E1E", marginTop: "3px" }}>{filteredData.utilizationRate.toFixed(1)}%</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#800000", marginTop: "3px" }}>{filteredData.utilizationRate.toFixed(1)}%</div>
               </div>
               {/* Card 4 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
@@ -345,7 +345,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
               {/* Card 5 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
                 <div style={{ fontSize: "9px", fontWeight: "bold", color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em" }}>Inflation Forecast</div>
-                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#7B1E1E", marginTop: "3px" }}>{formatCurrency(initialData.kpis.forecastedIncreaseNextMonth)}</div>
+                <div style={{ fontSize: "14px", fontWeight: "bold", color: "#800000", marginTop: "3px" }}>{formatCurrency(initialData.kpis.forecastedIncreaseNextMonth)}</div>
               </div>
               {/* Card 6 */}
               <div style={{ border: "1px solid #e5e7eb", padding: "8px 12px", borderRadius: "4px", backgroundColor: "#f9fafb" }}>
@@ -357,12 +357,12 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
 
           {/* Section II: Supplier Intelligence Rankings */}
           <div style={{ pageBreakInside: "avoid", marginBottom: "20px" }}>
-            <h3 style={{ fontSize: "12px", fontWeight: "bold", color: "#7b1e1e", borderBottom: "1px solid #e5e7eb", paddingBottom: "3px", marginBottom: "10px", textTransform: "uppercase" }}>
+            <h3 style={{ fontSize: "12px", fontWeight: "bold", color: "#800000", borderBottom: "1px solid #e5e7eb", paddingBottom: "3px", marginBottom: "10px", textTransform: "uppercase" }}>
               II. Supplier Intelligence & Rankings
             </h3>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "10px" }}>
               <thead>
-                <tr style={{ backgroundColor: "#7b1e1e", color: "#ffffff" }}>
+                <tr style={{ backgroundColor: "#800000", color: "#ffffff" }}>
                   <th style={{ padding: "6px 10px", textAlign: "left", fontWeight: "bold", border: "1px solid #d1d5db" }}>Supplier Company Name</th>
                   <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>Awarded POs</th>
                   <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>On-Time Delivery</th>
@@ -377,7 +377,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{s.awardCount} POs</td>
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{s.onTimeRate}%</td>
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{(s.reliability * 20).toFixed(0)}/100</td>
-                    <td style={{ padding: "6px 10px", textAlign: "center", border: "1px solid #d1d5db", fontWeight: "bold", color: s.riskGroup === "LOW" ? "#7B1E1E" : "#7B1E1E" }}>{s.riskGroup}</td>
+                    <td style={{ padding: "6px 10px", textAlign: "center", border: "1px solid #d1d5db", fontWeight: "bold", color: s.riskGroup === "LOW" ? "#800000" : "#800000" }}>{s.riskGroup}</td>
                   </tr>
                 ))}
               </tbody>
@@ -386,12 +386,12 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
 
           {/* Section III: ARIMA Market Price Forecasts */}
           <div style={{ pageBreakInside: "avoid", marginBottom: "25px" }}>
-            <h3 style={{ fontSize: "12px", fontWeight: "bold", color: "#7b1e1e", borderBottom: "1px solid #e5e7eb", paddingBottom: "3px", marginBottom: "10px", textTransform: "uppercase" }}>
+            <h3 style={{ fontSize: "12px", fontWeight: "bold", color: "#800000", borderBottom: "1px solid #e5e7eb", paddingBottom: "3px", marginBottom: "10px", textTransform: "uppercase" }}>
               III. ARIMA Market Price Trend Forecasts
             </h3>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "10px" }}>
               <thead>
-                <tr style={{ backgroundColor: "#7b1e1e", color: "#ffffff" }}>
+                <tr style={{ backgroundColor: "#800000", color: "#ffffff" }}>
                   <th style={{ padding: "6px 10px", textAlign: "left", fontWeight: "bold", border: "1px solid #d1d5db" }}>Product Description</th>
                   <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>Current Price</th>
                   <th style={{ padding: "6px 10px", textAlign: "right", fontWeight: "bold", border: "1px solid #d1d5db" }}>Predicted Price</th>
@@ -405,7 +405,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
                     <td style={{ padding: "6px 10px", border: "1px solid #d1d5db", color: "#1f2937" }}>{f.productName}</td>
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(f.currentPrice)}</td>
                     <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db" }}>{formatCurrency(f.forecastPrice)}</td>
-                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db", fontWeight: "semibold", color: f.changeLabel.includes("+") ? "#7B1E1E" : "#7B1E1E" }}>{f.changeLabel}</td>
+                    <td style={{ padding: "6px 10px", textAlign: "right", border: "1px solid #d1d5db", fontWeight: "semibold", color: f.changeLabel.includes("+") ? "#800000" : "#800000" }}>{f.changeLabel}</td>
                     <td style={{ padding: "6px 10px", textAlign: "center", border: "1px solid #d1d5db" }}>{f.confidenceLabel} ({f.confidence}%)</td>
                   </tr>
                 ))}
@@ -436,7 +436,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
         </div>
       </DocumentLayout>
 
-      {/* ── Screen Header Controls (no-print) ── */}
+      {/* â”€â”€ Screen Header Controls (no-print) â”€â”€ */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 no-print">
         <div>
           <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: "var(--text-primary)" }}>
@@ -459,30 +459,30 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
           <button
             onClick={handlePrintPDF}
             className="flex items-center gap-2 py-2 px-4 rounded-xl text-white font-bold text-xs hover:opacity-90 transition cursor-pointer"
-            style={{ background: "linear-gradient(135deg, var(--accent) 0%, #7B1E1E 100%)" }}
+            style={{ background: "linear-gradient(135deg, var(--accent) 0%, #800000 100%)" }}
           >
             <Printer className="h-4 w-4" /> Print PDF Report
           </button>
         </div>
       </div>
 
-      {/* ── Executive Summary Panel Card (Section 7) ── */}
+      {/* â”€â”€ Executive Summary Panel Card (Section 7) â”€â”€ */}
       <div className="rounded-2xl border p-5 space-y-3 no-print" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
         <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
           <Sparkles className="h-4.5 w-4.5 text-[var(--secondary)]" />
           Executive Analytics Summary
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-1.5 text-xs leading-relaxed" style={{ color: "var(--text-secondary)" }}>
-          <div>• Annual procurement spend grew by <span className="font-extrabold text-slate-800 dark:text-slate-200">8.2%</span> relative to last fiscal averages.</div>
-          <div>• Budget utilization stands at <span className="font-extrabold text-slate-800 dark:text-slate-200">{filteredData.utilizationRate.toFixed(1)}%</span> ({filteredData.budgetHealth}).</div>
-          <div>• Office Supplies category shows the highest historical price variance.</div>
-          <div>• Recommended savings identify <span className="font-extrabold text-[var(--secondary)]">{formatCurrency(filteredData.totalSavings)}</span> in cost buffers.</div>
-          <div>• Top Performing Supplier: <span className="font-extrabold text-[#A6761D]">{initialData.kpis.topSupplierName}</span> (Lowest Risk).</div>
-          <div>• Forecasting model evaluation confidence is registered as <span className="font-extrabold text-slate-800 dark:text-slate-200">High</span>.</div>
+          <div>â€¢ Annual procurement spend grew by <span className="font-extrabold text-gray-800 dark:text-gray-200">8.2%</span> relative to last fiscal averages.</div>
+          <div>â€¢ Budget utilization stands at <span className="font-extrabold text-gray-800 dark:text-gray-200">{filteredData.utilizationRate.toFixed(1)}%</span> ({filteredData.budgetHealth}).</div>
+          <div>â€¢ Office Supplies category shows the highest historical price variance.</div>
+          <div>â€¢ Recommended savings identify <span className="font-extrabold text-[var(--secondary)]">{formatCurrency(filteredData.totalSavings)}</span> in cost buffers.</div>
+          <div>â€¢ Top Performing Supplier: <span className="font-extrabold text-[var(--secondary-strong)]">{initialData.kpis.topSupplierName}</span> (Lowest Risk).</div>
+          <div>â€¢ Forecasting model evaluation confidence is registered as <span className="font-extrabold text-gray-800 dark:text-gray-200">High</span>.</div>
         </div>
       </div>
 
-      {/* ── Interactive Filters Panel ── */}
+      {/* â”€â”€ Interactive Filters Panel â”€â”€ */}
       <div className="rounded-2xl border p-5 space-y-4 no-print" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
         <div className="flex justify-between items-center pb-2 border-b" style={{ borderColor: "var(--border)" }}>
           <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
@@ -502,7 +502,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={fiscalYear}
               onChange={(e) => setFiscalYear(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
+              className="w-full bg-[#FAFAFA] dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-2 text-xs focus:border-[#D4AF37] outline-none"
             >
               <option value="All">All Years</option>
               <option value="2026">2026</option>
@@ -515,7 +515,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
+              className="w-full bg-[#FAFAFA] dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-2 text-xs focus:border-[#D4AF37] outline-none"
             >
               <option value="All">All Departments</option>
               {departments.map((dept) => <option key={dept} value={dept}>{dept}</option>)}
@@ -527,7 +527,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
+              className="w-full bg-[#FAFAFA] dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-2 text-xs focus:border-[#D4AF37] outline-none"
             >
               <option value="All">All Categories</option>
               {categories.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
@@ -539,7 +539,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={supplier}
               onChange={(e) => setSupplier(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
+              className="w-full bg-[#FAFAFA] dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-2 text-xs focus:border-[#D4AF37] outline-none"
             >
               <option value="All">All Suppliers</option>
               {suppliersList.map((sup) => <option key={sup} value={sup}>{sup}</option>)}
@@ -551,7 +551,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value)}
-              className="w-full bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-2 text-xs focus:border-[#A6761D] outline-none"
+              className="w-full bg-[#FAFAFA] dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-2 text-xs focus:border-[#D4AF37] outline-none"
             >
               <option value="All">All History</option>
               <option value="Last 3 Months">Last 3 Months</option>
@@ -561,7 +561,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
         </div>
       </div>
 
-      {/* ── Tab Selector ── */}
+      {/* â”€â”€ Tab Selector â”€â”€ */}
       <div className="flex bg-muted/20 border p-1 rounded-xl no-print" style={{ borderColor: "var(--border)" }}>
         {(["overview", "suppliers", "market", "performance"] as const).map((tab) => (
           <button
@@ -578,7 +578,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
         ))}
       </div>
 
-      {/* ── Tab Content ── */}
+      {/* â”€â”€ Tab Content â”€â”€ */}
 
       {/* T1. Spend Overview */}
       {activeTab === "overview" && (
@@ -779,7 +779,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
               <select
                 value={selectedSupplierIdx}
                 onChange={(e) => setSelectedSupplierIdx(parseInt(e.target.value))}
-                className="bg-[#FAF9F6] dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-lg p-1.5 text-xs font-bold cursor-pointer"
+                className="bg-[#FAFAFA] dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-lg p-1.5 text-xs font-bold cursor-pointer"
               >
                 {initialData.suppliers.topAwarded.map((s, i) => (
                   <option key={i} value={i}>{s.name}</option>
@@ -831,7 +831,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
               <div className="space-y-1">
                 <span className="text-[10px] text-muted-foreground block">Current Supplier Bid Decision</span>
                 <span className="text-sm font-extrabold block truncate" style={{ color: "var(--text-primary)" }}>{initialData.scenario.currentSupplier}</span>
-                <span className="text-lg font-black text-slate-700 dark:text-slate-300 block">{formatCurrency(initialData.scenario.currentCost)}</span>
+                <span className="text-lg font-black text-gray-700 dark:text-gray-300 block">{formatCurrency(initialData.scenario.currentCost)}</span>
               </div>
 
               {/* Recommended choice */}
@@ -948,7 +948,7 @@ export default function AnalyticsDashboardClient({ initialData }: AnalyticsDashb
             <div className="rounded-2xl border p-5 flex flex-col justify-between" style={{ borderColor: "var(--border)", background: "var(--surface)" }}>
               <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">E2E Procurement Cycle</span>
               <div>
-                <span className="text-3xl font-black text-[#A6761D]">{initialData.kpis.avgCycleDays} Days</span>
+                <span className="text-3xl font-black text-[var(--secondary-strong)]">{initialData.kpis.avgCycleDays} Days</span>
                 <p className="text-xs text-muted-foreground mt-1">Average request submission to PO creation time</p>
               </div>
             </div>

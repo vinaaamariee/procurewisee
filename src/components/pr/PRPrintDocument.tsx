@@ -44,14 +44,14 @@ export default function PRPrintDocument({ pr, printAreaId = 'prPrintArea' }: PRP
             PURCHASE REQUEST
           </h1>
           {pr.prNumber && (
-            <p className="text-xs font-mono font-bold mt-1 text-slate-700">
+            <p className="text-xs font-mono font-bold mt-1 text-gray-700">
               Ref No: {pr.prNumber}
             </p>
           )}
         </div>
 
         {/* Agency Metadata Grid */}
-        <div className="grid grid-cols-2 border border-slate-800 divide-x divide-slate-800 text-[11px] font-bold">
+        <div className="grid grid-cols-2 border border-gray-800 divide-x divide-gray-800 text-[11px] font-bold">
           <div className="p-2 space-y-1">
             <div>Entity Name: <span className="font-extrabold underline">BATANES STATE COLLEGE</span></div>
             <div>Office/Section: <span className="underline">{pr.department} ({pr.office})</span></div>
@@ -64,10 +64,10 @@ export default function PRPrintDocument({ pr, printAreaId = 'prPrintArea' }: PRP
         </div>
 
         {/* Items Table Grid */}
-        <div className="border border-slate-800 overflow-hidden">
+        <div className="border border-gray-800 overflow-hidden">
           <table className="w-full text-[11px] border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-100 text-center font-extrabold divide-x divide-slate-800">
+              <tr className="border-b border-gray-800 bg-gray-100 text-center font-extrabold divide-x divide-gray-800">
                 <th className="p-2 w-12">Item No</th>
                 <th className="p-2 w-16">Unit</th>
                 <th className="p-2">Item Description</th>
@@ -78,13 +78,13 @@ export default function PRPrintDocument({ pr, printAreaId = 'prPrintArea' }: PRP
             </thead>
             <tbody>
               {pr.items.map((item, idx) => (
-                <tr key={item.id} className="border-b border-slate-400 divide-x divide-slate-800 font-semibold text-[10px]">
+                <tr key={item.id} className="border-b border-gray-400 divide-x divide-gray-800 font-semibold text-[10px]">
                   <td className="p-2 text-center">{idx + 1}</td>
                   <td className="p-2 text-center">{item.unit}</td>
                   <td className="p-2">
                     <div className="font-extrabold">{item.description}</div>
                     {item.specification && (
-                      <div className="text-[9px] text-slate-600 mt-0.5 whitespace-pre-wrap">{item.specification}</div>
+                      <div className="text-[9px] text-gray-600 mt-0.5 whitespace-pre-wrap">{item.specification}</div>
                     )}
                   </td>
                   <td className="p-2 text-center">{item.quantity}</td>
@@ -93,8 +93,8 @@ export default function PRPrintDocument({ pr, printAreaId = 'prPrintArea' }: PRP
                 </tr>
               ))}
               {/* Purpose row */}
-              <tr className="border-t border-slate-800 font-extrabold text-[11px]">
-                <td colSpan={6} className="p-3 bg-slate-50 text-left border-b border-slate-800">
+              <tr className="border-t border-gray-800 font-extrabold text-[11px]">
+                <td colSpan={6} className="p-3 bg-gray-50 text-left border-b border-gray-800">
                   Purpose: <span className="underline normal-case italic font-bold">{pr.purpose}</span>
                 </td>
               </tr>
@@ -108,14 +108,14 @@ export default function PRPrintDocument({ pr, printAreaId = 'prPrintArea' }: PRP
         </div>
 
         {/* Signatures block */}
-        <div className="grid grid-cols-2 border border-slate-800 divide-x divide-slate-800 text-[11px] font-bold">
+        <div className="grid grid-cols-2 border border-gray-800 divide-x divide-gray-800 text-[11px] font-bold">
           <div className="p-4 space-y-4">
             <span>Requested By:</span>
             <div className="pt-6 text-center">
               <span className="block font-black underline uppercase">
                 {pr.requesterName || "BSC Requisitioner"}
               </span>
-              <span className="text-[9px] text-slate-500 font-bold">End-User Unit Head / Requisitioner</span>
+              <span className="text-[9px] text-gray-500 font-bold">End-User Unit Head / Requisitioner</span>
             </div>
           </div>
           <div className="p-4 space-y-4">
@@ -124,7 +124,7 @@ export default function PRPrintDocument({ pr, printAreaId = 'prPrintArea' }: PRP
               <span className="block font-black underline uppercase">
                 {pr.officerName || "Procurement Staff"}
               </span>
-              <span className="text-[9px] text-slate-500 font-bold">Procurement Staff (Verification)</span>
+              <span className="text-[9px] text-gray-500 font-bold">Procurement Staff (Verification)</span>
             </div>
           </div>
         </div>

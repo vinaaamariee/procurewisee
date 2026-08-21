@@ -17,9 +17,9 @@ export default function LoginAlert({ type, message, onClose }: LoginAlertProps) 
       className="relative flex flex-col items-start gap-3 rounded-lg border p-4 text-sm leading-relaxed"
       role="alert"
       style={{
-        borderColor: isError ? 'rgba(123, 30, 30, 0.2)' : 'rgba(123, 30, 30, 0.2)',
-        backgroundColor: isError ? 'rgba(123, 30, 30, 0.03)' : 'rgba(123, 30, 30, 0.03)',
-        color: isError ? '#7B1E1E' : '#7B1E1E',
+        borderColor: isError ? 'rgba(128, 0, 0, 0.2)' : 'rgba(128, 0, 0, 0.2)',
+        backgroundColor: isError ? 'rgba(128, 0, 0, 0.03)' : 'rgba(128, 0, 0, 0.03)',
+        color: isError ? '#800000' : '#800000',
       }}
     >
       {isError ? (

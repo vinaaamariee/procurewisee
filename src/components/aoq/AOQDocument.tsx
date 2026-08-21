@@ -109,7 +109,7 @@ export default function AOQDocument({
       <div className="w-full flex justify-center">
         <div
           id="aoq-document"
-          className="w-full max-w-[900px] bg-white text-black shadow-xl border border-slate-400 font-sans text-xs leading-snug"
+          className="w-full max-w-[900px] bg-white text-black shadow-xl border border-gray-400 font-sans text-xs leading-snug"
         >
           <DocumentLayout
             title="ABSTRACT OF QUOTATION"
@@ -117,7 +117,7 @@ export default function AOQDocument({
             printAreaId="aoq-document"
           >
             {/* Annex F label */}
-            <div className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <div className="text-right text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">
               Annex F
             </div>
 
@@ -137,7 +137,7 @@ export default function AOQDocument({
                       name="procurementType"
                       checked={procurementType === type}
                       onChange={() => setProcurementType(type)}
-                      className="mt-0.5 accent-[#7B1E1E]"
+                      className="mt-0.5 accent-[#800000]"
                     />
                     <span className="text-xs">{type}</span>
                   </label>
@@ -175,7 +175,7 @@ export default function AOQDocument({
                       type="text"
                       value={placeOfDelivery}
                       onChange={e => setPlaceOfDelivery(e.target.value)}
-                      className="border-b border-slate-400 outline-none bg-transparent ml-1 w-64 text-xs"
+                      className="border-b border-gray-400 outline-none bg-transparent ml-1 w-64 text-xs"
                     />
                   </td>
                 </tr>
@@ -192,7 +192,7 @@ export default function AOQDocument({
             <div className="overflow-x-auto">
               <table className="border-collapse border border-black text-[10px] w-full">
                 <thead>
-                  <tr className="bg-slate-100">
+                  <tr className="bg-gray-100">
                     <th className="border border-black p-2 text-center w-8" rowSpan={2}>#</th>
                     <th className="border border-black p-2 text-center w-8" rowSpan={2}>Qty</th>
                     <th className="border border-black p-2 text-center w-10" rowSpan={2}>Unit</th>
@@ -207,7 +207,7 @@ export default function AOQDocument({
                       </th>
                     ))}
                   </tr>
-                  <tr className="bg-slate-50">
+                  <tr className="bg-gray-50">
                     {supplierQuotes.map(q => (
                       <th key={q.supplierId} className="border border-black p-1 text-center text-[9px] font-normal italic">
                         Unit Price
@@ -219,7 +219,7 @@ export default function AOQDocument({
                   {rfqItems.map((item, idx) => {
                     const lowest = lowestPerRow[item.id];
                     return (
-                      <tr key={item.id} className="hover:bg-slate-50">
+                      <tr key={item.id} className="hover:bg-gray-50">
                         <td className="border border-black p-1 text-center font-mono">
                           {String(idx + 1).padStart(3, '0')}
                         </td>
@@ -238,7 +238,7 @@ export default function AOQDocument({
                             >
                               {price !== undefined && price > 0
                                 ? `₱${Number(price).toLocaleString('en-PH', { minimumFractionDigits: 2 })}`
-                                : <span className="text-slate-300">—</span>}
+                                : <span className="text-gray-300">—</span>}
                             </td>
                           );
                         })}
@@ -247,7 +247,7 @@ export default function AOQDocument({
                   })}
 
                   {/* Totals row */}
-                  <tr className="bg-slate-100 font-bold">
+                  <tr className="bg-gray-100 font-bold">
                     <td className="border border-black p-2 text-right" colSpan={4}>
                       TOTAL (Unit Price × Quantity)
                     </td>
@@ -274,7 +274,7 @@ export default function AOQDocument({
 
             {/* No bids state */}
             {supplierQuotes.length === 0 && (
-              <div className="text-center text-slate-400 italic p-6 border border-dashed border-slate-300 mt-2">
+              <div className="text-center text-gray-400 italic p-6 border border-dashed border-gray-300 mt-2">
                 No supplier quotes have been submitted for this RFQ yet.
                 <br />
                 The comparison matrix will populate once bids are received.
@@ -314,7 +314,7 @@ export default function AOQDocument({
         <button
           type="button"
           onClick={() => window.print()}
-          className="px-6 py-2 rounded-xl bg-[#7B1E1E] text-white text-sm font-bold hover:opacity-90 transition shadow-md"
+          className="px-6 py-2 rounded-xl bg-[#800000] text-white text-sm font-bold hover:opacity-90 transition shadow-md"
         >
           🖨️ Print Abstract of Quotation
         </button>

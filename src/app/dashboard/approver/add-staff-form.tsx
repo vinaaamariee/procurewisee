@@ -33,7 +33,7 @@ export default function AddStaffForm() {
         {message && (
           <div style={{
             padding: '0.75rem', marginBottom: '1rem', borderRadius: 8, fontSize: '0.85rem',
-            background: message.type === 'success' ? 'var(--green-dim)' : 'var(--accent-glass)',
+            background: message.type === 'success' ? 'var(--secondary-dim)' : 'var(--accent-glass)',
             color: message.type === 'success' ? 'var(--secondary)' : 'var(--accent)',
             border: `1px solid ${message.type === 'success' ? 'var(--secondary)' : 'var(--accent)'}`
           }}>

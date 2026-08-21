@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
@@ -30,9 +30,9 @@ import {
   MapPin,
 } from "lucide-react";
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Interfaces (unchanged)
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 interface Product {
   id: number;
@@ -63,9 +63,9 @@ interface MarketplaceClientProps {
   userProfile: any;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Sub-components
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function MarketplaceHeader({
   searchQuery,
@@ -92,12 +92,12 @@ function MarketplaceHeader({
       : "/dashboard/end-user";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-gray-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl shadow-sm">
+    <header className="sticky top-0 z-40 border-b border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4 h-16">
           {/* Brand */}
           <div className="flex items-center gap-3 shrink-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#7B1E1E] to-[#7B1E1E] flex items-center justify-center shadow-md">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#800000] to-[#800000] flex items-center justify-center shadow-md">
               <Package className="w-4.5 h-4.5 text-white" />
             </div>
             <div className="hidden sm:block">
@@ -116,10 +116,10 @@ function MarketplaceHeader({
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 group-focus-within:text-[var(--accent)] transition-colors" />
               <input
                 type="text"
-                placeholder="Search catalog items, brands, specifications…"
+                placeholder="Search catalog items, brands, specificationsâ€¦"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl text-sm outline-none focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/10 transition-all placeholder:text-gray-400"
+                className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm outline-none focus:border-[#800000] focus:ring-2 focus:ring-[#800000]/10 transition-all placeholder:text-gray-400"
               />
             </div>
           </div>
@@ -130,12 +130,12 @@ function MarketplaceHeader({
 
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative p-2 rounded-xl border border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+              className="relative p-2 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               aria-label="Open cart"
             >
-              <ShoppingCart className="w-4.5 h-4.5 text-gray-600 dark:text-slate-300" />
+              <ShoppingCart className="w-4.5 h-4.5 text-gray-600 dark:text-gray-300" />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[var(--secondary)] text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white dark:border-slate-950">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[var(--secondary)] text-white text-[9px] font-black rounded-full flex items-center justify-center border-2 border-white dark:border-gray-950">
                   {cartCount}
                 </span>
               )}
@@ -144,7 +144,7 @@ function MarketplaceHeader({
             {userProfile ? (
               <a
                 href={dashboardHref}
-                className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[#5a1515] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
+                className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[#5C0000] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Dashboard</span>
@@ -152,7 +152,7 @@ function MarketplaceHeader({
             ) : (
               <a
                 href="/login"
-                className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[#5a1515] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
+                className="flex items-center gap-2 bg-[var(--accent)] hover:bg-[#5C0000] text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shadow-sm"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 <span className="hidden sm:inline">Sign In</span>
@@ -167,7 +167,7 @@ function MarketplaceHeader({
 
 function HeroSection() {
   return (
-    <section className="bg-gradient-to-br from-[#7B1E1E] via-[#7B1E1E] to-[#A6761D] text-white">
+    <section className="bg-gradient-to-br from-[#800000] via-[#800000] to-[#D4AF37] text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left */}
@@ -177,7 +177,7 @@ function HeroSection() {
               Procurement Management Information System
             </div>
             <h1 className="text-4xl lg:text-5xl font-black leading-tight tracking-tight">
-              Good Morning 👋
+              Good Morning ðŸ‘‹
               <span className="block text-2xl lg:text-3xl font-bold text-white/80 mt-2">
                 Welcome to ProcureWise
               </span>
@@ -189,7 +189,7 @@ function HeroSection() {
             <div className="flex flex-wrap gap-3 pt-2">
               <Link
                 href="/catalog"
-                className="inline-flex items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--secondary-dark,#A6761D)] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg shadow-md"
+                className="inline-flex items-center gap-2 bg-[var(--secondary)] hover:bg-[var(--secondary-dark,#D4AF37)] text-white px-6 py-3 rounded-xl font-bold text-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg shadow-md"
               >
                 <Package className="w-4 h-4" />
                 Browse Catalog
@@ -204,7 +204,7 @@ function HeroSection() {
             </div>
           </div>
 
-          {/* Right — decorative card */}
+          {/* Right â€” decorative card */}
           <div className="hidden lg:block">
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-8 space-y-5">
               <div className="flex items-center gap-3 mb-2">
@@ -217,7 +217,7 @@ function HeroSection() {
                 </div>
               </div>
               {[
-                { label: "Catalog Items", value: "2,713", color: "#A6761D" },
+                { label: "Catalog Items", value: "2,713", color: 'var(--secondary-strong)' },
               ].map((stat) => (
                 <div
                   key={stat.label}
@@ -244,36 +244,36 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
       title: "Browse Products",
       desc: "Explore the procurement catalog with detailed specs and supplier pricing.",
       href: "/catalog",
-      cta: "View Catalog →",
+      cta: "View Catalog â†’",
       color: "var(--accent)",
-      bg: "rgba(123, 30, 30, 0.06)",
+      bg: "rgba(128, 0, 0, 0.06)",
     },
     {
       icon: ClipboardList,
       title: "Create PPMP",
       desc: "Prepare your Project Procurement Management Plan for budget allocation.",
       href: "/dashboard/end-user/ppmp",
-      cta: "Start Planning →",
-      color: "var(--secondary)",
-      bg: "rgba(166, 118, 29, 0.06)",
+      cta: "Start Planning â†’",
+      color: 'var(--secondary-strong)',
+      bg: "rgba(212, 175, 55, 0.06)",
     },
     {
       icon: FileText,
       title: "Submit Purchase Request",
       desc: "File a purchase request for items needed by your department or office.",
       href: "/dashboard/end-user/pr",
-      cta: "Submit PR →",
-      color: "var(--secondary)",
-      bg: "rgba(123, 30, 30, 0.06)",
+      cta: "Submit PR â†’",
+      color: 'var(--secondary-strong)',
+      bg: "rgba(128, 0, 0, 0.06)",
     },
     {
       icon: MapPin,
       title: "Track Request",
       desc: "Track the status of your procurement request using your tracking code.",
       href: "/track",
-      cta: "Track Now →",
-      color: "#7B1E1E",
-      bg: "rgba(123, 30, 30, 0.06)",
+      cta: "Track Now â†’",
+      color: "#800000",
+      bg: "rgba(128, 0, 0, 0.06)",
     },
   ];
 
@@ -292,7 +292,7 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
           <a
             key={tile.title}
             href={tile.href}
-            className="group bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 flex flex-col gap-4"
+            className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all duration-200 hover:-translate-y-1 flex flex-col gap-4"
           >
             <div
               className="w-11 h-11 rounded-xl flex items-center justify-center"
@@ -304,7 +304,7 @@ function QuickAccessSection({ onOpenCart }: { onOpenCart: () => void }) {
               <h3 className="font-bold text-sm text-gray-900 dark:text-white mb-1">
                 {tile.title}
               </h3>
-              <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed">
+              <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">
                 {tile.desc}
               </p>
             </div>
@@ -338,17 +338,17 @@ function FilterToolbar({
   onReset,
 }: any) {
   return (
-    <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-4 shadow-sm">
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-sm">
       <div className="flex flex-wrap items-center gap-3">
-        {/* Search — mobile */}
+        {/* Search â€” mobile */}
         <div className="relative flex-1 min-w-[180px] md:hidden">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
           <input
             type="text"
-            placeholder="Search…"
+            placeholder="Searchâ€¦"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg outline-none focus:border-[#7B1E1E] transition"
+            className="w-full pl-9 pr-3 py-2 text-xs bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg outline-none focus:border-[#800000] transition"
           />
         </div>
 
@@ -356,7 +356,7 @@ function FilterToolbar({
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="flex-1 min-w-[130px] max-w-[200px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#7B1E1E] cursor-pointer transition"
+          className="flex-1 min-w-[130px] max-w-[200px] bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#800000] cursor-pointer transition"
         >
           <option value="">All Categories</option>
           {categories.map((c: string) => (
@@ -368,7 +368,7 @@ function FilterToolbar({
         <select
           value={selectedBrand}
           onChange={(e) => setSelectedBrand(e.target.value)}
-          className="flex-1 min-w-[120px] max-w-[180px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#7B1E1E] cursor-pointer transition"
+          className="flex-1 min-w-[120px] max-w-[180px] bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#800000] cursor-pointer transition"
         >
           <option value="">All Brands</option>
           {brands.map((b: string) => (
@@ -380,7 +380,7 @@ function FilterToolbar({
         <select
           value={selectedSupplier}
           onChange={(e) => setSelectedSupplier(e.target.value)}
-          className="flex-1 min-w-[140px] max-w-[220px] bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#7B1E1E] cursor-pointer transition"
+          className="flex-1 min-w-[140px] max-w-[220px] bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#800000] cursor-pointer transition"
         >
           <option value="">All Suppliers</option>
           {suppliers.map((s: any) => (
@@ -389,25 +389,25 @@ function FilterToolbar({
         </select>
 
         {/* Divider */}
-        <div className="h-6 w-px bg-gray-200 dark:bg-slate-700 hidden sm:block" />
+        <div className="h-6 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
 
         {/* Sort */}
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value)}
-          className="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#7B1E1E] cursor-pointer transition"
+          className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-xs outline-none focus:border-[#800000] cursor-pointer transition"
         >
           <option value="popularity">Popularity</option>
           <option value="newest">Newest Added</option>
         </select>
 
         {/* View Toggle */}
-        <div className="flex bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-lg p-0.5 gap-0.5">
+        <div className="flex bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-0.5 gap-0.5">
           <button
             onClick={() => setViewMode("grid")}
             className={`p-1.5 rounded-md transition-colors ${
               viewMode === "grid"
-                ? "bg-white dark:bg-slate-700 text-[var(--accent)] shadow-sm"
+                ? "bg-white dark:bg-gray-700 text-[var(--accent)] shadow-sm"
                 : "text-gray-400"
             }`}
             aria-label="Grid view"
@@ -418,7 +418,7 @@ function FilterToolbar({
             onClick={() => setViewMode("list")}
             className={`p-1.5 rounded-md transition-colors ${
               viewMode === "list"
-                ? "bg-white dark:bg-slate-700 text-[var(--accent)] shadow-sm"
+                ? "bg-white dark:bg-gray-700 text-[var(--accent)] shadow-sm"
                 : "text-gray-400"
             }`}
             aria-label="List view"
@@ -446,9 +446,9 @@ function FilterToolbar({
 
 function ProductCard({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) {
   return (
-    <div className="group bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between relative overflow-hidden">
+    <div className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between relative overflow-hidden">
       {/* Accent bar */}
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#7B1E1E] to-[#A6761D] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#800000] to-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
       <div className="space-y-4">
         {/* Badge + SKU */}
@@ -474,17 +474,17 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) 
         </div>
 
         {/* Description */}
-        <p className="text-xs text-gray-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+        <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed">
           {p.description}
         </p>
 
         {/* Specs */}
         {p.technicalSpecifications && (
-          <div className="bg-gray-50 dark:bg-slate-800/60 rounded-xl p-3 border border-gray-100 dark:border-slate-700">
+          <div className="bg-gray-50 dark:bg-gray-800/60 rounded-xl p-3 border border-gray-100 dark:border-gray-700">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
               Specifications
             </p>
-            <p className="text-[11px] text-gray-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+            <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
               {p.technicalSpecifications}
             </p>
           </div>
@@ -492,7 +492,7 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) 
       </div>
 
       {/* Footer */}
-      <div className="mt-5 pt-4 border-t border-gray-100 dark:border-slate-800 space-y-3">
+      <div className="mt-5 pt-4 border-t border-gray-100 dark:border-gray-800 space-y-3">
         <div className="flex items-end justify-between">
           <div>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
@@ -507,7 +507,7 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) 
 
         <button
           onClick={() => onAdd(p)}
-          className="w-full bg-[var(--accent)] hover:bg-[#5a1515] active:scale-[0.98] text-white py-2.5 rounded-xl text-xs font-bold transition-all duration-200 shadow-sm tracking-wide"
+          className="w-full bg-[var(--accent)] hover:bg-[#5C0000] active:scale-[0.98] text-white py-2.5 rounded-xl text-xs font-bold transition-all duration-200 shadow-sm tracking-wide"
         >
           + Add to Requisition
         </button>
@@ -518,9 +518,9 @@ function ProductCard({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) 
 
 function ProductListItem({ p, onAdd }: { p: Product; onAdd: (p: Product) => void }) {
   return (
-    <div className="group bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col md:flex-row gap-5 relative overflow-hidden">
+    <div className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-lg transition-all duration-200 flex flex-col md:flex-row gap-5 relative overflow-hidden">
       {/* Left accent */}
-      <div className="absolute top-0 bottom-0 left-0 w-0.5 bg-gradient-to-b from-[#7B1E1E] to-[#A6761D] opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
+      <div className="absolute top-0 bottom-0 left-0 w-0.5 bg-gradient-to-b from-[#800000] to-[#D4AF37] opacity-0 group-hover:opacity-100 transition-opacity rounded-l-2xl" />
 
       <div className="flex-1 space-y-2 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
@@ -537,7 +537,7 @@ function ProductListItem({ p, onAdd }: { p: Product; onAdd: (p: Product) => void
         <p className="text-xs text-gray-400 font-semibold flex items-center gap-2">
           <span className="flex items-center gap-1"><Building2 className="w-3 h-3" />{p.brand}</span>
         </p>
-        <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed max-w-2xl">
+        <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl">
           {p.description}
         </p>
         {p.technicalSpecifications && (
@@ -548,7 +548,7 @@ function ProductListItem({ p, onAdd }: { p: Product; onAdd: (p: Product) => void
         )}
       </div>
 
-      <div className="md:w-44 shrink-0 flex flex-col justify-between items-end border-t md:border-t-0 md:border-l border-gray-100 dark:border-slate-800 pt-4 md:pt-0 md:pl-5 gap-4">
+      <div className="md:w-44 shrink-0 flex flex-col justify-between items-end border-t md:border-t-0 md:border-l border-gray-100 dark:border-gray-800 pt-4 md:pt-0 md:pl-5 gap-4">
         <div className="text-right">
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Enter during PR</p>
           <p className="text-xs text-[var(--secondary)] font-semibold">per {p.unitOfMeasure}</p>
@@ -556,7 +556,7 @@ function ProductListItem({ p, onAdd }: { p: Product; onAdd: (p: Product) => void
 
         <button
           onClick={() => onAdd(p)}
-          className="w-full bg-[var(--accent)] hover:bg-[#5a1515] active:scale-[0.98] text-white py-2 rounded-xl text-xs font-bold transition-all duration-200 shadow-sm tracking-wide"
+          className="w-full bg-[var(--accent)] hover:bg-[#5C0000] active:scale-[0.98] text-white py-2 rounded-xl text-xs font-bold transition-all duration-200 shadow-sm tracking-wide"
         >
           + Add to Requisition
         </button>
@@ -589,9 +589,9 @@ function CartDrawer({
       />
 
       {/* Panel */}
-      <div className="relative w-full max-w-[420px] bg-white dark:bg-slate-950 h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-300">
+      <div className="relative w-full max-w-[420px] bg-white dark:bg-gray-950 h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-300">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-slate-800">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-800">
           <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-xl bg-[var(--accent)]/08 dark:bg-[var(--accent)]/20 flex items-center justify-center">
               <ShoppingCart className="w-4.5 h-4.5 text-[var(--accent)]" />
@@ -607,17 +607,17 @@ function CartDrawer({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <X className="w-4 h-4 text-gray-500" />
           </button>
         </div>
 
         {/* Items */}
-        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-1 divide-y divide-gray-100 dark:divide-slate-800">
+        <div className="flex-1 overflow-y-auto px-6 py-4 space-y-1 divide-y divide-gray-100 dark:divide-gray-800">
           {cart.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-48 text-center gap-3">
-              <div className="w-16 h-16 rounded-2xl bg-gray-50 dark:bg-slate-800 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-gray-50 dark:bg-gray-800 flex items-center justify-center">
                 <ShoppingCart className="w-7 h-7 text-gray-300" />
               </div>
               <div>
@@ -637,14 +637,14 @@ function CartDrawer({
                   <p className="text-[11px] text-gray-400 font-semibold mt-0.5 uppercase tracking-wide">
                     {item.brand}
                   </p>
-                  <p className="text-xs font-semibold text-gray-500 dark:text-slate-400 mt-1">
+                  <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mt-1">
                     {item.uom}
                   </p>
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   <button
                     onClick={() => updateQuantity(item.id, -1)}
-                    className="w-7 h-7 rounded-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+                    className="w-7 h-7 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     <Minus className="w-3 h-3 text-gray-500" />
                   </button>
@@ -653,7 +653,7 @@ function CartDrawer({
                   </span>
                   <button
                     onClick={() => updateQuantity(item.id, 1)}
-                    className="w-7 h-7 rounded-lg border border-gray-200 dark:border-slate-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors"
+                    className="w-7 h-7 rounded-lg border border-gray-200 dark:border-gray-700 flex items-center justify-center hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                   >
                     <Plus className="w-3 h-3 text-gray-500" />
                   </button>
@@ -665,7 +665,7 @@ function CartDrawer({
 
         {/* Footer */}
         {cart.length > 0 && (
-          <div className="px-6 py-5 border-t border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-900 space-y-4">
+          <div className="px-6 py-5 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 space-y-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
@@ -679,10 +679,10 @@ function CartDrawer({
             <button
               onClick={onCheckout}
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[#5a1515] disabled:opacity-60 text-white py-3.5 rounded-xl font-bold text-sm transition-all duration-200 shadow-md hover:shadow-lg"
+              className="w-full flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[#5C0000] disabled:opacity-60 text-white py-3.5 rounded-xl font-bold text-sm transition-all duration-200 shadow-md hover:shadow-lg"
             >
               {loading ? (
-                "Loading…"
+                "Loadingâ€¦"
               ) : (
                 <>
                   Generate Purchase Request
@@ -717,15 +717,15 @@ function CheckoutModal({
   onSubmit: (e: React.FormEvent) => void;
 }) {
   const inputClass =
-    "w-full bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-[#7B1E1E] focus:ring-2 focus:ring-[#7B1E1E]/10 transition-all placeholder:text-gray-400 dark:placeholder:text-slate-500";
+    "w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-3.5 py-2.5 text-sm outline-none focus:border-[#800000] focus:ring-2 focus:ring-[#800000]/10 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500";
   const labelClass =
     "block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
+      <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl w-full max-w-lg shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[92vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-6 pb-5 border-b border-gray-100 dark:border-slate-800">
+        <div className="flex items-center justify-between px-6 pt-6 pb-5 border-b border-gray-100 dark:border-gray-800">
           <div>
             <h3 className="text-lg font-black text-gray-900 dark:text-white">
               Generate Purchase Request
@@ -738,7 +738,7 @@ function CheckoutModal({
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
           >
             <X className="w-4.5 h-4.5 text-gray-500" />
           </button>
@@ -838,7 +838,7 @@ function CheckoutModal({
                 <option value="">Select PPMP (Optional)</option>
                 {ppmpList.map((ppmp) => (
                   <option key={ppmp.id} value={ppmp.id}>
-                    {ppmp.ppmpNumber} — {ppmp.projectTitle}
+                    {ppmp.ppmpNumber} â€” {ppmp.projectTitle}
                   </option>
                 ))}
               </select>
@@ -851,7 +851,7 @@ function CheckoutModal({
             <textarea
               required
               rows={3}
-              placeholder="Specify details, urgency, and destination…"
+              placeholder="Specify details, urgency, and destinationâ€¦"
               value={checkoutData.purpose}
               onChange={(e) =>
                 setCheckoutData({ ...checkoutData, purpose: e.target.value })
@@ -861,27 +861,27 @@ function CheckoutModal({
           </div>
 
           {/* Policy note */}
-          <div className="bg-[var(--secondary)]/08 dark:bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-xl p-4 text-xs text-[var(--secondary)] dark:text-[#A6761D] leading-relaxed font-medium">
+          <div className="bg-[var(--secondary)]/08 dark:bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-xl p-4 text-xs text-[var(--secondary)] dark:text-[var(--secondary-strong)] leading-relaxed font-medium">
             <strong>Budget Check Policy:</strong> Generates a Purchase Request Draft and allocates estimates
             against department budget allocations automatically. Revisions are logged asynchronously.
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-1 border-t border-gray-100 dark:border-slate-800">
+          <div className="flex gap-3 pt-1 border-t border-gray-100 dark:border-gray-800">
             <button
               type="button"
               disabled={loading}
               onClick={onClose}
-              className="flex-1 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-600 dark:text-slate-300 py-3 rounded-xl font-bold text-sm transition-colors"
+              className="flex-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 py-3 rounded-xl font-bold text-sm transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-[var(--accent)] hover:bg-[#5a1515] disabled:opacity-60 text-white py-3 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
+              className="flex-1 bg-[var(--accent)] hover:bg-[#5C0000] disabled:opacity-60 text-white py-3 rounded-xl font-bold text-sm transition-all duration-200 flex items-center justify-center gap-2 shadow-sm"
             >
-              {loading ? "Generating…" : "Submit Purchase Request"}
+              {loading ? "Generatingâ€¦" : "Submit Purchase Request"}
             </button>
           </div>
         </form>
@@ -904,7 +904,7 @@ function SuccessModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-      <div className="bg-white dark:bg-slate-950 border border-gray-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-8 shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl max-w-md w-full p-8 shadow-2xl text-center space-y-6 animate-in fade-in zoom-in-95 duration-200">
         {/* Icon */}
         <div className="w-20 h-20 bg-[var(--accent-glass)] dark:bg-[var(--accent-glass)] rounded-2xl flex items-center justify-center mx-auto">
           <CheckCircle2 className="w-10 h-10 text-[var(--accent)]" />
@@ -922,7 +922,7 @@ function SuccessModal({
               </span>
             </div>
           )}
-          <p className="text-sm text-gray-500 dark:text-slate-400 leading-relaxed mt-3">
+          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mt-3">
             {message}
           </p>
         </div>
@@ -930,13 +930,13 @@ function SuccessModal({
         <div className="flex gap-3 pt-2">
           <button
             onClick={onClose}
-            className="flex-1 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-600 dark:text-slate-300 py-3 rounded-xl font-bold text-sm transition-colors"
+            className="flex-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-300 py-3 rounded-xl font-bold text-sm transition-colors"
           >
             Continue Browsing
           </button>
           <button
             onClick={onDashboard}
-            className="flex-1 bg-[var(--accent)] hover:bg-[#5a1515] text-white py-3 rounded-xl font-bold text-sm transition-all duration-200 shadow-sm"
+            className="flex-1 bg-[var(--accent)] hover:bg-[#5C0000] text-white py-3 rounded-xl font-bold text-sm transition-all duration-200 shadow-sm"
           >
             Go to Dashboard
           </button>
@@ -946,9 +946,9 @@ function SuccessModal({
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Main Component
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function MarketplaceClient({
   products,
@@ -957,7 +957,7 @@ export default function MarketplaceClient({
 }: MarketplaceClientProps) {
   const router = useRouter();
 
-  // ── State (ALL UNCHANGED) ──────────────────────────────────────────────────
+  // â”€â”€ State (ALL UNCHANGED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -982,7 +982,7 @@ export default function MarketplaceClient({
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // ── Effects (ALL UNCHANGED) ────────────────────────────────────────────────
+  // â”€â”€ Effects (ALL UNCHANGED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
     const saved = localStorage.getItem("procurewise_cart");
     if (saved) {
@@ -1034,7 +1034,7 @@ export default function MarketplaceClient({
     }
   };
 
-  // ── Derived values (ALL UNCHANGED) ────────────────────────────────────────
+  // â”€â”€ Derived values (ALL UNCHANGED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const categories = useMemo(
     () => Array.from(new Set(products.map((p) => p.category))),
     [products]
@@ -1065,7 +1065,7 @@ export default function MarketplaceClient({
 
   const cartTotal = 0;
 
-  // ── Handlers (ALL UNCHANGED) ───────────────────────────────────────────────
+  // â”€â”€ Handlers (ALL UNCHANGED) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const handleCheckoutClick = async () => {
     if (userProfile && userProfile.role !== "End User") {
       alert(
@@ -1143,11 +1143,11 @@ export default function MarketplaceClient({
     }
   };
 
-  // ─────────────────────────────────────────────────────────────────────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   // Render
-  // ─────────────────────────────────────────────────────────────────────────
+  // â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   return (
-    <div className="min-h-screen bg-[#FAF9F6] dark:bg-slate-950 text-gray-900 dark:text-white font-sans">
+    <div className="min-h-screen bg-[#FAFAFA] dark:bg-gray-950 text-gray-900 dark:text-white font-sans">
       {/* Header */}
       <MarketplaceHeader
         searchQuery={searchQuery}
@@ -1205,8 +1205,8 @@ export default function MarketplaceClient({
 
         {/* Product Grid / List */}
         {processedProducts.length === 0 ? (
-          <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-2xl py-24 text-center shadow-sm">
-            <div className="w-16 h-16 bg-gray-50 dark:bg-slate-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl py-24 text-center shadow-sm">
+            <div className="w-16 h-16 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <Package className="w-8 h-8 text-gray-300" />
             </div>
             <p className="text-sm font-semibold text-gray-500">

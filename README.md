@@ -1,5 +1,17 @@
 # 🏛️ ProcureWise
 
+## Canonical Brand Palette v2 — Strict Two-Color System (#800000 / #D4AF37)
+
+**Date**: August 21, 2026
+
+- **Canonical Palette Locked In**: The system now uses the official BSC ramp exclusively — Maroon `#800000` (Primary), `#5C0000` (Dark), `#400000` (Deep), `#F5EAEA` (Tint); Gold `#D4AF37` (Primary), `#B8941F` (Dark, AA-safe gold text on light), `#F4E4A6` (Light), `#FFF8E1` (Tint). The previous pass-1 values (`#7B1E1E`, `#5A1515`, `#A6761D`) are fully purged.
+- **Centralized Semantic Tokens**: `src/app/globals.css` defines the full semantic layer — `--primary/-hover/-light`, `--secondary-strong` (contrast-safe gold text: `#B8941F` in light mode, `#F4E4A6` in dark), `--secondary-hover`, plus legacy aliases (`--accent`, `--accent-light`, `--secondary`, `--secondary-dim`, `--border-accent`) and a complete sidebar token set (`--sidebar-bg/-border/-item/-item-hover-bg/-active-bg/-active-text/-label`). daisyUI light + dark themes were rewritten onto the ramp (`primary #800000`, `secondary/warning #D4AF37`, info/success/error remapped to maroon).
+- **Dark Maroon Sidebar**: The app sidebar is now dark maroon (`--maroon-hover` light / `--maroon-deep` dark) with a gold top accent band, gold active-state indicators (left bar + tinted pill + gold-light icons/text), white item labels, gold section labels — per spec §8.
+- **Centralized Status System**: New `src/lib/status-tone.ts` is the single source of truth for status colors. Mapping per spec §9: Draft/Cancelled/Closed = neutral gray; Submitted/Pending/Review = gold fill; RFQ/in-procurement milestones = gold outline; Approved/Verified = maroon outline; Returned-for-revision = light maroon tint; Completed/Delivered = dark maroon fill; Rejected = deep maroon fill. The shared `StatusBadge` component delegates to it, as do the PR tracker, PO drafting board, supplier directory, solicitation board, and pre-canvass list. No rainbow status colors anywhere.
+- **Charts & Data Viz**: All custom SVG charts (spend trends, radar, price trends) route through brand tokens; scorecard metrics differentiate via maroon (quality) vs dark gold (delivery) only. Chart palette is restricted to `#800000`, `#D4AF37`, `#B8941F`, `#5C0000`, `#9CA3AF`.
+- **Blue-Tinted Grays Purged**: All `slate-*`/`zinc-*` Tailwind classes were normalized to same-shade `gray-*`; warm-neutral inline hexes (`#181411`, `#211B17`, `#2B241F`, `#E7E5E0`, `#FAF9F6`, etc.) were normalized to the pure neutral ramp (`#111111`–`#FFFFFF`).
+- **Verification Checklist Passed (zero violations)**: grep confirms zero occurrences of `bg-blue-`, `text-blue-`, `bg-green-`, `text-emerald-`, `bg-amber-`, `text-purple-`, `bg-red-`, `text-red-`, `-slate-`, `-zinc-`, `#7B1E1E`, `#A6761D`, `#5A1515`. Full hex inventory across `src/` contains only the canonical maroon/gold ramps plus pure neutrals. `tsc --noEmit`, `eslint` (0 errors), and `next build` all pass.
+
 ## Strict Maroon & Gold Enforcement — Whole-System Color Audit
 
 **Date**: August 21, 2026

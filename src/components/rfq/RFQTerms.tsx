@@ -34,7 +34,7 @@ export default function RFQTerms({
       <div className="flex gap-1">
         <span className="font-bold text-black shrink-0">NOTE: 1.</span>
         <p className="uppercase text-black">
-          THE DEFAULT MODE OF PRICE EVALUATION SHALL BE ON A LOT BASIS, OTHERWISE PER ITEMS EVALUATION SHALL BE USED IF THERE WILL BE LACKING ITEMS IN ALL RFQ'S AND SUBJECT TO END-USER APPROVAL., <span className="italic normal-case text-slate-900">(Clause 15.2, Section I, Instruction to Bidders of the Philippine Bidding Documents for goods and infrastructure projects)</span>
+          THE DEFAULT MODE OF PRICE EVALUATION SHALL BE ON A LOT BASIS, OTHERWISE PER ITEMS EVALUATION SHALL BE USED IF THERE WILL BE LACKING ITEMS IN ALL RFQ'S AND SUBJECT TO END-USER APPROVAL., <span className="italic normal-case text-gray-900">(Clause 15.2, Section I, Instruction to Bidders of the Philippine Bidding Documents for goods and infrastructure projects)</span>
         </p>
       </div>
 

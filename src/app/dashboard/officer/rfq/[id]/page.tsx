@@ -186,19 +186,19 @@ export default async function RfqEvaluationPage({ params }: { params: Params }) 
     <div className="flex flex-wrap gap-3 print:hidden">
       <Link
         href={`/dashboard/officer/rfq/${rfqId}/ack`}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-sm font-semibold text-slate-700 shadow-sm transition"
+        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-sm font-semibold text-gray-700 shadow-sm transition"
       >
         <span>📋</span>
         <span>Acknowledgement Receipt</span>
-        <span className="text-[10px] text-slate-400 font-normal">(Annex E)</span>
+        <span className="text-[10px] text-gray-400 font-normal">(Annex E)</span>
       </Link>
       <Link
         href={`/dashboard/officer/rfq/${rfqId}/aoq`}
-        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-sm font-semibold text-slate-700 shadow-sm transition"
+        className="flex items-center gap-2 px-4 py-2 rounded-xl border border-gray-300 bg-white hover:bg-gray-50 text-sm font-semibold text-gray-700 shadow-sm transition"
       >
         <span>📊</span>
         <span>Abstract of Quotation</span>
-        <span className="text-[10px] text-slate-400 font-normal">(Annex F)</span>
+        <span className="text-[10px] text-gray-400 font-normal">(Annex F)</span>
       </Link>
     </div>
 

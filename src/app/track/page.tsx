@@ -21,7 +21,7 @@ export default function TrackPage() {
         >
           {/* Header Banner */}
           <div className="text-center space-y-2">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#7B1E1E] to-[#A6761D] flex items-center justify-center text-white font-black text-sm mx-auto shadow-md">
+            <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#800000] to-[#D4AF37] flex items-center justify-center text-white font-black text-sm mx-auto shadow-md">
               PW
             </div>
             <h2 className="text-xl font-extrabold tracking-tight" style={{ color: "var(--text-primary)" }}>

@@ -22,26 +22,26 @@ export default function PRSignatureSection({
   isReadOnly = false,
 }: PRSignatureSectionProps) {
   return (
-    <div className="pr-signature-section mt-3 border border-slate-900 font-serif text-xs break-inside-avoid" style={{pageBreakInside: 'avoid'}}>
-      <div className="grid grid-cols-2 divide-x divide-slate-900">
+    <div className="pr-signature-section mt-3 border border-gray-900 font-serif text-xs break-inside-avoid" style={{pageBreakInside: 'avoid'}}>
+      <div className="grid grid-cols-2 divide-x divide-gray-900">
         
         {/* Requested By Block */}
         <div className=" p-3 space-y-3 flex flex-col justify-between">
-          <div className="flex justify-between items-center border-b border-slate-300 pb-1">
-            <span className="font-bold text-slate-950 uppercase text-[11px] font-sans">
+          <div className="flex justify-between items-center border-b border-gray-300 pb-1">
+            <span className="font-bold text-gray-950 uppercase text-[11px] font-sans">
               Requested by:
             </span>
           </div>
 
           <div className="space-y-1 text-center pt-2">
-            <div className="border-b border-slate-900 w-3/4 mx-auto h-7"></div>
+            <div className="border-b border-gray-900 w-3/4 mx-auto h-7"></div>
             <div className="pt-1">
-              <span className="font-bold text-slate-950 uppercase text-xs font-sans">
+              <span className="font-bold text-gray-950 uppercase text-xs font-sans">
                 Signature over Printed Name
               </span>
             </div>
             {isReadOnly ? (
-              <div className="font-bold uppercase text-slate-950 text-xs">
+              <div className="font-bold uppercase text-gray-950 text-xs">
                 {requestedByName}
               </div>
             ) : (
@@ -50,30 +50,30 @@ export default function PRSignatureSection({
                 value={requestedByName}
                 onChange={(e) => setRequestedByName?.(e.target.value)}
                 placeholder="Printed Name of Requisitioner"
-                className="w-3/4 text-center font-bold uppercase text-slate-950 border-b border-dotted border-slate-400 py-0.5 text-xs bg-transparent focus:outline-none"
+                className="w-3/4 text-center font-bold uppercase text-gray-950 border-b border-dotted border-gray-400 py-0.5 text-xs bg-transparent focus:outline-none"
               />
             )}
-            <div className="text-[10px] text-slate-600 font-sans">{requestedByTitle}</div>
+            <div className="text-[10px] text-gray-600 font-sans">{requestedByTitle}</div>
           </div>
         </div>
 
         {/* Approved By Block */}
-        <div className=" p-3 space-y-3 flex flex-col justify-between bg-slate-50/40">
-          <div className="flex justify-between items-center border-b border-slate-300 pb-1">
-            <span className="font-bold text-slate-950 uppercase text-[11px] font-sans">
+        <div className=" p-3 space-y-3 flex flex-col justify-between bg-gray-50/40">
+          <div className="flex justify-between items-center border-b border-gray-300 pb-1">
+            <span className="font-bold text-gray-950 uppercase text-[11px] font-sans">
               Approved by:
             </span>
           </div>
 
           <div className="space-y-1 text-center pt-2">
-            <div className="border-b border-slate-900 w-3/4 mx-auto h-7"></div>
+            <div className="border-b border-gray-900 w-3/4 mx-auto h-7"></div>
             <div className="pt-1">
-              <span className="font-bold text-slate-950 uppercase text-xs font-sans">
+              <span className="font-bold text-gray-950 uppercase text-xs font-sans">
                 Signature over Printed Name
               </span>
             </div>
             {isReadOnly ? (
-              <div className="font-bold uppercase text-slate-950 text-xs">
+              <div className="font-bold uppercase text-gray-950 text-xs">
                 {approvedByName}
               </div>
             ) : (
@@ -82,10 +82,10 @@ export default function PRSignatureSection({
                 value={approvedByName}
                 onChange={(e) => setApprovedByName?.(e.target.value)}
                 placeholder="Printed Name of Approver"
-                className="w-3/4 text-center font-bold uppercase text-slate-950 border-b border-dotted border-slate-400 py-0.5 text-xs bg-transparent focus:outline-none"
+                className="w-3/4 text-center font-bold uppercase text-gray-950 border-b border-dotted border-gray-400 py-0.5 text-xs bg-transparent focus:outline-none"
               />
             )}
-            <div className="text-[10px] text-slate-600 font-sans">{approvedByTitle}</div>
+            <div className="text-[10px] text-gray-600 font-sans">{approvedByTitle}</div>
           </div>
         </div>
 

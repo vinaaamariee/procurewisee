@@ -14,7 +14,7 @@ export default function PrintableDocumentLayout({
   printAreaId = "printable-area",
 }: PrintableDocumentLayoutProps) {
   return (
-    <div className="relative w-full text-slate-950 bg-white">
+    <div className="relative w-full text-gray-950 bg-white">
       {/* Reusable Print Stylesheet */}
       <style
         dangerouslySetInnerHTML={{
@@ -60,7 +60,7 @@ export default function PrintableDocumentLayout({
                 display: block !important;
                 visibility: visible !important;
                 width: 100% !important;
-                border-bottom: 2px solid #7b1e1e !important;
+                border-bottom: 2px solid #800000 !important;
                 margin-bottom: 20px !important;
               }
               
@@ -87,7 +87,7 @@ export default function PrintableDocumentLayout({
               header.bsc-print-header-fallback {
                 display: block !important;
                 visibility: visible !important;
-                border-bottom: 2px solid #7b1e1e !important;
+                border-bottom: 2px solid #800000 !important;
                 margin-bottom: 6mm !important;
               }
               
@@ -138,7 +138,7 @@ export default function PrintableDocumentLayout({
       <div id={printAreaId} className="w-full font-serif p-6 md:p-8 bg-white border border-base-300 rounded-sm">
         {/* Printable Fixed Header (Visible in print fallback and preview) */}
         <header className="bsc-print-header-fallback w-full pb-4">
-          <div className="flex items-center justify-between border-b-2 border-slate-900 pb-2">
+          <div className="flex items-center justify-between border-b-2 border-gray-900 pb-2">
             <div className="flex items-center gap-4">
               <img
                 src="/images/bsc-logo.png"
@@ -146,19 +146,19 @@ export default function PrintableDocumentLayout({
                 className="w-16 h-16 object-contain"
               />
               <div className="text-left font-serif">
-                <p className="text-[10px] uppercase tracking-wider text-slate-700 font-semibold">
+                <p className="text-[10px] uppercase tracking-wider text-gray-700 font-semibold">
                   Republic of the Philippines
                 </p>
-                <p className="text-sm font-bold uppercase text-slate-950">
+                <p className="text-sm font-bold uppercase text-gray-950">
                   Batanes State College
                 </p>
-                <p className="text-[10px] text-slate-600">
+                <p className="text-[10px] text-gray-600">
                   Washington Ave., San Antonio, Basco, Batanes
                 </p>
               </div>
             </div>
             {documentRef && (
-              <div className="text-right text-[10px] font-mono font-bold text-slate-700">
+              <div className="text-right text-[10px] font-mono font-bold text-gray-700">
                 Ref No: {documentRef}
               </div>
             )}
@@ -167,19 +167,19 @@ export default function PrintableDocumentLayout({
 
         {/* Printable Content Header */}
         <div className="text-center my-4">
-          <h1 className="text-base font-bold uppercase tracking-wider text-slate-950">
+          <h1 className="text-base font-bold uppercase tracking-wider text-gray-950">
             {title}
           </h1>
         </div>
 
         {/* Content */}
-        <div className="w-full text-slate-950">
+        <div className="w-full text-gray-950">
           {children}
         </div>
 
         {/* Printable Fixed Footer */}
-        <footer className="bsc-print-footer-fallback w-full pt-4 mt-6 text-center text-[9px] text-slate-500">
-          <div className="border-t border-slate-300 pt-2 flex justify-between items-center">
+        <footer className="bsc-print-footer-fallback w-full pt-4 mt-6 text-center text-[9px] text-gray-500">
+          <div className="border-t border-gray-300 pt-2 flex justify-between items-center">
             <span>ProcureWise Procurement Information System</span>
             <span>Batanes State College | Washington Ave., Basco, Batanes</span>
             <span>Page 1 of 1</span>

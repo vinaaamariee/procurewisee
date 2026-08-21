@@ -17,7 +17,7 @@ export default function RFQHeader({
     <div className="font-sans text-xs text-black space-y-1 mb-2">
       {/* Top Header Row: Annex D & Date */}
       <div className="flex justify-between items-baseline font-sans text-xs">
-        <div className="font-sans text-xs text-slate-900 font-normal">Annex D</div>
+        <div className="font-sans text-xs text-gray-900 font-normal">Annex D</div>
         <div className="flex items-baseline gap-1 text-xs">
           <span className="font-sans">Date:</span>
           {isReadOnly ? (

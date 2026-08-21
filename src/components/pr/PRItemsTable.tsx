@@ -305,7 +305,7 @@ export default function PRItemsTable({
               <td colSpan={5} className="border-r border-[var(--text-primary)] p-2 text-right uppercase tracking-wider text-[var(--text-primary)]">
                 Grand Total / Estimated Total Cost:
               </td>
-              <td className="p-2 text-right text-[#7B1E1E] text-sm">
+              <td className="p-2 text-right text-[#800000] text-sm">
                 ₱ {grandTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </td>
               {!isReadOnly && <td className="print:hidden"></td>}

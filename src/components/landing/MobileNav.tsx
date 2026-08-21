@@ -36,7 +36,7 @@ export default function MobileNav({ links }: MobileNavProps) {
                 <ChevronRight className="h-4 w-4 text-gray-400" />
               </Link>
             ))}
-            <div className="pt-3 mt-2 border-t border-gray-100 dark:border-slate-800">
+            <div className="pt-3 mt-2 border-t border-gray-100 dark:border-gray-800">
               <Link
                 href="/login"
                 onClick={() => setIsOpen(false)}

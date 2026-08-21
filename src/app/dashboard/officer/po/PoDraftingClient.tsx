@@ -8,6 +8,7 @@ import { createPoFromAwardAction } from "@/app/actions/po";
 import Card from "@/components/ui/Card";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { Search, FileText, ArrowRight, Filter } from "lucide-react";
+import { statusBadgeClass } from "@/lib/status-tone";
 
 interface Supplier {
   id: number;
@@ -57,20 +58,8 @@ interface PurchaseOrder {
 
 const ALL_STATUSES = ["All", "Draft", "Pending Approval", "Approved", "Sent to Supplier", "Partially Delivered", "Delivered", "Completed", "Cancelled", "Closed"];
 
-const STATUS_BADGE_COLORS: Record<string, string> = {
-  Draft: "bg-slate-100 text-slate-600 border-slate-200",
-  "Pending Approval": "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]",
-  Approved: "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]",
-  "Sent to Supplier": "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]",
-  "Partially Delivered": "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]",
-  Delivered: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]",
-  Completed: "bg-[var(--secondary-dim)] text-[var(--secondary)] border-[var(--border-accent)]",
-  Cancelled: "bg-[var(--accent-glass)] text-[var(--accent)] border-[var(--border-accent)]",
-  Closed: "bg-gray-100 text-gray-600 border-gray-200",
-};
-
 function PoStatusBadge({ status }: { status: string }) {
-  const cls = STATUS_BADGE_COLORS[status] || "bg-slate-100 text-slate-600 border-slate-200";
+  const cls = statusBadgeClass(status);
   return (
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full border text-[10px] font-bold ${cls}`}>
       {status}

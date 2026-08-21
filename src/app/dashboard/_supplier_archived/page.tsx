@@ -31,10 +31,10 @@ async function getSupplierData(supplierId?: number) {
 
 // Rewritten status styles to use inline colors
 const QUOTE_STATUS_STYLE: Record<string, { bg: string; color: string; border: string }> = {
-  Accepted:     { bg: 'rgba(123, 30, 30, 0.1)', color: '#7B1E1E', border: '1px solid rgba(123, 30, 30, 0.2)' },
-  Rejected:     { bg: 'rgba(123, 30, 30, 0.1)', color: '#7B1E1E', border: '1px solid rgba(123, 30, 30, 0.2)' },
-  'Under Review': { bg: 'rgba(166, 118, 29, 0.1)', color: '#A6761D', border: '1px solid rgba(166, 118, 29, 0.3)' },
-  Submitted:    { bg: 'rgba(123, 30, 30, 0.1)', color: '#7B1E1E', border: '1px solid rgba(123, 30, 30, 0.2)' },
+  Accepted:     { bg: 'rgba(128, 0, 0, 0.1)', color: '#800000', border: '1px solid rgba(128, 0, 0, 0.2)' },
+  Rejected:     { bg: 'rgba(128, 0, 0, 0.1)', color: '#800000', border: '1px solid rgba(128, 0, 0, 0.2)' },
+  'Under Review': { bg: 'rgba(212, 175, 55, 0.1)', color: 'var(--secondary-strong)', border: '1px solid rgba(212, 175, 55, 0.3)' },
+  Submitted:    { bg: 'rgba(128, 0, 0, 0.1)', color: '#800000', border: '1px solid rgba(128, 0, 0, 0.2)' },
 };
 
 export default async function SupplierDashboard() {
@@ -63,9 +63,9 @@ export default async function SupplierDashboard() {
 
   // Brand Colors mapped from your Login Page design
   const theme = {
-    crimson: '#7B1E1E',
-    gold: '#A6761D',
-    goldDark: '#A6761D',
+    crimson: '#800000',
+    gold: '#D4AF37',
+    goldDark: '#D4AF37',
     dark: '#111827',
     textMain: '#1f2937',
     textMuted: '#6b7280',
@@ -77,7 +77,7 @@ export default async function SupplierDashboard() {
   const statCards = [
     { label: 'Open RFQs',       value: openRfqs.length, icon: '📋', color: '#1f2937', desc: 'Available to bid on' },
     { label: 'My Quotes',       value: myQuotes.length, icon: '💰', color: theme.gold, desc: 'Submitted bids' },
-    { label: 'Accepted',        value: myQuotes.filter((q: any) => q.status === 'Accepted').length, icon: '✅', color: '#7B1E1E', desc: 'Winning bids' },
+    { label: 'Accepted',        value: myQuotes.filter((q: any) => q.status === 'Accepted').length, icon: '✅', color: '#800000', desc: 'Winning bids' },
     { label: 'Under Review',    value: myQuotes.filter((q: any) => q.status === 'Under Review').length, icon: '⏳', color: theme.crimson, desc: 'Pending decision' },
   ];
 
@@ -132,7 +132,7 @@ export default async function SupplierDashboard() {
       }}>
         <div style={{ padding: '1.25rem 1.5rem', borderBottom: '1px solid rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', backgroundColor: 'rgba(255,255,255,0.4)' }}>
           <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: theme.textMain, margin: 0 }}>Open Solicitations</h2>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, background: 'rgba(166, 118, 29, 0.1)', color: theme.goldDark, padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 700, background: 'rgba(212, 175, 55, 0.1)', color: theme.goldDark, padding: '0.25rem 0.75rem', borderRadius: '999px' }}>
             {openRfqs.length} available
           </span>
         </div>
@@ -165,7 +165,7 @@ export default async function SupplierDashboard() {
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '1rem', marginTop: 'auto' }}>
                     <div>
                       <span style={{ fontSize: '0.65rem', color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.5px', display: 'block', fontWeight: 700 }}>Budget</span>
-                      <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#7B1E1E' }}>
+                      <span style={{ fontSize: '0.9rem', fontWeight: 800, color: '#800000' }}>
                         ₱{Number(rfq.approvedBudgetContract).toLocaleString('en-PH')}
                       </span>
                     </div>
@@ -183,7 +183,7 @@ export default async function SupplierDashboard() {
                       width: '100%', padding: '0.75rem', borderRadius: '0.75rem', border: 'none', cursor: 'pointer',
                       background: `linear-gradient(90deg, ${theme.crimson} 0%, ${theme.goldDark} 100%)`,
                       color: 'white', fontSize: '0.85rem', fontWeight: 700, textAlign: 'center',
-                      textDecoration: 'none', display: 'block', marginTop: '0.5rem', boxShadow: `0 4px 12px rgba(166, 118, 29, 0.2)`
+                      textDecoration: 'none', display: 'block', marginTop: '0.5rem', boxShadow: `0 4px 12px rgba(212, 175, 55, 0.2)`
                     }}
                   >
                     📝 Submit Quotation

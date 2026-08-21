@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { UserCheck, ShieldAlert, Wrench, Lock } from "lucide-react";
 
@@ -68,10 +68,10 @@ export default function UserRolesSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="mb-8 max-w-3xl space-y-2">
-          <div className="badge badge-outline border-[#7B1E1E] text-[#7B1E1E] font-bold uppercase tracking-wider text-xs py-2 px-3">
+          <div className="badge badge-outline border-[#800000] text-[#800000] font-bold uppercase tracking-wider text-xs py-2 px-3">
             Role-Based Access
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#7B1E1E] tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#800000] tracking-tight">
             Institutional User Roles
           </h2>
           <p className="text-sm sm:text-base text-base-content/70">
@@ -81,7 +81,7 @@ export default function UserRolesSection() {
         </div>
 
         {/* Auth Gate Banner */}
-        <div className="flex items-center gap-3 rounded-xl border border-[#A6761D]/30 bg-[#A6761D]/5 px-4 py-3 mb-8 text-sm font-semibold text-[#A6761D]">
+        <div className="flex items-center gap-3 rounded-xl border border-[#D4AF37]/30 bg-[#D4AF37]/5 px-4 py-3 mb-8 text-sm font-semibold text-[var(--secondary-strong)]">
           <Lock className="h-5 w-5 flex-shrink-0" />
           <span>
             All role-specific modules are protected behind institutional authentication. Users must sign in to access any procurement function.
@@ -100,17 +100,17 @@ export default function UserRolesSection() {
                 <div className="card-body p-6 space-y-3 flex-1">
                   {/* Icon & Badge */}
                   <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#7B1E1E]/10 text-[#7B1E1E]">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#800000]/10 text-[#800000]">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <span className="badge badge-sm border-[#A6761D]/30 bg-[#A6761D]/10 text-[#A6761D] font-bold">
+                    <span className="badge badge-sm border-[#D4AF37]/30 bg-[#D4AF37]/10 text-[var(--secondary-strong)] font-bold">
                       {role.badge}
                     </span>
                   </div>
 
                   {/* Title */}
                   <div>
-                    <h3 className="card-title text-lg font-extrabold text-[#7B1E1E]">
+                    <h3 className="card-title text-lg font-extrabold text-[#800000]">
                       {role.title}
                     </h3>
                     <p className="text-xs font-semibold text-base-content/60">
@@ -131,7 +131,7 @@ export default function UserRolesSection() {
                   <ul className="space-y-1.5 text-xs text-base-content/80">
                     {role.access.map((item, i) => (
                       <li key={i} className="flex items-start gap-1.5">
-                        <span className="text-[#7B1E1E] font-bold mt-0.5">•</span>
+                        <span className="text-[#800000] font-bold mt-0.5">â€¢</span>
                         <span>{item}</span>
                       </li>
                     ))}

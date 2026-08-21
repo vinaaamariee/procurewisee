@@ -68,7 +68,7 @@ export default function RFQSignatureSection({
       </div>
 
       {/* Ref.# Footer Line */}
-      <div className="pt-4 flex justify-between items-baseline text-xs font-sans border-t border-slate-200 mt-4">
+      <div className="pt-4 flex justify-between items-baseline text-xs font-sans border-t border-gray-200 mt-4">
         <div className="flex items-baseline gap-1">
           <span className="font-sans">Ref.#</span>
           {isReadOnly ? (

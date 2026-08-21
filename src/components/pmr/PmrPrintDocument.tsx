@@ -45,13 +45,13 @@ export default function PmrPrintDocument({ pmr, printAreaId = 'pmrPrintArea' }: 
           <h1 className="text-xl font-bold uppercase tracking-wider text-black font-serif">
             PROCUREMENT MONITORING RECORD
           </h1>
-          <p className="text-xs font-mono font-bold mt-1 text-slate-700">
+          <p className="text-xs font-mono font-bold mt-1 text-gray-700">
             Ref No: {pmr.pmrNumber}
           </p>
         </div>
 
         {/* PMR Metadata Grid */}
-        <div className="grid grid-cols-2 border border-slate-800 divide-x divide-slate-800 text-[11px] font-bold">
+        <div className="grid grid-cols-2 border border-gray-800 divide-x divide-gray-800 text-[11px] font-bold">
           <div className="p-2 space-y-1">
             <div>Entity Name: <span className="font-extrabold underline">BATANES STATE COLLEGE</span></div>
             <div>Office: <span className="underline">{pmr.office}</span></div>
@@ -68,16 +68,16 @@ export default function PmrPrintDocument({ pmr, printAreaId = 'pmrPrintArea' }: 
         </div>
 
         {/* Stage / Status strip */}
-        <div className="grid grid-cols-2 border border-slate-800 divide-x divide-slate-800 text-[11px] font-bold">
+        <div className="grid grid-cols-2 border border-gray-800 divide-x divide-gray-800 text-[11px] font-bold">
           <div className="p-2">Current Stage: <span className="font-extrabold underline uppercase">{pmr.stage}</span></div>
           <div className="p-2">Status: <span className="font-extrabold underline uppercase">{pmr.status}</span></div>
         </div>
 
         {/* Items Table */}
-        <div className="border border-slate-800 overflow-hidden">
+        <div className="border border-gray-800 overflow-hidden">
           <table className="w-full text-[11px] border-collapse">
             <thead>
-              <tr className="border-b border-slate-800 bg-slate-100 text-center font-extrabold divide-x divide-slate-800">
+              <tr className="border-b border-gray-800 bg-gray-100 text-center font-extrabold divide-x divide-gray-800">
                 <th className="p-2 w-12">Item No</th>
                 <th className="p-2 w-16">Unit</th>
                 <th className="p-2">Item Description</th>
@@ -88,13 +88,13 @@ export default function PmrPrintDocument({ pmr, printAreaId = 'pmrPrintArea' }: 
             </thead>
             <tbody>
               {pmr.items.map((item, idx) => (
-                <tr key={idx} className="border-b border-slate-400 divide-x divide-slate-800 font-semibold text-[10px]">
+                <tr key={idx} className="border-b border-gray-400 divide-x divide-gray-800 font-semibold text-[10px]">
                   <td className="p-2 text-center">{idx + 1}</td>
                   <td className="p-2 text-center">{item.unit}</td>
                   <td className="p-2">
                     <div className="font-extrabold">{item.description}</div>
                     {item.specification && (
-                      <div className="text-[9px] text-slate-600 mt-0.5 whitespace-pre-wrap">{item.specification}</div>
+                      <div className="text-[9px] text-gray-600 mt-0.5 whitespace-pre-wrap">{item.specification}</div>
                     )}
                   </td>
                   <td className="p-2 text-center">{item.quantity}</td>
@@ -103,8 +103,8 @@ export default function PmrPrintDocument({ pmr, printAreaId = 'pmrPrintArea' }: 
                 </tr>
               ))}
               {pmr.purpose && (
-                <tr className="border-t border-slate-800 font-extrabold text-[11px]">
-                  <td colSpan={6} className="p-3 bg-slate-50 text-left border-b border-slate-800">
+                <tr className="border-t border-gray-800 font-extrabold text-[11px]">
+                  <td colSpan={6} className="p-3 bg-gray-50 text-left border-b border-gray-800">
                     Purpose: <span className="underline normal-case italic font-bold">{pmr.purpose}</span>
                   </td>
                 </tr>
@@ -119,20 +119,20 @@ export default function PmrPrintDocument({ pmr, printAreaId = 'pmrPrintArea' }: 
 
         {/* Remarks */}
         {pmr.remarks && (
-          <div className="border border-slate-800 p-3 text-[11px] font-bold">
+          <div className="border border-gray-800 p-3 text-[11px] font-bold">
             Remarks: <span className="font-semibold">{pmr.remarks}</span>
           </div>
         )}
 
         {/* Signatures */}
-        <div className="grid grid-cols-2 border border-slate-800 divide-x divide-slate-800 text-[11px] font-bold">
+        <div className="grid grid-cols-2 border border-gray-800 divide-x divide-gray-800 text-[11px] font-bold">
           <div className="p-4 space-y-4">
             <span>Recorded By:</span>
             <div className="pt-6 text-center">
               <span className="block font-black underline uppercase">
                 {pmr.verifiedBy || "Procurement Staff"}
               </span>
-              <span className="text-[9px] text-slate-500 font-bold">Procurement Staff (Verification)</span>
+              <span className="text-[9px] text-gray-500 font-bold">Procurement Staff (Verification)</span>
             </div>
           </div>
           <div className="p-4 space-y-4">
@@ -141,7 +141,7 @@ export default function PmrPrintDocument({ pmr, printAreaId = 'pmrPrintArea' }: 
               <span className="block font-black underline uppercase">
                 {pmr.prNumber ? "BSC Requisitioner" : "Batanes State College"}
               </span>
-              <span className="text-[9px] text-slate-500 font-bold">Requisitioning Office</span>
+              <span className="text-[9px] text-gray-500 font-bold">Requisitioning Office</span>
             </div>
           </div>
         </div>

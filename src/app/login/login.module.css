@@ -1,4 +1,4 @@
-/* --- login.module.css --- */
+﻿/* --- login.module.css --- */
 
 .wrapper {
   display: flex;
@@ -17,14 +17,14 @@
   left: 0; 
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, #7B1E1E 0 34%, #A6761D 34% 67%, #7B1E1E 67% 100%);
+  background: linear-gradient(90deg, #800000 0 34%, #D4AF37 34% 67%, #800000 67% 100%);
   z-index: 50;
 }
 
 /* --- Left Panel --- */
 .leftPanel {
   width: 50%;
-  background: linear-gradient(135deg, #7B1E1E 0%, #5A1515 100%);
+  background: linear-gradient(135deg, #800000 0%, #5C0000 100%);
   position: relative;
   padding: 3.5rem;
   display: flex;
@@ -79,11 +79,11 @@
 }
 
 .logoP {
-  color: #7B1E1E;
+  color: #800000;
 }
 
 .logoW {
-  color: #A6761D;
+  color: #D4AF37;
 }
 
 .logoTitle {
@@ -96,7 +96,7 @@
 }
 
 .logoSubtitle {
-  color: #A6761D;
+  color: #D4AF37;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 1.2px;
@@ -163,7 +163,7 @@
 
 .cardHeader h2 {
   font-size: 12px;
-  color: #A6761D;
+  color: #D4AF37;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1.5px;
@@ -222,8 +222,8 @@
 }
 
 .inputField:focus {
-  border-color: #7B1E1E;
-  box-shadow: 0 0 0 4px rgba(123, 30, 30, 0.08);
+  border-color: #800000;
+  box-shadow: 0 0 0 4px rgba(128, 0, 0, 0.08);
 }
 
 .inputIcon {
@@ -257,16 +257,16 @@
 }
 
 .forgotPassword:hover {
-  color: #7B1E1E;
+  color: #800000;
   text-decoration: underline;
 }
 
 .submitButton {
   width: 100%;
   padding: 14px;
-  border: 1px solid #7B1E1E;
+  border: 1px solid #800000;
   border-radius: 12px;
-  background: #7B1E1E;
+  background: #800000;
   color: #ffffff;
   font-size: 14px;
   font-weight: 700;
@@ -276,8 +276,8 @@
 }
 
 .submitButton:hover {
-  background: #5A1515;
-  border-color: #5A1515;
+  background: #5C0000;
+  border-color: #5C0000;
   transform: translateY(-1px);
 }
 
@@ -306,14 +306,14 @@
 }
 
 .alertError {
-  border-color: rgba(123, 30, 30, 0.2);
-  background-color: rgba(123, 30, 30, 0.03);
+  border-color: rgba(128, 0, 0, 0.2);
+  background-color: rgba(128, 0, 0, 0.03);
   color: var(--alert);
 }
 
 .alertSuccess {
-  border-color: rgba(123, 30, 30, 0.2);
-  background-color: rgba(123, 30, 30, 0.03);
+  border-color: rgba(128, 0, 0, 0.2);
+  background-color: rgba(128, 0, 0, 0.03);
   color: var(--green);
 }
 
@@ -378,34 +378,34 @@
 
 /* --- Dark Mode overrides --- */
 :global(.dark) .loginCard {
-  background-color: #211B17;
-  border-color: #2B241F;
+  background-color: #1F1F1F;
+  border-color: #262626;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
 }
 
 :global(.dark) .inputField {
-  background-color: #181411;
-  border-color: #2B241F;
-  color: #FAF9F6;
+  background-color: #161616;
+  border-color: #262626;
+  color: #FAFAFA;
 }
 
 :global(.dark) .inputField:focus {
-  border-color: #A6761D;
-  box-shadow: 0 0 0 4px rgba(166, 118, 29, 0.15);
+  border-color: #D4AF37;
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.15);
 }
 
 :global(.dark) .forgotPassword:hover {
-  color: #A6761D;
+  color: #D4AF37;
 }
 
 :global(.dark) .submitButton {
-  background: #7B1E1E;
-  border-color: #7B1E1E;
+  background: #800000;
+  border-color: #800000;
 }
 
 :global(.dark) .submitButton:hover {
-  background: #7B1E1E;
-  border-color: #7B1E1E;
+  background: #800000;
+  border-color: #800000;
 }
 
 /* --- Responsive Layout --- */

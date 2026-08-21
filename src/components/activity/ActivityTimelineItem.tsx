@@ -60,13 +60,13 @@ const CATEGORY_CONFIG: Record<
 
 // Only maroon and gold for avatar cycling
 const AVATAR_PALETTE = [
-  "#7B1E1E",
-  "#A6761D",
-  "#5a1515",
-  "#A6761D",
-  "#7B1E1E",
-  "#A6761D",
-  "#5a1515",
+  "#800000",
+  "#D4AF37",
+  "#5C0000",
+  "#D4AF37",
+  "#800000",
+  "#D4AF37",
+  "#5C0000",
 ];
 
 function avatarColor(name: string): string {

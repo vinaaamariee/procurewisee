@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, useCallback } from "react";
 import { updatePoAction, approvePoAction, logPoPrintedAction, updatePoStatusAction } from "@/app/actions/po";
@@ -60,11 +60,11 @@ interface PoDetailsClientProps {
 
 // Status workflow: what button appears next for each status
 const STATUS_TRANSITIONS: Record<string, { label: string; nextStatus: string; color: string }> = {
-  Draft: { label: "Submit for Approval", nextStatus: "Pending Approval", color: "var(--secondary)" },
-  "Pending Approval": { label: "Approve & Sign", nextStatus: "Approved", color: "var(--secondary)" },
+  Draft: { label: "Submit for Approval", nextStatus: "Pending Approval", color: 'var(--secondary-strong)' },
+  "Pending Approval": { label: "Approve & Sign", nextStatus: "Approved", color: 'var(--secondary-strong)' },
   Approved: { label: "Mark as Sent to Supplier", nextStatus: "Sent to Supplier", color: "var(--accent)" },
-  "Sent to Supplier": { label: "Mark as Delivered", nextStatus: "Delivered", color: "var(--secondary)" },
-  Delivered: { label: "Mark as Completed", nextStatus: "Completed", color: "var(--secondary)" },
+  "Sent to Supplier": { label: "Mark as Delivered", nextStatus: "Delivered", color: 'var(--secondary-strong)' },
+  Delivered: { label: "Mark as Completed", nextStatus: "Completed", color: 'var(--secondary-strong)' },
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -243,16 +243,16 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "2rem" }} className="lg:grid-cols-3">
-      {/* Main document — 2/3 width */}
+      {/* Main document â€” 2/3 width */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-2">
         {errorMsg && (
           <div className="no-print p-3 rounded-lg bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold">
-            ⚠️ {errorMsg}
+            âš ï¸ {errorMsg}
           </div>
         )}
         {successMsg && (
           <div className="no-print p-3 rounded-lg bg-[var(--accent-glass)] border border-[var(--border-accent)] text-[var(--accent)] text-xs font-semibold">
-            ✅ {successMsg}
+            âœ… {successMsg}
           </div>
         )}
         <PODocument
@@ -262,7 +262,7 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
         />
       </div>
 
-      {/* Right panel — controls + traceability */}
+      {/* Right panel â€” controls + traceability */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }} className="lg:col-span-1 no-print">
 
         {/* Status badge */}
@@ -305,7 +305,7 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
           gap: "0.75rem",
         }}>
           <h3 style={{ fontSize: "1rem", fontWeight: 800, color: theme.textMain, margin: 0 }}>
-            ⚙️ Document Controls
+            âš™ï¸ Document Controls
           </h3>
 
           {/* Print */}
@@ -317,7 +317,7 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
               color: theme.textMain, fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
             }}
           >
-            🖨️ Print Purchase Order
+            ðŸ–¨ï¸ Print Purchase Order
           </button>
 
           {/* Download PDF */}
@@ -325,11 +325,11 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
             onClick={handleDownloadPdf}
             style={{
               width: "100%", padding: "0.65rem", borderRadius: "0.5rem",
-              border: `1px solid #7B1E1E40`, background: "#7B1E1E10",
+              border: `1px solid #80000040`, background: "#80000010",
               color: "var(--accent)", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
             }}
           >
-            📄 Download PDF
+            ðŸ“„ Download PDF
           </button>
 
           {/* Status transition */}
@@ -344,7 +344,7 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
                 opacity: isProcessing ? 0.6 : 1,
               }}
             >
-              {isProcessing ? "Processing…" : `✅ ${nextTransition.label}`}
+              {isProcessing ? "Processingâ€¦" : `âœ… ${nextTransition.label}`}
             </button>
           )}
 
@@ -355,12 +355,12 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
               disabled={isProcessing}
               style={{
                 width: "100%", padding: "0.55rem", borderRadius: "0.5rem",
-                border: "1px solid #7B1E1E40", background: "transparent",
+                border: "1px solid #80000040", background: "transparent",
                 color: "var(--accent)", fontWeight: 700, fontSize: "0.75rem", cursor: "pointer",
                 opacity: isProcessing ? 0.6 : 1,
               }}
             >
-              🚫 Cancel PO
+              ðŸš« Cancel PO
             </button>
           )}
         </div>
@@ -374,11 +374,11 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
           boxShadow: theme.shadow,
         }}>
           <h3 style={{ fontSize: "1rem", fontWeight: 800, color: theme.textMain, margin: "0 0 1rem 0" }}>
-            📁 Traceability
+            ðŸ“ Traceability
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", fontSize: "0.78rem" }}>
             <div style={{ display: "flex", gap: "8px" }}>
-              <span style={{ color: "var(--secondary)" }}>✓</span>
+              <span style={{ color: 'var(--secondary-strong)' }}>âœ“</span>
               <div>
                 <div style={{ fontWeight: 700, color: theme.textMain }}>PO Created</div>
                 <div style={{ color: theme.textMuted }}>{new Date(po.createdAt).toLocaleString()}</div>
@@ -386,16 +386,16 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
             </div>
             {po.rfq && (
               <div style={{ display: "flex", gap: "8px" }}>
-                <span style={{ color: "var(--secondary)" }}>✓</span>
+                <span style={{ color: 'var(--secondary-strong)' }}>âœ“</span>
                 <div>
                   <div style={{ fontWeight: 700, color: theme.textMain }}>From RFQ</div>
-                  <div style={{ color: theme.textMuted }}>{po.rfq.rfqNumber} — {po.rfq.title}</div>
+                  <div style={{ color: theme.textMuted }}>{po.rfq.rfqNumber} â€” {po.rfq.title}</div>
                 </div>
               </div>
             )}
             {po.status !== "Draft" && (
               <div style={{ display: "flex", gap: "8px" }}>
-                <span style={{ color: "var(--secondary)" }}>✓</span>
+                <span style={{ color: 'var(--secondary-strong)' }}>âœ“</span>
                 <div>
                   <div style={{ fontWeight: 700, color: theme.textMain }}>Status: {po.status}</div>
                   <div style={{ color: theme.textMuted }}>Workflow updated.</div>
@@ -414,7 +414,7 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
           boxShadow: theme.shadow,
         }}>
           <h3 style={{ fontSize: "0.9rem", fontWeight: 800, color: theme.textMain, margin: "0 0 0.75rem 0" }}>
-            📋 PO Summary
+            ðŸ“‹ PO Summary
           </h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", fontSize: "0.78rem" }}>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -432,7 +432,7 @@ export default function PoDetailsClient({ initialPo }: PoDetailsClientProps) {
             <div style={{ display: "flex", justifyContent: "space-between", borderTop: `1px solid ${theme.glassBorder}`, paddingTop: "0.5rem", marginTop: "0.25rem" }}>
               <span style={{ color: theme.textMuted, fontWeight: 700 }}>Total Amount</span>
               <span style={{ fontWeight: 800, color: theme.accent, fontSize: "0.9rem" }}>
-                ₱{Number(po.totalCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
+                â‚±{Number(po.totalCost).toLocaleString("en-PH", { minimumFractionDigits: 2 })}
               </span>
             </div>
           </div>

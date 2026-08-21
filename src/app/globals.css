@@ -14,32 +14,32 @@
   color-scheme: light;
 
   --color-base-100: #ffffff;
-  --color-base-200: #f5f2ec;
-  --color-base-300: #d8d0c2;
-  --color-base-content: #28231f;
+  --color-base-200: #fafafa;
+  --color-base-300: #e5e7eb;
+  --color-base-content: #1f2937;
 
-  --color-primary: #7b1e1e;
+  --color-primary: #800000;
   --color-primary-content: #ffffff;
 
-  --color-secondary: #a6761d;
-  --color-secondary-content: #ffffff;
+  --color-secondary: #d4af37;
+  --color-secondary-content: #400000;
 
-  --color-accent: #7b1e1e;
+  --color-accent: #800000;
   --color-accent-content: #ffffff;
 
-  --color-neutral: #2f2925;
-  --color-neutral-content: #f8f4ec;
+  --color-neutral: #1f2937;
+  --color-neutral-content: #fafafa;
 
-  --color-info: #7b1e1e;
+  --color-info: #800000;
   --color-info-content: #ffffff;
 
-  --color-success: #7b1e1e;
+  --color-success: #800000;
   --color-success-content: #ffffff;
 
-  --color-warning: #a6761d;
-  --color-warning-content: #ffffff;
+  --color-warning: #d4af37;
+  --color-warning-content: #400000;
 
-  --color-error: #7b1e1e;
+  --color-error: #800000;
   --color-error-content: #ffffff;
 
   --radius-selector: 4px;
@@ -59,33 +59,33 @@
   prefersdark: true;
   color-scheme: dark;
 
-  --color-base-100: #181411;
-  --color-base-200: #211b17;
-  --color-base-300: #3a3029;
-  --color-base-content: #f5efe7;
+  --color-base-100: #161616;
+  --color-base-200: #1f1f1f;
+  --color-base-300: #333333;
+  --color-base-content: #fafafa;
 
-  --color-primary: #7b1e1e;
+  --color-primary: #800000;
   --color-primary-content: #ffffff;
 
-  --color-secondary: #a6761d;
-  --color-secondary-content: #ffffff;
+  --color-secondary: #d4af37;
+  --color-secondary-content: #400000;
 
-  --color-accent: #7b1e1e;
+  --color-accent: #800000;
   --color-accent-content: #ffffff;
 
-  --color-neutral: #181411;
-  --color-neutral-content: #f8f4ec;
+  --color-neutral: #111111;
+  --color-neutral-content: #fafafa;
 
-  --color-info: #7b1e1e;
+  --color-info: #800000;
   --color-info-content: #ffffff;
 
-  --color-success: #7b1e1e;
+  --color-success: #800000;
   --color-success-content: #ffffff;
 
-  --color-warning: #a6761d;
-  --color-warning-content: #ffffff;
+  --color-warning: #d4af37;
+  --color-warning-content: #400000;
 
-  --color-error: #7b1e1e;
+  --color-error: #800000;
   --color-error-content: #ffffff;
 
   --radius-selector: 4px;
@@ -116,58 +116,81 @@
 
 /* ---------- CSS Variables ---------- */
 :root {
-  /* Default: Light Mode — Official Government Portal Theme */
+  /* Default: Light Mode — Official Institutional Theme (Maroon / Gold / Neutral Gray) */
   --font-display: 'Public Sans', var(--font-geist-sans, Arial), sans-serif;
   --font-body: 'Public Sans', var(--font-geist-sans, Arial), sans-serif;
 
-  --accent: #7B1E1E;
-  /* Institutional Maroon */
-  --accent-light: #7B1E1E;
-  --accent-glass: rgba(123, 30, 30, 0.06);
+  /* ── Canonical brand ramp ── */
+  --maroon: #800000;        /* Primary Maroon */
+  --maroon-hover: #5C0000;  /* Dark Maroon (hover) */
+  --maroon-deep: #400000;   /* Deep Maroon */
+  --maroon-tint: #F5EAEA;   /* Light Maroon tint */
 
-  --secondary: #A6761D;
-  /* Gold */
-  --secondary-light: #A6761D;
-  --secondary-dim: rgba(166, 118, 29, 0.08);
+  --gold: #D4AF37;          /* Primary Gold */
+  --gold-hover: #B8941F;    /* Dark Gold */
+  --gold-light: #F4E4A6;    /* Light Gold */
+  --gold-tint: #FFF8E1;     /* Gold tint */
+
+  /* ── Semantic tokens ── */
+  --primary: var(--maroon);
+  --primary-hover: var(--maroon-hover);
+  --primary-light: var(--maroon-tint);
+  --secondary-strong: var(--gold-hover);
+  --secondary-hover: var(--gold-hover);
+  /* AA-safe gold for TEXT on light surfaces */
+
+  /* ── Legacy aliases kept for compatibility (all components route through these) ── */
+  --accent: var(--maroon);
+  --accent-light: var(--maroon-hover);
+  --accent-deep: var(--maroon-deep);
+  --accent-glass: rgba(128, 0, 0, 0.06);
+
+  --secondary: var(--gold);
+  --secondary-light: var(--gold-light);
+  --secondary-dim: rgba(212, 175, 55, 0.14);
 
   --alert: var(--accent);
-  --alert-light: var(--accent);
-  --alert-dim: rgba(123, 30, 30, 0.08);
+  --alert-light: var(--accent-light);
+  --alert-dim: rgba(128, 0, 0, 0.08);
 
-  --bg-deep: #f5f2ec;
-  /* Flat light gray base */
-  --bg-dark: #e8e1d6;
+  /* ── Neutrals (structure only) ── */
+  --bg-deep: #fafafa;
+  --bg-dark: #f5f5f5;
   --bg-header: #ffffff;
 
   --green: var(--accent);
-  --green-dim: rgba(123, 30, 30, 0.08);
+  --green-dim: rgba(128, 0, 0, 0.08);
   --red-dim: var(--alert-dim);
 
-  --text-primary: #28231f;
-  --text-secondary: #5f554d;
-  --text-muted: #8b7e73;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
 
   --surface: #ffffff;
-  --surface-hover: #f5f2ec;
-  --border: #d8d0c2;
-  --border-accent: rgba(123, 30, 30, 0.2);
+  --surface-hover: #f5f5f5;
+  --border: #e5e7eb;
+  --border-accent: rgba(128, 0, 0, 0.22);
+
+  /* Sidebar identity tokens */
+  --sidebar-bg: var(--maroon-hover);
+  --sidebar-border: rgba(255, 255, 255, 0.12);
+  --sidebar-item: rgba(255, 255, 255, 0.78);
+  --sidebar-item-hover-bg: rgba(255, 255, 255, 0.07);
+  --sidebar-active-bg: rgba(212, 175, 55, 0.16);
+  --sidebar-active-text: var(--gold-light);
+  --sidebar-label: rgba(244, 228, 166, 0.65);
 
   /* Map old variables for compatibility and easy transition */
-  --maroon: var(--accent);
-  --maroon-dark: var(--bg-dark);
-  --maroon-deep: var(--bg-deep);
-  --maroon-light: var(--accent-light);
+  --maroon-dark: var(--maroon-hover);
   --maroon-glass: var(--accent-glass);
-  --gold: var(--secondary);
-  --gold-light: var(--secondary-light);
-  --gold-dim: var(--secondary-dim);
-  --border-gold: var(--border-accent);
+  --gold-dark: var(--gold-hover);
+  --border-gold: rgba(212, 175, 55, 0.3);
 
   --radius-sm: 2px;
   --radius-md: 4px;
   --radius-lg: 4px;
   --radius-pill: 4px;
-  
+
   --shadow-card: none;
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
@@ -182,36 +205,56 @@
 }
 
 .dark, [data-theme="dark"] {
-  /* Dark Mode — same official palette, inverted ground */
-  --accent: #7B1E1E;
-  --accent-light: #7B1E1E;
-  --accent-glass: rgba(123, 30, 30, 0.14);
+  /* Dark Mode — same institutional palette on a neutral dark ground */
+  --maroon: #800000;
+  --maroon-hover: #5C0000;
+  --maroon-deep: #400000;
+  --maroon-tint: #F5EAEA;
 
-  --secondary: #A6761D;
-  --secondary-light: #A6761D;
-  --secondary-dim: rgba(166, 118, 29, 0.14);
+  --gold: #D4AF37;
+  --gold-hover: #B8941F;
+  --gold-light: #F4E4A6;
+  --gold-tint: #FFF8E1;
 
-  --alert: var(--accent-light);
+  --primary: var(--maroon);
+  --primary-hover: var(--maroon-hover);
+  --primary-light: var(--maroon-deep);
+  --secondary-strong: var(--gold-light);
+  --secondary-hover: var(--gold-hover);
+
+  --accent: var(--maroon);
+  --accent-light: var(--maroon-hover);
+  --accent-deep: var(--maroon-deep);
+  --accent-glass: rgba(128, 0, 0, 0.18);
+
+  --secondary: var(--gold);
+  --secondary-light: var(--gold-light);
+  --secondary-dim: rgba(212, 175, 55, 0.16);
+
+  --alert: var(--gold-light);
   --alert-light: var(--accent);
-  --alert-dim: rgba(123, 30, 30, 0.14);
+  --alert-dim: rgba(128, 0, 0, 0.18);
 
-  --bg-deep: #211b17;
-  --bg-dark: #2b241f;
-  --bg-header: #181411;
+  --bg-deep: #111111;
+  --bg-dark: #1c1c1c;
+  --bg-header: #161616;
 
-  --green: var(--accent-light);
-  --green-dim: rgba(123, 30, 30, 0.14);
+  --green: var(--gold-light);
+  --green-dim: rgba(128, 0, 0, 0.18);
   --red-dim: var(--alert-dim);
 
-  --text-primary: #f5efe7;
-  --text-secondary: #cbbdaf;
-  --text-muted: #95867a;
+  --text-primary: #fafafa;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
 
-  --surface: #181411;
-  --surface-hover: #211b17;
-  --border: #3a3029;
-  --border-accent: rgba(166, 118, 29, 0.3);
+  --surface: #161616;
+  --surface-hover: #1f1f1f;
+  --border: #333333;
+  --border-accent: rgba(212, 175, 55, 0.35);
   --shadow-card: none;
+
+  --sidebar-bg: #400000;
+  --sidebar-border: rgba(255, 255, 255, 0.12);
 }
 
 @layer base {
@@ -945,7 +988,7 @@ textarea:focus-visible,
 }
 
 .cell-best {
-  background: var(--green-dim) !important;
+  background: var(--secondary-dim) !important;
 }
 
 .cell-worst {
@@ -978,7 +1021,7 @@ textarea:focus-visible,
 }
 
 .badge-instock {
-  background: var(--green-dim);
+  background: var(--secondary-dim);
   color: var(--green);
   border: 1px solid rgba(123, 30, 30, 0.35);
 }
@@ -1005,7 +1048,7 @@ textarea:focus-visible,
   padding: var(--space-1) var(--space-2);
   /* 8px 12px — was 0.25rem 0.6rem, now on-scale */
   border-radius: var(--radius-sm);
-  background: var(--green-dim);
+  background: var(--secondary-dim);
   border: 1px solid rgba(123, 30, 30, 0.35);
   color: var(--green);
   font-weight: 700;
@@ -1024,7 +1067,7 @@ textarea:focus-visible,
 
 .savings-positive {
   color: var(--green);
-  background: var(--green-dim);
+  background: var(--secondary-dim);
   padding: 0.15rem 0.55rem;
   border-radius: var(--radius-pill);
   border: 1px solid rgba(123, 30, 30, 0.3);
@@ -1278,7 +1321,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
-  -webkit-text-fill-color: #28231f !important;
+  -webkit-text-fill-color: #1f2937 !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -1286,8 +1329,8 @@ input:-webkit-autofill:active {
 .dark input:-webkit-autofill:hover,
 .dark input:-webkit-autofill:focus,
 .dark input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #181411 inset !important;
-  -webkit-text-fill-color: #f5efe7 !important;
+  -webkit-box-shadow: 0 0 0 1000px #161616 inset !important;
+  -webkit-text-fill-color: #fafafa !important;
 }
 
 /* ============================================================
@@ -1495,11 +1538,11 @@ body {
 .btn-secondary {
   background-color: var(--secondary) !important;
   border-color: var(--secondary) !important;
-  color: #ffffff !important;
+  color: var(--maroon-deep) !important;
 }
 .btn-secondary:hover {
-  background-color: var(--secondary-light) !important;
-  border-color: var(--secondary-light) !important;
+  background-color: var(--secondary-hover, var(--gold-hover)) !important;
+  border-color: var(--secondary-hover, var(--gold-hover)) !important;
   box-shadow: none !important;
 }
 

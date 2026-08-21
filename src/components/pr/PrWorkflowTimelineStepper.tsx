@@ -48,8 +48,8 @@ export default function PrWorkflowTimelineStepper({ currentStatus }: PrWorkflowT
                 <div
                   className={`h-7 w-7 rounded-full flex items-center justify-center text-xs font-bold border transition-all duration-300 ${
                     isActive
-                      ? 'bg-[#7B1E1E] text-white border-[#7B1E1E] shadow-sm font-extrabold'
-                      : 'bg-slate-100 dark:bg-slate-800 text-slate-400 border-slate-200 dark:border-slate-700'
+                      ? 'bg-[#800000] text-white border-[#800000] shadow-sm font-extrabold'
+                      : 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-200 dark:border-gray-700'
                   }`}
                 >
                   {idx + 1}
@@ -57,8 +57,8 @@ export default function PrWorkflowTimelineStepper({ currentStatus }: PrWorkflowT
                 <span
                   className={`text-[9px] font-bold text-center leading-tight ${
                     isActive
-                      ? 'text-[#7B1E1E] font-extrabold'
-                      : 'text-slate-400'
+                      ? 'text-[#800000] font-extrabold'
+                      : 'text-gray-400'
                   }`}
                 >
                   {step.label}
@@ -68,8 +68,8 @@ export default function PrWorkflowTimelineStepper({ currentStatus }: PrWorkflowT
                 <div
                   className={`flex-1 min-w-[15px] h-0.5 -mt-4 transition-all duration-355 ${
                     getStepActiveState(arr[idx + 1].id)
-                      ? 'bg-[#7B1E1E]'
-                      : 'bg-slate-200 dark:bg-slate-800'
+                      ? 'bg-[#800000]'
+                      : 'bg-gray-200 dark:bg-gray-800'
                   }`}
                 />
               )}

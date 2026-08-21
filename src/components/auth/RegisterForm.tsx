@@ -192,7 +192,7 @@ export default function RegisterForm({
         {/* Submit */}
         <button
           type="submit"
-          className="w-full h-14 mt-1 flex items-center justify-center gap-2 rounded-xl bg-primary text-white text-sm font-semibold transition-colors hover:bg-[#7B1E1E] disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full h-14 mt-1 flex items-center justify-center gap-2 rounded-xl bg-primary text-white text-sm font-semibold transition-colors hover:bg-[#800000] disabled:opacity-60 disabled:cursor-not-allowed"
           disabled={isPending}
         >
           {isPending ? (

@@ -185,9 +185,9 @@ export default function ReportsExporterClient({
   };
 
   const theme = {
-    crimson: "#7B1E1E",
-    gold: "#A6761D",
-    goldDark: "#A6761D",
+    crimson: "#800000",
+    gold: "#D4AF37",
+    goldDark: "#D4AF37",
     textMain: "#1f2937",
     textMuted: "#6b7280",
     glassBg: "rgba(255, 255, 255, 0.75)",
@@ -253,7 +253,7 @@ export default function ReportsExporterClient({
                 width: "100%", padding: "0.65rem", borderRadius: "0.75rem", border: "none",
                 background: isCurrent ? "var(--secondary)" : `linear-gradient(90deg, ${theme.crimson}, ${theme.goldDark})`,
                 color: "#fff", fontWeight: 700, fontSize: "0.8rem", cursor: "pointer",
-                marginTop: "auto", boxShadow: "0 4px 12px rgba(123, 30, 30, 0.15)",
+                marginTop: "auto", boxShadow: "0 4px 12px rgba(128, 0, 0, 0.15)",
                 display: "flex", alignItems: "center", justifyContent: "center", gap: "0.5rem"
               }}
             >

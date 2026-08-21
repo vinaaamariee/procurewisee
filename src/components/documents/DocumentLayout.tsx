@@ -53,7 +53,7 @@ export default function DocumentLayout({
             display: block !important;
             visibility: visible !important;
             z-index: 9999 !important;
-            border-bottom: 2px solid #7B1E1E !important;
+            border-bottom: 2px solid #800000 !important;
           }
           
           footer.bsc-print-footer {
@@ -96,9 +96,9 @@ export default function DocumentLayout({
         <div className="bsc-print-content w-full">
           {title && (
             <div className="text-center mb-6 hidden print:block">
-              <h1 className="text-xl font-black uppercase tracking-wider text-[#7B1E1E]">{title}</h1>
+              <h1 className="text-xl font-black uppercase tracking-wider text-[#800000]">{title}</h1>
               {documentRef && (
-                <p className="text-xs font-mono font-bold mt-1 text-slate-700">
+                <p className="text-xs font-mono font-bold mt-1 text-gray-700">
                   Ref No: {documentRef}
                 </p>
               )}

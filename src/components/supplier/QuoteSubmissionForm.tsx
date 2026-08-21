@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useTransition, useRef } from 'react';
 import { useRouter } from 'next/navigation';
@@ -96,7 +96,7 @@ export default function QuoteSubmissionForm({
   // Option B: Download Excel Template
   const downloadExcelTemplate = () => {
     const headers = [
-      ['Batanes State College — Request for Price Quotation'],
+      ['Batanes State College â€” Request for Price Quotation'],
       [`RFQ Number: ${rfq.rfqNumber}`],
       [`RFQ Title: ${rfq.title}`],
       [],
@@ -253,20 +253,20 @@ export default function QuoteSubmissionForm({
       {errorMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'var(--accent-glass)', border: '1px solid rgba(123, 30, 30, 0.2)',
+          background: 'var(--accent-glass)', border: '1px solid rgba(128, 0, 0, 0.2)',
           color: 'var(--accent)', fontSize: '0.875rem', fontWeight: 500
         }}>
-          ⚠️ {errorMsg}
+          âš ï¸ {errorMsg}
         </div>
       )}
 
       {successMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'var(--green-dim)', border: '1px solid var(--border)',
-          color: 'var(--secondary)', fontSize: '0.875rem', fontWeight: 500
+          background: 'var(--secondary-dim)', border: '1px solid var(--border)',
+          color: 'var(--secondary-strong)', fontSize: '0.875rem', fontWeight: 500
         }}>
-          ✅ {successMsg}
+          âœ… {successMsg}
         </div>
       )}
 
@@ -291,14 +291,14 @@ export default function QuoteSubmissionForm({
           color: 'var(--text-primary)'
         }}>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem' }}>
-            <div style={{ fontSize: '2.5rem' }}>🏛️</div>
+            <div style={{ fontSize: '2.5rem' }}>ðŸ›ï¸</div>
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontWeight: 800, fontSize: '1.1rem', letterSpacing: '0.5px' }}>BATANES STATE COLLEGE</div>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>Washington Ave., San Antonio, Basco, Batanes</div>
               <div style={{ fontSize: '0.72rem', color: 'var(--accent)', fontWeight: 700, marginTop: '0.2rem' }}>PROCUREMENT UNIT</div>
             </div>
           </div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', letterSpacing: '1px', color: 'var(--secondary)' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', letterSpacing: '1px', color: 'var(--secondary-strong)' }}>
             REQUEST FOR PRICE QUOTATION
           </h2>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1rem', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
@@ -320,10 +320,10 @@ export default function QuoteSubmissionForm({
           flexDirection: 'column',
           gap: '0.5rem'
         }}>
-          <div>• Please offer your best and final price for the item/s listed below.</div>
-          <div>• <strong>Price Evaluation Mode</strong>: The default mode shall be on a <strong>LOT BASIS</strong> (otherwise item-by-item).</div>
-          <div>• <strong>Limit Budget (ABC)</strong>: <span style={{ color: 'var(--accent)', fontWeight: 700 }}>₱{limitBudget.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</span>. Quotes above this limit may be automatically disqualified.</div>
-          <div>• In case an item is unavailable or out of stock, toggle availability to <strong>No (None)</strong>.</div>
+          <div>â€¢ Please offer your best and final price for the item/s listed below.</div>
+          <div>â€¢ <strong>Price Evaluation Mode</strong>: The default mode shall be on a <strong>LOT BASIS</strong> (otherwise item-by-item).</div>
+          <div>â€¢ <strong>Limit Budget (ABC)</strong>: <span style={{ color: 'var(--accent)', fontWeight: 700 }}>â‚±{limitBudget.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</span>. Quotes above this limit may be automatically disqualified.</div>
+          <div>â€¢ In case an item is unavailable or out of stock, toggle availability to <strong>No (None)</strong>.</div>
         </div>
 
         {/* Options Toolbar */}
@@ -349,23 +349,23 @@ export default function QuoteSubmissionForm({
               style={{
                 padding: '0.5rem 1rem', borderRadius: 8,
                 background: 'var(--secondary-dim)', border: '1px solid var(--border)',
-                color: 'var(--secondary)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+                color: 'var(--secondary-strong)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '0.4rem'
               }}
             >
-              📥 Download Template
+              ðŸ“¥ Download Template
             </button>
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
               style={{
                 padding: '0.5rem 1rem', borderRadius: 8,
-                background: 'var(--green-dim)', border: '1px solid var(--border)',
-                color: 'var(--secondary)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
+                background: 'var(--secondary-dim)', border: '1px solid var(--border)',
+                color: 'var(--secondary-strong)', fontSize: '0.78rem', fontWeight: 600, cursor: 'pointer',
                 display: 'flex', alignItems: 'center', gap: '0.4rem'
               }}
             >
-              📤 Upload Completed Excel
+              ðŸ“¤ Upload Completed Excel
             </button>
             <input
               type="file"
@@ -387,8 +387,8 @@ export default function QuoteSubmissionForm({
                 <th style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 600 }}>Qty</th>
                 <th style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 600 }}>Unit</th>
                 <th style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 600 }}>Status</th>
-                <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, width: '150px' }}>Unit Price (₱)</th>
-                <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, width: '150px' }}>Total (₱)</th>
+                <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, width: '150px' }}>Unit Price (â‚±)</th>
+                <th style={{ padding: '0.75rem 1rem', textAlign: 'right', fontWeight: 600, width: '150px' }}>Total (â‚±)</th>
               </tr>
             </thead>
             <tbody>
@@ -417,7 +417,7 @@ export default function QuoteSubmissionForm({
                         onClick={() => handleAvailabilityToggle(item.id, !entry.isAvailable)}
                         style={{
                           padding: '0.25rem 0.5rem', borderRadius: 6,
-                          background: entry.isAvailable ? 'var(--green-dim)' : 'var(--accent-glass)',
+                          background: entry.isAvailable ? 'var(--secondary-dim)' : 'var(--accent-glass)',
                           border: '1px solid var(--border)',
                           color: entry.isAvailable ? 'var(--secondary)' : 'var(--accent)',
                           fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer',
@@ -442,7 +442,7 @@ export default function QuoteSubmissionForm({
                       />
                     </td>
                     <td style={{ padding: '1rem', textAlign: 'right', fontWeight: 700, fontFamily: 'monospace', color: entry.isAvailable ? 'var(--secondary)' : 'var(--text-muted)' }}>
-                      {entry.isAvailable ? `₱${rowTotal.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '—'}
+                      {entry.isAvailable ? `â‚±${rowTotal.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : 'â€”'}
                     </td>
                   </tr>
                 );
@@ -454,7 +454,7 @@ export default function QuoteSubmissionForm({
                   Total Bid Amount:
                 </td>
                 <td style={{ padding: '1.25rem 1rem', textAlign: 'right', fontSize: '1rem', color: totalQuotedAmount > limitBudget ? 'var(--accent)' : 'var(--secondary)', fontFamily: 'monospace' }}>
-                  ₱{totalQuotedAmount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  â‚±{totalQuotedAmount.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   {totalQuotedAmount > limitBudget && (
                     <div style={{ fontSize: '0.65rem', color: 'var(--accent)', fontWeight: 600, marginTop: '0.25rem' }}>
                       Exceeds ABC Budget Limit!

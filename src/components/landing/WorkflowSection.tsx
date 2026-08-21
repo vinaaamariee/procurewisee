@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { FileText, CheckSquare, Megaphone, Inbox, Award, ShoppingCart, Truck } from "lucide-react";
 
@@ -53,10 +53,10 @@ export default function WorkflowSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12 space-y-2">
-          <div className="badge badge-outline border-[#7B1E1E] text-[#7B1E1E] font-bold uppercase tracking-wider text-xs py-2 px-3">
+          <div className="badge badge-outline border-[#800000] text-[#800000] font-bold uppercase tracking-wider text-xs py-2 px-3">
             Procurement Lifecycle
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#7B1E1E] tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#800000] tracking-tight">
             Institutional Procurement Workflow
           </h2>
           <p className="text-sm sm:text-base text-base-content/70">
@@ -76,13 +76,13 @@ export default function WorkflowSection() {
                   className="step step-primary font-bold text-xs"
                 >
                   <div className="flex flex-col items-center text-center p-2 space-y-1 max-w-[140px] mx-auto">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#7B1E1E]/10 text-[#7B1E1E] mb-1">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#800000]/10 text-[#800000] mb-1">
                       <Icon className="h-5 w-5" />
                     </div>
                     <span className="font-extrabold text-sm text-base-content leading-tight">
                       {step.title}
                     </span>
-                    <span className="text-[11px] font-bold text-[#A6761D]">
+                    <span className="text-[11px] font-bold text-[var(--secondary-strong)]">
                       {step.subtitle}
                     </span>
                   </div>
@@ -99,12 +99,12 @@ export default function WorkflowSection() {
             return (
               <div key={step.title} className="card bg-base-200/50 p-4 border border-base-200 rounded-xl space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-[#7B1E1E] text-white">
+                  <div className="p-2 rounded-lg bg-[#800000] text-white">
                     <Icon className="h-4 w-4" />
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-base-content leading-tight">{step.title}</h3>
-                    <p className="text-[11px] font-bold text-[#A6761D]">{step.subtitle}</p>
+                    <p className="text-[11px] font-bold text-[var(--secondary-strong)]">{step.subtitle}</p>
                   </div>
                 </div>
                 <p className="text-xs text-base-content/70 leading-normal">{step.description}</p>
@@ -119,12 +119,12 @@ export default function WorkflowSection() {
             return (
               <div key={step.title} className="card bg-base-200/50 p-4 border border-base-200 rounded-xl space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-lg bg-[#7B1E1E] text-white">
+                  <div className="p-2 rounded-lg bg-[#800000] text-white">
                     <Icon className="h-4 w-4" />
                   </div>
                   <div>
                     <h3 className="text-sm font-bold text-base-content leading-tight">{step.title}</h3>
-                    <p className="text-[11px] font-bold text-[#A6761D]">{step.subtitle}</p>
+                    <p className="text-[11px] font-bold text-[var(--secondary-strong)]">{step.subtitle}</p>
                   </div>
                 </div>
                 <p className="text-xs text-base-content/70 leading-normal">{step.description}</p>

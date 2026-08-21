@@ -33,7 +33,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
       {/* Layer 1 - solid maroon background (hardcoded gradient, per design spec) */}
       <div
         className="absolute inset-0"
-        style={{ background: "linear-gradient(180deg, #7B1E1E 0%, #7B1E1E 100%)" }}
+        style={{ background: "linear-gradient(180deg, #800000 0%, #800000 100%)" }}
       />
 
       {/* Layer 2 - BSC logo watermark (no blur/rotation/shadow) */}
@@ -76,12 +76,12 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
 
         {/* Gold divider with diamond */}
         <div className="flex items-center justify-center gap-3">
-          <span className="h-px w-12" style={{ backgroundColor: "#A6761D" }} />
+          <span className="h-px w-12" style={{ backgroundColor: 'var(--secondary-strong)' }} />
           <span
             className="block w-2 h-2 rotate-45"
-            style={{ backgroundColor: "#A6761D" }}
+            style={{ backgroundColor: 'var(--secondary-strong)' }}
           />
-          <span className="h-px w-12" style={{ backgroundColor: "#A6761D" }} />
+          <span className="h-px w-12" style={{ backgroundColor: 'var(--secondary-strong)' }} />
         </div>
 
         {/* Description */}
@@ -96,7 +96,7 @@ export default function HeroPanel({ activeTab, onToggle }: HeroPanelProps) {
         <button
           type="button"
           onClick={() => onToggle(content.btnTarget)}
-          className="h-[54px] px-9 rounded-xl border-2 border-white text-white text-sm font-semibold transition-colors hover:bg-white hover:text-[#7B1E1E] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
+          className="h-[54px] px-9 rounded-xl border-2 border-white text-white text-sm font-semibold transition-colors hover:bg-white hover:text-[#800000] focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60"
         >
           {content.btnLabel} →
         </button>

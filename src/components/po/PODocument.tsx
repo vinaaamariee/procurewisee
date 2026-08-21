@@ -212,7 +212,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
   };
 
   const inputCls = (readOnly?: boolean) =>
-    `border-b ${readOnly || isReadOnly ? 'border-transparent bg-transparent' : 'border-slate-400 focus:border-[#7B1E1E]'} outline-none bg-transparent text-xs px-0.5 w-full transition`;
+    `border-b ${readOnly || isReadOnly ? 'border-transparent bg-transparent' : 'border-gray-400 focus:border-[#800000]'} outline-none bg-transparent text-xs px-0.5 w-full transition`;
 
   const poDate = new Date(initialPo.createdAt).toLocaleDateString('en-PH', {
     month: 'long',
@@ -254,7 +254,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
       <div className="w-full flex justify-center">
         <div
           id="po-document"
-          className="w-full max-w-[900px] bg-white text-black shadow-xl border border-slate-300 font-sans text-xs leading-snug"
+          className="w-full max-w-[900px] bg-white text-black shadow-xl border border-gray-300 font-sans text-xs leading-snug"
         >
           <DocumentLayout
             title="PURCHASE ORDER"
@@ -262,7 +262,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
             printAreaId="po-document"
           >
             {/* Appendix label */}
-            <div className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <div className="text-right text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">
               Appendix 61
             </div>
 
@@ -279,7 +279,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                 value={entityName}
                 onChange={e => setEntityName(e.target.value)}
                 readOnly={isReadOnly}
-                className="border-b border-slate-400 outline-none bg-transparent text-xs px-1 text-center"
+                className="border-b border-gray-400 outline-none bg-transparent text-xs px-1 text-center"
                 style={{ minWidth: 200 }}
               />
             </div>
@@ -322,7 +322,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                           <select
                             value={modeOfProcurement}
                             onChange={e => setModeOfProcurement(e.target.value)}
-                            className="border-b border-slate-400 outline-none bg-transparent text-xs flex-1"
+                            className="border-b border-gray-400 outline-none bg-transparent text-xs flex-1"
                           >
                             {MODES_OF_PROCUREMENT.map(m => (
                               <option key={m} value={m}>{m}</option>
@@ -379,12 +379,12 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
             {/* Brand/spec toggle (screen only, draft mode) */}
             {!isReadOnly && (
               <div className="flex items-center gap-2 mb-2 print:hidden">
-                <label className="flex items-center gap-1 text-[10px] text-slate-500 cursor-pointer select-none">
+                <label className="flex items-center gap-1 text-[10px] text-gray-500 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={showBrandSpec}
                     onChange={e => setShowBrandSpec(e.target.checked)}
-                    className="accent-[#7B1E1E]"
+                    className="accent-[#800000]"
                   />
                   Show Brand & Specification columns
                 </label>
@@ -394,7 +394,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
             {/* Line-item table */}
             <table className="w-full border-collapse border border-black text-xs mb-0">
               <thead>
-                <tr className="bg-slate-100">
+                <tr className="bg-gray-100">
                   <th className="border border-black p-1.5 text-center w-12">Stock/<br />Property No.</th>
                   <th className="border border-black p-1.5 text-center w-10">Unit</th>
                   <th className="border border-black p-1.5 text-left">Description</th>
@@ -414,7 +414,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
               </thead>
               <tbody>
                 {items.map((item, idx) => (
-                  <tr key={item.id} className={idx % 2 === 0 ? '' : 'bg-slate-50/50'}>
+                  <tr key={item.id} className={idx % 2 === 0 ? '' : 'bg-gray-50/50'}>
                     <td className="border border-black p-1 text-center font-mono">
                       <input
                         type="text"
@@ -519,11 +519,11 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                 )}
 
                 {/* Total row */}
-                <tr className="bg-slate-50 font-black">
+                <tr className="bg-gray-50 font-black">
                   <td className="border border-black p-2 text-right" colSpan={showBrandSpec && !isReadOnly ? 7 : 5}>
                     TOTAL AMOUNT
                   </td>
-                  <td className="border border-black p-2 text-right font-mono text-sm text-[#7B1E1E]">
+                  <td className="border border-black p-2 text-right font-mono text-sm text-[#800000]">
                     ₱{computedTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                   </td>
                   {!isReadOnly && <td className="border border-black print:hidden" />}
@@ -538,8 +538,8 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
             </div>
 
             {/* Penalty clause */}
-            <div className="border border-slate-300 bg-slate-50 p-3 rounded mb-6">
-              <p className="text-[10px] leading-relaxed text-slate-800">
+            <div className="border border-gray-300 bg-gray-50 p-3 rounded mb-6">
+              <p className="text-[10px] leading-relaxed text-gray-800">
                 In case of failure to make the full delivery within the time specified above, a penalty of one-tenth (1/10) of one percent (1%) for every day of delay shall be imposed on the undelivered item/s.
               </p>
             </div>
@@ -550,14 +550,14 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                 <p className="font-bold mb-4 text-xs">Conforme:</p>
                 <div className="border-b border-black h-8 w-4/5" />
                 <p className="text-[10px] mt-1">Signature over Printed Name of Supplier</p>
-                <p className="text-[10px] text-slate-500 font-medium">{initialPo.supplierName}</p>
+                <p className="text-[10px] text-gray-500 font-medium">{initialPo.supplierName}</p>
                 <div className="border-b border-black h-8 w-4/5 mt-5" />
                 <p className="text-[10px] mt-1">Date</p>
               </div>
               <div>
                 <p className="mb-4 text-xs">Very truly yours,</p>
                 {initialPo.status === 'Approved' ? (
-                  <p className="italic font-bold text-[#7B1E1E] h-8 text-sm">✓ Digitally Signed</p>
+                  <p className="italic font-bold text-[#800000] h-8 text-sm">✓ Digitally Signed</p>
                 ) : (
                   <div className="h-8" />
                 )}
@@ -568,11 +568,11 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                     value={authorizedOfficialName}
                     onChange={e => setAuthorizedOfficialName(e.target.value)}
                     readOnly={isReadOnly}
-                    className="font-bold outline-none bg-transparent border-b border-transparent hover:border-slate-300 w-full text-[10px]"
+                    className="font-bold outline-none bg-transparent border-b border-transparent hover:border-gray-300 w-full text-[10px]"
                     placeholder="Authorized Official Name"
                   />
                   <span className="block">SUC President I</span>
-                  <span className="block text-slate-500">Batanes State College</span>
+                  <span className="block text-gray-500">Batanes State College</span>
                 </p>
               </div>
             </div>
@@ -590,7 +590,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                         value={fundCluster}
                         onChange={e => setFundCluster(e.target.value)}
                         readOnly={isReadOnly}
-                        className="border-b border-slate-400 outline-none bg-transparent w-full"
+                        className="border-b border-gray-400 outline-none bg-transparent w-full"
                         placeholder="e.g. GAA 2026 - Current Appropriation"
                       />
                     </td>
@@ -601,7 +601,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                         value={orsBursNumber}
                         onChange={e => setOrsBursNumber(e.target.value)}
                         readOnly={isReadOnly}
-                        className="border-b border-slate-400 outline-none bg-transparent w-full"
+                        className="border-b border-gray-400 outline-none bg-transparent w-full"
                         placeholder="ORS/BURS number"
                       />
                     </td>
@@ -612,7 +612,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                         value={dateOfOrsBurs}
                         onChange={e => setDateOfOrsBurs(e.target.value)}
                         readOnly={isReadOnly}
-                        className="border-b border-slate-400 outline-none bg-transparent w-full"
+                        className="border-b border-gray-400 outline-none bg-transparent w-full"
                       />
                     </td>
                   </tr>
@@ -624,7 +624,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                         value={fundsAvailable}
                         onChange={e => setFundsAvailable(e.target.value === '' ? '' : Number(e.target.value))}
                         readOnly={isReadOnly}
-                        className="border-b border-slate-400 outline-none bg-transparent w-full"
+                        className="border-b border-gray-400 outline-none bg-transparent w-full"
                         placeholder="0.00"
                         step="0.01"
                       />
@@ -647,7 +647,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
                         className="outline-none bg-transparent text-center w-full mt-1 text-[10px] font-bold"
                         placeholder="Chief Accountant Name"
                       />
-                      <p className="text-[9px] text-slate-500">Signature over Printed Name of Chief Accountant / Head of Accounting Division / Unit</p>
+                      <p className="text-[9px] text-gray-500">Signature over Printed Name of Chief Accountant / Head of Accounting Division / Unit</p>
                     </td>
                   </tr>
                 </tbody>
@@ -671,7 +671,7 @@ export default function PODocument({ initialPo, isReadOnly = false, onSave }: PO
           <button
             type="button"
             onClick={() => window.print()}
-            className="px-6 py-2.5 rounded-xl bg-[#7B1E1E] text-white text-sm font-bold hover:opacity-90 transition shadow-md"
+            className="px-6 py-2.5 rounded-xl bg-[#800000] text-white text-sm font-bold hover:opacity-90 transition shadow-md"
           >
             🖨️ Print Purchase Order
           </button>

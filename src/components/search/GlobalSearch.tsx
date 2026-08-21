@@ -102,7 +102,7 @@ export default function GlobalSearch() {
           outline: 'none',
           transition: 'all 0.15s ease',
         }}
-        className="hover:border-[var(--border-accent)] hover:bg-gray-50 dark:hover:bg-zinc-800 focus-visible:ring-2 focus-visible:ring-[var(--accent)] md:w-48 justify-between"
+        className="hover:border-[var(--border-accent)] hover:bg-gray-50 dark:hover:bg-gray-800 focus-visible:ring-2 focus-visible:ring-[var(--accent)] md:w-48 justify-between"
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
           <Search size={14} />
@@ -129,7 +129,7 @@ export default function GlobalSearch() {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(123, 30, 30, 0.4)',
+          backgroundColor: 'rgba(128, 0, 0, 0.4)',
           backdropFilter: 'blur(8px)',
           zIndex: 99999,
           display: 'flex',

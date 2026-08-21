@@ -84,7 +84,7 @@ export default function PoDetailError({ error, reset }: PoDetailErrorProps) {
             textDecoration: "none",
             transition: "background 0.2s"
           }}
-          className="hover:bg-slate-500/10"
+          className="hover:bg-gray-500/10"
         >
           Back to PO Workspace
         </Link>

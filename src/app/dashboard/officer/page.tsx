@@ -260,7 +260,7 @@ const ACTIVITY_META: Record<string, { label: string; icon: any; tone: string }> 
   CREATE_RFQ: { label: "RFQ Generated", icon: FileText, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
   CONVERT_PR_TO_RFQ: { label: "RFQ Generated", icon: FileText, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
   PUBLISH_RFQ: { label: "RFQ Distributed", icon: Send, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
-  CLOSE_RFQ: { label: "RFQ Closed", icon: Lock, tone: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300" },
+  CLOSE_RFQ: { label: "RFQ Closed", icon: Lock, tone: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300" },
   APPROVE_RECOMMENDATION: { label: "BAC Resolution Created", icon: Award, tone: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]" },
   SUBMIT_SUPPLIER_EVALUATION: { label: "Supplier Evaluation Submitted", icon: Star, tone: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)]" },
   CREATE_PO: { label: "Purchase Order Generated", icon: ShoppingCart, tone: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)]" },
@@ -289,7 +289,7 @@ async function getRecentActivity() {
     const meta = ACTIVITY_META[log.actionType] ?? {
       label: log.actionType,
       icon: FileText,
-      tone: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300",
+      tone: "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300",
     };
     return {
       id: log.id,

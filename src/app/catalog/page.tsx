@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import { Package, ChevronRight } from "lucide-react";
 import { getCatalogPage, getCatalogFilters } from "@/features/catalog/server/queries";
@@ -10,7 +10,7 @@ import CatalogEmptyState from "@/components/catalog/CatalogEmptyState";
 import CatalogPagination from "@/components/catalog/CatalogPagination";
 
 export const metadata: Metadata = {
-  title: "Procurement Catalog — ProcureWise | Batanes State College",
+  title: "Procurement Catalog â€” ProcureWise | Batanes State College",
   description:
     "Browse government-standard products, compare supplier prices, and prepare procurement planning for Batanes State College.",
   keywords: [
@@ -108,13 +108,13 @@ export default async function CatalogPage({ searchParams }: CatalogPageProps) {
       {/* Horizontal Category Scroller on Top */}
       <div className="mb-8">
         <div className="flex items-center justify-between mb-3">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+          <span className="text-xs font-extrabold uppercase tracking-widest text-gray-500 dark:text-gray-400">
             Browse Category
           </span>
           {categoryId && (
             <Link
               href="/catalog"
-              className="text-xs font-bold text-[#7B1E1E] dark:text-[#A6761D] hover:underline"
+              className="text-xs font-bold text-[#800000] dark:text-[var(--secondary-strong)] hover:underline"
             >
               Clear Filter
             </Link>

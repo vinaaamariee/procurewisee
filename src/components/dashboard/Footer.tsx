@@ -88,9 +88,9 @@ export default function Footer() {
           <span
             className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest"
             style={{
-              background: "rgba(123, 30, 30, 0.07)",
-              borderColor: "rgba(123, 30, 30, 0.25)",
-              color: "var(--secondary)",
+              background: "rgba(128, 0, 0, 0.07)",
+              borderColor: "rgba(128, 0, 0, 0.25)",
+              color: 'var(--secondary-strong)',
             }}
           >
             <ShieldCheck className="h-3 w-3" />

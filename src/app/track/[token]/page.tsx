@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+﻿import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { rateLimit } from "@/lib/rate-limit";
@@ -18,9 +18,9 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
 
   if (!rateLimit(`track:${ip}`)) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
-        <div className="max-w-md p-6 bg-white rounded-xl shadow-sm border border-[#E7E5E0] text-center">
-          <h1 className="text-xl font-bold text-[#7B1E1E] mb-2">Too Many Requests</h1>
+      <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA]">
+        <div className="max-w-md p-6 bg-white rounded-xl shadow-sm border border-[#E5E5E5] text-center">
+          <h1 className="text-xl font-bold text-[#800000] mb-2">Too Many Requests</h1>
           <p className="text-sm text-gray-600">
             You&apos;ve made too many tracking lookups. Please wait a minute and try again.
           </p>
@@ -152,24 +152,24 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
   const statusConfig = getStatusConfig(requisition.status);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] flex flex-col">
+    <div className="min-h-screen bg-[#FAFAFA] text-[#1A1A1A] flex flex-col">
       {/* Header Bar */}
-      <header className="bg-white border-b border-[#E7E5E0] shadow-sm">
+      <header className="bg-white border-b border-[#E5E5E5] shadow-sm">
         <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/end-user" className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#7B1E1E] to-[#A6761D] flex items-center justify-center text-white font-black text-xs">
+            <Link href="/end-user" className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#800000] to-[#D4AF37] flex items-center justify-center text-white font-black text-xs">
               PW
             </Link>
             <div>
-              <h1 className="text-lg font-black text-[#7B1E1E]">ProcureWise Tracking</h1>
+              <h1 className="text-lg font-black text-[#800000]">ProcureWise Tracking</h1>
               <p className="text-[9px] text-gray-500 uppercase tracking-widest">Batanes State College</p>
             </div>
           </div>
           <Link 
             href="/" 
-            className="text-xs font-bold text-[#7B1E1E] border border-[#7B1E1E]/30 rounded-lg px-3 py-1.5 hover:bg-[#7B1E1E]/5 transition"
+            className="text-xs font-bold text-[#800000] border border-[#800000]/30 rounded-lg px-3 py-1.5 hover:bg-[#800000]/5 transition"
           >
-            ← Back to Homepage
+            â† Back to Homepage
           </Link>
         </div>
       </header>
@@ -177,7 +177,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
       {/* Main Track Section */}
       <main className="max-w-[900px] mx-auto px-6 py-10 space-y-8 flex-1 w-full">
         {/* Tracking Header */}
-        <section className="bg-white border border-[#E7E5E0] rounded-xl p-6 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <section className="bg-white border border-[#E5E5E5] rounded-xl p-6 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           <div>
             <span className="text-[10px] uppercase font-bold text-gray-400 tracking-wider">
               {isPr ? "Purchase Request Number" : "Requisition Tracking Code"}
@@ -206,8 +206,8 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
         </section>
 
         {/* Process History Logs */}
-        <section className="bg-white border border-[#E7E5E0] rounded-xl p-6 shadow-sm">
-          <h3 className="text-lg font-bold text-[#7B1E1E] border-b pb-3 mb-6">Status Log & Remarks History</h3>
+        <section className="bg-white border border-[#E5E5E5] rounded-xl p-6 shadow-sm">
+          <h3 className="text-lg font-bold text-[#800000] border-b pb-3 mb-6">Status Log & Remarks History</h3>
 
           <div className="relative border-l-2 border-gray-200 pl-6 ml-3 space-y-6">
             {requisition.statusHistory.map((historyItem: any, idx: number) => {
@@ -256,7 +256,7 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
         </section>
 
         {/* Items List */}
-        <section className="bg-white border border-[#E7E5E0] rounded-xl shadow-sm overflow-hidden">
+        <section className="bg-white border border-[#E5E5E5] rounded-xl shadow-sm overflow-hidden">
           <div className="p-6 border-b border-gray-100">
             <h3 className="text-lg font-bold text-gray-900">Items Requested</h3>
           </div>
@@ -283,13 +283,13 @@ export default async function RequisitionTrackingPage({ params }: TrackingPagePr
                     )}
                   </td>
                   <td className="p-4 text-center font-semibold text-gray-700">{item.quantity}</td>
-                  <td className="p-4 text-right text-gray-600">₱{Number(item.estimatedUnitPrice).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
-                  <td className="p-4 text-right font-bold text-gray-900">₱{(Number(item.estimatedUnitPrice) * item.quantity).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                  <td className="p-4 text-right text-gray-600">â‚±{Number(item.estimatedUnitPrice).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                  <td className="p-4 text-right font-bold text-gray-900">â‚±{(Number(item.estimatedUnitPrice) * item.quantity).toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
                 </tr>
               ))}
               <tr className="bg-gray-50 font-bold">
-                <td colSpan={3} className="p-4 text-right text-[#7B1E1E] uppercase">Estimated Grand Total Value</td>
-                <td className="p-4 text-right text-base text-[#7B1E1E] font-black">₱{itemsTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
+                <td colSpan={3} className="p-4 text-right text-[#800000] uppercase">Estimated Grand Total Value</td>
+                <td className="p-4 text-right text-base text-[#800000] font-black">â‚±{itemsTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}</td>
               </tr>
             </tbody>
           </table>

@@ -84,7 +84,7 @@ export default function PrDetailError({ error, reset }: PrDetailErrorProps) {
             textDecoration: "none",
             transition: "background 0.2s"
           }}
-          className="hover:bg-slate-500/10"
+          className="hover:bg-gray-500/10"
         >
           Back to Requisitions
         </Link>

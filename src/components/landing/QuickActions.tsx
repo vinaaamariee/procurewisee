@@ -15,8 +15,8 @@ const defaultActions = [
       "Explore the procurement catalog with detailed specs and supplier pricing.",
     href: "/catalog",
     buttonLabel: "View Catalog",
-    color: "#7B1E1E",
-    bgColor: "rgba(123, 30, 30, 0.08)",
+    color: "#800000",
+    bgColor: "rgba(128, 0, 0, 0.08)",
   },
   {
     icon: ClipboardList,
@@ -25,8 +25,8 @@ const defaultActions = [
       "Prepare your Project Procurement Management Plan for budget allocation.",
     href: "/end-user/ppmp",
     buttonLabel: "Start Planning",
-    color: "var(--secondary)",
-    bgColor: "rgba(166, 118, 29, 0.08)",
+    color: 'var(--secondary-strong)',
+    bgColor: "rgba(212, 175, 55, 0.08)",
   },
   {
     icon: FileText,
@@ -35,7 +35,7 @@ const defaultActions = [
       "File a purchase request for items needed by your department or office.",
     href: "/end-user",
     buttonLabel: "Submit PR",
-    color: "var(--secondary)",
+    color: 'var(--secondary-strong)',
     bgColor: "var(--secondary-dim)",
   },
   {
@@ -45,8 +45,8 @@ const defaultActions = [
       "Track the status of your procurement request using your tracking code.",
     href: "/track",
     buttonLabel: "Track Now",
-    color: "#7B1E1E",
-    bgColor: "rgba(123, 30, 30, 0.08)",
+    color: "#800000",
+    bgColor: "rgba(128, 0, 0, 0.08)",
   },
 ];
 
@@ -81,7 +81,7 @@ export default function QuickActions({
         >
           {title}
         </h2>
-        <p className="mt-2 text-sm text-[#6B7280] dark:text-slate-400">
+        <p className="mt-2 text-sm text-[#6B7280] dark:text-gray-400">
           {subtitle}
         </p>
       </div>
@@ -92,7 +92,7 @@ export default function QuickActions({
           return (
             <div
               key={action.title}
-              className="group relative bg-white dark:bg-slate-900 rounded-3xl border border-gray-200/80 dark:border-slate-800 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden"
+              className="group relative bg-white dark:bg-gray-900 rounded-3xl border border-gray-200/80 dark:border-gray-800 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] dark:hover:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden"
             >
               {/* Subtle top accent line */}
               <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{ background: action.color }} />
@@ -106,16 +106,16 @@ export default function QuickActions({
                 </div>
 
                 {/* Content */}
-                <h3 className="text-lg font-semibold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-[var(--accent)] transition-colors">
+                <h3 className="text-lg font-semibold text-[#111827] dark:text-white group-hover:text-[#800000] dark:group-hover:text-[var(--accent)] transition-colors">
                   {action.title}
                 </h3>
-                <p className="mt-2 text-sm text-[#6B7280] dark:text-slate-400 leading-relaxed">
+                <p className="mt-2 text-sm text-[#6B7280] dark:text-gray-400 leading-relaxed">
                   {action.description}
                 </p>
               </div>
 
               {/* Action Link */}
-              <div className="mt-6 pt-4 border-t border-gray-100 dark:border-slate-800">
+              <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
                 <Link
                   href={action.href}
                   className="inline-flex items-center gap-2 text-xs font-bold transition-all duration-200"

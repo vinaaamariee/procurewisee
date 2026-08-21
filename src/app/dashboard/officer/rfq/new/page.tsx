@@ -65,7 +65,7 @@ export default async function NewRfqPage({ searchParams }: PageProps) {
             <p className="text-sm text-[var(--text-primary)] mt-4">
               Unable to load Approved Purchase Requests from the database. Please try again.
             </p>
-            <pre className="text-xs text-[var(--accent)] dark:text-[var(--accent)] whitespace-pre-wrap break-all mt-4 p-4 border border-[var(--border-accent)] dark:border-[var(--accent)] bg-white dark:bg-slate-900 rounded-xl">
+            <pre className="text-xs text-[var(--accent)] dark:text-[var(--accent)] whitespace-pre-wrap break-all mt-4 p-4 border border-[var(--border-accent)] dark:border-[var(--accent)] bg-white dark:bg-gray-900 rounded-xl">
               {fetchError}
             </pre>
           </Card>
@@ -94,7 +94,7 @@ export default async function NewRfqPage({ searchParams }: PageProps) {
           <div className="overflow-x-auto">
             {approvedPrs.length === 0 ? (
               <div className="p-12 text-center flex flex-col items-center justify-center gap-4">
-                <div className="h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                <div className="h-16 w-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400">
                   <ClipboardCopy className="h-8 w-8" />
                 </div>
                 <div>
@@ -278,7 +278,7 @@ export default async function NewRfqPage({ searchParams }: PageProps) {
           <div className="flex gap-3 mt-6">
             <Link
               href="/dashboard/officer/rfq/new"
-              className="rounded-xl bg-[#7B1E1E] px-5 py-2 text-sm font-bold text-white hover:opacity-90 active:scale-[0.97] transition"
+              className="rounded-xl bg-[#800000] px-5 py-2 text-sm font-bold text-white hover:opacity-90 active:scale-[0.97] transition"
             >
               Back to PR Selector
             </Link>

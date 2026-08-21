@@ -34,7 +34,7 @@ export default function StatisticsCards({
         >
           {title}
         </h2>
-        <p className="mt-2 text-sm text-[#6B7280] dark:text-slate-400">
+        <p className="mt-2 text-sm text-[#6B7280] dark:text-gray-400">
           {subtitle}
         </p>
       </div>
@@ -47,29 +47,29 @@ export default function StatisticsCards({
           return (
             <div
               key={stat.title}
-              className="group relative bg-white dark:bg-slate-900 rounded-3xl border border-gray-200/80 dark:border-slate-800 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden"
+              className="group relative bg-white dark:bg-gray-900 rounded-3xl border border-gray-200/80 dark:border-gray-800 p-6 shadow-[0_2px_12px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] dark:shadow-[0_2px_12px_rgba(0,0,0,0.3)] transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between overflow-hidden"
             >
               {/* Top accent bar */}
               <div
                 className="absolute top-0 left-0 right-0 h-[3px] rounded-t-3xl"
-                style={{ background: stat.color ?? "#7B1E1E" }}
+                style={{ background: stat.color ?? "#800000" }}
               />
               <div className="flex items-start justify-between gap-4">
                 <div
                   className="flex h-14 w-14 items-center justify-center rounded-2xl transition-transform duration-300 group-hover:scale-105"
                   style={{
-                    background: stat.bgColor ?? "rgba(123, 30, 30, 0.08)",
+                    background: stat.bgColor ?? "rgba(128, 0, 0, 0.08)",
                   }}
                 >
                   {Icon ? (
                     <Icon
                       className="h-7 w-7"
-                      style={{ color: stat.color ?? "#7B1E1E" }}
+                      style={{ color: stat.color ?? "#800000" }}
                     />
                   ) : (
                     <div
                       className="h-3 w-3 rounded-full"
-                      style={{ background: stat.color ?? "#7B1E1E" }}
+                      style={{ background: stat.color ?? "#800000" }}
                     />
                   )}
                 </div>
@@ -85,12 +85,12 @@ export default function StatisticsCards({
                   {stat.value}
                 </div>
 
-                <div className="mt-1 text-sm font-semibold text-[#6B7280] dark:text-slate-400">
+                <div className="mt-1 text-sm font-semibold text-[#6B7280] dark:text-gray-400">
                   {stat.title}
                 </div>
 
                 {stat.sublabel && (
-                  <div className="mt-1 text-xs text-[#6B7280] dark:text-slate-500">
+                  <div className="mt-1 text-xs text-[#6B7280] dark:text-gray-500">
                     {stat.sublabel}
                   </div>
                 )}

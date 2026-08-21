@@ -46,7 +46,7 @@ export default function RelatedProducts({ products }: RelatedProductsProps) {
               className="flex h-32 items-center justify-center"
               style={{
                 background:
-                  "linear-gradient(135deg, rgba(123, 30, 30, 0.05), rgba(166, 118, 29, 0.05))",
+                  "linear-gradient(135deg, rgba(128, 0, 0, 0.05), rgba(212, 175, 55, 0.05))",
               }}
             >
               <Package

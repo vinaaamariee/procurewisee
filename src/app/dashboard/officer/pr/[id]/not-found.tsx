@@ -37,7 +37,7 @@ export default function PrDetailNotFound() {
           fontWeight: 700,
           fontSize: "0.85rem",
           textDecoration: "none",
-          boxShadow: "0 4px 12px rgba(123, 30, 30, 0.2)",
+          boxShadow: "0 4px 12px rgba(128, 0, 0, 0.2)",
           transition: "opacity 0.2s"
         }}
         className="hover:opacity-90"

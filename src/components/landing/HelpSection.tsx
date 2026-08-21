@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { Mail, Phone, HelpCircle, LogIn, ArrowRight } from "lucide-react";
@@ -30,10 +30,10 @@ export default function HelpSection() {
           {/* Left: FAQs */}
           <div className="lg:col-span-7 space-y-6">
             <div className="space-y-2">
-              <div className="badge badge-outline border-[#7B1E1E] text-[#7B1E1E] font-bold uppercase tracking-wider text-xs py-2 px-3">
+              <div className="badge badge-outline border-[#800000] text-[#800000] font-bold uppercase tracking-wider text-xs py-2 px-3">
                 Help & Support
               </div>
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#7B1E1E] tracking-tight">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#800000] tracking-tight">
                 Frequently Asked Questions
               </h2>
               <p className="text-sm sm:text-base text-base-content/70">
@@ -57,8 +57,8 @@ export default function HelpSection() {
             </div>
 
             {/* Sign-In CTA */}
-            <div className="flex items-center gap-3 rounded-xl bg-[#7B1E1E]/5 border border-[#7B1E1E]/20 p-4">
-              <HelpCircle className="h-5 w-5 text-[#7B1E1E] flex-shrink-0" />
+            <div className="flex items-center gap-3 rounded-xl bg-[#800000]/5 border border-[#800000]/20 p-4">
+              <HelpCircle className="h-5 w-5 text-[#800000] flex-shrink-0" />
               <div className="flex-1">
                 <div className="text-sm font-extrabold text-base-content">
                   Ready to access the system?
@@ -69,7 +69,7 @@ export default function HelpSection() {
               </div>
               <Link
                 href="/login"
-                className="btn btn-sm btn-primary rounded-lg bg-[#7B1E1E] hover:bg-[#7B1E1E] text-white border-none font-bold flex-shrink-0"
+                className="btn btn-sm btn-primary rounded-lg bg-[#800000] hover:bg-[#800000] text-white border-none font-bold flex-shrink-0"
               >
                 <LogIn className="h-3.5 w-3.5" />
                 <span>Sign In</span>
@@ -80,21 +80,21 @@ export default function HelpSection() {
           {/* Right: Contact Card */}
           <div className="lg:col-span-5 space-y-4">
             <div className="card card-border rounded-box bg-base-100 p-6 space-y-5">
-              <h3 className="text-base font-extrabold text-[#7B1E1E] border-b border-base-200 pb-3">
+              <h3 className="text-base font-extrabold text-[#800000] border-b border-base-200 pb-3">
                 Contact for Support
               </h3>
 
               <div className="space-y-4 text-xs text-base-content/80">
                 <div className="space-y-1">
-                  <div className="text-xs font-extrabold uppercase tracking-wider text-[#A6761D]">
+                  <div className="text-xs font-extrabold uppercase tracking-wider text-[var(--secondary-strong)]">
                     Procurement Office
                   </div>
                   <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-[#7B1E1E]" />
+                    <Mail className="h-4 w-4 text-[#800000]" />
                     <span>procurement@bsc.edu.ph</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-[#A6761D]" />
+                    <Phone className="h-4 w-4 text-[var(--secondary-strong)]" />
                     <span>(078) 533-3000</span>
                   </div>
                 </div>
@@ -102,11 +102,11 @@ export default function HelpSection() {
                 <div className="divider my-1"></div>
 
                 <div className="space-y-1">
-                  <div className="text-xs font-extrabold uppercase tracking-wider text-[#A6761D]">
+                  <div className="text-xs font-extrabold uppercase tracking-wider text-[var(--secondary-strong)]">
                     ICT / System Administration
                   </div>
                   <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-[#7B1E1E]" />
+                    <Mail className="h-4 w-4 text-[#800000]" />
                     <span>ict@bsc.edu.ph</span>
                   </div>
                   <div className="text-[11px] text-base-content/60 mt-1 leading-snug">
@@ -125,7 +125,7 @@ export default function HelpSection() {
               </p>
               <Link
                 href="/login"
-                className="btn btn-sm bg-white text-[#7B1E1E] hover:bg-gray-100 border-none font-bold rounded-lg w-full"
+                className="btn btn-sm bg-white text-[#800000] hover:bg-gray-100 border-none font-bold rounded-lg w-full"
               >
                 <span>Get Started</span>
                 <ArrowRight className="h-4 w-4" />

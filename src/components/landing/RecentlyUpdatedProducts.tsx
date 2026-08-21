@@ -47,14 +47,14 @@ export default function RecentlyUpdatedProducts({
           >
             {title}
           </h2>
-          <p className="mt-1 text-sm text-[#6B7280] dark:text-slate-400">
+          <p className="mt-1 text-sm text-[#6B7280] dark:text-gray-400">
             {subtitle}
           </p>
         </div>
 
         <Link
           href="/catalog"
-          className="hidden shrink-0 items-center gap-1.5 text-xs font-bold text-[#7B1E1E] dark:text-[var(--accent)] hover:underline sm:inline-flex"
+          className="hidden shrink-0 items-center gap-1.5 text-xs font-bold text-[#800000] dark:text-[var(--accent)] hover:underline sm:inline-flex"
         >
           <span>View Catalog</span>
           <ArrowRight className="h-4 w-4" />
@@ -70,12 +70,12 @@ export default function RecentlyUpdatedProducts({
             <Link
               key={product.id}
               href={`/catalog/${product.id}`}
-              className="group bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 p-6 no-underline shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
+              className="group bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 p-6 no-underline shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
             >
               {/* Top Banner */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1 rounded-full bg-[#7B1E1E]/10 dark:bg-[#7B1E1E]/20 px-3 py-1 text-[10px] font-bold text-[#7B1E1E] dark:text-[var(--accent)] uppercase tracking-wide">
+                  <span className="inline-flex items-center gap-1 rounded-full bg-[#800000]/10 dark:bg-[#800000]/20 px-3 py-1 text-[10px] font-bold text-[#800000] dark:text-[var(--accent)] uppercase tracking-wide">
                     <Tag className="h-3 w-3" />
                     {product.category}
                   </span>
@@ -85,7 +85,7 @@ export default function RecentlyUpdatedProducts({
                   </span>
                 </div>
 
-                <h3 className="line-clamp-2 text-base font-bold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-[var(--accent)] transition-colors leading-snug">
+                <h3 className="line-clamp-2 text-base font-bold text-[#111827] dark:text-white group-hover:text-[#800000] dark:group-hover:text-[var(--accent)] transition-colors leading-snug">
                   {product.name}
                 </h3>
 
@@ -97,7 +97,7 @@ export default function RecentlyUpdatedProducts({
               </div>
 
               {/* Price & Unit */}
-              <div className="mt-6 pt-4 border-t border-gray-100 dark:border-slate-800 flex items-baseline justify-between">
+              <div className="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800 flex items-baseline justify-between">
                 <div>
                   <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">
                     Est. Unit Cost
@@ -116,7 +116,7 @@ export default function RecentlyUpdatedProducts({
       <div className="mt-6 text-center sm:hidden">
         <Link
           href="/catalog"
-          className="inline-flex items-center gap-1 text-sm font-bold text-[#7B1E1E] dark:text-[var(--accent)]"
+          className="inline-flex items-center gap-1 text-sm font-bold text-[#800000] dark:text-[var(--accent)]"
         >
           <span>View All Products</span>
           <ArrowRight className="h-4 w-4" />

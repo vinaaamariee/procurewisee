@@ -200,10 +200,14 @@ export default function DashboardSidebar({ role }: { role: string }) {
 
   return (
     <aside
-      className="relative flex w-72 flex-col overflow-hidden bg-base-100 border-r border-base-300 shadow-none shrink-0"
+      className="relative flex w-72 flex-col overflow-hidden shrink-0"
+      style={{
+        background: "var(--sidebar-bg)",
+        borderRight: "1px solid var(--sidebar-border)",
+      }}
     >
       {/* Brand Header Band */}
-      <div className="h-[3px] w-full flex-shrink-0 bg-primary" />
+      <div className="h-[3px] w-full flex-shrink-0" style={{ background: "var(--gold)" }} />
 
       {/* Watermark Logo Background */}
       <Image
@@ -211,13 +215,18 @@ export default function DashboardSidebar({ role }: { role: string }) {
         alt=""
         width={420}
         height={420}
-        className="pointer-events-none absolute -bottom-14 -left-20 opacity-[0.02] dark:opacity-[0.04] select-none"
+        className="pointer-events-none absolute -bottom-14 -left-20 opacity-[0.06] select-none"
       />
 
       {/* Brand Profile */}
-      <div className="border-b border-base-300 px-6 py-6 bg-base-100/50">
+      <div
+        className="px-6 py-6"
+        style={{ borderBottom: "1px solid var(--sidebar-border)" }}
+      >
         <div className="flex flex-col items-center text-center">
-          <div className="p-1 border border-base-300 rounded bg-base-100 shadow-none">
+          <div
+            className="p-1 rounded bg-white shadow-none"
+          >
             <Image
               src="/images/bsc-logo.png"
               alt="Batanes State College"
@@ -227,17 +236,18 @@ export default function DashboardSidebar({ role }: { role: string }) {
             />
           </div>
 
-          <h1
-            className="mt-3 text-xl font-bold text-base-content font-display"
-          >
-            Procure<span className="text-primary">Wise</span>
+          <h1 className="mt-3 text-xl font-bold text-white font-display">
+            Procure<span style={{ color: "var(--gold-light)" }}>Wise</span>
           </h1>
 
-          <p className="mt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-primary">
+          <p
+            className="mt-1 text-[9px] font-bold uppercase tracking-[0.16em]"
+            style={{ color: "var(--gold-light)" }}
+          >
             Procurement Management
           </p>
 
-          <p className="text-[10px] text-base-content/60">
+          <p className="text-[10px]" style={{ color: "rgba(255,255,255,0.65)" }}>
             Batanes State College
           </p>
         </div>
@@ -246,8 +256,11 @@ export default function DashboardSidebar({ role }: { role: string }) {
       {/* Navigation Menu */}
       <nav className="relative flex-1 overflow-y-auto px-4 py-4 space-y-4">
         {sections.map((section, idx) => (
-          <div key={section.title} className={idx > 0 ? "pt-4 border-t border-base-200" : ""}>
-            <div className="mb-2 px-3 text-[9px] font-bold uppercase tracking-[0.2em] text-base-content/40">
+          <div key={section.title} className={idx > 0 ? "pt-4" : ""} style={idx > 0 ? { borderTop: "1px solid var(--sidebar-border)" } : undefined}>
+            <div
+              className="mb-2 px-3 text-[9px] font-bold uppercase tracking-[0.2em]"
+              style={{ color: "var(--sidebar-label)" }}
+            >
               {section.title}
             </div>
 
@@ -272,17 +285,32 @@ export default function DashboardSidebar({ role }: { role: string }) {
                       }
                     }}
                     className={`group relative flex items-center gap-3 rounded-md px-3.5 py-2 text-xs transition-colors duration-100 ${
-                      isDisabled
-                        ? "opacity-35 cursor-not-allowed select-none"
-                        : isActive
-                        ? "bg-primary/10 text-primary font-bold border-l-2 border-primary rounded-l-none"
-                        : "text-base-content/75 hover:bg-base-200 hover:text-base-content"
+                      isDisabled ? "opacity-35 cursor-not-allowed select-none" : ""
                     }`}
+                    style={
+                      isDisabled
+                        ? undefined
+                        : isActive
+                        ? {
+                            background: "var(--sidebar-active-bg)",
+                            color: "var(--sidebar-active-text)",
+                            fontWeight: 700,
+                            borderLeft: "2px solid var(--gold)",
+                            borderRadius: "4px 0 0 4px",
+                          }
+                        : { color: "var(--sidebar-item)" }
+                    }
+                    onMouseEnter={(e) => {
+                      if (!isDisabled && !isActive) e.currentTarget.style.background = "var(--sidebar-item-hover-bg)";
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isDisabled && !isActive) e.currentTarget.style.background = "transparent";
+                    }}
                   >
                     <Icon
                       className="h-4.5 w-4.5 flex-shrink-0"
                       style={{
-                        color: isActive ? "var(--color-primary)" : "currentColor",
+                        color: isActive ? "var(--gold-light)" : "currentColor",
                       }}
                     />
 
@@ -296,19 +324,22 @@ export default function DashboardSidebar({ role }: { role: string }) {
       </nav>
 
       {/* Footer Info */}
-      <div className="border-t border-base-300 px-6 py-4 bg-base-100/50">
-        <div className="text-xs font-bold text-primary">
+      <div className="px-6 py-4" style={{ borderTop: "1px solid var(--sidebar-border)" }}>
+        <div className="text-xs font-bold" style={{ color: "var(--gold-light)" }}>
           ProcureWise
         </div>
-        <div className="mt-0.5 text-[10px] text-base-content/50 leading-tight">
+        <div className="mt-0.5 text-[10px] leading-tight" style={{ color: "rgba(255,255,255,0.55)" }}>
           Procurement Management System
         </div>
         {role && (
-          <div className="mt-2 text-[9px] font-semibold text-primary/70 uppercase tracking-wide leading-tight">
+          <div
+            className="mt-2 text-[9px] font-semibold uppercase tracking-wide leading-tight"
+            style={{ color: "var(--sidebar-label)" }}
+          >
             {displayRole}
           </div>
         )}
-        <div className="mt-1 text-[9px] text-base-content/40">
+        <div className="mt-1 text-[9px]" style={{ color: "rgba(255,255,255,0.4)" }}>
           © 2026 Batanes State College
         </div>
       </div>

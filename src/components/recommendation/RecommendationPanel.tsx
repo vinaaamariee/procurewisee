@@ -79,7 +79,7 @@ export default function RecommendationPanel({
         className="flex justify-between items-center px-6 py-4 border-b"
         style={{
           borderColor: "var(--border)",
-          background: "linear-gradient(135deg, rgba(123, 30, 30, 0.04) 0%, rgba(166, 118, 29, 0.04) 100%)",
+          background: "linear-gradient(135deg, rgba(128, 0, 0, 0.04) 0%, rgba(212, 175, 55, 0.04) 100%)",
         }}
       >
         <div className="flex items-center gap-2">
@@ -181,7 +181,7 @@ export default function RecommendationPanel({
                 onClick={handleGeneratePo}
                 disabled={isGenerating}
                 className="w-full py-2 px-4 rounded-xl text-white font-bold text-xs shadow flex justify-center items-center gap-2 hover:opacity-90 transition-opacity"
-                style={{ background: "linear-gradient(135deg, var(--accent) 0%, #7B1E1E 100%)" }}
+                style={{ background: "linear-gradient(135deg, var(--accent) 0%, #800000 100%)" }}
               >
                 {isGenerating ? (
                   <>

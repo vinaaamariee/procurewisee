@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
 
@@ -23,7 +23,7 @@ export default function DepartmentSelectForm({ departments }: DepartmentSelectFo
               setIsCustom(!isCustom);
               setDepartment("");
             }}
-            className="text-[11px] font-bold text-[#7B1E1E] hover:text-[#7B1E1E] hover:underline transition bg-transparent border-none cursor-pointer"
+            className="text-[11px] font-bold text-[#800000] hover:text-[#800000] hover:underline transition bg-transparent border-none cursor-pointer"
           >
             {isCustom ? "Choose from list" : "Enter custom"}
           </button>
@@ -37,7 +37,7 @@ export default function DepartmentSelectForm({ departments }: DepartmentSelectFo
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
             placeholder="E.g., IT Research Division"
-            className="w-full border border-gray-300 rounded-lg p-3 text-sm outline-none focus:border-[#A6761D] bg-[#FAF9F6] transition font-medium"
+            className="w-full border border-gray-300 rounded-lg p-3 text-sm outline-none focus:border-[#D4AF37] bg-[#FAFAFA] transition font-medium"
           />
         ) : (
           <select
@@ -45,7 +45,7 @@ export default function DepartmentSelectForm({ departments }: DepartmentSelectFo
             required
             value={department}
             onChange={(e) => setDepartment(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg p-3 text-sm outline-none focus:border-[#A6761D] bg-[#FAF9F6] transition cursor-pointer font-medium"
+            className="w-full border border-gray-300 rounded-lg p-3 text-sm outline-none focus:border-[#D4AF37] bg-[#FAFAFA] transition cursor-pointer font-medium"
           >
             <option value="" disabled>
               -- Choose Department --
@@ -59,15 +59,15 @@ export default function DepartmentSelectForm({ departments }: DepartmentSelectFo
         )}
       </div>
 
-      <div className="bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-lg p-4 text-xs leading-relaxed text-[#A6761D]">
+      <div className="bg-[var(--secondary-dim)] border border-[var(--border-accent)] rounded-lg p-4 text-xs leading-relaxed text-[var(--secondary-strong)]">
         <strong>BSC Planning Policy:</strong> PPMP plans are validated against annual departmental budget allocations. No login is required to prepare and save these plans, but all submissions are subject to budget audits.
       </div>
 
       <button
         type="submit"
-        className="w-full bg-[#7B1E1E] hover:bg-[#7B1E1E] text-white py-3 rounded-lg font-bold text-sm transition uppercase tracking-wider shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+        className="w-full bg-[#800000] hover:bg-[#800000] text-white py-3 rounded-lg font-bold text-sm transition uppercase tracking-wider shadow-md hover:shadow-lg flex items-center justify-center gap-2"
       >
-        Start Planning →
+        Start Planning â†’
       </button>
     </form>
   );

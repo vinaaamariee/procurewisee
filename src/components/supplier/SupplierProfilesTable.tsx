@@ -98,8 +98,8 @@ export default function SupplierProfilesTable({
 
   // Helper to color quality compliance
   const getQualityStyle = (rate: number) => {
-    if (rate >= 90) return { color: 'var(--secondary)', bg: 'var(--green-dim)', label: 'Excellent' };
-    if (rate >= 80) return { color: 'var(--secondary)', bg: 'rgba(166, 118, 29, 0.08)', label: 'Good' };
+    if (rate >= 90) return { color: 'var(--secondary-strong)', bg: 'var(--secondary-dim)', label: 'Excellent' };
+    if (rate >= 80) return { color: 'var(--secondary-strong)', bg: 'rgba(212, 175, 55, 0.08)', label: 'Good' };
     return { color: 'var(--accent)', bg: 'var(--accent-glass)', label: 'Poor' };
   };
 
@@ -110,7 +110,7 @@ export default function SupplierProfilesTable({
       {errorMsg && (
         <div style={{
           padding: '1rem 1.25rem', borderRadius: 12,
-          background: 'var(--accent-glass)', border: '1px solid rgba(123, 30, 30, 0.2)',
+          background: 'var(--accent-glass)', border: '1px solid rgba(128, 0, 0, 0.2)',
           color: 'var(--accent)', fontSize: '0.85rem', fontWeight: 500,
           display: 'flex', justifyContent: 'space-between', alignItems: 'center'
         }}>
@@ -274,7 +274,7 @@ export default function SupplierProfilesTable({
                         gap: '0.35rem',
                         padding: '0.3rem 0.75rem',
                         borderRadius: 999,
-                        background: supplier.isVerified ? 'var(--green-dim)' : 'var(--bg-dark)',
+                        background: supplier.isVerified ? 'var(--secondary-dim)' : 'var(--bg-dark)',
                         border: '1px solid var(--border)',
                         color: supplier.isVerified ? 'var(--secondary)' : 'var(--text-muted)',
                         fontSize: '0.75rem',
@@ -337,7 +337,7 @@ export default function SupplierProfilesTable({
                           style={{
                             padding: '0.5rem 1rem',
                             borderRadius: 8,
-                            background: supplier.isVerified ? 'var(--accent-glass)' : 'var(--green-dim)',
+                            background: supplier.isVerified ? 'var(--accent-glass)' : 'var(--secondary-dim)',
                             border: '1px solid var(--border)',
                             color: supplier.isVerified ? 'var(--accent)' : 'var(--secondary)',
                             fontSize: '0.78rem',

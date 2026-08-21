@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About ProcureWise — Intelligent Procurement Analytics | Batanes State College",
+  title: "About ProcureWise â€” Intelligent Procurement Analytics | Batanes State College",
   description:
     "Learn about ProcureWise: Batanes State College's automated canvassing, MCDM best-value recommendation engine, and transparent procurement analytics platform. Compliant with RA 9184 and COA/GAM rules.",
 };
@@ -27,23 +27,23 @@ const pillars = [
     title: "MCDM Best-Value Engine",
     description:
       "Employs Multi-Criteria Decision Making (MCDM) algorithms to evaluate bids across price, delivery compliance, and supplier reliability ratings.",
-    color: "#7B1E1E",
-    bg: "rgba(123, 30, 30, 0.08)",
+    color: "#800000",
+    bg: "rgba(128, 0, 0, 0.08)",
   },
   {
     icon: FileCheck,
     title: "Official BSC Digital Forms",
     description:
       "Standardized digital paper layouts for PR (Appendix 60), RFQ (Annex D), Ack Receipt (Annex E), AOQ (Annex F), and PO (Appendix 61) with official institutional letterheads.",
-    color: "var(--secondary)",
-    bg: "rgba(166, 118, 29, 0.08)",
+    color: 'var(--secondary-strong)',
+    bg: "rgba(212, 175, 55, 0.08)",
   },
   {
     icon: ShieldCheck,
     title: "RA 9184 & COA Compliance",
     description:
       "Strict audit trails, role-based approval controls (Requisitioner, Officer, Approver), and digital signatures per Republic Act 9184 IRR.",
-    color: "var(--secondary)",
+    color: 'var(--secondary-strong)',
     bg: "var(--secondary-dim)",
   },
   {
@@ -51,8 +51,8 @@ const pillars = [
     title: "Historical Price Tracking",
     description:
       "ARIMA-powered price forecasting and historical price trends derived from historical Small Value Procurement (SVP) workbooks.",
-    color: "#7B1E1E",
-    bg: "rgba(123, 30, 30, 0.08)",
+    color: "#800000",
+    bg: "rgba(128, 0, 0, 0.08)",
   },
 ];
 
@@ -65,12 +65,12 @@ const institutionalGoals = [
 
 export default function AboutPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#FAF9F6] via-[#F3F4F6] to-[#FAF9F6] dark:bg-slate-950 text-[#111827] dark:text-slate-100 font-sans">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#FAFAFA] via-[#F3F4F6] to-[#FAFAFA] dark:bg-gray-950 text-[#111827] dark:text-gray-100 font-sans">
       <Header />
 
       <main className="flex-1">
-        {/* ── Hero Banner ── */}
-        <section className="relative overflow-hidden bg-gradient-to-r from-[#7B1E1E] via-[#5A1515] to-[#5A1515] py-16 lg:py-24 text-white">
+        {/* â”€â”€ Hero Banner â”€â”€ */}
+        <section className="relative overflow-hidden bg-gradient-to-r from-[#800000] via-[#5C0000] to-[#5C0000] py-16 lg:py-24 text-white">
           <div className="absolute inset-0 bg-[radial-[var(--secondary-dim)]_1px,transparent_1px] [background-size:24px_24px] opacity-30" />
           
           <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -84,14 +84,14 @@ export default function AboutPage() {
                 About <span className="text-[var(--secondary)]">ProcureWise</span>
               </h1>
 
-              <p className="text-base sm:text-lg text-slate-200 leading-relaxed">
+              <p className="text-base sm:text-lg text-gray-200 leading-relaxed">
                 An Intelligent Procurement Analytics and Automated Canvassing System with Best-Value Recommendation Engine engineered specifically to elevate institutional procurement at Batanes State College.
               </p>
 
               <div className="flex flex-wrap gap-4 pt-2">
                 <Link
                   href="/catalog"
-                  className="inline-flex items-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-xs font-bold text-[#111827] hover:bg-[#A6761D] transition-all shadow-md hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--secondary)] px-6 py-3 text-xs font-bold text-[#111827] hover:bg-[#D4AF37] transition-all shadow-md hover:-translate-y-0.5"
                 >
                   <Package className="h-4 w-4" />
                   <span>Browse Procurement Catalog</span>
@@ -108,13 +108,13 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── Main Content ── */}
+        {/* â”€â”€ Main Content â”€â”€ */}
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 lg:py-16 space-y-16 lg:space-y-20">
           
           {/* Overview & Mission */}
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#7B1E1E] dark:text-[var(--secondary)]">
+              <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#800000] dark:text-[var(--secondary)]">
                 <Building2 className="h-4 w-4" />
                 <span>Institutional Vision</span>
               </div>
@@ -123,7 +123,7 @@ export default function AboutPage() {
                 Modernizing Higher Education Procurement
               </h2>
 
-              <p className="text-sm sm:text-base text-gray-600 dark:text-slate-300 leading-relaxed">
+              <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 leading-relaxed">
                 ProcureWise bridges traditional government procurement workflows with cutting-edge analytics. By replacing manual paperwork with automated canvas generation, multi-criteria decision support, and digital auditability, the system empowers Procurement Staff, Approvers, and Requisitions to achieve maximum value for state college funds.
               </p>
 
@@ -131,7 +131,7 @@ export default function AboutPage() {
                 {institutionalGoals.map((goal, idx) => (
                   <div key={idx} className="flex items-start gap-2.5">
                     <CheckCircle2 className="h-4 w-4 text-[var(--secondary)] flex-shrink-0 mt-0.5" />
-                    <span className="text-xs text-gray-700 dark:text-slate-300 font-medium">
+                    <span className="text-xs text-gray-700 dark:text-gray-300 font-medium">
                       {goal}
                     </span>
                   </div>
@@ -140,37 +140,37 @@ export default function AboutPage() {
             </div>
 
             {/* Stats / Highlight Box */}
-            <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl p-8 shadow-xl space-y-6">
-              <div className="flex items-center gap-3 border-b border-gray-100 dark:border-slate-800 pb-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#7B1E1E]/10 text-[#7B1E1E] dark:text-[var(--accent)]">
+            <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-8 shadow-xl space-y-6">
+              <div className="flex items-center gap-3 border-b border-gray-100 dark:border-gray-800 pb-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#800000]/10 text-[#800000] dark:text-[var(--accent)]">
                   <Award className="h-6 w-6" />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-[#111827] dark:text-white">
                     Built for Batanes State College
                   </h3>
-                  <p className="text-xs text-gray-500 dark:text-slate-400">
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
                     Compliant with Philippine Public Procurement Guidelines
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-800 text-center">
-                  <div className="text-2xl font-black text-[#7B1E1E] dark:text-[var(--accent)]">100%</div>
-                  <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Paperless Canvas</div>
+                <div className="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 text-center">
+                  <div className="text-2xl font-black text-[#800000] dark:text-[var(--accent)]">100%</div>
+                  <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">Paperless Canvas</div>
                 </div>
-                <div className="p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-800 text-center">
+                <div className="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 text-center">
                   <div className="text-2xl font-black text-[var(--secondary)]">MCDM</div>
-                  <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Recommendation</div>
+                  <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">Recommendation</div>
                 </div>
-                <div className="p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-800 text-center">
+                <div className="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 text-center">
                   <div className="text-2xl font-black text-[var(--secondary)]">E2E</div>
-                  <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Audit Trail</div>
+                  <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">Audit Trail</div>
                 </div>
-                <div className="p-4 rounded-2xl bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-slate-800 text-center">
-                  <div className="text-2xl font-black text-[#7B1E1E]">24/7</div>
-                  <div className="text-[11px] font-semibold text-gray-500 dark:text-slate-400">Public Tracking</div>
+                <div className="p-4 rounded-2xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 text-center">
+                  <div className="text-2xl font-black text-[#800000]">24/7</div>
+                  <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-400">Public Tracking</div>
                 </div>
               </div>
             </div>
@@ -193,7 +193,7 @@ export default function AboutPage() {
                 return (
                   <div
                     key={pillar.title}
-                    className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
+                    className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between"
                   >
                     <div className="space-y-4">
                       <div
@@ -205,7 +205,7 @@ export default function AboutPage() {
                       <h3 className="text-base font-bold text-[#111827] dark:text-white">
                         {pillar.title}
                       </h3>
-                      <p className="text-xs text-gray-600 dark:text-slate-400 leading-relaxed">
+                      <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                         {pillar.description}
                       </p>
                     </div>
@@ -216,17 +216,17 @@ export default function AboutPage() {
           </div>
 
           {/* Bottom Call to Action */}
-          <div className="bg-gradient-to-r from-[#7B1E1E] to-[#5A1515] rounded-3xl p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+          <div className="bg-gradient-to-r from-[#800000] to-[#5C0000] rounded-3xl p-8 text-white flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
             <div className="space-y-2 text-center sm:text-left">
               <h3 className="text-xl font-black">Ready to explore ProcureWise?</h3>
-              <p className="text-xs text-slate-200">
+              <p className="text-xs text-gray-200">
                 Browse public item catalogs, track existing Purchase Requests, or sign into your operational role.
               </p>
             </div>
             <div className="flex flex-wrap gap-3 shrink-0">
               <Link
                 href="/catalog"
-                className="px-5 py-2.5 rounded-xl bg-[var(--secondary)] text-slate-950 text-xs font-bold hover:bg-[#A6761D] transition shadow-md"
+                className="px-5 py-2.5 rounded-xl bg-[var(--secondary)] text-gray-950 text-xs font-bold hover:bg-[#D4AF37] transition shadow-md"
               >
                 Browse Catalog
               </Link>

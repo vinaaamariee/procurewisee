@@ -148,14 +148,14 @@ export default function RFQItemsTable({
     <div className="my-4 font-serif space-y-2">
       {/* Header and Add Button */}
       <div className="flex items-center justify-between">
-        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-sans">
+        <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider font-sans">
           Itemized Specifications & Price Schedule
         </h3>
         {!isReadOnly && setItems && (
           <button
             type="button"
             onClick={handleAddItem}
-            className="inline-flex items-center gap-1 text-xs font-sans font-bold text-[#7B1E1E] hover:underline bg-[var(--secondary-dim)] border border-[var(--border-accent)] px-2.5 py-1 rounded print:hidden"
+            className="inline-flex items-center gap-1 text-xs font-sans font-bold text-[#800000] hover:underline bg-[var(--secondary-dim)] border border-[var(--border-accent)] px-2.5 py-1 rounded print:hidden"
           >
             <span>+ Add Line Item</span>
           </button>
@@ -163,38 +163,38 @@ export default function RFQItemsTable({
       </div>
 
       {/* Official Bordered Table */}
-      <div className="overflow-x-auto border border-slate-900">
+      <div className="overflow-x-auto border border-gray-900">
         <table className="w-full border-collapse text-xs">
           <thead>
-            <tr className="bg-slate-100 border-b border-slate-900 text-slate-900 font-bold uppercase text-[11px] font-sans">
-              <th className="border-r border-slate-900 p-2 text-center w-12">Item No.</th>
-              <th className="border-r border-slate-900 p-2 text-center w-16">Qty</th>
-              <th className="border-r border-slate-900 p-2 text-center w-20">Unit</th>
-              <th className="border-r border-slate-900 p-2 text-left">
+            <tr className="bg-gray-100 border-b border-gray-900 text-gray-900 font-bold uppercase text-[11px] font-sans">
+              <th className="border-r border-gray-900 p-2 text-center w-12">Item No.</th>
+              <th className="border-r border-gray-900 p-2 text-center w-16">Qty</th>
+              <th className="border-r border-gray-900 p-2 text-center w-20">Unit</th>
+              <th className="border-r border-gray-900 p-2 text-left">
                 Item Description / Technical Specifications
               </th>
-              <th className="border-r border-slate-900 p-2 text-right w-28">
+              <th className="border-r border-gray-900 p-2 text-right w-28">
                 Unit Cost (₱)
               </th>
-              <th className="border-r border-slate-900 p-2 text-right w-32">
+              <th className="border-r border-gray-900 p-2 text-right w-32">
                 Total Cost (₱)
               </th>
               {!isReadOnly && <th className="p-2 text-center w-10 print:hidden">Action</th>}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-800">
+          <tbody className="divide-y divide-gray-800">
             {items.map((item, index) => {
               const lineTotal = item.totalCost || (item.quantity * (item.unitCost || 0));
 
               return (
-                <tr key={item.id || index} className="hover:bg-slate-50/50">
+                <tr key={item.id || index} className="hover:bg-gray-50/50">
                   {/* Item Number */}
-                  <td className="border-r border-slate-800 p-2 text-center font-bold text-slate-900 align-top">
+                  <td className="border-r border-gray-800 p-2 text-center font-bold text-gray-900 align-top">
                     {item.itemNumber}
                   </td>
 
                   {/* Quantity */}
-                  <td className="border-r border-slate-800 p-2 text-center align-top">
+                  <td className="border-r border-gray-800 p-2 text-center align-top">
                     {isReadOnly ? (
                       item.quantity
                     ) : (
@@ -204,13 +204,13 @@ export default function RFQItemsTable({
                         required
                         value={item.quantity}
                         onChange={(e) => handleItemFieldChange(item.id, 'quantity', e.target.value)}
-                        className="w-full text-center font-semibold bg-[var(--secondary-dim)]/50 border border-slate-300 rounded p-1 text-xs"
+                        className="w-full text-center font-semibold bg-[var(--secondary-dim)]/50 border border-gray-300 rounded p-1 text-xs"
                       />
                     )}
                   </td>
 
                   {/* Unit */}
-                  <td className="border-r border-slate-800 p-2 text-center align-top">
+                  <td className="border-r border-gray-800 p-2 text-center align-top">
                     {isReadOnly ? (
                       item.unit
                     ) : (
@@ -220,20 +220,20 @@ export default function RFQItemsTable({
                         value={item.unit}
                         onChange={(e) => handleItemFieldChange(item.id, 'unit', e.target.value)}
                         placeholder="pcs, reams"
-                        className="w-full text-center bg-[var(--secondary-dim)]/50 border border-slate-300 rounded p-1 text-xs"
+                        className="w-full text-center bg-[var(--secondary-dim)]/50 border border-gray-300 rounded p-1 text-xs"
                       />
                     )}
                   </td>
 
                   {/* Particulars / Specifications */}
-                  <td className="border-r border-slate-800 p-2 align-top space-y-1.5">
+                  <td className="border-r border-gray-800 p-2 align-top space-y-1.5">
                     {!isReadOnly && (appItems.length > 0 || catalogProducts.length > 0) && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 print:hidden">
                         {appItems.length > 0 && (
                           <select
                             value={item.appItemId || ''}
                             onChange={(e) => handleItemFieldChange(item.id, 'appItemId', e.target.value)}
-                            className="w-full text-[11px] p-1 border border-slate-300 rounded bg-white text-slate-700"
+                            className="w-full text-[11px] p-1 border border-gray-300 rounded bg-white text-gray-700"
                           >
                             <option value="">-- Link APP Item (Optional) --</option>
                             {appItems.map((a) => (
@@ -247,7 +247,7 @@ export default function RFQItemsTable({
                           <select
                             value={item.productId || ''}
                             onChange={(e) => handleItemFieldChange(item.id, 'productId', e.target.value)}
-                            className="w-full text-[11px] p-1 border border-slate-300 rounded bg-white text-slate-700"
+                            className="w-full text-[11px] p-1 border border-gray-300 rounded bg-white text-gray-700"
                           >
                             <option value="">-- Link Product Catalog (Optional) --</option>
                             {catalogProducts.map((p) => (
@@ -261,7 +261,7 @@ export default function RFQItemsTable({
                     )}
 
                     {isReadOnly ? (
-                      <div className="whitespace-pre-wrap leading-relaxed text-slate-900 font-serif">
+                      <div className="whitespace-pre-wrap leading-relaxed text-gray-900 font-serif">
                         {item.particulars}
                       </div>
                     ) : (
@@ -271,13 +271,13 @@ export default function RFQItemsTable({
                         value={item.particulars}
                         onChange={(e) => handleItemFieldChange(item.id, 'particulars', e.target.value)}
                         placeholder="Detailed item particulars and specifications..."
-                        className="w-full p-1.5 text-xs bg-[var(--secondary-dim)]/50 border border-slate-300 rounded font-serif text-slate-900 resize-y"
+                        className="w-full p-1.5 text-xs bg-[var(--secondary-dim)]/50 border border-gray-300 rounded font-serif text-gray-900 resize-y"
                       />
                     )}
                   </td>
 
                   {/* Unit Cost */}
-                  <td className="border-r border-slate-800 p-2 text-right align-top">
+                  <td className="border-r border-gray-800 p-2 text-right align-top">
                     {isReadOnly ? (
                       item.unitCost ? `₱ ${item.unitCost.toLocaleString('en-PH', { minimumFractionDigits: 2 })}` : '—'
                     ) : (
@@ -288,13 +288,13 @@ export default function RFQItemsTable({
                         value={item.unitCost || ''}
                         onChange={(e) => handleItemFieldChange(item.id, 'unitCost', e.target.value)}
                         placeholder="0.00"
-                        className="w-full text-right font-semibold bg-[var(--secondary-dim)]/50 border border-slate-300 rounded p-1 text-xs"
+                        className="w-full text-right font-semibold bg-[var(--secondary-dim)]/50 border border-gray-300 rounded p-1 text-xs"
                       />
                     )}
                   </td>
 
                   {/* Total Cost */}
-                  <td className="border-r border-slate-800 p-2 text-right font-bold text-slate-900 align-top">
+                  <td className="border-r border-gray-800 p-2 text-right font-bold text-gray-900 align-top">
                     ₱ {lineTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
                   </td>
 
@@ -318,11 +318,11 @@ export default function RFQItemsTable({
             })}
 
             {/* Grand Total Footer Row */}
-            <tr className="bg-slate-100 border-t-2 border-slate-900 font-bold font-sans text-xs">
-              <td colSpan={4} className="border-r border-slate-900 p-2.5 text-right uppercase tracking-wider text-slate-950">
+            <tr className="bg-gray-100 border-t-2 border-gray-900 font-bold font-sans text-xs">
+              <td colSpan={4} className="border-r border-gray-900 p-2.5 text-right uppercase tracking-wider text-gray-950">
                 Grand Total / Approved Budget Total:
               </td>
-              <td colSpan={2} className="p-2.5 text-right text-[#7B1E1E] text-sm">
+              <td colSpan={2} className="p-2.5 text-right text-[#800000] text-sm">
                 ₱ {grandTotal.toLocaleString('en-PH', { minimumFractionDigits: 2 })}
               </td>
               {!isReadOnly && <td className="print:hidden"></td>}

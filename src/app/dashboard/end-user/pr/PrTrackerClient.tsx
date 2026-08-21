@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { submitPrAction, resubmitPrAction, deletePrDraftAction } from "@/app/actions/pr";
+import { statusBadgeClass } from "@/lib/status-tone";
 import EmptyState from "@/components/ui/EmptyState";
 import PrWorkflowTimeline, { TimelineEntry } from "@/components/pr/PrWorkflowTimeline";
 import PrWorkflowTimelineStepper from "@/components/pr/PrWorkflowTimelineStepper";
@@ -198,21 +199,21 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "Draft":
-        return { label: "Draft", cls: "bg-gray-100 text-gray-700 border-gray-300" };
+        return { label: "Draft", cls: statusBadgeClass("Draft") };
       case "PendingProcurementReview":
       case "Pending Procurement Review":
       case "Submitted":
       case "UnderReview":
       case "Under Review":
-        return { label: "Pending Procurement Verification", cls: "bg-[var(--secondary-dim)] text-[var(--secondary)] dark:bg-[var(--secondary-dim)] dark:text-[var(--secondary)] border-[var(--border-accent)]" };
+        return { label: "Pending Procurement Verification", cls: statusBadgeClass("Submitted") };
       case "Returned":
       case "ReturnedForRevision":
       case "Returned for Revision":
-        return { label: "Returned", cls: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--accent)] border-[var(--border-accent)]" };
+        return { label: "Returned", cls: statusBadgeClass("Returned") };
       case "Approved":
-        return { label: "Verified", cls: "bg-[var(--accent-glass)] text-[var(--accent)] dark:bg-[var(--accent-glass)] dark:text-[var(--secondary)] border-[var(--border-accent)]" };
+        return { label: "Verified", cls: statusBadgeClass("Approved") };
       default:
-        return { label: status, cls: "bg-gray-100 text-gray-700 border-gray-300" };
+        return { label: status, cls: statusBadgeClass(status) };
     }
   };
 
@@ -363,8 +364,8 @@ export default function PrTrackerClient({ initialPrs }: PrTrackerClientProps) {
 
             {/* Approved Safeguard Banner */}
             {isApproved && (
-              <div className="rounded-2xl border border-slate-300 bg-slate-100 p-4 dark:border-slate-800 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300 flex items-start gap-3 text-xs">
-                <Lock className="h-4 w-4 text-slate-500 shrink-0 mt-0.5" />
+              <div className="rounded-2xl border border-gray-300 bg-gray-100 p-4 dark:border-gray-800 dark:bg-gray-900/50 text-gray-700 dark:text-gray-300 flex items-start gap-3 text-xs">
+                <Lock className="h-4 w-4 text-gray-500 shrink-0 mt-0.5" />
                 <span>
                   This Purchase Request has already been approved. Further modifications are no longer permitted. If changes are required, contact the Procurement Office.
                 </span>

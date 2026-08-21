@@ -39,9 +39,9 @@ export default async function ManageCatalogPage() {
 
   // Brand Colors mapped from your Login Page design
   const theme = {
-    crimson: '#7B1E1E',
-    gold: '#A6761D',
-    goldDark: '#A6761D',
+    crimson: '#800000',
+    gold: '#D4AF37',
+    goldDark: '#D4AF37',
     dark: '#111827',
     textMain: '#1f2937',
     textMuted: '#6b7280',
@@ -52,9 +52,9 @@ export default async function ManageCatalogPage() {
 
   if (fetchError) {
     return (
-      <div style={{ maxWidth: '800px', margin: '4rem auto', padding: '2.5rem', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(20px)', border: '1px solid rgba(123, 30, 30, 0.2)', borderRadius: '1.25rem', boxShadow: theme.shadow, fontFamily: '"Inter", sans-serif' }}>
+      <div style={{ maxWidth: '800px', margin: '4rem auto', padding: '2.5rem', background: 'rgba(255, 255, 255, 0.8)', backdropFilter: 'blur(20px)', border: '1px solid rgba(128, 0, 0, 0.2)', borderRadius: '1.25rem', boxShadow: theme.shadow, fontFamily: '"Inter", sans-serif' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#7B1E1E' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', color: '#800000' }}>
             <span style={{ fontSize: '2rem' }}>⚠️</span>
             <h2 style={{ fontSize: '1.5rem', fontWeight: 800, margin: 0 }}>Database Connection Error</h2>
           </div>
@@ -68,7 +68,7 @@ export default async function ManageCatalogPage() {
             <div style={{ fontSize: '0.8rem', fontWeight: 700, color: theme.textMuted, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.5rem' }}>
               System Error Message
             </div>
-            <pre style={{ margin: 0, fontSize: '0.85rem', color: '#7B1E1E', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: 'monospace', lineHeight: '1.5' }}>
+            <pre style={{ margin: 0, fontSize: '0.85rem', color: '#800000', whiteSpace: 'pre-wrap', wordBreak: 'break-all', fontFamily: 'monospace', lineHeight: '1.5' }}>
               {fetchError}
             </pre>
           </div>
@@ -80,7 +80,7 @@ export default async function ManageCatalogPage() {
                 display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.6rem 1.4rem',
                 backgroundColor: theme.crimson, border: 'none',
                 borderRadius: '999px', color: '#fff', textDecoration: 'none',
-                fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 4px 12px rgba(123, 30, 30, 0.2)',
+                fontSize: '0.85rem', fontWeight: 600, boxShadow: '0 4px 12px rgba(128, 0, 0, 0.2)',
                 cursor: 'pointer'
               }}
             >

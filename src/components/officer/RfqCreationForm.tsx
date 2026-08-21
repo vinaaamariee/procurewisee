@@ -241,7 +241,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
       {errorMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'var(--accent-glass)', border: '1px solid rgba(123, 30, 30, 0.2)',
+          background: 'var(--accent-glass)', border: '1px solid rgba(128, 0, 0, 0.2)',
           color: 'var(--accent)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ⚠️ {errorMsg}
@@ -251,8 +251,8 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
       {successMsg && (
         <div style={{
           padding: '1rem', borderRadius: 12,
-          background: 'var(--green-dim)', border: '1px solid var(--border)',
-          color: 'var(--secondary)', fontSize: '0.875rem', fontWeight: 500
+          background: 'var(--secondary-dim)', border: '1px solid var(--border)',
+          color: 'var(--secondary-strong)', fontSize: '0.875rem', fontWeight: 500
         }}>
           ✅ {successMsg}
         </div>
@@ -286,7 +286,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
               <div style={{ fontSize: '0.72rem', color: 'var(--accent)', fontWeight: 700, marginTop: '0.2rem' }}>PROCUREMENT UNIT</div>
             </div>
           </div>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', letterSpacing: '1px', color: 'var(--secondary)' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: '1.5rem', letterSpacing: '1px', color: 'var(--secondary-strong)' }}>
             CREATE REQUEST FOR PRICE QUOTATION
           </h2>
         </div>
@@ -339,8 +339,8 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
         {/* Manual Override Justification Section (appears only when overridden) */}
         {isManualOverride && (
           <div style={{
-            background: 'rgba(123, 30, 30, 0.03)',
-            border: '1px dashed rgba(123, 30, 30, 0.2)',
+            background: 'rgba(128, 0, 0, 0.03)',
+            border: '1px dashed rgba(128, 0, 0, 0.2)',
             borderRadius: 12,
             padding: '1.25rem',
             display: 'flex',
@@ -348,7 +348,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
             gap: '1rem',
             marginTop: '-0.5rem',
           }}>
-            <h4 style={{ margin: 0, fontSize: '0.8rem', fontWeight: 800, color: '#7B1E1E', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <h4 style={{ margin: 0, fontSize: '0.8rem', fontWeight: 800, color: '#800000', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               ⚠️ Sequence Override Justification (Audited)
             </h4>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem' }} className="grid grid-cols-1 md:grid-cols-3">
@@ -426,7 +426,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
                 style={{
                   width: '100%', padding: '0.6rem 0.8rem 0.6rem 1.8rem', borderRadius: 8,
                   background: 'var(--bg-deep)', border: '1px solid var(--border)',
-                  color: 'var(--secondary)', fontSize: '0.85rem', fontWeight: 700,
+                  color: 'var(--secondary-strong)', fontSize: '0.85rem', fontWeight: 700,
                 }}
               />
             </div>
@@ -453,7 +453,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
         {/* Dynamic Line Items Section */}
         <div style={{ marginTop: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
-            <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--secondary)', letterSpacing: '0.3px' }}>Solicited Line Items</h3>
+            <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--secondary-strong)', letterSpacing: '0.3px' }}>Solicited Line Items</h3>
             <button
               type="button"
               onClick={handleAddItem}
@@ -607,7 +607,7 @@ export default function RfqCreationForm({ appItems, catalogProducts, nextRfqNumb
                         disabled={items.length === 1}
                         style={{
                           padding: '0.4rem', borderRadius: 6,
-                          background: 'var(--accent-glass)', border: '1px solid rgba(123, 30, 30, 0.2)',
+                          background: 'var(--accent-glass)', border: '1px solid rgba(128, 0, 0, 0.2)',
                           color: 'var(--accent)', fontSize: '0.75rem', cursor: items.length === 1 ? 'not-allowed' : 'pointer',
                           opacity: items.length === 1 ? 0.4 : 1, transition: 'all 0.2s'
                         }}

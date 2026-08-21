@@ -39,7 +39,7 @@ function getTrendConfig(trend: string) {
       return {
         icon: TrendingDown,
         label: "Decreasing",
-        color: "var(--secondary)",
+        color: 'var(--secondary-strong)',
         bgColor: "var(--accent-glass)",
       };
     case "stable":
@@ -47,14 +47,14 @@ function getTrendConfig(trend: string) {
         icon: Minus,
         label: "Stable",
         color: "var(--text-secondary)",
-        bgColor: "rgba(123, 30, 30, 0.08)",
+        bgColor: "rgba(128, 0, 0, 0.08)",
       };
     default:
       return {
         icon: HelpCircle,
         label: "Unknown",
         color: "var(--text-muted)",
-        bgColor: "rgba(123, 30, 30, 0.08)",
+        bgColor: "rgba(128, 0, 0, 0.08)",
       };
   }
 }
@@ -64,7 +64,7 @@ function getConfidenceColor(label: string) {
     case "High":
       return { color: "var(--accent)", bgColor: "var(--accent-glass)" };
     case "Medium":
-      return { color: "var(--secondary)", bgColor: "var(--secondary-dim)" };
+      return { color: 'var(--secondary-strong)', bgColor: "var(--secondary-dim)" };
     case "Low":
     default:
       return { color: "var(--accent)", bgColor: "var(--accent-glass)" };
@@ -80,7 +80,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
       >
         <div
           className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-          style={{ background: "rgba(123, 30, 30, 0.1)" }}
+          style={{ background: "rgba(128, 0, 0, 0.1)" }}
         >
           <AlertCircle className="h-5 w-5" style={{ color: "var(--text-muted)" }} />
         </div>
@@ -126,15 +126,15 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
         className="flex flex-col gap-4 border-b px-6 py-5 sm:flex-row sm:items-center sm:justify-between"
         style={{
           borderColor: "var(--border)",
-          background: "linear-gradient(135deg, rgba(123, 30, 30, 0.04) 0%, rgba(166, 118, 29, 0.04) 100%)",
+          background: "linear-gradient(135deg, rgba(128, 0, 0, 0.04) 0%, rgba(212, 175, 55, 0.04) 100%)",
         }}
       >
         <div className="flex items-center gap-3">
           <div
             className="flex h-11 w-11 items-center justify-center rounded-xl shadow-inner"
             style={{
-              background: "rgba(123, 30, 30, 0.08)",
-              border: "1px solid rgba(123, 30, 30, 0.15)",
+              background: "rgba(128, 0, 0, 0.08)",
+              border: "1px solid rgba(128, 0, 0, 0.15)",
             }}
           >
             <Sparkles className="h-5 w-5" style={{ color: "var(--accent)" }} />
@@ -325,7 +325,7 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
                     className="h-full rounded-full transition-all duration-500"
                     style={{
                       width: `${topSupplier.individualScores.historicalPerformanceScore}%`,
-                      background: "rgba(123, 30, 30, 0.4)",
+                      background: "rgba(128, 0, 0, 0.4)",
                     }}
                   />
                 </div>
@@ -420,10 +420,10 @@ export default function RecommendationCard({ recommendation }: RecommendationCar
                           : "var(--text-secondary)",
                     backgroundColor:
                       forecastTrend === "increasing"
-                        ? "rgba(123, 30, 30, 0.05)"
+                        ? "rgba(128, 0, 0, 0.05)"
                         : forecastTrend === "decreasing"
-                        ? "rgba(123, 30, 30, 0.05)"
-                        : "rgba(123, 30, 30, 0.05)",
+                        ? "rgba(128, 0, 0, 0.05)"
+                        : "rgba(128, 0, 0, 0.05)",
                   }}
                 >
                   {forecastTrend === "increasing" ? "BUY NOW" : forecastTrend === "decreasing" ? "WAIT FOR PRICE" : "MONITOR MARKET"}

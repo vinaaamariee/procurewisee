@@ -120,7 +120,7 @@ export default function AcknowledgementReceiptDocument({
       <div className="w-full flex justify-center">
         <div
           id="ack-receipt-document"
-          className="w-full max-w-[800px] bg-white text-black shadow-xl border border-slate-400 font-sans text-xs leading-snug"
+          className="w-full max-w-[800px] bg-white text-black shadow-xl border border-gray-400 font-sans text-xs leading-snug"
         >
           <DocumentLayout
             title="ACKNOWLEDGEMENT RECEIPT FOR RFQ"
@@ -128,7 +128,7 @@ export default function AcknowledgementReceiptDocument({
             printAreaId="ack-receipt-document"
           >
             {/* Annex E Header */}
-            <div className="text-right text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-2">
+            <div className="text-right text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">
               Annex E
             </div>
 
@@ -136,7 +136,7 @@ export default function AcknowledgementReceiptDocument({
               <h1 className="text-base font-black uppercase tracking-wide">
                 Acknowledgement Receipt for RFQ
               </h1>
-              <p className="text-[10px] text-slate-600 mt-1 italic">
+              <p className="text-[10px] text-gray-600 mt-1 italic">
                 (To be accomplished by the Procurement Office)
               </p>
             </div>
@@ -148,7 +148,7 @@ export default function AcknowledgementReceiptDocument({
                   <td className="border border-black p-2 w-1/2">
                     <span className="font-bold">RIS#: </span>
                     <span>{rfqNumber}</span>
-                    <span className="ml-2 text-[9px] text-slate-500 italic">
+                    <span className="ml-2 text-[9px] text-gray-500 italic">
                       (confirm with Supply Office if different from RFQ reference)
                     </span>
                   </td>
@@ -179,7 +179,7 @@ export default function AcknowledgementReceiptDocument({
             {/* Main table */}
             <table className="w-full border-collapse border border-black text-xs mb-4">
               <thead>
-                <tr className="bg-slate-100">
+                <tr className="bg-gray-100">
                   <th className="border border-black p-2 text-center w-8">#</th>
                   <th className="border border-black p-2 text-left">Supplier / Company</th>
                   <th className="border border-black p-2 text-left w-36">Received By</th>
@@ -191,7 +191,7 @@ export default function AcknowledgementReceiptDocument({
               <tbody>
                 {logs.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="border border-black p-4 text-center text-slate-400 italic">
+                    <td colSpan={6} className="border border-black p-4 text-center text-gray-400 italic">
                       No suppliers on this RFQ yet. Add suppliers below or publish the RFQ to invite bids.
                     </td>
                   </tr>
@@ -207,7 +207,7 @@ export default function AcknowledgementReceiptDocument({
                     <td className="border border-black p-2">
                       <div className="font-semibold">{log.supplier.companyName}</div>
                       {log.supplier.contactPerson && (
-                        <div className="text-[10px] text-slate-500">{log.supplier.contactPerson}</div>
+                        <div className="text-[10px] text-gray-500">{log.supplier.contactPerson}</div>
                       )}
                     </td>
                     <td className="border border-black p-1">
@@ -251,7 +251,7 @@ export default function AcknowledgementReceiptDocument({
                         type="button"
                         onClick={() => handleSaveRow(log.id)}
                         disabled={isPending}
-                        className="px-2 py-1 rounded bg-[#7B1E1E] text-white text-[10px] font-bold hover:opacity-80 transition"
+                        className="px-2 py-1 rounded bg-[#800000] text-white text-[10px] font-bold hover:opacity-80 transition"
                       >
                         Save
                       </button>
@@ -266,7 +266,7 @@ export default function AcknowledgementReceiptDocument({
               <select
                 value={addingSupplierId}
                 onChange={e => setAddingSupplierId(e.target.value)}
-                className="border border-slate-300 rounded px-2 py-1.5 text-xs flex-1 bg-white"
+                className="border border-gray-300 rounded px-2 py-1.5 text-xs flex-1 bg-white"
               >
                 <option value="">— Add supplier to this receipt —</option>
                 {allSuppliers
@@ -279,7 +279,7 @@ export default function AcknowledgementReceiptDocument({
                 type="button"
                 onClick={handleAddSupplier}
                 disabled={!addingSupplierId || isPending}
-                className="px-3 py-1.5 rounded bg-[#7B1E1E] text-white text-xs font-bold hover:opacity-80 disabled:opacity-40 transition"
+                className="px-3 py-1.5 rounded bg-[#800000] text-white text-xs font-bold hover:opacity-80 disabled:opacity-40 transition"
               >
                 + Add
               </button>
@@ -311,7 +311,7 @@ export default function AcknowledgementReceiptDocument({
         <button
           type="button"
           onClick={() => window.print()}
-          className="px-6 py-2 rounded-xl bg-[#7B1E1E] text-white text-sm font-bold hover:opacity-90 transition shadow-md"
+          className="px-6 py-2 rounded-xl bg-[#800000] text-white text-sm font-bold hover:opacity-90 transition shadow-md"
         >
           🖨️ Print Acknowledgement Receipt
         </button>

@@ -30,10 +30,10 @@ export default function RFQSupplierInformation({
   };
 
   return (
-    <div className="my-4 border border-slate-800 p-3 bg-white text-xs font-serif space-y-2">
-      <div className="font-bold text-slate-900 uppercase tracking-wider text-[11px] border-b border-slate-300 pb-1 flex justify-between items-center">
+    <div className="my-4 border border-gray-800 p-3 bg-white text-xs font-serif space-y-2">
+      <div className="font-bold text-gray-900 uppercase tracking-wider text-[11px] border-b border-gray-300 pb-1 flex justify-between items-center">
         <span>Supplier / Bidder Information</span>
-        <span className="text-[10px] text-slate-500 font-sans normal-case italic">
+        <span className="text-[10px] text-gray-500 font-sans normal-case italic">
           (To be filled out by bidding supplier upon quotation submission)
         </span>
       </div>
@@ -41,9 +41,9 @@ export default function RFQSupplierInformation({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
         {/* Company Name */}
         <div className="flex items-baseline gap-2">
-          <span className="font-bold text-slate-900 shrink-0">Company Name:</span>
+          <span className="font-bold text-gray-900 shrink-0">Company Name:</span>
           {isReadOnly ? (
-            <span className="border-b border-dotted border-slate-400 grow min-h-[20px] px-1 font-semibold">
+            <span className="border-b border-dotted border-gray-400 grow min-h-[20px] px-1 font-semibold">
               {supplier.companyName || '_____________________________________'}
             </span>
           ) : (
@@ -52,16 +52,16 @@ export default function RFQSupplierInformation({
               value={supplier.companyName || ''}
               onChange={(e) => handleChange('companyName', e.target.value)}
               placeholder="e.g. Batanes General Supplies Inc."
-              className="grow border-b border-dotted border-slate-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-slate-900"
+              className="grow border-b border-dotted border-gray-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-gray-900"
             />
           )}
         </div>
 
         {/* TIN */}
         <div className="flex items-baseline gap-2">
-          <span className="font-bold text-slate-900 shrink-0">TIN:</span>
+          <span className="font-bold text-gray-900 shrink-0">TIN:</span>
           {isReadOnly ? (
-            <span className="border-b border-dotted border-slate-400 grow min-h-[20px] px-1">
+            <span className="border-b border-dotted border-gray-400 grow min-h-[20px] px-1">
               {supplier.tin || '___________________________'}
             </span>
           ) : (
@@ -70,16 +70,16 @@ export default function RFQSupplierInformation({
               value={supplier.tin || ''}
               onChange={(e) => handleChange('tin', e.target.value)}
               placeholder="000-000-000-000"
-              className="grow border-b border-dotted border-slate-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-slate-900"
+              className="grow border-b border-dotted border-gray-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-gray-900"
             />
           )}
         </div>
 
         {/* Business Address */}
         <div className="flex items-baseline gap-2 md:col-span-2">
-          <span className="font-bold text-slate-900 shrink-0">Business Address:</span>
+          <span className="font-bold text-gray-900 shrink-0">Business Address:</span>
           {isReadOnly ? (
-            <span className="border-b border-dotted border-slate-400 grow min-h-[20px] px-1">
+            <span className="border-b border-dotted border-gray-400 grow min-h-[20px] px-1">
               {supplier.businessAddress || '____________________________________________________________________'}
             </span>
           ) : (
@@ -88,16 +88,16 @@ export default function RFQSupplierInformation({
               value={supplier.businessAddress || ''}
               onChange={(e) => handleChange('businessAddress', e.target.value)}
               placeholder="Address, Municipality, Province"
-              className="grow border-b border-dotted border-slate-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-slate-900"
+              className="grow border-b border-dotted border-gray-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-gray-900"
             />
           )}
         </div>
 
         {/* Contact Person */}
         <div className="flex items-baseline gap-2">
-          <span className="font-bold text-slate-900 shrink-0">Contact Person:</span>
+          <span className="font-bold text-gray-900 shrink-0">Contact Person:</span>
           {isReadOnly ? (
-            <span className="border-b border-dotted border-slate-400 grow min-h-[20px] px-1">
+            <span className="border-b border-dotted border-gray-400 grow min-h-[20px] px-1">
               {supplier.contactPerson || '___________________________'}
             </span>
           ) : (
@@ -106,16 +106,16 @@ export default function RFQSupplierInformation({
               value={supplier.contactPerson || ''}
               onChange={(e) => handleChange('contactPerson', e.target.value)}
               placeholder="Authorized Representative Name"
-              className="grow border-b border-dotted border-slate-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-slate-900"
+              className="grow border-b border-dotted border-gray-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-gray-900"
             />
           )}
         </div>
 
         {/* Telephone / Mobile */}
         <div className="flex items-baseline gap-2">
-          <span className="font-bold text-slate-900 shrink-0">Tel / Mobile No.:</span>
+          <span className="font-bold text-gray-900 shrink-0">Tel / Mobile No.:</span>
           {isReadOnly ? (
-            <span className="border-b border-dotted border-slate-400 grow min-h-[20px] px-1">
+            <span className="border-b border-dotted border-gray-400 grow min-h-[20px] px-1">
               {supplier.contactNumber || '___________________________'}
             </span>
           ) : (
@@ -124,16 +124,16 @@ export default function RFQSupplierInformation({
               value={supplier.contactNumber || ''}
               onChange={(e) => handleChange('contactNumber', e.target.value)}
               placeholder="(09xx) xxx-xxxx"
-              className="grow border-b border-dotted border-slate-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-slate-900"
+              className="grow border-b border-dotted border-gray-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-gray-900"
             />
           )}
         </div>
 
         {/* Email Address */}
         <div className="flex items-baseline gap-2">
-          <span className="font-bold text-slate-900 shrink-0">Email Address:</span>
+          <span className="font-bold text-gray-900 shrink-0">Email Address:</span>
           {isReadOnly ? (
-            <span className="border-b border-dotted border-slate-400 grow min-h-[20px] px-1">
+            <span className="border-b border-dotted border-gray-400 grow min-h-[20px] px-1">
               {supplier.email || '___________________________'}
             </span>
           ) : (
@@ -142,16 +142,16 @@ export default function RFQSupplierInformation({
               value={supplier.email || ''}
               onChange={(e) => handleChange('email', e.target.value)}
               placeholder="supplier@company.com"
-              className="grow border-b border-dotted border-slate-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-slate-900"
+              className="grow border-b border-dotted border-gray-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-gray-900"
             />
           )}
         </div>
 
         {/* Date Quoted */}
         <div className="flex items-baseline gap-2">
-          <span className="font-bold text-slate-900 shrink-0">Quotation Date:</span>
+          <span className="font-bold text-gray-900 shrink-0">Quotation Date:</span>
           {isReadOnly ? (
-            <span className="border-b border-dotted border-slate-400 grow min-h-[20px] px-1">
+            <span className="border-b border-dotted border-gray-400 grow min-h-[20px] px-1">
               {supplier.quotationDate || '___________________________'}
             </span>
           ) : (
@@ -159,7 +159,7 @@ export default function RFQSupplierInformation({
               type="date"
               value={supplier.quotationDate || ''}
               onChange={(e) => handleChange('quotationDate', e.target.value)}
-              className="grow border-b border-dotted border-slate-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-slate-900"
+              className="grow border-b border-dotted border-gray-400 px-1 py-0.5 text-xs font-serif bg-transparent focus:outline-none focus:border-gray-900"
             />
           )}
         </div>

@@ -1,8 +1,8 @@
-import { requireRole } from "@/lib/auth/get-user-profile";
+﻿import { requireRole } from "@/lib/auth/get-user-profile";
 import SectionHeader from "@/components/ui/SectionHeader";
 import { Settings, Shield, Bell, HelpCircle } from "lucide-react";
 
-export const metadata = { title: "System Settings — ProcureWise" };
+export const metadata = { title: "System Settings â€” ProcureWise" };
 
 export default async function SettingsPage() {
   await requireRole("Procurement Officer");
@@ -17,7 +17,7 @@ export default async function SettingsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Navigation Tabs Placeholder */}
         <div className="md:col-span-1 space-y-2">
-          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg bg-base-200 text-[#7B1E1E] font-bold text-sm text-left">
+          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-lg bg-base-200 text-[#800000] font-bold text-sm text-left">
             <Settings className="h-4 w-4" />
             <span>General Config</span>
           </button>
@@ -34,7 +34,7 @@ export default async function SettingsPage() {
         {/* Content Card Placeholder */}
         <div className="md:col-span-2 rounded-xl border border-base-300 bg-base-100 p-6 shadow-sm">
           <div className="flex flex-col items-center justify-center text-center p-8 space-y-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#A6761D]/10 text-[#A6761D]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#D4AF37]/10 text-[var(--secondary-strong)]">
               <HelpCircle className="h-6 w-6" />
             </div>
             <div>

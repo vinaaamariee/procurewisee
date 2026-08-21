@@ -101,9 +101,9 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
   };
 
   const theme = {
-    crimson: "#7B1E1E",
-    gold: "#A6761D",
-    goldDark: "#A6761D",
+    crimson: "#800000",
+    gold: "#D4AF37",
+    goldDark: "#D4AF37",
     textMain: "#1f2937",
     textMuted: "#6b7280",
     glassBg: "rgba(255, 255, 255, 0.75)",
@@ -132,7 +132,7 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
                 style={{
                   width: "100%", padding: "0.75rem", borderRadius: "0.75rem",
                   border: selectedModule === mod ? `1.5px solid ${theme.crimson}` : "1px solid rgba(0,0,0,0.06)",
-                  background: selectedModule === mod ? "rgba(123, 30, 30, 0.04)" : "#fff",
+                  background: selectedModule === mod ? "rgba(128, 0, 0, 0.04)" : "#fff",
                   color: selectedModule === mod ? theme.crimson : theme.textMain,
                   fontWeight: 700, fontSize: "0.85rem", cursor: "pointer", textAlign: "left", transition: "all 0.2s"
                 }}
@@ -243,13 +243,13 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
         </div>
 
         {errorMsg && (
-          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(123, 30, 30, 0.1)", color: "var(--accent)", fontSize: "0.8rem", fontWeight: 600 }}>
+          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(128, 0, 0, 0.1)", color: "var(--accent)", fontSize: "0.8rem", fontWeight: 600 }}>
             ⚠️ {errorMsg}
           </div>
         )}
 
         {successMsg && (
-          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(123, 30, 30, 0.1)", color: "var(--secondary)", fontSize: "0.8rem", fontWeight: 600 }}>
+          <div style={{ padding: "0.75rem 1rem", borderRadius: "0.5rem", backgroundColor: "rgba(128, 0, 0, 0.1)", color: 'var(--secondary-strong)', fontSize: "0.8rem", fontWeight: 600 }}>
             ✅ {successMsg}
           </div>
         )}
@@ -290,7 +290,7 @@ export default function WorkflowsBuilderClient({ initialConfigs }: WorkflowsBuil
                       {step.parallel && (
                         <>
                           <span>•</span>
-                          <span style={{ color: "var(--secondary)", fontWeight: 700 }}>Parallel Verification</span>
+                          <span style={{ color: 'var(--secondary-strong)', fontWeight: 700 }}>Parallel Verification</span>
                         </>
                       )}
                     </div>

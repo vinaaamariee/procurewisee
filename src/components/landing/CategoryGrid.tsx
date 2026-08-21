@@ -30,12 +30,12 @@ const categoryIconMap: Record<string, typeof Monitor> = {
 };
 
 const accentColors = [
-  { color: "#7B1E1E", bg: "rgba(123, 30, 30, 0.08)" },
-  { color: "var(--secondary)", bg: "rgba(166, 118, 29, 0.08)" },
-  { color: "var(--secondary)", bg: "var(--secondary-dim)" },
-  { color: "#7B1E1E", bg: "rgba(123, 30, 30, 0.08)" },
-  { color: "var(--secondary)", bg: "var(--secondary-dim)" },
-  { color: "var(--secondary)", bg: "var(--secondary-dim)" },
+  { color: "#800000", bg: "rgba(128, 0, 0, 0.08)" },
+  { color: 'var(--secondary-strong)', bg: "rgba(212, 175, 55, 0.08)" },
+  { color: 'var(--secondary-strong)', bg: "var(--secondary-dim)" },
+  { color: "#800000", bg: "rgba(128, 0, 0, 0.08)" },
+  { color: 'var(--secondary-strong)', bg: "var(--secondary-dim)" },
+  { color: 'var(--secondary-strong)', bg: "var(--secondary-dim)" },
 ];
 
 export default function CategoryGrid({
@@ -58,7 +58,7 @@ export default function CategoryGrid({
         >
           {title}
         </h2>
-        <p className="mt-2 text-sm text-[#6B7280] dark:text-slate-400">
+        <p className="mt-2 text-sm text-[#6B7280] dark:text-gray-400">
           {subtitle}
         </p>
       </div>
@@ -73,7 +73,7 @@ export default function CategoryGrid({
             <Link
               key={cat.category}
               href={`/catalog?category=${cat.id}`}
-              className="group bg-white dark:bg-slate-900 rounded-3xl border border-gray-200 dark:border-slate-800 p-6 no-underline shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex items-center gap-4"
+              className="group bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 p-6 no-underline shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex items-center gap-4"
             >
               {/* Icon */}
               <div
@@ -85,10 +85,10 @@ export default function CategoryGrid({
 
               {/* Content */}
               <div className="min-w-0 flex-1">
-                <h3 className="truncate text-base font-semibold text-[#111827] dark:text-white group-hover:text-[#7B1E1E] dark:group-hover:text-[var(--accent)] transition-colors">
+                <h3 className="truncate text-base font-semibold text-[#111827] dark:text-white group-hover:text-[#800000] dark:group-hover:text-[var(--accent)] transition-colors">
                   {cat.category}
                 </h3>
-                <p className="mt-1 text-xs text-[#6B7280] dark:text-slate-400 font-medium">
+                <p className="mt-1 text-xs text-[#6B7280] dark:text-gray-400 font-medium">
                   {cat._count} {cat._count === 1 ? "product" : "products"}
                 </p>
               </div>

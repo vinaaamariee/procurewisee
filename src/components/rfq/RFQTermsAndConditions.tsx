@@ -31,12 +31,12 @@ export default function RFQTermsAndConditions({
   };
 
   return (
-    <div className="my-4 border border-slate-800 p-3.5 bg-slate-50/60 font-serif text-xs space-y-2">
-      <div className="font-bold text-slate-900 uppercase tracking-wider text-[11px] border-b border-slate-300 pb-1 font-sans">
+    <div className="my-4 border border-gray-800 p-3.5 bg-gray-50/60 font-serif text-xs space-y-2">
+      <div className="font-bold text-gray-900 uppercase tracking-wider text-[11px] border-b border-gray-300 pb-1 font-sans">
         Terms and Conditions & General Bidding Instructions
       </div>
 
-      <ol className="list-decimal list-inside space-y-1.5 text-slate-800 leading-relaxed text-[11px]">
+      <ol className="list-decimal list-inside space-y-1.5 text-gray-800 leading-relaxed text-[11px]">
         {terms.map((term, index) => (
           <li key={index} className="align-top">
             {isReadOnly ? (
@@ -46,7 +46,7 @@ export default function RFQTermsAndConditions({
                 type="text"
                 value={term}
                 onChange={(e) => handleTermChange(index, e.target.value)}
-                className="w-[94%] border-b border-dotted border-slate-400 bg-transparent px-1 py-0.5 text-[11px] font-serif focus:outline-none focus:border-slate-900"
+                className="w-[94%] border-b border-dotted border-gray-400 bg-transparent px-1 py-0.5 text-[11px] font-serif focus:outline-none focus:border-gray-900"
               />
             )}
           </li>

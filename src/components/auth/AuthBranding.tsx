@@ -43,7 +43,7 @@ export default function AuthBranding({ size = 88 }: AuthBrandingProps) {
       </p>
       <p className="mt-1.5 text-[26px] font-extrabold tracking-tight leading-none">
         <span className="text-gray-900">Procure</span>
-        <span style={{ color: "#7B1E1E" }}>Wise</span>
+        <span style={{ color: "#800000" }}>Wise</span>
       </p>
       <p className="mt-1.5 text-[11px] text-base-content/55 leading-snug">
         Procurement Management Information System
@@ -51,12 +51,12 @@ export default function AuthBranding({ size = 88 }: AuthBrandingProps) {
 
       {/* Gold divider */}
       <div className="mt-4 flex items-center justify-center gap-2">
-        <span className="h-px w-10" style={{ backgroundColor: "#A6761D" }} />
+        <span className="h-px w-10" style={{ backgroundColor: 'var(--secondary-strong)' }} />
         <span
           className="block w-1.5 h-1.5 rotate-45"
-          style={{ backgroundColor: "#A6761D" }}
+          style={{ backgroundColor: 'var(--secondary-strong)' }}
         />
-        <span className="h-px w-10" style={{ backgroundColor: "#A6761D" }} />
+        <span className="h-px w-10" style={{ backgroundColor: 'var(--secondary-strong)' }} />
       </div>
     </div>
   );
