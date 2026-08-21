@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { ShieldCheck, Lock, FileCheck2, LogIn } from "lucide-react";
 
 export default function HeroSection() {
@@ -19,25 +18,13 @@ export default function HeroSection() {
 
             {/* Institution & System Title */}
             <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="relative h-12 w-12 flex-shrink-0 flex items-center justify-center bg-white p-1 border border-base-300">
-                  <Image
-                    src="/images/bsc-logo.png"
-                    alt="Batanes State College Logo"
-                    width={48}
-                    height={48}
-                    className="object-contain h-full w-full"
-                    priority
-                  />
-                </div>
-                <div>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-primary tracking-tight leading-tight">
-                    Batanes State College
-                  </h1>
-                  <p className="text-xs font-bold uppercase tracking-widest text-secondary">
-                    Official Internal Procurement System
-                  </p>
-                </div>
+              <div>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-primary tracking-tight leading-tight">
+                  Batanes State College
+                </h1>
+                <p className="text-xs font-bold uppercase tracking-widest text-secondary">
+                  Official Internal Procurement System
+                </p>
               </div>
 
               <h2 className="max-w-2xl pt-2 text-xl font-bold text-base-content sm:text-2xl lg:text-3xl">

@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { LogIn, Menu } from "lucide-react";
 
 export default function Header() {
@@ -33,17 +31,7 @@ export default function Header() {
 
           {/* Brand */}
           <Link href="/" className="flex items-center gap-3 group no-underline">
-            <div className="relative h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 flex items-center justify-center bg-white p-1 border border-base-300">
-              <Image
-                src="/images/bsc-logo.png"
-                alt="Batanes State College Logo"
-                width={40}
-                height={40}
-                className="object-contain h-full w-full"
-                priority
-              />
-            </div>
-            <div className="hidden sm:block">
+            <div>
               <div className="text-sm sm:text-base font-extrabold tracking-tight text-primary leading-tight">
                 Batanes State College
               </div>
@@ -67,8 +55,6 @@ export default function Header() {
 
         {/* Right: Auth Actions */}
         <div className="navbar-end gap-2">
-          <ThemeToggle />
-
           <Link
             href="/login"
             className="btn btn-primary btn-sm rounded-field font-bold"

@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Mail, MapPin } from "lucide-react";
 
 export default function Footer() {
@@ -12,15 +11,6 @@ export default function Footer() {
       <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
           <div className="flex items-center gap-3">
-            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center bg-white p-1">
-              <Image
-                src="/images/bsc-logo.png"
-                alt="Batanes State College Logo"
-                width={40}
-                height={40}
-                className="h-full w-full object-contain"
-              />
-            </div>
             <div>
               <p className="font-bold">Batanes State College</p>
               <p className="text-xs text-neutral-content/65">Procurement Management Information System</p>

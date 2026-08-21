@@ -1,5 +1,14 @@
 # 🏛️ ProcureWise
 
+## Strict Maroon-and-Gold Palette Correction
+
+**Date**: August 21, 2026
+
+- Removed the theme toggle from the public landing page and locked the page to the light institutional theme.
+- Removed the full-color college logo from the landing header, hero, and footer because the asset introduced blue.
+- Replaced cool blue-gray neutrals with warm paper and charcoal neutrals.
+- Collapsed all semantic and compatibility colors to exact maroon `#7B1E1E` or gold `#A6761D`; no pink, blue, green, or orange UI accents remain in the shared theme.
+
 ## Focused Maroon-and-Gold Landing Page
 
 **Date**: August 21, 2026

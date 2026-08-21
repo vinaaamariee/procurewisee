@@ -2,7 +2,7 @@
 
 /* ============================================================
    ProcureWise — Price Comparison Dashboard Styles
-   Official Government Portal Theme (Navy / Paper / Gold / Red)
+   Official Government Portal Theme (Maroon / Gold / Warm Neutrals)
    ============================================================ */
 
 @import "tailwindcss";
@@ -14,9 +14,9 @@
   color-scheme: light;
 
   --color-base-100: #ffffff;
-  --color-base-200: #f6f8fa;
-  --color-base-300: #cbd5e1;
-  --color-base-content: #1f2937;
+  --color-base-200: #f5f2ec;
+  --color-base-300: #d8d0c2;
+  --color-base-content: #28231f;
 
   --color-primary: #7b1e1e;
   --color-primary-content: #ffffff;
@@ -27,8 +27,8 @@
   --color-accent: #7b1e1e;
   --color-accent-content: #ffffff;
 
-  --color-neutral: #374151;
-  --color-neutral-content: #f9fafb;
+  --color-neutral: #2f2925;
+  --color-neutral-content: #f8f4ec;
 
   --color-info: #7b1e1e;
   --color-info-content: #ffffff;
@@ -39,7 +39,7 @@
   --color-warning: #a6761d;
   --color-warning-content: #ffffff;
 
-  --color-error: #991b1b;
+  --color-error: #7b1e1e;
   --color-error-content: #ffffff;
 
   --radius-selector: 4px;
@@ -59,10 +59,10 @@
   prefersdark: true;
   color-scheme: dark;
 
-  --color-base-100: #0d1117;
-  --color-base-200: #161b22;
-  --color-base-300: #30363d;
-  --color-base-content: #c9d1d9;
+  --color-base-100: #181411;
+  --color-base-200: #211b17;
+  --color-base-300: #3a3029;
+  --color-base-content: #f5efe7;
 
   --color-primary: #7b1e1e;
   --color-primary-content: #ffffff;
@@ -70,22 +70,22 @@
   --color-secondary: #a6761d;
   --color-secondary-content: #ffffff;
 
-  --color-accent: #9b2c2c;
+  --color-accent: #7b1e1e;
   --color-accent-content: #ffffff;
 
-  --color-neutral: #111827;
-  --color-neutral-content: #f9fafb;
+  --color-neutral: #181411;
+  --color-neutral-content: #f8f4ec;
 
-  --color-info: #9b2c2c;
+  --color-info: #7b1e1e;
   --color-info-content: #ffffff;
 
-  --color-success: #9b2c2c;
+  --color-success: #7b1e1e;
   --color-success-content: #ffffff;
 
-  --color-warning: #d69e2e;
+  --color-warning: #a6761d;
   --color-warning-content: #ffffff;
 
-  --color-error: #9b2c2c;
+  --color-error: #7b1e1e;
   --color-error-content: #ffffff;
 
   --radius-selector: 4px;
@@ -122,35 +122,34 @@
 
   --accent: #7B1E1E;
   /* Institutional Maroon */
-  --accent-light: #9B2C2C;
+  --accent-light: #7B1E1E;
   --accent-glass: rgba(123, 30, 30, 0.06);
 
   --secondary: #A6761D;
   /* Gold */
-  --secondary-light: #C99A2E;
+  --secondary-light: #A6761D;
   --secondary-dim: rgba(166, 118, 29, 0.08);
 
   --alert: var(--accent);
-  /* Official Red */
-  --alert-light: #D33B48;
-  --alert-dim: rgba(183, 32, 46, 0.08);
+  --alert-light: var(--accent);
+  --alert-dim: rgba(123, 30, 30, 0.08);
 
-  --bg-deep: #f6f8fa;
+  --bg-deep: #f5f2ec;
   /* Flat light gray base */
-  --bg-dark: #ebeff2;
+  --bg-dark: #e8e1d6;
   --bg-header: #ffffff;
 
   --green: var(--accent);
-  --green-dim: rgba(37, 108, 62, 0.08);
+  --green-dim: rgba(123, 30, 30, 0.08);
   --red-dim: var(--alert-dim);
 
-  --text-primary: #1f2937;
-  --text-secondary: #4b5563;
-  --text-muted: #9ca3af;
+  --text-primary: #28231f;
+  --text-secondary: #5f554d;
+  --text-muted: #8b7e73;
 
   --surface: #ffffff;
-  --surface-hover: #f3f4f6;
-  --border: #cbd5e1;
+  --surface-hover: #f5f2ec;
+  --border: #d8d0c2;
   --border-accent: rgba(123, 30, 30, 0.2);
 
   /* Map old variables for compatibility and easy transition */
@@ -184,34 +183,33 @@
 
 .dark, [data-theme="dark"] {
   /* Dark Mode — same official palette, inverted ground */
-  --accent: #9B2C2C;
-  /* Lighter maroon for accessibility in dark mode */
-  --accent-light: #B94A4A;
-  --accent-glass: rgba(229, 62, 62, 0.14);
+  --accent: #7B1E1E;
+  --accent-light: #7B1E1E;
+  --accent-glass: rgba(123, 30, 30, 0.14);
 
-  --secondary: #D69E2E;
-  --secondary-light: #ECC94B;
-  --secondary-dim: rgba(214, 158, 46, 0.14);
+  --secondary: #A6761D;
+  --secondary-light: #A6761D;
+  --secondary-dim: rgba(166, 118, 29, 0.14);
 
   --alert: var(--accent-light);
-  --alert-light: #C85A5A;
-  --alert-dim: rgba(254, 178, 178, 0.14);
+  --alert-light: var(--accent);
+  --alert-dim: rgba(123, 30, 30, 0.14);
 
-  --bg-deep: #161b22;
-  --bg-dark: #21262d;
-  --bg-header: #0d1117;
+  --bg-deep: #211b17;
+  --bg-dark: #2b241f;
+  --bg-header: #181411;
 
   --green: var(--accent-light);
-  --green-dim: rgba(72, 187, 120, 0.14);
+  --green-dim: rgba(123, 30, 30, 0.14);
   --red-dim: var(--alert-dim);
 
-  --text-primary: #c9d1d9;
-  --text-secondary: #8b949e;
-  --text-muted: #484f58;
+  --text-primary: #f5efe7;
+  --text-secondary: #cbbdaf;
+  --text-muted: #95867a;
 
-  --surface: #0d1117;
-  --surface-hover: #161b22;
-  --border: #30363d;
+  --surface: #181411;
+  --surface-hover: #211b17;
+  --border: #3a3029;
   --border-accent: rgba(214, 158, 46, 0.3);
   --shadow-card: none;
 }
@@ -982,7 +980,7 @@ textarea:focus-visible,
 .badge-instock {
   background: var(--green-dim);
   color: var(--green);
-  border: 1px solid rgba(37, 108, 62, 0.35);
+  border: 1px solid rgba(123, 30, 30, 0.35);
 }
 
 .badge-limited {
@@ -994,7 +992,7 @@ textarea:focus-visible,
 .badge-oos {
   background: var(--alert-dim);
   color: var(--alert);
-  border: 1px solid rgba(183, 32, 46, 0.35);
+  border: 1px solid rgba(123, 30, 30, 0.35);
 }
 
 /* Best & Savings columns */
@@ -1008,7 +1006,7 @@ textarea:focus-visible,
   /* 8px 12px — was 0.25rem 0.6rem, now on-scale */
   border-radius: var(--radius-sm);
   background: var(--green-dim);
-  border: 1px solid rgba(37, 108, 62, 0.35);
+  border: 1px solid rgba(123, 30, 30, 0.35);
   color: var(--green);
   font-weight: 700;
   font-size: 0.85rem;
@@ -1029,7 +1027,7 @@ textarea:focus-visible,
   background: var(--green-dim);
   padding: 0.15rem 0.55rem;
   border-radius: var(--radius-pill);
-  border: 1px solid rgba(37, 108, 62, 0.3);
+  border: 1px solid rgba(123, 30, 30, 0.3);
 }
 
 /* Detail row */
@@ -1183,7 +1181,7 @@ textarea:focus-visible,
 }
 
 .chart-bar-best {
-  box-shadow: inset 0 0 0 1px rgba(37, 108, 62, 0.4);
+  box-shadow: inset 0 0 0 1px rgba(123, 30, 30, 0.4);
 }
 
 .chart-bar-label {
@@ -1280,7 +1278,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px #ffffff inset !important;
-  -webkit-text-fill-color: #1C2230 !important;
+  -webkit-text-fill-color: #28231f !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 
@@ -1288,8 +1286,8 @@ input:-webkit-autofill:active {
 .dark input:-webkit-autofill:hover,
 .dark input:-webkit-autofill:focus,
 .dark input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 1000px #0E1420 inset !important;
-  -webkit-text-fill-color: #EEF1F6 !important;
+  -webkit-box-shadow: 0 0 0 1000px #181411 inset !important;
+  -webkit-text-fill-color: #f5efe7 !important;
 }
 
 /* ============================================================

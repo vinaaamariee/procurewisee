@@ -29,7 +29,7 @@ export default function LandingPage() {
   return (
     <div
       className="public-site flex min-h-screen flex-col bg-base-100 text-base-content font-sans antialiased"
-      data-theme="bsc"
+      data-theme="light"
     >
       {/* Sticky Institutional Navbar */}
       <Header />

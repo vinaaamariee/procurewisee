@@ -56,7 +56,7 @@ Maroon and gold are the only chromatic colors. White, paper gray, borders, and d
 
 ### Tables
 - Border: thin header-separator rules.
-- Selection states & Hovers: Subtle background highlight `rgba(11, 45, 92, 0.04)`.
+- Selection states & Hovers: Subtle maroon highlight `rgba(123, 30, 30, 0.04)`.
 - Zebra-striping: ultra-light alternating rows on `#f8f9fa` (or base-200).
 
 ### Buttons

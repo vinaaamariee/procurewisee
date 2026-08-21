@@ -3,6 +3,14 @@
     "date": "2026-08-21",
     "scope": "app",
     "macrostructure": "focused government service portal",
+    "theme": "strict BSC maroon and gold",
+    "enrichment": "none",
+    "brief": "Remove residual pink and blue from the public UI and shared theme"
+  },
+  {
+    "date": "2026-08-21",
+    "scope": "app",
+    "macrostructure": "focused government service portal",
     "theme": "BSC maroon and gold",
     "enrichment": "none",
     "brief": "Reduce landing content and restrict chromatic colors to maroon and gold"
