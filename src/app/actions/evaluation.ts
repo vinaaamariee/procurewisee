@@ -5,6 +5,7 @@ import { EvaluationType, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
 import { createNotificationHelper } from "./notifications";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 interface SubmitEvaluationInput {
   supplierId: number;
@@ -48,13 +49,30 @@ interface SubmitEvaluationInput {
 
 export async function submitSupplierPerformanceEvaluationAction(input: SubmitEvaluationInput) {
   try {
+    const allowedRole = input.evaluationType === EvaluationType.EndUser
+      ? "End User"
+      : "Procurement Officer";
+    const { profile } = await requireRole(allowedRole);
+
+    const ratings = [
+      input.productQuality, input.deliveryCompliance, input.accuracy,
+      input.responsiveness, input.communication, input.clearCommunication,
+      input.costEffectiveness, input.valueForMoney, input.wouldRecommend,
+      input.rfqResponsiveness, input.competitivePricing,
+      input.specificationCompliance, input.documentCompliance,
+      input.deliveryPerformance,
+    ].filter((value): value is number => value !== undefined);
+    if (ratings.length === 0 || ratings.some((value) => !Number.isInteger(value) || value < 1 || value > 4)) {
+      return { success: false, error: "Ratings must be whole numbers from 1 to 4." };
+    }
+
     const result = await prisma.$transaction(async (tx) => {
       // 1. Save evaluation
       const evalRow = await tx.supplierEvaluation.create({
         data: {
           supplierId: input.supplierId,
           evaluationType: input.evaluationType,
-          evaluatorName: input.evaluatorName,
+          evaluatorName: profile.fullName,
           evaluationDate: new Date(),
           // End-User criteria
           productQuality: input.productQuality || null,
@@ -211,7 +229,7 @@ export async function submitSupplierPerformanceEvaluationAction(input: SubmitEva
     
     await createNotificationHelper({
       title: 'Supplier Evaluation Submitted',
-      description: `A new performance evaluation for "${supplier?.companyName || 'Supplier'}" has been submitted by ${input.evaluatorName}.`,
+      description: `A new performance evaluation for "${supplier?.companyName || 'Supplier'}" has been submitted by ${profile.fullName}.`,
       icon: '📊',
       role: 'Procurement Officer'
     });
@@ -226,6 +244,7 @@ export async function submitSupplierPerformanceEvaluationAction(input: SubmitEva
 
 export async function getSupplierScorecard(supplierId: number) {
   try {
+    await requireRole(["End User", "Procurement Officer", "Administrative Approver"]);
     const supplier = await prisma.supplier.findUnique({
       where: { id: supplierId },
       include: {

@@ -32,26 +32,12 @@ interface CreatePrInput {
 
 export async function createPrFromCartAction(input: CreatePrInput) {
   try {
-    await requireRole("End User");
+    const { profile } = await requireRole("End User");
     const totalCost = input.items.reduce((sum, item) => sum + (item.quantity * item.estimatedUnitCost), 0);
 
-    // Retrieve authenticated user info if not explicitly passed
-    let reqId = input.requestedById;
-    let reqName = input.requesterName;
-    let reqEmail = input.requesterEmail;
-
-    if (!reqId) {
-      try {
-        const auth = await getAuthenticatedUser();
-        if (auth && auth.profile) {
-          reqId = auth.profile.id;
-          reqName = auth.profile.fullName || reqName;
-          reqEmail = auth.profile.email || reqEmail;
-        }
-      } catch (err) {
-        console.warn("No authenticated user session found:", err);
-      }
-    }
+    const reqId = profile.id;
+    const reqName = profile.fullName;
+    const reqEmail = profile.email;
 
     const result = await prisma.$transaction(async (tx) => {
       // 1. Verify PPMP status and budget allocation if linked
@@ -63,6 +49,9 @@ export async function createPrFromCartAction(input: CreatePrInput) {
 
         if (!ppmp || ppmp.status !== "Approved") {
           throw new Error("Linked PPMP must be approved before generating a Purchase Request.");
+        }
+        if (ppmp.preparedById !== profile.id) {
+          throw new Error("You can only create a Purchase Request from your own PPMP.");
         }
 
         const remainingBudget = Number(ppmp.estimatedBudget);
@@ -135,7 +124,7 @@ export async function createPrFromCartAction(input: CreatePrInput) {
           purchaseRequestId: pr.id,
           status: PrStatus.Submitted,
           remarks: "Purchase Request created and submitted.",
-          changedById: input.requestedById || null
+          changedById: profile.id
         }
       });
 

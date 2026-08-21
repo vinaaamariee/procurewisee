@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { requireRole } from '@/lib/auth/get-user-profile';
 
 interface QuoteDetailInput {
   rfqItemId: number;
@@ -21,6 +22,7 @@ export async function submitQuoteAction({
   quoteDetails: QuoteDetailInput[];
 }) {
   try {
+    await requireRole('Procurement Officer');
     // 1. Fetch RfqItems to get quantities for multiplier
     const rfqItems = await prisma.rfqItem.findMany({
       where: { rfqId },

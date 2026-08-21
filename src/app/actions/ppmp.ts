@@ -35,7 +35,10 @@ interface CreatePpmpInput {
 export async function createPpmpAction(input: CreatePpmpInput) {
   try {
     // End User role check
-    await requireRole("End User");
+    const { profile } = await requireRole("End User");
+    if (input.documentUrl && !input.documentUrl.startsWith(`${profile.id}/`)) {
+      throw new Error("Invalid PPMP document path.");
+    }
     const calculatedBudget = input.items.reduce(
       (sum, item) => sum + (item.quantity * item.estimatedUnitCost),
       0
@@ -68,6 +71,9 @@ export async function createPpmpAction(input: CreatePpmpInput) {
         // Update existing PPMP
         const oldPpmp = await tx.ppmp.findUnique({ where: { id: input.id } });
         if (!oldPpmp) throw new Error("PPMP not found.");
+        if (oldPpmp.preparedById !== profile.id) {
+          throw new Error("You can only modify your own PPMPs.");
+        }
         if (oldPpmp.status !== PpmpStatus.Draft && oldPpmp.status !== PpmpStatus.Returned) {
           throw new Error("Only Draft or Returned PPMPs can be modified.");
         }
@@ -94,7 +100,7 @@ export async function createPpmpAction(input: CreatePpmpInput) {
             estimatedBudget: new Prisma.Decimal(calculatedBudget),
             remarks: input.remarks || null,
             attachments: input.attachments || null,
-            preparedById: input.preparedById || null,
+            preparedById: profile.id,
             documentUrl: input.documentUrl ?? undefined,
             documentName: input.documentName ?? undefined,
             documentSize: input.documentSize ?? undefined,
@@ -128,7 +134,7 @@ export async function createPpmpAction(input: CreatePpmpInput) {
             remarks: input.remarks || null,
             attachments: input.attachments || null,
             status: PpmpStatus.Draft,
-            preparedById: input.preparedById || null,
+            preparedById: profile.id,
             documentUrl: input.documentUrl || null,
             documentName: input.documentName || null,
             documentSize: input.documentSize || null,
@@ -183,6 +189,7 @@ export async function createPpmpAction(input: CreatePpmpInput) {
 export async function submitPpmpAction(id: number) {
   try {
     const { profile } = await requireRole("End User");
+
     const old = await prisma.ppmp.findUnique({ where: { id } });
     if (!old) return { success: false, error: "PPMP not found." };
     if (old.preparedById !== profile.id) {
@@ -405,6 +412,10 @@ export async function updatePpmpDocumentAction(
 ) {
   try {
     const { profile } = await requireRole("End User");
+
+    if (documentUrl && !documentUrl.startsWith(`${profile.id}/`)) {
+      throw new Error("Invalid PPMP document path.");
+    }
 
     const ppmp = await prisma.ppmp.findUnique({ where: { id: ppmpId } });
     if (!ppmp) throw new Error("PPMP not found.");

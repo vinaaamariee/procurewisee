@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { DeliveryStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 interface CreateReceiptInput {
   poId: number;
@@ -15,6 +16,7 @@ interface CreateReceiptInput {
 
 export async function createReceiptAction(input: CreateReceiptInput) {
   try {
+    await requireRole("Procurement Officer");
     const po = await prisma.purchaseOrder.findUnique({
       where: { id: input.poId }
     });
@@ -168,6 +170,7 @@ export async function createReceiptAction(input: CreateReceiptInput) {
 
 export async function getReceipts(filters?: { supplierId?: number }) {
   try {
+    await requireRole(["Procurement Officer", "Administrative Approver"]);
     const where: any = {};
     if (filters?.supplierId) where.supplierId = filters.supplierId;
 

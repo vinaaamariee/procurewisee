@@ -15,6 +15,7 @@ import { WEIGHTS, CriterionWeights } from "@/lib/recommendation/weights";
  */
 export async function generateRecommendations(rfqId: number, weights?: CriterionWeights) {
   try {
+    await requireRole('Procurement Officer');
     // 1. Fetch RFQ and verify it exists
     const rfq = await prisma.requestForQuote.findUnique({
       where: { id: rfqId },
@@ -118,6 +119,7 @@ export async function generateRecommendations(rfqId: number, weights?: Criterion
  * Fetches the ranked recommendations for a given RFQ.
  */
 export async function getRecommendations(rfqId: number) {
+  await requireRole(['Procurement Officer', 'Administrative Approver']);
   const canvas = await prisma.canvasAbstract.findFirst({
     where: { rfqId },
   });

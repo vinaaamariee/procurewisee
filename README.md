@@ -1,5 +1,18 @@
 # 🏛️ ProcureWise
 
+## Security Hardening — Server Actions and Private PPMP Documents
+
+**Date**: August 21, 2026
+
+- Added server-side authentication and role authorization to catalog, RFQ, quotation, receipt, supplier, workflow, recommendation, evaluation, analytics, form-template, acknowledgement, activity, search, and notification actions.
+- Removed trust in client-provided user identity for PPMP and PR ownership. Linked PPMPs must belong to the authenticated End User.
+- Notification reads now derive the user and role from the verified server session and reject unrelated notification IDs.
+- Supplier quotations are encoded only by authenticated Procurement Officers, matching the institutional workflow.
+- Changed the `ppmp-documents` Storage bucket from public to private. Objects use owner-prefixed paths, owner-scoped Storage policies, and 15-minute signed URLs.
+- Added `pnpm security:check` to catch regressions in critical authorization and Storage boundaries.
+
+Deployment note: run `pnpm storage:secure` to apply and verify `migrations/secure_ppmp_document_storage.sql`. Bucket administration through `scripts/setup-storage-bucket.ts` requires `SUPABASE_SECRET_KEY` (preferred) or the legacy `SUPABASE_SERVICE_ROLE_KEY`, set only in the server environment.
+
 ### An Intelligent Procurement Analytics and Automated Canvassing System with Best-Value Recommendation Engine
 
 **Capstone Project for Batanes State College**

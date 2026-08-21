@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/get-user-profile";
 import { logAuditTrail } from "@/lib/audit";
 
 interface FormFieldInput {
@@ -19,6 +20,7 @@ export async function saveFormTemplateAction(data: {
   notes?: string;
 }) {
   try {
+    await requireRole("Administrative Approver");
     const fieldsJson = JSON.parse(JSON.stringify(data.fields));
 
     const result = await prisma.$transaction(async (tx) => {
@@ -76,6 +78,7 @@ export async function saveFormTemplateAction(data: {
 
 export async function getFormTemplates() {
   try {
+    await requireRole("Administrative Approver");
     return await prisma.formTemplate.findMany({
       where: { isActive: true },
       orderBy: { updatedAt: "desc" },

@@ -1,6 +1,7 @@
 import { requireRole } from "@/lib/auth/get-user-profile";
 import { prisma } from "@/lib/prisma";
 import PackageReviewClient from "./PackageReviewClient";
+import { createPpmpDocumentSignedUrl } from "@/lib/storage/ppmp-documents";
 
 export const metadata = { title: "Package Review — ProcureWise" };
 
@@ -34,7 +35,7 @@ export default async function PackageReviewPage() {
     orderBy: { updatedAt: "desc" },
   });
 
-  const serializedPrs = prs.map((pr: any) => ({
+  const serializedPrs = await Promise.all(prs.map(async (pr: any) => ({
     id: pr.id,
     prNumber: pr.prNumber,
     department: pr.department,
@@ -50,7 +51,7 @@ export default async function PackageReviewPage() {
       ppmpNumber: pr.ppmp.ppmpNumber,
       projectTitle: pr.ppmp.projectTitle,
       status: pr.ppmp.status,
-      documentUrl: pr.ppmp.documentUrl || null,
+      documentUrl: await createPpmpDocumentSignedUrl(pr.ppmp.documentUrl),
       documentName: pr.ppmp.documentName || null,
       documentSize: pr.ppmp.documentSize || null,
       documentUploadedAt: pr.ppmp.documentUploadedAt ? pr.ppmp.documentUploadedAt.toISOString() : null,
@@ -75,7 +76,7 @@ export default async function PackageReviewPage() {
       })),
     } : null,
     assignedOfficer: pr.assignedOfficer ? { fullName: pr.assignedOfficer.fullName } : null,
-  }));
+  })));
 
   return (
     <div className="space-y-6">

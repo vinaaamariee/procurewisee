@@ -2,7 +2,11 @@ import "dotenv/config";
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+if (!supabaseKey) {
+  throw new Error("SUPABASE_SECRET_KEY or SUPABASE_SERVICE_ROLE_KEY is required to administer Storage buckets.");
+}
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
@@ -20,7 +24,7 @@ async function setup() {
   if (existing) {
     console.log('Bucket "ppmp-documents" already exists. Updating...');
     const { error: updateError } = await supabase.storage.updateBucket("ppmp-documents", {
-      public: true,
+      public: false,
       fileSizeLimit: 10 * 1024 * 1024, // 10MB
       allowedMimeTypes: [
         "application/pdf",
@@ -36,7 +40,7 @@ async function setup() {
   } else {
     console.log('Creating bucket "ppmp-documents"...');
     const { error: createError } = await supabase.storage.createBucket("ppmp-documents", {
-      public: true,
+      public: false,
       fileSizeLimit: 10 * 1024 * 1024, // 10MB
       allowedMimeTypes: [
         "application/pdf",

@@ -5,6 +5,7 @@ import { RfqStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
 import { createNotificationHelper } from "./notifications";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 /**
  * Creates a Request for Quote (RFQ) along with its requisition line items.
@@ -27,6 +28,7 @@ export async function createRfq(data: {
   }>;
 }) {
   try {
+    const { profile } = await requireRole("Procurement Officer");
     let rfqNumber = data.rfqNumber;
     if (!rfqNumber) {
       const year = new Date().getFullYear();
@@ -43,7 +45,7 @@ export async function createRfq(data: {
         approvedBudgetContract: data.approvedBudgetContract,
         deadlineDate: new Date(data.deadlineDate),
         status: data.status || RfqStatus.Draft,
-        createdById: data.createdById || null,
+        createdById: profile.id,
         items: {
           create: data.items.map(item => ({
             itemNumber: item.itemNumber,
@@ -87,6 +89,7 @@ export const createRfqAction = createRfq;
  * Transitions an RFQ's status to `Published` (open for bidding).
  */
 export async function publishRfq(rfqId: number) {
+  await requireRole("Procurement Officer");
   const oldRfq = await prisma.requestForQuote.findUnique({
     where: { id: rfqId },
   });
@@ -126,6 +129,7 @@ export async function publishRfq(rfqId: number) {
  * Transitions an RFQ's status to `Closed` (no longer accepting quotes).
  */
 export async function closeRfq(rfqId: number) {
+  await requireRole("Procurement Officer");
   const oldRfq = await prisma.requestForQuote.findUnique({
     where: { id: rfqId },
   });
@@ -151,6 +155,7 @@ export async function closeRfq(rfqId: number) {
  * Retrieves a full RFQ record including its line items and all submitted supplier quotes.
  */
 export async function getRfqWithQuotes(rfqId: number) {
+  await requireRole(["Procurement Officer", "Administrative Approver"]);
   return await prisma.requestForQuote.findUnique({
     where: { id: rfqId },
     include: {

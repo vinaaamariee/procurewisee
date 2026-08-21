@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { logAuditTrail } from "@/lib/audit";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 interface WorkflowStepInput {
   role: string;
@@ -18,6 +19,7 @@ export async function saveWorkflowConfigAction(data: {
   isActive?: boolean;
 }) {
   try {
+    await requireRole("Administrative Approver");
     const stepsJson = JSON.parse(JSON.stringify(data.steps));
 
     const result = await prisma.$transaction(async (tx) => {
@@ -64,6 +66,7 @@ export async function saveWorkflowConfigAction(data: {
 
 export async function getWorkflowConfig(moduleName: string) {
   try {
+    await requireRole("Administrative Approver");
     return await prisma.workflowConfig.findUnique({
       where: { moduleName }
     });

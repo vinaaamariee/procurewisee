@@ -33,7 +33,7 @@ export default function NotificationBell({ currentUser }: NotificationBellProps)
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const fetchNotifications = async () => {
-    const res = await getNotificationsAction(currentUser.role, currentUser.id);
+    const res = await getNotificationsAction();
     if (res.success && res.notifications) {
       setNotifications(res.notifications as any);
     }
@@ -69,7 +69,7 @@ export default function NotificationBell({ currentUser }: NotificationBellProps)
 
   const handleMarkAllAsRead = async () => {
     setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
-    await markAllNotificationsAsReadAction(currentUser.role, currentUser.id);
+    await markAllNotificationsAsReadAction();
   };
 
   const formatRelativeTime = (dateStr: Date | string) => {

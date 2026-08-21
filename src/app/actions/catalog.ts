@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 export interface CatalogProductInput {
   sku?: string;
@@ -83,6 +84,7 @@ export async function getCatalogProducts(filters?: {
  */
 export async function createCatalogProduct(data: CatalogProductInput) {
   try {
+    await requireRole("Procurement Officer");
     const categoryRecord = await prisma.category.upsert({
       where: { name: data.category.trim() },
       update: {},
@@ -119,6 +121,7 @@ export async function createCatalogProduct(data: CatalogProductInput) {
  */
 export async function updateCatalogProduct(id: number, data: Partial<CatalogProductInput>) {
   try {
+    await requireRole("Procurement Officer");
     let categoryId: number | undefined;
     let unitId: number | undefined;
 
@@ -165,6 +168,7 @@ export async function updateCatalogProduct(id: number, data: Partial<CatalogProd
  */
 export async function deleteCatalogProduct(id: number) {
   try {
+    await requireRole("Procurement Officer");
     await prisma.catalogProduct.update({
       where: { id },
       data: { isActive: false },

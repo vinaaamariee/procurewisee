@@ -1,6 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { requireRole } from '@/lib/auth/get-user-profile';
 import { revalidatePath } from 'next/cache';
 import { logAuditTrail } from '@/lib/audit';
 
@@ -9,6 +10,7 @@ import { logAuditTrail } from '@/lib/audit';
  * Called when an Officer opens the Annex E tab for the first time.
  */
 export async function initRfqAcknowledgementsAction(rfqId: number) {
+  await requireRole('Procurement Officer');
   try {
     const quotes = await prisma.supplierQuote.findMany({
       where: { rfqId },
@@ -48,6 +50,7 @@ export async function updateRfqAcknowledgementAction(
     acknowledged?: boolean;
   }
 ) {
+  await requireRole('Procurement Officer');
   try {
     const updated = await (prisma as any).rfqAcknowledgementLog.update({
       where: { id },
@@ -78,6 +81,7 @@ export async function updateRfqAcknowledgementAction(
  * Used when a supplier is invited but has no submitted quote yet.
  */
 export async function addSupplierToRfqAckAction(rfqId: number, supplierId: number) {
+  await requireRole('Procurement Officer');
   try {
     const log = await (prisma as any).rfqAcknowledgementLog.upsert({
       where: { rfqId_supplierId: { rfqId, supplierId } },
@@ -96,6 +100,7 @@ export async function addSupplierToRfqAckAction(rfqId: number, supplierId: numbe
  * Retrieves all acknowledgement log entries for an RFQ, with supplier details.
  */
 export async function getRfqAcknowledgementsAction(rfqId: number) {
+  await requireRole(['Procurement Officer', 'Administrative Approver']);
   try {
     const logs = await (prisma as any).rfqAcknowledgementLog.findMany({
       where: { rfqId },

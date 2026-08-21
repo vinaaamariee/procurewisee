@@ -1,6 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
 
 export interface SearchResultItem {
   id: number;
@@ -20,6 +21,7 @@ export interface GroupedSearchResults {
 }
 
 export async function globalSearchAction(query: string) {
+  await getAuthenticatedUser();
   if (!query || query.trim().length < 2) {
     return { success: true, results: {} as GroupedSearchResults };
   }

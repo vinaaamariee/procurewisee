@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireRole } from "@/lib/auth/get-user-profile";
 
 /**
  * Creates or updates supplier performance/intelligence metrics.
@@ -15,6 +16,7 @@ export async function upsertSupplierProfile(
     isVerified?: boolean;
   }
 ) {
+  await requireRole("Procurement Officer");
   const updated = await prisma.supplier.update({
     where: { id: supplierId },
     data: {
@@ -33,6 +35,7 @@ export async function upsertSupplierProfile(
  * Retrieves all registered suppliers, ordered alphabetically by company name.
  */
 export async function getSupplierProfiles() {
+  await requireRole(["Procurement Officer", "Administrative Approver"]);
   return await prisma.supplier.findMany({
     orderBy: { companyName: "asc" },
   });
@@ -42,6 +45,7 @@ export async function getSupplierProfiles() {
  * Toggles the `isVerified` status of a supplier.
  */
 export async function verifySupplier(supplierId: number) {
+  await requireRole("Procurement Officer");
   const supplier = await prisma.supplier.findUnique({
     where: { id: supplierId },
     select: { isVerified: true },

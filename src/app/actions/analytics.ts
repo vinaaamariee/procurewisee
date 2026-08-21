@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { requireRole } from "@/lib/auth/get-user-profile";
 import { forecastProductPrice } from "@/lib/forecast/engine";
 import { generateForecastSummary } from "@/lib/forecast/forecast-summary";
 import { determineForecastBadge } from "@/lib/forecast/forecast-alerts";
@@ -150,6 +151,7 @@ function computeDynamicMape(prices: number[]): number {
 }
 
 export async function getIntelligentProcurementAnalytics(): Promise<AnalyticsPayload> {
+  await requireRole(["Procurement Officer", "Administrative Approver"]);
   const [
     allPos,
     allPrs,

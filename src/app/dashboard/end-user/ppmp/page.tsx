@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getPpmpList } from "@/app/actions/ppmp";
 import PPMPDashboardClient from "./PPMPDashboardClient";
 import { ProductListItem } from "@/features/catalog/server/queries";
+import { createPpmpDocumentSignedUrl, getPpmpDocumentPath } from "@/lib/storage/ppmp-documents";
 
 export const metadata = { title: "PPMP — ProcureWise" };
 
@@ -25,7 +26,12 @@ export default async function EndUserPpmpPage() {
   const budgetAllocated = budget ? Number(budget.allocatedBudget) : 1200000.00;
   const budgetSpent = budget ? Number(budget.spentBudget) : 0.00;
 
-  const initialPpmps = await getPpmpList({ department: selectedDepartment });
+  const rawPpmps = await getPpmpList({ department: selectedDepartment });
+  const initialPpmps = await Promise.all(rawPpmps.map(async (ppmp) => ({
+    ...ppmp,
+    documentPath: getPpmpDocumentPath(ppmp.documentUrl),
+    documentUrl: await createPpmpDocumentSignedUrl(ppmp.documentUrl),
+  })));
 
   const plannedSum = initialPpmps.reduce(
     (sum, plan) => sum + Number(plan.estimatedBudget),

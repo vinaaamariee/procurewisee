@@ -19,6 +19,7 @@ function formatFileSize(bytes: number): string {
 
 export interface PpmpDocument {
   url: string;
+  path: string;
   name: string;
   size: number;
   uploadedAt: string;
@@ -67,22 +68,29 @@ export default function PpmpDocumentUpload({
     );
 
     const ext = file.name.substring(file.name.lastIndexOf("."));
-    const filePath = `ppmp/${ppmpId || "draft"}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}${ext}`;
+    if (!preparedById) throw new Error("Authenticated user information is missing.");
+    const filePath = `${preparedById}/ppmp/${ppmpId || "draft"}/${crypto.randomUUID()}${ext}`;
 
     const { error: uploadError } = await supabase.storage
       .from("ppmp-documents")
-      .upload(filePath, file, { upsert: true });
+      .upload(filePath, file, { upsert: false, contentType: file.type });
 
     if (uploadError) {
       throw new Error(`Upload failed: ${uploadError.message}`);
     }
 
-    const { data: urlData } = supabase.storage
+    const { data: urlData, error: signedUrlError } = await supabase.storage
       .from("ppmp-documents")
-      .getPublicUrl(filePath);
+      .createSignedUrl(filePath, 60 * 15);
+
+    if (signedUrlError) {
+      await supabase.storage.from("ppmp-documents").remove([filePath]);
+      throw new Error(`Could not secure the uploaded document: ${signedUrlError.message}`);
+    }
 
     return {
-      url: urlData.publicUrl,
+      url: urlData.signedUrl,
+      path: filePath,
       name: file.name,
       size: file.size,
       uploadedAt: new Date().toISOString(),
@@ -121,9 +129,21 @@ export default function PpmpDocumentUpload({
     if (file) handleFile(file);
   };
 
-  const handleRemove = () => {
-    if (!canModify) return;
+  const handleRemove = async () => {
+    if (!canModify || !currentDocument) return;
     if (confirm("Remove the uploaded PPMP document?")) {
+      const { createBrowserClient } = await import("@supabase/ssr");
+      const supabase = createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      const { error: removeError } = await supabase.storage
+        .from("ppmp-documents")
+        .remove([currentDocument.path]);
+      if (removeError) {
+        setError(`Remove failed: ${removeError.message}`);
+        return;
+      }
       onDocumentChange(null);
     }
   };

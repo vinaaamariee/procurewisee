@@ -1,6 +1,7 @@
 'use server';
 
 import { prisma } from '@/lib/prisma';
+import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
 
 export interface ActivityItem {
   id: number;
@@ -92,6 +93,7 @@ function initials(name: string): string {
 }
 
 export async function getRecentActivity(limit: number = 12): Promise<ActivityItem[]> {
+  await getAuthenticatedUser();
   try {
     const logs = await prisma.auditTrail.findMany({
       orderBy: { timestamp: 'desc' },

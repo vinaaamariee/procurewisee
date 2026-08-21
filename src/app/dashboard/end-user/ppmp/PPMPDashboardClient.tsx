@@ -173,7 +173,7 @@ export default function PPMPDashboardClient({
         fiscalYear: 2026,
         estimatedBudget: currentDraftTotal,
         preparedById: userId,
-        documentUrl: currentDocument?.url || null,
+        documentUrl: currentDocument?.path || null,
         documentName: currentDocument?.name || null,
         documentSize: currentDocument?.size || null,
         documentUploadedAt: currentDocument?.uploadedAt || null,
@@ -238,6 +238,7 @@ export default function PPMPDashboardClient({
       ppmp.documentUrl
         ? {
             url: ppmp.documentUrl,
+            path: ppmp.documentPath || ppmp.documentUrl,
             name: ppmp.documentName || "PPMP Document",
             size: ppmp.documentSize || 0,
             uploadedAt: ppmp.documentUploadedAt || new Date().toISOString(),

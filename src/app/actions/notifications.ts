@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
+import { getAuthenticatedUser } from '@/lib/auth/get-user-profile';
 
 /**
  * Creates a notification in the database.
@@ -15,6 +16,7 @@ export async function createNotificationHelper(data: {
   userId?: string | null;
 }) {
   try {
+    await getAuthenticatedUser();
     const notification = await prisma.notification.create({
       data: {
         title: data.title,
@@ -35,13 +37,14 @@ export async function createNotificationHelper(data: {
 /**
  * Retrieves read & unread notifications for a specific user and their role.
  */
-export async function getNotificationsAction(role: string, userId: string) {
+export async function getNotificationsAction() {
   try {
+    const { profile } = await getAuthenticatedUser();
     const notifications = await prisma.notification.findMany({
       where: {
         OR: [
-          { userId: userId },
-          { role: role },
+          { userId: profile.id },
+          { role: profile.role },
         ],
       },
       orderBy: {
@@ -61,10 +64,17 @@ export async function getNotificationsAction(role: string, userId: string) {
  */
 export async function markNotificationAsReadAction(id: string) {
   try {
-    const notification = await prisma.notification.update({
-      where: { id },
+    const { profile } = await getAuthenticatedUser();
+    const notification = await prisma.notification.updateMany({
+      where: {
+        id,
+        OR: [{ userId: profile.id }, { role: profile.role }],
+      },
       data: { isRead: true },
     });
+    if (notification.count !== 1) {
+      return { success: false, error: 'Notification not found.' };
+    }
     revalidatePath('/', 'layout');
     return { success: true, notification };
   } catch (error: any) {
@@ -76,13 +86,14 @@ export async function markNotificationAsReadAction(id: string) {
 /**
  * Marks all active notifications for a user/role as read.
  */
-export async function markAllNotificationsAsReadAction(role: string, userId: string) {
+export async function markAllNotificationsAsReadAction() {
   try {
+    const { profile } = await getAuthenticatedUser();
     await prisma.notification.updateMany({
       where: {
         OR: [
-          { userId: userId },
-          { role: role },
+          { userId: profile.id },
+          { role: profile.role },
         ],
         isRead: false,
       },
