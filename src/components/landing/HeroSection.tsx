@@ -16,21 +16,21 @@ export default function HeroSection() {
   ];
 
   return (
-    <section className="bg-gradient-to-b from-base-100 via-base-200/30 to-base-100 py-8 lg:py-14 border-b border-base-200">
+    <section className="border-b border-base-300 bg-base-100 py-10 lg:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left Column */}
           <div className="lg:col-span-7 space-y-5 text-left">
             {/* Compliance Badge */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-[#7B1E1E]/20 bg-[#7B1E1E]/5 px-3.5 py-1.5 text-xs font-bold text-[#7B1E1E] uppercase tracking-wider shadow-sm">
-              <ShieldCheck className="h-4 w-4 text-[#A6761D]" />
+            <div className="inline-flex items-center gap-2 border-l-4 border-primary bg-base-200 px-3.5 py-2 text-xs font-bold text-primary uppercase tracking-wider">
+              <ShieldCheck className="h-4 w-4 text-secondary" />
               <span>Republic Act No. 9184 — Government Procurement Reform Act</span>
             </div>
 
             {/* Institution & System Title */}
             <div className="space-y-2">
               <div className="flex items-center gap-3">
-                <div className="relative h-12 w-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-white p-1 shadow-sm border border-base-200">
+                <div className="relative h-12 w-12 flex-shrink-0 flex items-center justify-center bg-white p-1 border border-base-300">
                   <Image
                     src="/images/bsc-logo.png"
                     alt="Batanes State College Logo"
@@ -41,16 +41,16 @@ export default function HeroSection() {
                   />
                 </div>
                 <div>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#7B1E1E] tracking-tight leading-tight">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-primary tracking-tight leading-tight">
                     Batanes State College
                   </h1>
-                  <p className="text-xs font-bold uppercase tracking-widest text-[#A6761D]">
+                  <p className="text-xs font-bold uppercase tracking-widest text-secondary">
                     Official Internal Procurement System
                   </p>
                 </div>
               </div>
 
-              <h2 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-base-content tracking-tight pt-1">
+              <h2 className="max-w-2xl pt-2 text-xl font-bold text-base-content sm:text-2xl lg:text-3xl">
                 Procurement Management Information System
               </h2>
             </div>
@@ -66,7 +66,7 @@ export default function HeroSection() {
             <div className="flex flex-col gap-3 pt-2">
               <Link
                 href="/login"
-                className="btn btn-primary btn-md rounded-xl bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold shadow-md px-8 w-fit"
+                className="btn btn-primary btn-md rounded-field font-bold px-8 w-fit"
               >
                 <LogIn className="h-4 w-4" />
                 <span>Sign In to ProcureWise</span>
@@ -106,7 +106,8 @@ export default function HeroSection() {
 
           {/* Right Column: Workflow Visualization */}
           <div className="lg:col-span-5">
-            <div className="card bg-base-100 p-5 sm:p-6 rounded-2xl border border-base-200 shadow-md">
+            <div className="card card-border rounded-box bg-base-100">
+              <div className="card-body gap-0 p-5 sm:p-6">
               <div className="flex items-center justify-between border-b border-base-200 pb-3 mb-4">
                 <h3 className="text-sm font-extrabold text-[#7B1E1E] uppercase tracking-wider">
                   Institutional Procurement Lifecycle
@@ -139,9 +140,10 @@ export default function HeroSection() {
                 ))}
               </ul>
 
-              <div className="mt-4 pt-3 border-t border-base-200 flex items-center gap-2 text-xs text-base-content/60">
+              <div className="mt-4 pt-3 border-t border-base-300 flex items-center gap-2 text-xs text-base-content/60">
                 <Lock className="h-3.5 w-3.5 text-[#A6761D]" />
                 <span>All workflow modules require institutional login.</span>
+              </div>
               </div>
             </div>
           </div>

@@ -32,7 +32,7 @@ export const dynamic = "force-dynamic";
 export default function LandingPage() {
   return (
     <div
-      className="flex min-h-screen flex-col bg-base-100 text-base-content font-sans antialiased selection:bg-[#7B1E1E] selection:text-white"
+      className="public-site flex min-h-screen flex-col bg-base-100 text-base-content font-sans antialiased"
       data-theme="bsc"
     >
       {/* Sticky Institutional Navbar */}

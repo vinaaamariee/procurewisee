@@ -3,21 +3,21 @@
 A locked design system for this app. Every page redesign reads this file before emitting code. Do not regenerate per page — extend or amend this file when the system needs to grow.
 
 ## Genre
-modern-minimal
+institutional-flat
 
 ## Macrostructure family
-- **Marketing pages**: Bento Grid / Marquee Hero
+- **Marketing pages**: Government service portal / structured information page
 - **App pages**:       Workbench (Sidebar + Top Navigation + main content container)
 
 ## Theme
-Existing color palette preserved exactly.
+Existing institutional palette preserved. Pages use flat fields, rules, and semantic contrast rather than decorative gradients, glass, or elevation.
 
 - Primary Maroon: `#7B1E1E` (`var(--accent)` in code, DaisyUI `primary`)
 - Gold Secondary: `#A6761D` (`var(--secondary)` in code, DaisyUI `secondary`)
 - Accent Navy:    `#0B2D5C` (`var(--accent-navy)` in code, DaisyUI `accent`)
 - Paper Canvas:   `#F2F3EF` (`var(--bg-deep)` in code, DaisyUI `base-100` / `base-200`)
 - Paper Darker:   `#E7E8E2` (`var(--bg-dark)` in code)
-- Surface White:  `#ffffff` (`var(--surface)` in code)
+- Surface White:  `#ffffff` (`var(--surface)` in code; permitted as the document surface)
 - Neutral Border: `#D4D7DE` (`var(--border)` in code)
 
 ## Typography
@@ -48,9 +48,9 @@ Existing color palette preserved exactly.
 ## Component Specifications
 
 ### Cards
-- Radius: `rounded-2xl` (16px)
+- Radius: `rounded-box` / 4px
 - Border: `1px solid var(--border)`
-- Shadow: `0 10px 30px -10px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.02)` (soft layered shadow)
+- Shadow: none. Use rules and background contrast for grouping.
 
 ### Tables
 - Border: thin header-separator rules.
@@ -58,15 +58,23 @@ Existing color palette preserved exactly.
 - Zebra-striping: ultra-light alternating rows on `#f8f9fa` (or base-200).
 
 ### Buttons
-- Rounded corners: `rounded-xl` (12px) to match DaisyUI selection themes.
+- Rounded corners: `rounded-field` / 4px.
 - Active Press: Scale down to `0.97`.
 
 ### Top Navigation Header
-- Spacing: high baseline vertical alignment, balanced 8px padding increments.
-- Glass effect: `backdrop-blur-md bg-white/80` or dark equivalent.
+- Government identifier strip above a flat white navigation bar.
+- Solid surfaces and a primary-color rule; no blur, transparency, or drop shadow.
 
 ### Sidebar Navigation
-- Kept as institutional dark maroon gradient: `linear-gradient(180deg, #74171B 0%, #4B0B0E 100%)`.
+- Institutional solid maroon field. Avoid gradients.
 - Enhanced spacing: 8px grid alignment.
 - Selection indicator: `#D4A017` left border line.
-- Hover state: Shift items smoothly by translating `translateX(4px)` with alpha background.
+- Hover state: Background/color change only; no spatial shift.
+
+## Flat government interface rules
+- Content leads; decoration is limited to the college seal and functional icons.
+- Section boundaries use 1px rules or base-200 bands.
+- Cards do not float, glow, scale, or translate on hover.
+- Use primary maroon for the single highest-priority action in a view; gold is a restrained secondary marker.
+- Headings are sentence case except short official labels and table headers.
+- Landing and content pages use a document-like maximum width and left-biased hierarchy.

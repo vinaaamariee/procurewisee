@@ -109,16 +109,16 @@
   --spacing-13:   3.25rem;    /* h-13,  w-13   */
 
   /* ── Font families ── */
---font-family-sans: 'Inter', var(--font-geist-sans, Arial), sans-serif;
-  --font-family-display: 'Inter', var(--font-geist-sans, Arial), sans-serif;
+  --font-family-sans: 'Public Sans', var(--font-geist-sans, Arial), sans-serif;
+  --font-family-display: 'Public Sans', var(--font-geist-sans, Arial), sans-serif;
   --font-family-mono: var(--font-geist-mono, ui-monospace, monospace);
 }
 
 /* ---------- CSS Variables ---------- */
 :root {
   /* Default: Light Mode — Official Government Portal Theme */
-  --font-display: 'Inter', var(--font-geist-sans, Arial), sans-serif;
-  --font-body: 'Inter', var(--font-geist-sans, Arial), sans-serif;
+  --font-display: 'Public Sans', var(--font-geist-sans, Arial), sans-serif;
+  --font-body: 'Public Sans', var(--font-geist-sans, Arial), sans-serif;
 
   --accent: #7B1E1E;
   /* Institutional Maroon */
@@ -1641,4 +1641,67 @@ body {
 .tab-active {
   color: var(--accent) !important;
   border-color: var(--accent) !important;
+}
+
+/* Hallmark · genre: institutional-flat · macrostructure: government service portal
+ * design-system: design.md · designed-as-app
+ */
+.public-site {
+  background: var(--surface);
+}
+
+.public-site section {
+  scroll-margin-top: 7rem;
+}
+
+.public-site .card,
+.public-site .stats,
+.public-site .collapse {
+  border-radius: var(--radius-md) !important;
+  box-shadow: none !important;
+}
+
+.public-site .card:hover,
+.public-site .summary-card:hover,
+.public-site [class*="hover:-translate"],
+.public-site [class*="hover:scale"] {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.public-site .btn {
+  border-radius: var(--radius-md) !important;
+  min-height: 2.5rem;
+}
+
+.public-site .badge {
+  border-radius: var(--radius-sm) !important;
+}
+
+.public-site .divider::before,
+.public-site .divider::after {
+  height: 1px;
+}
+
+.public-site h1,
+.public-site h2,
+.public-site h3 {
+  font-style: normal;
+  text-wrap: balance;
+}
+
+.public-site a,
+.public-site button {
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .public-site *,
+  .public-site *::before,
+  .public-site *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
 }

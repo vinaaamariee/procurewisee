@@ -67,7 +67,7 @@ export default function UserRolesSection() {
     <section id="roles" className="py-14 lg:py-20 bg-base-200/40 border-b border-base-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 space-y-2">
+        <div className="mb-8 max-w-3xl space-y-2">
           <div className="badge badge-outline border-[#7B1E1E] text-[#7B1E1E] font-bold uppercase tracking-wider text-xs py-2 px-3">
             Role-Based Access
           </div>
@@ -95,7 +95,7 @@ export default function UserRolesSection() {
             return (
               <div
                 key={role.title}
-                className="card bg-base-100 shadow-sm border border-base-200 hover:shadow-lg transition-all duration-300 rounded-2xl overflow-hidden flex flex-col"
+                className="card card-border rounded-box bg-base-100 overflow-hidden flex flex-col"
               >
                 <div className="card-body p-6 space-y-3 flex-1">
                   {/* Icon & Badge */}

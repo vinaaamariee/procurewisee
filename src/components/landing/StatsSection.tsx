@@ -4,10 +4,10 @@ import { FileCheck, Users, ShieldCheck, Layers } from "lucide-react";
 
 export default function StatsSection() {
   return (
-    <section className="py-12 bg-base-200/50 border-b border-base-200">
+    <section className="border-b border-base-300 bg-base-200 py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* daisyUI Stats Component */}
-        <div className="stats stats-vertical lg:stats-horizontal shadow-sm bg-base-100 border border-base-200 w-full rounded-2xl">
+        <div className="stats stats-vertical w-full rounded-box border border-base-300 bg-base-100 lg:stats-horizontal">
           {/* Stat 1 */}
           <div className="stat p-6">
             <div className="stat-figure text-[#7B1E1E]">

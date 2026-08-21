@@ -1,5 +1,17 @@
 # 🏛️ ProcureWise
 
+## Institutional Flat UI Refresh
+
+**Date**: August 21, 2026
+
+- Reworked the public landing page into a restrained Philippine government-service portal style.
+- Added an official government identifier strip and simplified the institutional navigation.
+- Replaced decorative gradients, glass effects, large radii, card shadows, and hover movement with flat surfaces, rules, and semantic color contrast.
+- Changed the public feature area from a generic three-column card pattern to a denser two-column service directory.
+- Standardized the public interface on daisyUI semantic colors and 4px field/card radii while retaining the BSC maroon, gold, and navy palette.
+- Updated the locked `design.md` system so future pages follow the same institutional-flat direction.
+- Preserved all routes, content, authentication, and procurement workflow behavior.
+
 ## Security Hardening — Server Actions and Private PPMP Documents
 
 **Date**: August 21, 2026

@@ -1,0 +1,10 @@
+[
+  {
+    "date": "2026-08-21",
+    "scope": "app",
+    "macrostructure": "government service portal",
+    "theme": "BSC institutional flat",
+    "enrichment": "none",
+    "brief": "Flatten the public UI to match government service websites"
+  }
+]

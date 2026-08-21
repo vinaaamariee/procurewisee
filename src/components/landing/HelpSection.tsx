@@ -44,7 +44,7 @@ export default function HelpSection() {
             {/* daisyUI Collapse FAQ */}
             <div className="space-y-2">
               {faqs.map((faq, idx) => (
-                <div key={idx} className="collapse collapse-arrow bg-base-200/50 border border-base-200 rounded-xl">
+                <div key={idx} className="collapse collapse-arrow rounded-box border border-base-300 bg-base-100">
                   <input type="radio" name="faq-accordion" defaultChecked={idx === 0} />
                   <div className="collapse-title text-sm font-extrabold text-base-content pr-8">
                     {faq.question}
@@ -79,7 +79,7 @@ export default function HelpSection() {
 
           {/* Right: Contact Card */}
           <div className="lg:col-span-5 space-y-4">
-            <div className="card bg-base-100 p-6 rounded-2xl border border-base-200 shadow-md space-y-5">
+            <div className="card card-border rounded-box bg-base-100 p-6 space-y-5">
               <h3 className="text-base font-extrabold text-[#7B1E1E] border-b border-base-200 pb-3">
                 Contact for Support
               </h3>
@@ -117,7 +117,7 @@ export default function HelpSection() {
             </div>
 
             {/* New Account Card */}
-            <div className="card bg-[#7B1E1E] text-white p-6 rounded-2xl shadow-md space-y-3">
+            <div className="card rounded-box bg-primary text-primary-content p-6 space-y-3">
               <h3 className="text-base font-extrabold">Need an Account?</h3>
               <p className="text-xs text-white/80 leading-relaxed">
                 New institutional users must request account provisioning through the ICT Office or

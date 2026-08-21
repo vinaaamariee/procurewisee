@@ -75,10 +75,10 @@ export default function AboutSection() {
 
           {/* Right: Institution Info Card */}
           <div className="lg:col-span-5">
-            <div className="card bg-base-100 p-6 rounded-2xl border border-base-200 shadow-md space-y-5">
+            <div className="card card-border rounded-box bg-base-100 p-6 space-y-5">
               {/* College Info */}
-              <div className="flex flex-col items-center text-center space-y-3 border-b border-base-200 pb-5">
-                <div className="relative h-20 w-20 flex items-center justify-center rounded-2xl bg-white p-2 shadow-sm border border-base-200">
+              <div className="flex flex-col items-center text-center space-y-3 border-b border-base-300 pb-5">
+                <div className="relative h-20 w-20 flex items-center justify-center bg-white p-2 border border-base-300">
                   <Image
                     src="/images/bsc-logo.png"
                     alt="Batanes State College Logo"

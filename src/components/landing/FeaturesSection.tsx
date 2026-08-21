@@ -46,7 +46,7 @@ export default function FeaturesSection() {
     <section id="features" className="py-14 lg:py-20 bg-base-100 border-b border-base-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 space-y-2">
+        <div className="mb-8 max-w-3xl space-y-2">
           <div className="badge badge-outline border-[#A6761D] text-[#A6761D] font-bold uppercase tracking-wider text-xs py-2 px-3">
             System Modules
           </div>
@@ -59,13 +59,13 @@ export default function FeaturesSection() {
         </div>
 
         {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-px overflow-hidden border border-base-300 bg-base-300 md:grid-cols-2">
           {features.map((item) => {
             const Icon = item.icon;
             return (
               <div
                 key={item.title}
-                className="card bg-base-100 shadow-sm border border-base-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 rounded-2xl overflow-hidden"
+                className="card rounded-none border-0 bg-base-100"
               >
                 <div className="card-body p-6 space-y-3">
                   <div className="flex items-center justify-between">

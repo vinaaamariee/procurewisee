@@ -7,8 +7,11 @@ import { LogIn, Menu } from "lucide-react";
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-base-100/95 backdrop-blur border-b border-base-200 shadow-sm transition-colors">
-      <div className="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20">
+    <header className="sticky top-0 z-50 border-b-2 border-primary bg-base-100">
+      <div className="border-b border-base-300 bg-neutral px-4 py-1.5 text-center text-[11px] font-semibold text-neutral-content sm:text-left">
+        <div className="mx-auto max-w-7xl">Official website of Batanes State College · Republic of the Philippines</div>
+      </div>
+      <div className="navbar max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-16 py-2">
         {/* Left: Mobile Dropdown & Brand */}
         <div className="navbar-start gap-2">
           {/* Mobile Menu */}
@@ -33,7 +36,7 @@ export default function Header() {
 
           {/* Brand */}
           <Link href="/" className="flex items-center gap-3 group no-underline">
-            <div className="relative h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 flex items-center justify-center rounded-xl bg-white p-1 shadow-sm border border-base-200">
+            <div className="relative h-10 w-10 sm:h-11 sm:w-11 flex-shrink-0 flex items-center justify-center bg-white p-1 border border-base-300">
               <Image
                 src="/images/bsc-logo.png"
                 alt="Batanes State College Logo"
@@ -44,10 +47,10 @@ export default function Header() {
               />
             </div>
             <div className="hidden sm:block">
-              <div className="text-sm sm:text-base font-black tracking-tight text-[#7B1E1E] leading-tight">
+              <div className="text-sm sm:text-base font-extrabold tracking-tight text-primary leading-tight">
                 Batanes State College
               </div>
-              <div className="text-[11px] sm:text-xs font-bold text-[#A6761D] leading-tight">
+              <div className="text-[11px] sm:text-xs font-semibold text-base-content/65 leading-tight">
                 Procurement Management Information System
               </div>
             </div>
@@ -56,24 +59,24 @@ export default function Header() {
 
         {/* Center: Desktop Navigation */}
         <div className="navbar-center hidden lg:flex">
-          <ul className="menu menu-horizontal px-1 gap-1 font-bold text-sm">
+          <ul className="menu menu-horizontal px-1 gap-0 font-semibold text-sm">
             <li>
-              <a href="#workflow" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10 rounded-lg">
+              <a href="#workflow" className="rounded-none hover:bg-base-200 hover:text-primary">
                 Workflow
               </a>
             </li>
             <li>
-              <a href="#features" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10 rounded-lg">
+              <a href="#features" className="rounded-none hover:bg-base-200 hover:text-primary">
                 Features
               </a>
             </li>
             <li>
-              <a href="#about" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10 rounded-lg">
+              <a href="#about" className="rounded-none hover:bg-base-200 hover:text-primary">
                 About
               </a>
             </li>
             <li>
-              <a href="#help" className="hover:text-[#7B1E1E] active:bg-[#7B1E1E]/10 rounded-lg">
+              <a href="#help" className="rounded-none hover:bg-base-200 hover:text-primary">
                 Help
               </a>
             </li>
@@ -86,7 +89,7 @@ export default function Header() {
 
           <Link
             href="/login"
-            className="btn btn-primary btn-sm rounded-lg bg-[#7B1E1E] hover:bg-[#601717] text-white border-none font-bold shadow-sm"
+            className="btn btn-primary btn-sm rounded-field font-bold"
           >
             <LogIn className="h-4 w-4" />
             <span>Sign In</span>
