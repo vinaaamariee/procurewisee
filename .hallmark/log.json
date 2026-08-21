@@ -2,6 +2,14 @@
   {
     "date": "2026-08-21",
     "scope": "app",
+    "macrostructure": "focused government service portal",
+    "theme": "BSC maroon and gold",
+    "enrichment": "none",
+    "brief": "Reduce landing content and restrict chromatic colors to maroon and gold"
+  },
+  {
+    "date": "2026-08-21",
+    "scope": "app",
     "macrostructure": "government service portal",
     "theme": "BSC institutional flat",
     "enrichment": "none",

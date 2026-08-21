@@ -1,5 +1,15 @@
 # 🏛️ ProcureWise
 
+## Focused Maroon-and-Gold Landing Page
+
+**Date**: August 21, 2026
+
+- Limited the design system to maroon and gold as its only chromatic colors; neutral paper, borders, and text remain for accessibility.
+- Removed statistics, role summaries, the long institutional About section, and the standalone FAQ block from the landing route.
+- Reduced the hero workflow visualization to a short authenticated-access notice.
+- Reduced six detailed module cards to four concise service summaries.
+- Simplified header navigation and replaced the multi-column footer with a compact institutional close.
+
 ## Institutional Flat UI Refresh
 
 **Date**: August 21, 2026

@@ -14,11 +14,13 @@ Existing institutional palette preserved. Pages use flat fields, rules, and sema
 
 - Primary Maroon: `#7B1E1E` (`var(--accent)` in code, DaisyUI `primary`)
 - Gold Secondary: `#A6761D` (`var(--secondary)` in code, DaisyUI `secondary`)
-- Accent Navy:    `#0B2D5C` (`var(--accent-navy)` in code, DaisyUI `accent`)
+- Accent:         Maroon (`var(--accent)` in code, DaisyUI `accent`)
 - Paper Canvas:   `#F2F3EF` (`var(--bg-deep)` in code, DaisyUI `base-100` / `base-200`)
 - Paper Darker:   `#E7E8E2` (`var(--bg-dark)` in code)
 - Surface White:  `#ffffff` (`var(--surface)` in code; permitted as the document surface)
 - Neutral Border: `#D4D7DE` (`var(--border)` in code)
+
+Maroon and gold are the only chromatic colors. White, paper gray, borders, and dark text are neutral support colors only. Semantic information, success, warning, and error treatments must resolve to maroon or gold rather than introducing blue, green, or orange.
 
 ## Typography
 - Display: 'Public Sans', var(--font-geist-sans), Arial, sans-serif

@@ -21,15 +21,12 @@ export default function Header() {
             </div>
             <ul
               tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200 font-semibold"
+              className="menu menu-sm dropdown-content mt-3 z-[1] w-52 rounded-box border border-base-300 bg-base-100 p-2 font-semibold"
             >
-              <li><a href="#workflow">Workflow</a></li>
               <li><a href="#features">Features</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#help">Help</a></li>
               <li className="divider my-1"></li>
               <li>
-                <Link href="/login" className="text-[#7B1E1E] font-bold">Sign In</Link>
+                <Link href="/login" className="font-bold text-primary">Sign In</Link>
               </li>
             </ul>
           </div>
@@ -61,23 +58,8 @@ export default function Header() {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 gap-0 font-semibold text-sm">
             <li>
-              <a href="#workflow" className="rounded-none hover:bg-base-200 hover:text-primary">
-                Workflow
-              </a>
-            </li>
-            <li>
               <a href="#features" className="rounded-none hover:bg-base-200 hover:text-primary">
-                Features
-              </a>
-            </li>
-            <li>
-              <a href="#about" className="rounded-none hover:bg-base-200 hover:text-primary">
-                About
-              </a>
-            </li>
-            <li>
-              <a href="#help" className="rounded-none hover:bg-base-200 hover:text-primary">
-                Help
+                System modules
               </a>
             </li>
           </ul>

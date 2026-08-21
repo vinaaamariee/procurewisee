@@ -2,19 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, Lock, CheckCircle2, LogIn } from "lucide-react";
+import { ShieldCheck, Lock, FileCheck2, LogIn } from "lucide-react";
 
 export default function HeroSection() {
-  const workflowSteps = [
-    { title: "Purchase Request", desc: "Appendix 60 PR Requisition" },
-    { title: "Procurement Review", desc: "Budget & Specification Audit" },
-    { title: "Request for Quotation", desc: "Automated RFQ Publication" },
-    { title: "Supplier Quotations", desc: "Sealed Bidding & AOQ" },
-    { title: "Supplier Evaluation", desc: "MCDM Best-Value Scoring" },
-    { title: "Purchase Order", desc: "Appendix 61 PO Generation" },
-    { title: "Delivery & Inspection", desc: "Receipt & Audit Completion" },
-  ];
-
   return (
     <section className="border-b border-base-300 bg-base-100 py-10 lg:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,9 +47,8 @@ export default function HeroSection() {
 
             {/* Description */}
             <p className="text-sm sm:text-base text-base-content/80 leading-relaxed font-normal">
-              The official internal digital platform for managing Purchase Requests, Requests for Quotation,
-              Supplier Evaluation, Purchase Orders, and end-to-end procurement monitoring across
-              Batanes State College. Access is restricted to authenticated institutional users only.
+              Manage purchase requests, quotations, supplier evaluation, and purchase orders in one
+              secure institutional system.
             </p>
 
             {/* Single primary CTA + account request note */}
@@ -76,74 +65,32 @@ export default function HeroSection() {
                 No account yet?{" "}
                 <a
                   href="mailto:procurement@bsc.edu.ph"
-                  className="text-[#A6761D] font-bold hover:underline"
+                  className="font-bold text-secondary hover:underline"
                 >
                   Request access from the Procurement Office →
                 </a>
               </p>
             </div>
 
-            {/* Sub-feature list */}
-            <div className="grid grid-cols-2 gap-2 pt-2 text-xs font-semibold text-base-content/70">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-[#7B1E1E] flex-shrink-0" />
-                <span>Official Appendix 60 PR Form</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-[#A6761D] flex-shrink-0" />
-                <span>Automated PR-to-RFQ Conversion</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-[#7B1E1E] flex-shrink-0" />
-                <span>MCDM Best-Value Recommendation</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-[#A6761D] flex-shrink-0" />
-                <span>Official Appendix 61 PO Form</span>
-              </div>
-            </div>
           </div>
 
-          {/* Right Column: Workflow Visualization */}
+          {/* Right Column: concise access notice */}
           <div className="lg:col-span-5">
             <div className="card card-border rounded-box bg-base-100">
-              <div className="card-body gap-0 p-5 sm:p-6">
-              <div className="flex items-center justify-between border-b border-base-200 pb-3 mb-4">
-                <h3 className="text-sm font-extrabold text-[#7B1E1E] uppercase tracking-wider">
-                  Institutional Procurement Lifecycle
-                </h3>
-                <div className="flex items-center gap-1.5">
-                  <Lock className="h-3.5 w-3.5 text-base-content/50" />
-                  <span className="badge badge-sm border-[#A6761D]/30 bg-[#A6761D]/10 text-[#A6761D] font-bold">
-                    Authenticated
-                  </span>
+              <div className="card-body gap-4 p-5 sm:p-6">
+                <div className="flex items-center gap-3 border-b border-base-300 pb-4">
+                  <Lock className="h-5 w-5 text-primary" />
+                  <div>
+                    <h3 className="font-bold text-primary">Institutional access only</h3>
+                    <p className="text-xs text-base-content/65">A registered BSC account is required.</p>
+                  </div>
                 </div>
-              </div>
-
-              {/* daisyUI Steps Vertical */}
-              <ul className="steps steps-vertical w-full text-xs">
-                {workflowSteps.map((step, idx) => (
-                  <li
-                    key={step.title}
-                    data-content={idx + 1}
-                    className="step step-primary font-bold py-1"
-                  >
-                    <div className="text-left ml-2">
-                      <div className="font-extrabold text-xs sm:text-sm text-base-content leading-tight">
-                        {step.title}
-                      </div>
-                      <div className="text-[11px] font-medium text-base-content/60">
-                        {step.desc}
-                      </div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-4 pt-3 border-t border-base-300 flex items-center gap-2 text-xs text-base-content/60">
-                <Lock className="h-3.5 w-3.5 text-[#A6761D]" />
-                <span>All workflow modules require institutional login.</span>
-              </div>
+                <div className="flex items-start gap-3">
+                  <FileCheck2 className="mt-0.5 h-5 w-5 shrink-0 text-secondary" />
+                  <p className="text-sm leading-relaxed text-base-content/75">
+                    Official forms, approvals, and audit records are handled inside the authenticated portal.
+                  </p>
+                </div>
               </div>
             </div>
           </div>

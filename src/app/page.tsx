@@ -2,11 +2,7 @@ import type { Metadata } from "next";
 
 import Header from "@/components/landing/Header";
 import HeroSection from "@/components/landing/HeroSection";
-import StatsSection from "@/components/landing/StatsSection";
 import FeaturesSection from "@/components/landing/FeaturesSection";
-import UserRolesSection from "@/components/landing/UserRolesSection";
-import AboutSection from "@/components/landing/AboutSection";
-import HelpSection from "@/components/landing/HelpSection";
 import Footer from "@/components/landing/Footer";
 
 export const metadata: Metadata = {
@@ -40,23 +36,11 @@ export default function LandingPage() {
 
       {/* Main Content */}
       <main className="flex-1">
-        {/* Hero: Two-Column Layout — Institution Title + Workflow Steps (auth-gated) */}
+        {/* Concise institutional sign-in hero */}
         <HeroSection />
 
-        {/* Institutional Stats — RA 9184, 7-Step Process, Role-Based Access, Appendix 60/61 */}
-        <StatsSection />
-
-        {/* Core Procurement Modules — all auth-gated descriptions */}
+        {/* Essential procurement services */}
         <FeaturesSection />
-
-        {/* Role-Based Access — End User, Procurement Officer, Administrator */}
-        <UserRolesSection />
-
-        {/* About the System — institutional description + BSC background */}
-        <AboutSection />
-
-        {/* Help & Contact — FAQs, contact, and sign-in CTA */}
-        <HelpSection />
       </main>
 
       {/* Institutional Footer */}

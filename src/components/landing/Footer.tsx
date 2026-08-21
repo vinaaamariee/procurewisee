@@ -2,118 +2,48 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, ShieldCheck } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="footer footer-vertical border-t-4 border-secondary bg-neutral text-neutral-content">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* Column 1: Institutional Branding (span 2) */}
-          <div className="space-y-4 lg:col-span-2">
-            <div className="flex items-center gap-3">
-              <div className="relative h-12 w-12 flex-shrink-0 flex items-center justify-center bg-white p-1">
-                <Image
-                  src="/images/bsc-logo.png"
-                  alt="Batanes State College Logo"
-                  width={44}
-                  height={44}
-                  className="object-contain h-full w-full"
-                />
-              </div>
-              <div>
-                <div className="text-lg font-black tracking-tight text-white">
-                  Batanes State College
-                </div>
-                <div className="text-xs font-bold text-[#A6761D]">
-                  Procurement Management Information System
-                </div>
-                <div className="text-[10px] uppercase font-bold text-neutral-content/50">
-                  Powered by ProcureWise
-                </div>
-              </div>
+    <footer className="border-t-4 border-secondary bg-neutral text-neutral-content">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:px-8">
+        <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-center">
+          <div className="flex items-center gap-3">
+            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center bg-white p-1">
+              <Image
+                src="/images/bsc-logo.png"
+                alt="Batanes State College Logo"
+                width={40}
+                height={40}
+                className="h-full w-full object-contain"
+              />
             </div>
-
-            <p className="text-xs sm:text-sm text-neutral-content/70 leading-relaxed max-w-md">
-              The official internal digital platform for institutional procurement management at Batanes State College,
-              in full compliance with Republic Act No. 9184, the Government Procurement Reform Act.
-              Access is restricted to authenticated institutional users only.
-            </p>
-
-            <div className="inline-flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-3 py-1.5 text-xs text-neutral-content/80 font-medium">
-              <ShieldCheck className="h-4 w-4 text-[#A6761D]" />
-              <span>RA 9184 Compliant · Authenticated Access Only</span>
+            <div>
+              <p className="font-bold">Batanes State College</p>
+              <p className="text-xs text-neutral-content/65">Procurement Management Information System</p>
             </div>
           </div>
 
-          {/* Column 2: Navigation */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-extrabold uppercase tracking-widest text-[#A6761D]">
-              Navigation
-            </h3>
-            <ul className="space-y-2 text-xs font-semibold text-neutral-content/80">
-              <li>
-                <a href="#workflow" className="hover:text-white transition-colors">Procurement Workflow</a>
-              </li>
-              <li>
-                <a href="#features" className="hover:text-white transition-colors">System Features</a>
-              </li>
-              <li>
-                <a href="#roles" className="hover:text-white transition-colors">User Roles</a>
-              </li>
-              <li>
-                <a href="#about" className="hover:text-white transition-colors">About the System</a>
-              </li>
-              <li>
-                <a href="#help" className="hover:text-white transition-colors">Help & FAQs</a>
-              </li>
-              <li>
-                <Link href="/login" className="hover:text-white transition-colors text-[#A6761D] font-bold">
-                  Institutional Sign In →
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Column 3: Contact */}
-          <div className="space-y-3">
-            <h3 className="text-xs font-extrabold uppercase tracking-widest text-[#A6761D]">
-              Contact Information
-            </h3>
-            <div className="space-y-2.5 text-xs text-neutral-content/80 font-normal">
-              <div className="flex items-start gap-2.5">
-                <MapPin className="h-4 w-4 text-[#A6761D] flex-shrink-0 mt-0.5" />
-                <span>San Antonio, Basco, Batanes, 3900 Philippines</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <Mail className="h-4 w-4 text-[#A6761D] flex-shrink-0" />
-                <span>procurement@bsc.edu.ph</span>
-              </div>
-              <div className="flex items-center gap-2.5">
-                <Phone className="h-4 w-4 text-[#A6761D] flex-shrink-0" />
-                <span>(078) 533-3000</span>
-              </div>
-            </div>
+          <div className="flex flex-col gap-2 text-xs text-neutral-content/75 sm:items-end">
+            <span className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-secondary" />
+              San Antonio, Basco, Batanes
+            </span>
+            <a className="flex items-center gap-2 hover:text-secondary" href="mailto:procurement@bsc.edu.ph">
+              <Mail className="h-4 w-4 text-secondary" />
+              procurement@bsc.edu.ph
+            </a>
           </div>
         </div>
 
-        <div className="divider divider-neutral my-8"></div>
-
-        {/* Bottom Bar */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-neutral-content/50 font-medium">
-          <div>
-            © {currentYear} Batanes State College. All rights reserved.
-          </div>
-          <div className="flex items-center gap-4">
-            <Link href="/about" className="hover:text-neutral-content/80 transition-colors">
-              Privacy Policy
-            </Link>
-            <Link href="/about" className="hover:text-neutral-content/80 transition-colors">
-              Terms of Use
-            </Link>
-            <span>Powered by ProcureWise</span>
+        <div className="flex flex-col justify-between gap-3 border-t border-neutral-content/20 pt-4 text-xs text-neutral-content/55 sm:flex-row">
+          <span>© {currentYear} Batanes State College</span>
+          <div className="flex gap-4">
+            <Link href="/about" className="hover:text-secondary">Privacy</Link>
+            <Link href="/login" className="font-semibold text-secondary">Institutional sign in</Link>
           </div>
         </div>
       </div>
